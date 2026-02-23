@@ -55,6 +55,25 @@
 
 ---
 
+## Phase 1B — Repository Structure Review & Reorganization
+
+- [ ] **1B.1** Audit current folder structure (document what exists and why)
+- [ ] **1B.2** Decide: numbered Private folders (`0.MainFunctions/` etc.) — keep or rename?
+- [ ] **1B.3** Decide: `Network_1/` / `Network_2/` split — keep, merge, or rename?
+- [ ] **1B.4** Decide: `Hybrid/ARCServers.ps1` → consolidate under `ArcServices/`?
+- [ ] **1B.5** Decide: module manifest location (root vs. `src/` subfolder)
+- [ ] **1B.6** Decide: `azure-pipelines/` — delete, archive, or replace with own CI/CD?
+- [ ] **1B.7** Decide: `docs/` inherited ARI content — gut now or rewrite in Phase 7?
+- [ ] **1B.8** Decide: `images/` — keep, relocate under `docs/`, or audit/prune?
+- [ ] **1B.9** Decide: `migration-temp/` — keep during dev, plan for removal before v1.0.0
+- [ ] **1B.10** Decide: `LegacyFunctions/` — keep, delete, or archive?
+- [ ] **1B.11** Decide: `tests/` organization — flat or mirror module structure?
+- [ ] **1B.12** Execute reorganization (`git mv`, update PSM1 dot-source paths, validate module load)
+- [ ] **1B.13** Create `docs/architecture/folder-structure.md` documenting decisions & rationale
+- [ ] **1B.14** Commit & push Phase 1B
+
+---
+
 ## Phase 2 — Auth Refactor
 
 - [ ] **2.1** Rewrite `Connect-AZTILoginSession` with 5 auth methods (current-user default)
@@ -144,6 +163,44 @@
 
 ---
 
+## Phase 8 — Inventory Module Expansion (ARM)
+
+### 8.1 — Azure Local (Stack HCI) Modules
+
+- [ ] **8.1.1** Create `Modules/Public/InventoryModules/AzureLocal/` directory
+- [ ] **8.1.2** `Clusters.ps1` — Azure Local cluster inventory (`microsoft.azurestackhci/clusters`)
+- [ ] **8.1.3** `VirtualMachines.ps1` — Azure Local VM instances (`microsoft.azurestackhci/virtualmachineinstances`)
+- [ ] **8.1.4** `LogicalNetworks.ps1` — Azure Local logical networks (`microsoft.azurestackhci/logicalnetworks`)
+- [ ] **8.1.5** `StorageContainers.ps1` — Azure Local storage containers (`microsoft.azurestackhci/storagecontainers`)
+- [ ] **8.1.6** `GalleryImages.ps1` — Azure Local gallery images (`microsoft.azurestackhci/galleryimages`)
+- [ ] **8.1.7** `MarketplaceGalleryImages.ps1` — Azure Local marketplace images (`microsoft.azurestackhci/marketplacegalleryimages`)
+- [ ] **8.1.8** Test: Verify Azure Local modules produce populated Excel worksheets against a test environment
+
+### 8.2 — Azure Arc Expanded Coverage
+
+- [ ] **8.2.1** Create `Modules/Public/InventoryModules/ArcServices/` directory
+- [ ] **8.2.2** `ArcGateways.ps1` — Arc Gateway inventory (`microsoft.hybridcompute/gateways`)
+- [ ] **8.2.3** `ArcKubernetes.ps1` — Arc-enabled Kubernetes clusters (`microsoft.kubernetes/connectedclusters`)
+- [ ] **8.2.4** `ArcResourceBridge.ps1` — Arc resource bridge/appliances (`microsoft.resourceconnector/appliances`)
+- [ ] **8.2.5** `ArcExtensions.ps1` — Arc machine extensions (`microsoft.hybridcompute/machines/extensions`)
+- [ ] **8.2.6** Test: Verify Arc modules produce populated Excel worksheets against a test environment
+
+### 8.3 — Enhanced VPN & Networking Detail
+
+- [ ] **8.3.1** Enhance `VirtualNetworkGateways.ps1` — Add P2S configuration fields (address pool, client protocols, auth type, root/revoked cert counts, RADIUS server, AAD tenant)
+- [ ] **8.3.2** Enhance `VirtualNetworkGateways.ps1` — Add custom DNS servers, NAT rules count, policy group count
+- [ ] **8.3.3** Enhance `Connections.ps1` — Add IPsec/IKE policy fields (encryption, integrity, DH group, PFS group, SA lifetime, SA data size)
+- [ ] **8.3.4** Enhance `Connections.ps1` — Add traffic selectors, DPD timeout, use policy-based traffic selectors
+- [ ] **8.3.5** Enhance `Connections.ps1` — Add ingress/egress bytes, shared key presence (boolean only — never log actual key)
+- [ ] **8.3.6** Test: Verify enhanced VPN fields populate correctly for S2S, P2S, and ExpressRoute connections
+
+### 8.4 — Phase 8 Finalize
+
+- [ ] **8.4.1** Update `CHANGELOG.md` with Phase 8 additions
+- [ ] **8.4.2** Commit & push Phase 8
+
+---
+
 ## Post-Implementation
 
 - [ ] Push to GitHub (`thisismydemo/azure-inventory`)
@@ -155,8 +212,8 @@
 
 **Version Control**
 - Created: 2026-02-22 by Product Technology Team
-- Last Edited: 2026-02-24 by Product Technology Team
-- Version: 1.0.0
-- Tags: todo, tracking, implementation
-- Keywords: azure-inventory, progress, checklist
+- Last Edited: 2026-02-22 by Product Technology Team
+- Version: 1.2.0
+- Tags: todo, tracking, implementation, azure-local, arc-gateway, vpn, folder-structure
+- Keywords: azure-inventory, progress, checklist, hci, arc, vpn, reorganization
 - Author: Product Technology Team

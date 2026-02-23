@@ -171,6 +171,87 @@ All other `.ps1` filenames stay as-is (they don't include `ARI` in the filename,
 
 ---
 
+## Phase 1B — Repository Structure Review & Reorganization
+
+Before adding new features (auth, Entra, JSON output), evaluate whether the inherited ARI folder layout is the optimal structure for AzureTenantInventory going forward. Reorganizing **before** Phase 2 avoids moving newly written code later.
+
+### 1B.1 — Audit Current Structure
+
+The repo currently uses ARI's original layout:
+
+```
+/
+├── AzureTenantInventory.psd1          # Module manifest (root)
+├── AzureTenantInventory.psm1          # Module loader (root)
+├── Modules/
+│   ├── Private/
+│   │   ├── 0.MainFunctions/           # Numbered — orchestration, auth, config
+│   │   ├── 1.ExtractionFunctions/     # Numbered — Resource Graph queries
+│   │   ├── 2.ProcessingFunctions/     # Numbered — data transform/cache
+│   │   ├── 3.ReportingFunctions/      # Numbered — Excel generation
+│   │   ├── 4.RAMPFunctions/           # REMOVED (Phase 0)
+│   │   └── LegacyFunctions/           # Deprecated functions
+│   └── Public/
+│       ├── PublicFunctions/            # Entry points (Invoke-AzureTenantInventory, etc.)
+│       └── InventoryModules/           # 86 ARM resource modules in 16 category folders
+│           ├── AI/ (14)               ├── Analytics/ (6)
+│           ├── APIs/ (5)              ├── Compute/ (7)
+│           ├── Container/ (6)         ├── Database/ (12)
+│           ├── Hybrid/ (1)            ├── Integration/ (2)
+│           ├── IoT/ (1)               ├── Management/ (3)
+│           ├── Monitoring/ (2)        ├── Network_1/ (10)
+│           ├── Network_2/ (10)        ├── Security/ (1)
+│           ├── Storage/ (2)           └── Web/ (2)
+├── azure-pipelines/                   # ARI CI/CD YAML (Microsoft-specific)
+├── docs/                              # MkDocs site content (inherited from ARI)
+├── images/                             # Screenshots and diagrams
+├── migration-temp/                    # Implementation plan & TODO
+├── tests/                             # Pester tests
+└── .github/                           # GitHub Actions, issue templates
+```
+
+### 1B.2 — Decisions to Make
+
+Evaluate each area and decide **keep as-is** or **reorganize**:
+
+| Area | Question | Options |
+|---|---|---|
+| **Numbered Private folders** | Are `0.MainFunctions/`, `1.ExtractionFunctions/`, etc. clear enough? | (A) Keep numbered — explicit load order. (B) Drop numbers — `Main/`, `Extraction/`, `Processing/`, `Reporting/`. |
+| **Network_1 / Network_2 split** | Why two network folders? Is there logic to the split? | (A) Keep split. (B) Merge into single `Network/`. (C) Rename to meaningful names (e.g., `NetworkConnectivity/`, `NetworkSecurity/`). |
+| **Hybrid → ArcServices consolidation** | `Hybrid/ARCServers.ps1` is alone; Phase 8 adds `ArcServices/`. | (A) Keep both separate. (B) Move ARCServers.ps1 into `ArcServices/` and delete `Hybrid/`. |
+| **Module manifest location** | `.psd1`/`.psm1` in repo root is PSGallery standard. | (A) Keep in root (standard). (B) Move into `src/` subfolder (requires `RootModule` path update). |
+| **`azure-pipelines/`** | Inherited Microsoft CI/CD — not relevant to us. | (A) Delete. (B) Archive to `archive/`. (C) Replace with our own CI/CD. |
+| **`docs/` content** | Inherited ARI MkDocs content with ARI branding. | (A) Rewrite in Phase 7. (B) Gut now, rewrite later. (C) Delete inherited content, start fresh. |
+| **`images/`** | Screenshots and diagrams — still relevant? | (A) Keep. (B) Move under `docs/images/`. (C) Audit and remove ARI-specific images. |
+| **`migration-temp/`** | This implementation plan directory. | (A) Keep during development, delete before v1.0.0 release. (B) Move content into `docs/`. |
+| **`LegacyFunctions/`** | Deprecated ARI functions carried forward. | (A) Keep for reference. (B) Delete now. (C) Archive to `archive/`. |
+| **Test organization** | `tests/` is flat. Multiple Pester test files planned. | (A) Keep flat. (B) Mirror `Modules/` structure (e.g., `tests/Private/`, `tests/Public/`). |
+
+### 1B.3 — Implement Reorganization
+
+Once decisions are made:
+
+1. Execute `git mv` for any folder/file relocations
+2. Update `AzureTenantInventory.psm1` dot-source paths if Private folders change
+3. Update `.gitignore` for any new/moved paths
+4. Update any internal path references across scripts
+5. Validate module still loads: `Import-Module ./AzureTenantInventory.psd1 -Force`
+6. Run existing Pester tests (if any)
+
+### 1B.4 — Document Decisions
+
+Record the decisions and rationale in a `docs/architecture/folder-structure.md` so future contributors understand the layout. Include:
+- Folder purpose descriptions
+- Why numbered vs. named (if kept)
+- Module authoring guide (where to put new inventory modules)
+- What belongs in Private vs. Public
+
+### 1B.5 — Commit Phase 1B
+
+Commit the reorganization (if any changes made) or the decision documentation (if keeping current structure).
+
+---
+
 ## Phase 2 — Auth Refactor
 
 ### 2.1 — Rewrite `Connect-AZTILoginSession`
@@ -496,22 +577,110 @@ Create `CREDITS.md` in repo root attributing the original ARI project:
 
 ---
 
+## Phase 8 — Inventory Module Expansion (ARM)
+
+Based on gap analysis of existing 86 ARM inventory modules, the following coverage gaps were identified and should be addressed with new or enhanced modules.
+
+### 8.1 — Azure Local (Stack HCI) Modules
+
+**Gap:** No modules exist for Azure Local / Azure Stack HCI resources. Zero references to `microsoft.azurestackhci` anywhere in the codebase. Azure Local clusters, VMs, networks, and storage are ARM-projected resources queryable via Azure Resource Graph, making them a natural fit for the existing extraction pipeline.
+
+**New directory:** `Modules/Public/InventoryModules/AzureLocal/`
+
+| # | File | Resource Type | Excel Worksheet | Key Processing Fields |
+|---|---|---|---|---|
+| 1 | `Clusters.ps1` | `microsoft.azurestackhci/clusters` | `AzLocal Clusters` | Name, Status, CloudId, Version, Last Sync, Node Count, OS Version, Connectivity Status, Desired Properties, Diagnostics Level |
+| 2 | `VirtualMachines.ps1` | `microsoft.azurestackhci/virtualmachineinstances` | `AzLocal VMs` | Name, Status, VM Size, OS Type, Processor Count, Memory MB, Storage, Dynamic Memory, Network Interfaces |
+| 3 | `LogicalNetworks.ps1` | `microsoft.azurestackhci/logicalnetworks` | `AzLocal Networks` | Name, VM Switch Name, Subnets, VLAN ID, DHCP, IP Pool, DNS Servers, Routes |
+| 4 | `StorageContainers.ps1` | `microsoft.azurestackhci/storagecontainers` | `AzLocal Storage` | Name, Path, Provisioning State, Status, Available Size |
+| 5 | `GalleryImages.ps1` | `microsoft.azurestackhci/galleryimages` | `AzLocal Images` | Name, OS Type, Version, Publisher, Offer, SKU, Provisioning State |
+| 6 | `MarketplaceGalleryImages.ps1` | `microsoft.azurestackhci/marketplacegalleryimages` | `AzLocal Marketplace` | Name, OS Type, Version, Publisher, Offer, SKU, Status |
+
+### 8.2 — Azure Arc Expanded Coverage
+
+The only existing Arc module is `Hybrid/ARCServers.ps1` (Arc-enabled servers, `microsoft.hybridcompute/machines`). No coverage for Arc Gateways, Arc-enabled Kubernetes, Arc resource bridge, or Arc extensions.
+
+**New directory:** `Modules/Public/InventoryModules/ArcServices/`
+
+| # | File | Resource Type | Excel Worksheet | Key Processing Fields |
+|---|---|---|---|---|
+| 1 | `ArcGateways.ps1` | `microsoft.hybridcompute/gateways` | `Arc Gateways` | Name, Location, Gateway Type, Gateway Endpoint, Provisioning State, Allowed Features |
+| 2 | `ArcKubernetes.ps1` | `microsoft.kubernetes/connectedclusters` | `Arc Kubernetes` | Name, Distribution, K8s Version, Node Count, Agent Version, Connectivity Status, Identity, Provisioning State |
+| 3 | `ArcResourceBridge.ps1` | `microsoft.resourceconnector/appliances` | `Arc Resource Bridge` | Name, Distro, Version, Status, Infrastructure Type, Provisioning State |
+| 4 | `ArcExtensions.ps1` | `microsoft.hybridcompute/machines/extensions` | `Arc Extensions` | Machine Name, Extension Name, Publisher, Type, Version, Provisioning State, Status |
+
+> **Note:** The existing `Hybrid/ARCServers.ps1` remains in place. Consider future consolidation of all Arc modules under `ArcServices/` for organizational consistency.
+
+### 8.3 — Enhanced VPN & Networking Detail
+
+Existing VPN modules capture basic properties but lack policy-level configuration detail critical for security audits. Point-to-Site configuration is entirely absent.
+
+#### VirtualNetworkGateways.ps1 — Enhancements
+
+**File:** `Modules/Public/InventoryModules/Network_2/VirtualNetworkGateways.ps1`
+
+**Currently captures:** SKU, generation, gateway type, VPN type, active-active mode, Enable BGP, BGP ASN, BGP Peering Address, BGP Peer Weight, gateway public IP, gateway subnet.
+
+**Add these fields:**
+
+| New Field | Source Property | Notes |
+|---|---|---|
+| P2S Address Pool | `properties.vpnClientConfiguration.vpnClientAddressPool.addressPrefixes` | Comma-separated |
+| P2S VPN Client Protocols | `properties.vpnClientConfiguration.vpnClientProtocols` | IkeV2, SSTP, OpenVPN |
+| P2S Auth Type | `properties.vpnClientConfiguration.vpnAuthenticationTypes` | Certificate, AAD, RADIUS |
+| P2S Root Cert Count | `properties.vpnClientConfiguration.vpnClientRootCertificates.count` | Number of trusted root certs |
+| P2S Revoked Cert Count | `properties.vpnClientConfiguration.vpnClientRevokedCertificates.count` | Number of revoked certs |
+| P2S RADIUS Server | `properties.vpnClientConfiguration.radiusServerAddress` | If RADIUS auth configured |
+| P2S AAD Tenant | `properties.vpnClientConfiguration.aadTenant` | If AAD auth configured |
+| Custom DNS Servers | `properties.customDnsServers` | Comma-separated |
+| NAT Rules Count | `properties.natRules.count` | Number of NAT rules |
+| Policy Group Count | `properties.vpnClientConfiguration.vngClientConnectionConfigurations.count` | Multi-pool P2S configurations |
+
+#### Connections.ps1 — Enhancements
+
+**File:** `Modules/Public/InventoryModules/Network_1/Connections.ps1`
+
+**Currently captures:** Connection type, status, protocol, routing weight, connection mode.
+
+**Add these fields:**
+
+| New Field | Source Property | Notes |
+|---|---|---|
+| IPsec Encryption | `properties.ipsecPolicies[0].ipsecEncryption` | AES256, AES192, etc. |
+| IPsec Integrity | `properties.ipsecPolicies[0].ipsecIntegrity` | SHA256, GCMAES256, etc. |
+| IKE Encryption | `properties.ipsecPolicies[0].ikeEncryption` | AES256, AES192, etc. |
+| IKE Integrity | `properties.ipsecPolicies[0].ikeIntegrity` | SHA256, SHA384, etc. |
+| DH Group | `properties.ipsecPolicies[0].dhGroup` | DHGroup14, ECP384, etc. |
+| PFS Group | `properties.ipsecPolicies[0].pfsGroup` | PFS2048, ECP384, etc. |
+| SA Lifetime (sec) | `properties.ipsecPolicies[0].saLifeTimeSeconds` | IPsec SA lifetime |
+| SA Data Size (KB) | `properties.ipsecPolicies[0].saDataSizeKilobytes` | IPsec SA data size |
+| Use Policy-Based TS | `properties.usePolicyBasedTrafficSelectors` | Boolean |
+| Traffic Selectors | `properties.trafficSelectorPolicies` | Local/Remote address ranges |
+| DPD Timeout (sec) | `properties.dpdTimeoutSeconds` | Dead Peer Detection timeout |
+| Ingress Bytes | `properties.ingressBytesTransferred` | Cumulative bytes received |
+| Egress Bytes | `properties.egressBytesTransferred` | Cumulative bytes sent |
+| Shared Key Set | `if ($_.properties.sharedKey) { 'Yes' } else { 'No' }` | Boolean only — NEVER log the actual key |
+
+---
+
 ## Implementation Order
 
 ```
-Phase 0  →  Phase 1  →  Phase 2  →  Phase 3  →  Phase 4  →  Phase 5  →  Phase 6  →  Phase 7
-Scaffold    Rename      Auth        Perms       Entra        Identity     JSON        Polish
-                                                Extract      Modules      Output
+Phase 0  →  Phase 1  →  Phase 1B  →  Phase 2  →  Phase 3  →  Phase 4  →  Phase 5  →  Phase 6  →  Phase 7  →  Phase 8
+Scaffold    Rename      Structure    Auth        Perms       Entra        Identity     JSON        Polish      Module
+                        Review                               Extract      Modules      Output                  Expansion
 ```
 
 Each phase is independently committable and testable. The tool remains functional after each phase:
 - After Phase 1: AZTI-renamed ARI (same functionality, new names)
+- After Phase 1B: Optimized folder layout, documented structure decisions
 - After Phase 2: New auth with current-user default
 - After Phase 3: Permission checking works
 - After Phase 4: Entra data extraction works
 - After Phase 5: Entra data appears in Excel
 - After Phase 6: JSON output alongside Excel
 - After Phase 7: Production-ready for PSGallery publish
+- After Phase 8: Azure Local, Arc Gateway, and enhanced VPN detail coverage
 
 ---
 
@@ -536,12 +705,22 @@ These 6 end-to-end scenarios must pass before the tool is considered production-
 - **Throttling**: `Invoke-AZTIGraphRequest` respects `Retry-After` header on HTTP 429 and retries automatically.
 - **No MgGraph dependency**: `Get-Module Microsoft.Graph* -ListAvailable` is NOT required. Tool functions with only `Az.Accounts`, `Az.ResourceGraph`, `Az.Compute`, `Az.Storage`, and `ImportExcel`.
 
+### Phase 8 Acceptance Checks
+
+| # | Scenario | Expected Outcome |
+|---|---|---|
+| 7 | **Azure Local cluster inventory** | `AzLocal Clusters` worksheet populated with cluster name, status, version, node count for each `microsoft.azurestackhci/clusters` resource. |
+| 8 | **Arc Gateway inventory** | `Arc Gateways` worksheet populated with gateway name, type, endpoint, provisioning state for each `microsoft.hybridcompute/gateways` resource. |
+| 9 | **P2S VPN detail** | `VirtualNetworkGateways` worksheet includes P2S Address Pool, VPN Client Protocols, Auth Type columns — populated when P2S is configured, empty when not. |
+| 10 | **IPsec policy detail** | `Connections` worksheet includes IPsec Encryption, IKE Encryption, DH Group, SA Lifetime columns — populated when custom IPsec policy is set. |
+| 11 | **Shared key safety** | `Connections` worksheet `Shared Key Set` column shows only `Yes`/`No` — never the actual shared key value. |
+
 ---
 
 **Version Control**
 - Created: 2026-02-22 by Product Technology Team
 - Last Edited: 2026-02-22 by Product Technology Team
-- Version: 1.0.0
-- Tags: powershell, azure, inventory, entra-id
-- Keywords: azure-inventory, ari, resource-graph, entra, identity
+- Version: 1.2.0
+- Tags: powershell, azure, inventory, entra-id, azure-local, arc-gateway, vpn, folder-structure
+- Keywords: azure-inventory, ari, resource-graph, entra, identity, hci, arc, vpn, reorganization
 - Author: Product Technology Team
