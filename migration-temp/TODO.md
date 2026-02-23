@@ -115,25 +115,25 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ## Phase 5 — Entra ID Inventory Modules (15 new)
 
-- [ ] **5.1** Create `Modules/Public/InventoryModules/Identity/` directory
-- [ ] **5.2** `Users.ps1` — User inventory module
-- [ ] **5.3** `Groups.ps1` — Group inventory module
-- [ ] **5.4** `AppRegistrations.ps1` — App registrations module
-- [ ] **5.5** `ServicePrincipals.ps1` — Service principals module
-- [ ] **5.6** `ManagedIdentities.ps1` — Managed identities module
-- [ ] **5.7** `DirectoryRoles.ps1` — Directory roles module
-- [ ] **5.8** `PIMAssignments.ps1` — PIM assignments module
-- [ ] **5.9** `ConditionalAccess.ps1` — Conditional Access policies module
-- [ ] **5.10** `NamedLocations.ps1` — Named locations module
-- [ ] **5.11** `AdminUnits.ps1` — Admin units module
-- [ ] **5.12** `Domains.ps1` — Domains module
-- [ ] **5.13** `Licensing.ps1` — License/SKU inventory module
-- [ ] **5.14** `CrossTenantAccess.ps1` — Cross-tenant access settings module
-- [ ] **5.15** `SecurityPolicies.ps1` — Security defaults + auth policy module
-- [ ] **5.16** `RiskyUsers.ps1` — Risky users module
-- [ ] **5.17** Register Identity modules in processing/reporting pipeline
+- [x] **5.1** Create `Modules/Public/InventoryModules/Identity/` directory
+- [x] **5.2** `Users.ps1` — User inventory module
+- [x] **5.3** `Groups.ps1` — Group inventory module
+- [x] **5.4** `AppRegistrations.ps1` — App registrations module
+- [x] **5.5** `ServicePrincipals.ps1` — Service principals module
+- [x] **5.6** `ManagedIdentities.ps1` — Managed identities module
+- [x] **5.7** `DirectoryRoles.ps1` — Directory roles module
+- [x] **5.8** `PIMAssignments.ps1` — PIM assignments module
+- [x] **5.9** `ConditionalAccess.ps1` — Conditional Access policies module
+- [x] **5.10** `NamedLocations.ps1` — Named locations module
+- [x] **5.11** `AdminUnits.ps1` — Admin units module
+- [x] **5.12** `Domains.ps1` — Domains module
+- [x] **5.13** `Licensing.ps1` — License/SKU inventory module
+- [x] **5.14** `CrossTenantAccess.ps1` — Cross-tenant access settings module
+- [x] **5.15** `SecurityPolicies.ps1` — Security defaults + auth policy module
+- [x] **5.16** `RiskyUsers.ps1` — Risky users module
+- [x] **5.17** Register Identity modules in processing/reporting pipeline *(auto-discovered — no changes needed)*
 - [ ] **5.18** Test: Full run with Entra modules producing Excel worksheets
-- [ ] **5.19** Commit Phase 5
+- [x] **5.19** Commit Phase 5
 
 ---
 
