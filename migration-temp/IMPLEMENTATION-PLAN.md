@@ -210,45 +210,248 @@ The repo currently uses ARI's original layout:
 └── .github/                           # GitHub Actions, issue templates
 ```
 
-### 1B.2 — Decisions to Make
+### 1B.2 — Finalized Decisions
 
-Evaluate each area and decide **keep as-is** or **reorganize**:
+All decisions resolved. Implementation follows the 15-step plan below.
 
-| Area | Question | Options |
+| Area | Decision | Rationale |
 |---|---|---|
-| **Numbered Private folders** | Are `0.MainFunctions/`, `1.ExtractionFunctions/`, etc. clear enough? | (A) Keep numbered — explicit load order. (B) Drop numbers — `Main/`, `Extraction/`, `Processing/`, `Reporting/`. |
-| **Network_1 / Network_2 split** | Why two network folders? Is there logic to the split? | (A) Keep split. (B) Merge into single `Network/`. (C) Rename to meaningful names (e.g., `NetworkConnectivity/`, `NetworkSecurity/`). |
-| **Hybrid → ArcServices consolidation** | `Hybrid/ARCServers.ps1` is alone; Phase 8 adds `ArcServices/`. | (A) Keep both separate. (B) Move ARCServers.ps1 into `ArcServices/` and delete `Hybrid/`. |
-| **Module manifest location** | `.psd1`/`.psm1` in repo root is PSGallery standard. | (A) Keep in root (standard). (B) Move into `src/` subfolder (requires `RootModule` path update). |
-| **`azure-pipelines/`** | Inherited Microsoft CI/CD — not relevant to us. | (A) Delete. (B) Archive to `archive/`. (C) Replace with our own CI/CD. |
-| **`docs/` content** | Inherited ARI MkDocs content with ARI branding. | (A) Rewrite in Phase 7. (B) Gut now, rewrite later. (C) Delete inherited content, start fresh. |
-| **`images/`** | Screenshots and diagrams — still relevant? | (A) Keep. (B) Move under `docs/images/`. (C) Audit and remove ARI-specific images. |
-| **`migration-temp/`** | This implementation plan directory. | (A) Keep during development, delete before v1.0.0 release. (B) Move content into `docs/`. |
-| **`LegacyFunctions/`** | Deprecated ARI functions carried forward. | (A) Keep for reference. (B) Delete now. (C) Archive to `archive/`. |
-| **Test organization** | `tests/` is flat. Multiple Pester test files planned. | (A) Keep flat. (B) Mirror `Modules/` structure (e.g., `tests/Private/`, `tests/Public/`). |
+| **Numbered Private folders** | **Drop numbers** → `Main/`, `Extraction/`, `Processing/`, `Reporting/` | PSM1 loader uses `Get-ChildItem -Recurse *.ps1` — folder names are cosmetic, numbering adds no value. |
+| **Network_1 / Network_2 split** | **Merge** into single `Network/` (20 files) | Split was arbitrary alphabetical overflow (ARI inherited), not a logical boundary. |
+| **Hybrid/** | **Keep `Hybrid/`** — all Arc modules land here | `Hybrid/` is the correct semantic category for Azure Arc resources. Phase 8.2 new modules (`ArcGateways.ps1`, `ArcKubernetes.ps1`, etc.) go into `Hybrid/`, not a new `ArcServices/` folder. |
+| **Module manifest location** | **Keep in root** (PSGallery standard) | Moving to `src/` breaks convention and requires `RootModule` path workarounds. |
+| **`azure-pipelines/`** | **Delete** | Microsoft ADO-specific CI/CD. Already rebranded but irrelevant — own CI/CD goes in `.github/workflows/`. |
+| **`docs/` content** | **Gut now**, restructure for Antora | Inherited ARI MkDocs content (`site_author: Microsoft`) is misleading. Delete inherited content, set up Antora directory structure, convert to AsciiDoc. |
+| **`images/`** | **Move under `docs/modules/ROOT/images/`** | Antora standard location. Root `images/` duplicates `docs/images/` — consolidate into one place. |
+| **`migration-temp/`** | **Keep as `.md`** during development | Temporary working files. Delete before v1.0.0 release. No AsciiDoc conversion needed. |
+| **`LegacyFunctions/`** | **Delete** | 6 `.ps2` files — intentionally unloaded (PSM1 only loads `*.ps1`). No value as reference. |
+| **Test organization** | **Keep flat** | Low test count (planned ~5 files). Mirror structure adds complexity with no benefit at this scale. |
+| **AsciiDoc conversion** | **Convert docs content to `.adoc`** | Antora requires AsciiDoc. GitHub convention files (`README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, etc.) and `migration-temp/` stay as Markdown. |
 
-### 1B.3 — Implement Reorganization
+### 1B.3 — Implementation Steps
 
-Once decisions are made:
+#### Step 1: Delete `4.RAMPFunctions/` (Verify Phase 0)
 
-1. Execute `git mv` for any folder/file relocations
-2. Update `AzureTenantInventory.psm1` dot-source paths if Private folders change
-3. Update `.gitignore` for any new/moved paths
-4. Update any internal path references across scripts
-5. Validate module still loads: `Import-Module ./AzureTenantInventory.psd1 -Force`
-6. Run existing Pester tests (if any)
+Phase 0.8 marked this complete, but verify the directory is actually gone. If it still exists (contains `FedRAMP-Inventory-Template.xlsx`, `StateRAMP-Inventory-Template.xlsx`), delete it now:
 
-### 1B.4 — Document Decisions
+```bash
+git rm -r Modules/Private/4.RAMPFunctions/
+```
 
-Record the decisions and rationale in a `docs/architecture/folder-structure.md` so future contributors understand the layout. Include:
-- Folder purpose descriptions
-- Why numbered vs. named (if kept)
-- Module authoring guide (where to put new inventory modules)
-- What belongs in Private vs. Public
+#### Step 2: Drop Numbered Prefixes from Private Folders
 
-### 1B.5 — Commit Phase 1B
+Rename using `git mv`:
 
-Commit the reorganization (if any changes made) or the decision documentation (if keeping current structure).
+| From | To |
+|---|---|
+| `Modules/Private/0.MainFunctions/` | `Modules/Private/Main/` |
+| `Modules/Private/1.ExtractionFunctions/` | `Modules/Private/Extraction/` |
+| `Modules/Private/2.ProcessingFunctions/` | `Modules/Private/Processing/` |
+| `Modules/Private/3.ReportingFunctions/` | `Modules/Private/Reporting/` |
+
+No PSM1 loader changes needed — `Get-ChildItem -Recurse *.ps1` discovers files regardless of folder names.
+
+#### Step 3: Merge Network_1 + Network_2 → Network
+
+```bash
+git mv Modules/Public/InventoryModules/Network_1/* Modules/Public/InventoryModules/Network/
+git mv Modules/Public/InventoryModules/Network_2/* Modules/Public/InventoryModules/Network/
+git rm -r Modules/Public/InventoryModules/Network_1/
+git rm -r Modules/Public/InventoryModules/Network_2/
+```
+
+Resulting `Network/` folder: 20 files. InventoryModules are loaded dynamically at runtime (not dot-sourced by PSM1), so no loader changes needed.
+
+#### Step 4: Keep Hybrid/ as Arc Category
+
+No structural change. `Hybrid/ARCServers.ps1` stays where it is. Phase 8.2 new modules land in `Hybrid/`:
+
+- `Hybrid/ArcGateways.ps1`
+- `Hybrid/ArcKubernetes.ps1`
+- `Hybrid/ArcResourceBridge.ps1`
+- `Hybrid/ArcExtensions.ps1`
+
+#### Step 5: Keep Module Manifest in Root
+
+No change. `AzureTenantInventory.psd1` and `.psm1` stay in repo root per PSGallery convention.
+
+#### Step 6: Delete `azure-pipelines/`
+
+```bash
+git rm -r azure-pipelines/
+```
+
+Own CI/CD will be GitHub Actions in `.github/workflows/` (Phase 7).
+
+#### Step 7: Gut `docs/` — Set Up Antora Structure
+
+Delete all inherited ARI MkDocs content:
+
+```bash
+git rm docs/mkdocs.yml
+git rm docs/requirements.txt
+git rm -r docs/docs/        # MkDocs source content
+```
+
+Create Antora directory structure:
+
+```
+docs/
+├── antora.yml              # Component descriptor
+└── modules/
+    └── ROOT/
+        ├── nav.adoc        # Navigation file
+        ├── pages/          # AsciiDoc content (.adoc files)
+        └── images/         # All images and diagrams
+```
+
+Create `docs/antora.yml`:
+
+```yaml
+name: azure-tenant-inventory
+title: Azure Tenant Inventory
+version: ~
+nav:
+  - modules/ROOT/nav.adoc
+```
+
+Create `antora-playbook.yml` in repo root:
+
+```yaml
+site:
+  title: Azure Tenant Inventory Documentation
+  url: https://thisismydemo.github.io/azure-inventory
+  start_page: azure-tenant-inventory::index.adoc
+content:
+  sources:
+    - url: .
+      branches: main
+      start_path: docs
+ui:
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
+```
+
+#### Step 8: Consolidate Images
+
+Move all images into Antora's standard image location:
+
+```bash
+# Move root images/ content (ARI screenshots with renamed filenames)
+git mv images/* docs/modules/ROOT/images/
+git rm -r images/
+
+# Move any remaining docs/images/ content
+git mv docs/images/* docs/modules/ROOT/images/  # if exists after Step 7 cleanup
+```
+
+Audit and remove any ARI-specific screenshots that no longer apply.
+
+#### Step 9: Keep `migration-temp/` as Markdown
+
+No changes. These are temporary working files (this plan, TODO.md). They stay as `.md` and will be deleted before v1.0.0 release.
+
+#### Step 10: Delete `LegacyFunctions/`
+
+```bash
+git rm -r Modules/Private/LegacyFunctions/
+```
+
+Files being removed (all `.ps2`, unused):
+
+- `Build-AZTILargeReportResources.ps2`
+- `Start-AZTIAutResourceJob.ps2`
+- `Start-AZTILargeEnvOrderFiles.ps2`
+- `Start-AZTIResourceJobs.ps2`
+- `Start-AZTIResourceReporting.ps2`
+- `VisioDiagram.ps2`
+
+#### Step 11: Keep Tests Flat
+
+No changes to `tests/` structure. New test files in Phase 7 go directly in `tests/`.
+
+#### Step 12: Clean Root Clutter
+
+Delete ARI-inherited root files that serve no purpose:
+
+```bash
+git rm HowTo.md
+git rm test-graphmod.sh
+git rm test-login-code-graph.sh
+git rm test-login-code.sh
+git rm test-login-secret.sh
+git rm test-login.sh
+git rm workflow_dispatch.json
+```
+
+#### Step 13: Convert Documentation to AsciiDoc
+
+Convert relevant `.md` documentation files to `.adoc` format and place in `docs/modules/ROOT/pages/`:
+
+**Files to convert:**
+
+- Any new documentation written for AZTI (getting started, auth guide, module catalog, etc.)
+- `CREDITS.md` → `docs/modules/ROOT/pages/credits.adoc` (when created in Phase 7)
+
+**Files that stay as Markdown (.md):**
+
+- `README.md` (GitHub convention)
+- `CHANGELOG.md` (GitHub convention)
+- `CONTRIBUTING.md` (GitHub convention, when created)
+- `CODE_OF_CONDUCT.md` (GitHub convention, when created)
+- `SECURITY.md` (GitHub convention, when created)
+- `SUPPORT.md` (GitHub convention, when created)
+- `.github/` templates (issue, PR)
+- `migration-temp/*.md` (temporary)
+
+#### Step 14: Validate
+
+1. Module loads: `Import-Module ./AzureTenantInventory.psd1 -Force` — expect 13 public functions
+2. Run Pester smoke tests: `Invoke-Pester tests/`
+3. Verify `Get-Command -Module AzureTenantInventory` lists all expected functions
+4. Spot-check InventoryModules discovery: confirm `Network/` files are found at runtime
+
+#### Step 15: Document & Commit
+
+1. Create `docs/modules/ROOT/pages/folder-structure.adoc` documenting the final layout and decisions
+2. Commit: `refactor: Phase 1B — reorganize folder structure, Antora/AsciiDoc, delete legacy`
+
+### 1B.4 — Target Structure After Phase 1B
+
+```
+/
+├── AzureTenantInventory.psd1          # Module manifest (root — PSGallery standard)
+├── AzureTenantInventory.psm1          # Module loader (root)
+├── antora-playbook.yml                # Antora site playbook
+├── Modules/
+│   ├── Private/
+│   │   ├── Main/                      # Orchestration, auth, config
+│   │   ├── Extraction/                # Resource Graph queries
+│   │   ├── Processing/                # Data transform/cache
+│   │   └── Reporting/                 # Excel generation
+│   └── Public/
+│       ├── PublicFunctions/            # Entry points (Invoke-AzureTenantInventory, etc.)
+│       └── InventoryModules/           # ARM resource modules in category folders
+│           ├── AI/ (14)               ├── Analytics/ (6)
+│           ├── APIs/ (5)              ├── Compute/ (7)
+│           ├── Container/ (6)         ├── Database/ (12)
+│           ├── Hybrid/ (1+)           ├── Integration/ (2)
+│           ├── IoT/ (1)               ├── Management/ (3)
+│           ├── Monitoring/ (2)        ├── Network/ (20)
+│           ├── Security/ (1)          ├── Storage/ (2)
+│           └── Web/ (2)
+├── docs/
+│   ├── antora.yml                     # Antora component descriptor
+│   └── modules/
+│       └── ROOT/
+│           ├── nav.adoc               # Navigation file
+│           ├── pages/                 # AsciiDoc content (.adoc)
+│           └── images/                # All images and diagrams
+├── migration-temp/                    # Implementation plan & TODO (.md, temporary)
+├── tests/                             # Pester tests (flat)
+└── .github/                           # GitHub Actions, issue templates
+```
 
 ---
 
@@ -548,23 +751,24 @@ Create in `tests/`:
 - `Invoke-AZTIGraphRequest.Tests.ps1` — pagination, throttling, error handling
 - `Start-AZTIEntraExtraction.Tests.ps1` — synthetic type normalization
 
-### 7.4 — GitHub Pages Documentation Site
+### 7.4 — GitHub Pages Documentation Site (Antora)
 
-Replace the existing `gh-pages` branch (inherited from microsoft/ARI, pointing at `microsoft.github.io/ARI/`) with a new documentation site for AzureTenantInventory:
+Replace the existing `gh-pages` branch (inherited from microsoft/ARI, pointing at `microsoft.github.io/ARI/`) with a new Antora-based documentation site for AzureTenantInventory:
 
 - Delete old `gh-pages` branch: `git push origin --delete gh-pages`
-- Set up MkDocs Material (or similar) with `docs/` source in `main`
-- Site content:
-  - Getting started / installation
-  - Authentication guide (all 5 methods)
-  - Scope & output format usage
-  - Permission requirements
-  - ARM module catalog (16 categories)
-  - Entra module catalog (15 Identity modules)
-  - Module authoring / contributing guide
-  - Credits & attribution to microsoft/ARI
-  - Changelog
-- GitHub Actions workflow to auto-deploy `gh-pages` on push to `main`
+- Antora structure set up in Phase 1B (Step 7): `docs/antora.yml`, `docs/modules/ROOT/`, `antora-playbook.yml`
+- Write AsciiDoc content in `docs/modules/ROOT/pages/`:
+  - `index.adoc` — Getting started / installation
+  - `authentication.adoc` — Authentication guide (all 5 methods)
+  - `usage.adoc` — Scope & output format usage
+  - `permissions.adoc` — Permission requirements
+  - `arm-modules.adoc` — ARM module catalog (16 categories)
+  - `entra-modules.adoc` — Entra module catalog (15 Identity modules)
+  - `contributing.adoc` — Module authoring / contributing guide
+  - `credits.adoc` — Credits & attribution to microsoft/ARI
+  - `changelog.adoc` — Changelog
+- Create `docs/modules/ROOT/nav.adoc` with navigation tree
+- GitHub Actions workflow (`.github/workflows/docs.yml`) to build with Antora and deploy to `gh-pages` on push to `main`
 - Site URL: `https://thisismydemo.github.io/azure-inventory/`
 
 ### 7.5 — CREDITS.md
@@ -598,9 +802,9 @@ Based on gap analysis of existing 86 ARM inventory modules, the following covera
 
 ### 8.2 — Azure Arc Expanded Coverage
 
-The only existing Arc module is `Hybrid/ARCServers.ps1` (Arc-enabled servers, `microsoft.hybridcompute/machines`). No coverage for Arc Gateways, Arc-enabled Kubernetes, Arc resource bridge, or Arc extensions.
+The existing Arc module is `Hybrid/ARCServers.ps1` (Arc-enabled servers, `microsoft.hybridcompute/machines`). No coverage for Arc Gateways, Arc-enabled Kubernetes, Arc resource bridge, or Arc extensions.
 
-**New directory:** `Modules/Public/InventoryModules/ArcServices/`
+**Directory:** `Modules/Public/InventoryModules/Hybrid/` (existing — all Arc modules belong under Hybrid)
 
 | # | File | Resource Type | Excel Worksheet | Key Processing Fields |
 |---|---|---|---|---|
@@ -608,8 +812,6 @@ The only existing Arc module is `Hybrid/ARCServers.ps1` (Arc-enabled servers, `m
 | 2 | `ArcKubernetes.ps1` | `microsoft.kubernetes/connectedclusters` | `Arc Kubernetes` | Name, Distribution, K8s Version, Node Count, Agent Version, Connectivity Status, Identity, Provisioning State |
 | 3 | `ArcResourceBridge.ps1` | `microsoft.resourceconnector/appliances` | `Arc Resource Bridge` | Name, Distro, Version, Status, Infrastructure Type, Provisioning State |
 | 4 | `ArcExtensions.ps1` | `microsoft.hybridcompute/machines/extensions` | `Arc Extensions` | Machine Name, Extension Name, Publisher, Type, Version, Provisioning State, Status |
-
-> **Note:** The existing `Hybrid/ARCServers.ps1` remains in place. Consider future consolidation of all Arc modules under `ArcServices/` for organizational consistency.
 
 ### 8.3 — Enhanced VPN & Networking Detail
 
@@ -719,8 +921,8 @@ These 6 end-to-end scenarios must pass before the tool is considered production-
 
 **Version Control**
 - Created: 2026-02-22 by Product Technology Team
-- Last Edited: 2026-02-22 by Product Technology Team
-- Version: 1.2.0
-- Tags: powershell, azure, inventory, entra-id, azure-local, arc-gateway, vpn, folder-structure
-- Keywords: azure-inventory, ari, resource-graph, entra, identity, hci, arc, vpn, reorganization
+- Last Edited: 2026-02-23 by Product Technology Team
+- Version: 1.3.0
+- Tags: powershell, azure, inventory, entra-id, azure-local, arc-gateway, vpn, folder-structure, antora, asciidoc
+- Keywords: azure-inventory, ari, resource-graph, entra, identity, hci, arc, vpn, reorganization, antora
 - Author: Product Technology Team

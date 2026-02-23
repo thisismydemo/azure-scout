@@ -57,20 +57,21 @@
 
 ## Phase 1B — Repository Structure Review & Reorganization
 
-- [ ] **1B.1** Audit current folder structure (document what exists and why)
-- [ ] **1B.2** Decide: numbered Private folders (`0.MainFunctions/` etc.) — keep or rename?
-- [ ] **1B.3** Decide: `Network_1/` / `Network_2/` split — keep, merge, or rename?
-- [ ] **1B.4** Decide: `Hybrid/ARCServers.ps1` → consolidate under `ArcServices/`?
-- [ ] **1B.5** Decide: module manifest location (root vs. `src/` subfolder)
-- [ ] **1B.6** Decide: `azure-pipelines/` — delete, archive, or replace with own CI/CD?
-- [ ] **1B.7** Decide: `docs/` inherited ARI content — gut now or rewrite in Phase 7?
-- [ ] **1B.8** Decide: `images/` — keep, relocate under `docs/`, or audit/prune?
-- [ ] **1B.9** Decide: `migration-temp/` — keep during dev, plan for removal before v1.0.0
-- [ ] **1B.10** Decide: `LegacyFunctions/` — keep, delete, or archive?
-- [ ] **1B.11** Decide: `tests/` organization — flat or mirror module structure?
-- [ ] **1B.12** Execute reorganization (`git mv`, update PSM1 dot-source paths, validate module load)
-- [ ] **1B.13** Create `docs/architecture/folder-structure.md` documenting decisions & rationale
-- [ ] **1B.14** Commit & push Phase 1B
+All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Phase 1B.2 for decision table and rationale.
+
+- [ ] **1B.1** Verify `4.RAMPFunctions/` deletion (Phase 0 cleanup — delete if still present)
+- [ ] **1B.2** Drop numbered prefixes: `0.MainFunctions/` → `Main/`, `1.ExtractionFunctions/` → `Extraction/`, `2.ProcessingFunctions/` → `Processing/`, `3.ReportingFunctions/` → `Reporting/`
+- [ ] **1B.3** Merge `Network_1/` + `Network_2/` → `Network/` (20 files)
+- [ ] **1B.4** Keep `Hybrid/` as-is (Arc modules land here in Phase 8.2)
+- [ ] **1B.5** Delete `azure-pipelines/` directory
+- [ ] **1B.6** Gut `docs/` — delete inherited MkDocs content, set up Antora directory structure
+- [ ] **1B.7** Consolidate `images/` into `docs/modules/ROOT/images/`
+- [ ] **1B.8** Delete `LegacyFunctions/` (6 unused `.ps2` files)
+- [ ] **1B.9** Clean root clutter (`HowTo.md`, 5 `test-*.sh` scripts, `workflow_dispatch.json`)
+- [ ] **1B.10** Create `docs/antora.yml` and root `antora-playbook.yml`
+- [ ] **1B.11** Validate module load + Pester tests pass
+- [ ] **1B.12** Create `docs/modules/ROOT/pages/folder-structure.adoc` documenting decisions
+- [ ] **1B.13** Commit & push Phase 1B
 
 ---
 
@@ -160,6 +161,7 @@
 - [ ] **7.8** Update `CHANGELOG.md` with all changes
 - [ ] **7.9** Final module load + smoke test
 - [ ] **7.10** Commit Phase 7
+- [ ] **7.11** Set up Antora documentation site (write AsciiDoc content, create nav.adoc, GitHub Actions workflow)
 
 ---
 
@@ -178,12 +180,11 @@
 
 ### 8.2 — Azure Arc Expanded Coverage
 
-- [ ] **8.2.1** Create `Modules/Public/InventoryModules/ArcServices/` directory
-- [ ] **8.2.2** `ArcGateways.ps1` — Arc Gateway inventory (`microsoft.hybridcompute/gateways`)
-- [ ] **8.2.3** `ArcKubernetes.ps1` — Arc-enabled Kubernetes clusters (`microsoft.kubernetes/connectedclusters`)
-- [ ] **8.2.4** `ArcResourceBridge.ps1` — Arc resource bridge/appliances (`microsoft.resourceconnector/appliances`)
-- [ ] **8.2.5** `ArcExtensions.ps1` — Arc machine extensions (`microsoft.hybridcompute/machines/extensions`)
-- [ ] **8.2.6** Test: Verify Arc modules produce populated Excel worksheets against a test environment
+- [ ] **8.2.1** `Hybrid/ArcGateways.ps1` — Arc Gateway inventory (`microsoft.hybridcompute/gateways`)
+- [ ] **8.2.2** `Hybrid/ArcKubernetes.ps1` — Arc-enabled Kubernetes clusters (`microsoft.kubernetes/connectedclusters`)
+- [ ] **8.2.3** `Hybrid/ArcResourceBridge.ps1` — Arc resource bridge/appliances (`microsoft.resourceconnector/appliances`)
+- [ ] **8.2.4** `Hybrid/ArcExtensions.ps1` — Arc machine extensions (`microsoft.hybridcompute/machines/extensions`)
+- [ ] **8.2.5** Test: Verify Arc modules produce populated Excel worksheets against a test environment
 
 ### 8.3 — Enhanced VPN & Networking Detail
 
@@ -212,8 +213,8 @@
 
 **Version Control**
 - Created: 2026-02-22 by Product Technology Team
-- Last Edited: 2026-02-22 by Product Technology Team
-- Version: 1.2.0
-- Tags: todo, tracking, implementation, azure-local, arc-gateway, vpn, folder-structure
-- Keywords: azure-inventory, progress, checklist, hci, arc, vpn, reorganization
+- Last Edited: 2026-02-23 by Product Technology Team
+- Version: 1.3.0
+- Tags: todo, tracking, implementation, azure-local, arc-gateway, vpn, folder-structure, antora, asciidoc
+- Keywords: azure-inventory, progress, checklist, hci, arc, vpn, reorganization, antora
 - Author: Product Technology Team
