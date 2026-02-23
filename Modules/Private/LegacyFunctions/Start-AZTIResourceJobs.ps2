@@ -1,4 +1,4 @@
-function Start-ARIResourceJobs {
+function Start-AZTIResourceJobs {
     Param ($Resources, $Retirements, $Subscriptions, $InTag, $Heavy, $Unsupported, $Debug)
     if ($Debug.IsPresent)
         {
@@ -135,7 +135,7 @@ function Start-ARIResourceJobs {
 
                     $InterJobNames = (Get-Job | Where-Object {$_.name -like 'ResourceJob_*' -and $_.State -eq 'Running'}).Name
 
-                    Wait-ARIJob -JobNames $InterJobNames -JobType 'Initial Resource' -LoopTime 15 -Debug $Debug
+                    Wait-AZTIJob -JobNames $InterJobNames -JobType 'Initial Resource' -LoopTime 15 -Debug $Debug
 
                     $JobLoop = 0
                 }

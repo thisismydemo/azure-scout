@@ -1,4 +1,4 @@
-function Start-ARIAutResourceJob {
+function Start-AZTIAutResourceJob {
     Param($Resources,$Subscriptions,$InTag,$Unsupported)
     Write-Output ('Starting Resources Processes')
     Write-Output ('Total Resources Being Analyzed: '+$Resources.count)

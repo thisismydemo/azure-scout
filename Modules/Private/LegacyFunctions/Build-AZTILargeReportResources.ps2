@@ -1,4 +1,4 @@
-function Build-ARILargeReportResources {
+function Build-AZTILargeReportResources {
     Param($DefaultPath, $Debug)
     if ($Debug.IsPresent)
         {

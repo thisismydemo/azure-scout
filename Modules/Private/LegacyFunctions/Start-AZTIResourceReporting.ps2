@@ -1,4 +1,4 @@
-function Start-ARIResourceReporting {
+function Start-AZTIResourceReporting {
     Param($InTag, $file, $SmaResources, $DefaultPath, $TableStyle, $Unsupported, $DebugEnvSize, $DataActive, $Debug)
     if ($Debug.IsPresent)
         {

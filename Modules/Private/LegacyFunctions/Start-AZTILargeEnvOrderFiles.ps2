@@ -1,4 +1,4 @@
-function Start-ARILargeEnvOrderFiles {
+function Start-AZTILargeEnvOrderFiles {
     Param($DefaultPath,$Debug)
     if ($Debug.IsPresent)
         {
