@@ -1,4 +1,4 @@
-﻿<#
+<#
 .Synopsis
 Inventory for Azure Route Table
 
@@ -7,10 +7,10 @@ This script consolidates information for all microsoft.network/routetables and  
 Excel Sheet Name: ROUTETABLE
 
 .Link
-https://github.com/microsoft/ARI/Modules/Public/InventoryModules/Network_1/RouteTables.ps1
+https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Network_1/RouteTables.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Resource Inventory (ARI)
+This powershell Module is part of Azure Tenant Inventory (AZTI)
 
 .NOTES
 Version: 3.6.0
