@@ -1,0 +1,13 @@
+site:
+  title: Azure Tenant Inventory Documentation
+  url: https://thisismydemo.github.io/azure-inventory
+  start_page: azure-tenant-inventory::index.adoc
+content:
+  sources:
+    - url: .
+      branches: main
+      start_path: docs
+ui:
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true

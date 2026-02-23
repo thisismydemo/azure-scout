@@ -1,0 +1,99 @@
+= Repository Structure
+:description: Post Phase 1B folder layout for Azure Tenant Inventory.
+:keywords: structure, layout, organization
+
+== Overview
+
+This page documents the repository layout after the Phase 1B reorganization.
+Numbered-prefix folders were renamed, duplicate directories merged, legacy code removed, and the docs tree was converted from MkDocs to Antora/AsciiDoc.
+
+== Directory Tree
+
+[source,text]
+----
+azure-inventory/
+├── .github/                            # GitHub config (issue templates, workflows, policies)
+│   ├── ISSUE_TEMPLATE/
+│   ├── policies/
+│   ├── PULL_REQUEST_TEMPLATE/
+│   └── workflows/
+├── docs/                               # Antora documentation component
+│   ├── antora.yml                      #   Component descriptor
+│   └── modules/ROOT/
+│       ├── nav.adoc                    #   Navigation file
+│       ├── images/                     #   All consolidated images (32 files)
+│       └── pages/                      #   AsciiDoc content pages
+│           ├── index.adoc
+│           └── folder-structure.adoc
+├── migration-temp/                     # Phase planning docs (removed in Phase 7)
+├── Modules/
+│   ├── Private/                        # Internal (non-exported) functions
+│   │   ├── Main/                       #   Core orchestration (was 0.MainFunctions)
+│   │   ├── Extraction/                 #   Data extraction  (was 1.ExtractionFunctions)
+│   │   │   └── ResourceDetails/
+│   │   ├── Processing/                 #   Data processing  (was 2.ProcessingFunctions)
+│   │   └── Reporting/                  #   Report generation (was 3.ReportingFunctions)
+│   │       └── StyleFunctions/
+│   └── Public/                         # Exported functions & runtime modules
+│       ├── InventoryModules/           #   86 ARM resource modules in 15 categories
+│       │   ├── AI/
+│       │   ├── Analytics/
+│       │   ├── APIs/
+│       │   ├── Compute/
+│       │   ├── Container/
+│       │   ├── Database/
+│       │   ├── Hybrid/
+│       │   ├── Integration/
+│       │   ├── IoT/
+│       │   ├── Management/
+│       │   ├── Monitoring/
+│       │   ├── Network/               #   Merged from Network_1 + Network_2 (20 files)
+│       │   ├── Security/
+│       │   ├── Storage/
+│       │   └── Web/
+│       └── PublicFunctions/            #   13 exported cmdlets
+│           ├── Diagram/
+│           └── Jobs/
+├── tests/                              # Pester test suites
+├── antora-playbook.yml                 # Antora site playbook
+├── AzureTenantInventory.psd1           # Module manifest
+├── AzureTenantInventory.psm1           # Module loader (recursive *.ps1 import)
+├── CHANGELOG.md
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── LICENSE
+├── README.md
+├── SECURITY.md
+└── SUPPORT.md
+----
+
+== Phase 1B Changes Summary
+
+[cols="1,3",options="header"]
+|===
+| Action | Detail
+
+| Renamed
+| `0.MainFunctions` → `Main`, `1.ExtractionFunctions` → `Extraction`, `2.ProcessingFunctions` → `Processing`, `3.ReportingFunctions` → `Reporting`
+
+| Merged
+| `Network_1/` + `Network_2/` → `Network/` (20 files)
+
+| Deleted
+| `4.RAMPFunctions/` (untracked .xlsx), `LegacyFunctions/` (6 .ps2 files), `azure-pipelines/`
+
+| Cleaned
+| Root clutter: `HowTo.md`, 5 `test-*.sh` scripts, `workflow_dispatch.json`
+
+| Converted
+| MkDocs → Antora/AsciiDoc; images consolidated into `docs/modules/ROOT/images/`
+
+| Kept
+| `Hybrid/` directory — validated as active module category
+|===
+
+== Module Loading
+
+The PSM1 loader uses `Get-ChildItem -Recurse *.ps1`.
+Folder names are cosmetic — renaming or merging directories has *zero* impact on which functions are loaded.
+13 public functions are exported via the PSD1 manifest.

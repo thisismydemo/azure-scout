@@ -1,0 +1,32 @@
+= Azure Tenant Inventory
+:description: A PowerShell module for comprehensive Azure + Entra ID tenant inventory.
+:keywords: azure, inventory, entra, powershell
+
+== Overview
+
+Azure Tenant Inventory (AZTI) is a PowerShell module that generates comprehensive inventory reports for a single Azure tenant — covering both ARM resources and Entra ID (Azure AD) objects.
+
+=== Key Features
+
+* *ARM Resource Inventory* — 86 resource modules across 15 categories
+* *Entra ID Inventory* — Users, groups, apps, conditional access, PIM, and more (Phase 5)
+* *Excel Reports* — Rich spreadsheets with multiple worksheets per resource type
+* *JSON Output* — Machine-readable output for automation pipelines (Phase 6)
+* *Network Diagrams* — Auto-generated draw.io topology diagrams
+* *Pre-flight Permission Checker* — Validates access before running (Phase 3)
+
+=== Quick Start
+
+[source,powershell]
+----
+# Install from PSGallery (when published)
+Install-Module -Name AzureTenantInventory
+
+# Or import from local clone
+Import-Module ./AzureTenantInventory.psd1
+
+# Run inventory (uses current Azure context)
+Invoke-AzureTenantInventory
+----
+
+TIP: If you're already logged in via `Connect-AzAccount`, AZTI uses your existing session — no additional flags needed.
