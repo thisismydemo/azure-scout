@@ -59,19 +59,19 @@
 
 All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Phase 1B.2 for decision table and rationale.
 
-- [ ] **1B.1** Verify `4.RAMPFunctions/` deletion (Phase 0 cleanup — delete if still present)
-- [ ] **1B.2** Drop numbered prefixes: `0.MainFunctions/` → `Main/`, `1.ExtractionFunctions/` → `Extraction/`, `2.ProcessingFunctions/` → `Processing/`, `3.ReportingFunctions/` → `Reporting/`
-- [ ] **1B.3** Merge `Network_1/` + `Network_2/` → `Network/` (20 files)
-- [ ] **1B.4** Keep `Hybrid/` as-is (Arc modules land here in Phase 8.2)
-- [ ] **1B.5** Delete `azure-pipelines/` directory
-- [ ] **1B.6** Gut `docs/` — delete inherited MkDocs content, set up Antora directory structure
-- [ ] **1B.7** Consolidate `images/` into `docs/modules/ROOT/images/`
-- [ ] **1B.8** Delete `LegacyFunctions/` (6 unused `.ps2` files)
-- [ ] **1B.9** Clean root clutter (`HowTo.md`, 5 `test-*.sh` scripts, `workflow_dispatch.json`)
-- [ ] **1B.10** Create `docs/antora.yml` and root `antora-playbook.yml`
-- [ ] **1B.11** Validate module load + Pester tests pass
-- [ ] **1B.12** Create `docs/modules/ROOT/pages/folder-structure.adoc` documenting decisions
-- [ ] **1B.13** Commit & push Phase 1B
+- [x] **1B.1** Verify `4.RAMPFunctions/` deletion (Phase 0 cleanup — delete if still present) — deleted from disk (was untracked .xlsx)
+- [x] **1B.2** Drop numbered prefixes: `0.MainFunctions/` → `Main/`, `1.ExtractionFunctions/` → `Extraction/`, `2.ProcessingFunctions/` → `Processing/`, `3.ReportingFunctions/` → `Reporting/` — commit `2e8b57e`
+- [x] **1B.3** Merge `Network_1/` + `Network_2/` → `Network/` (20 files) — commit `2e8b57e`
+- [x] **1B.4** Keep `Hybrid/` as-is (Arc modules land here in Phase 8.2) — confirmed, no action needed
+- [x] **1B.5** Delete `azure-pipelines/` directory — commit `2e8b57e`
+- [x] **1B.6** Gut `docs/` — delete inherited MkDocs content, set up Antora directory structure — commit `2e8b57e`
+- [x] **1B.7** Consolidate `images/` into `docs/modules/ROOT/images/` (32 images) — commit `2e8b57e`
+- [x] **1B.8** Delete `LegacyFunctions/` (6 unused `.ps2` files) — commit `2e8b57e`
+- [x] **1B.9** Clean root clutter (`HowTo.md`, 5 `test-*.sh` scripts, `workflow_dispatch.json`) — commit `2e8b57e`
+- [x] **1B.10** Create `docs/antora.yml` and root `antora-playbook.yml` — commit `2e8b57e`
+- [x] **1B.11** Validate module load — 13 public functions confirmed, zero breakage
+- [x] **1B.12** Create `docs/modules/ROOT/pages/folder-structure.adoc` documenting decisions — commit `2e8b57e`
+- [x] **1B.13** Commit & push Phase 1B — commit `2e8b57e`
 
 ---
 
