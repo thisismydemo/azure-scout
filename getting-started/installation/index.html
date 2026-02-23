@@ -6,13 +6,13 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentation for the Azure Resource Inventory PowerShell module">
+        <meta name="description" content="Documentation for the Azure Tenant Inventory PowerShell module">
       
       
         <meta name="author" content="Microsoft">
       
       
-        <link rel="canonical" href="https://microsoft.github.io/ARI/getting-started/installation/">
+        <link rel="canonical" href="https://thisismydemo.github.io/azure-inventory/getting-started/installation/">
       
       
         <link rel="prev" href="../..">
@@ -21,12 +21,12 @@
         <link rel="next" href="../quick-start/">
       
       
-      <link rel="icon" href="../../images/ARI_Logo.png">
+      <link rel="icon" href="../../images/AZTI_Logo.png">
       <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.5">
     
     
       
-        <title>Installation - Azure Resource Inventory (ARI)</title>
+        <title>Installation - Azure Tenant Inventory (AZTI)</title>
       
     
     
@@ -91,9 +91,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Azure Resource Inventory (ARI)" class="md-header__button md-logo" aria-label="Azure Resource Inventory (ARI)" data-md-component="logo">
+    <a href="../.." title="Azure Tenant Inventory (AZTI)" class="md-header__button md-logo" aria-label="Azure Tenant Inventory (AZTI)" data-md-component="logo">
       
-  <img src="../../images/ARI_Logo.png" alt="logo">
+  <img src="../../images/AZTI_Logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -104,7 +104,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Azure Resource Inventory (ARI)
+            Azure Tenant Inventory (AZTI)
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -160,13 +160,13 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/microsoft/ARI" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/thisismydemo/azure-inventory" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
-    microsoft/ARI
+    thisismydemo/azure-inventory
   </div>
 </a>
       </div>
@@ -334,22 +334,22 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Azure Resource Inventory (ARI)" class="md-nav__button md-logo" aria-label="Azure Resource Inventory (ARI)" data-md-component="logo">
+    <a href="../.." title="Azure Tenant Inventory (AZTI)" class="md-nav__button md-logo" aria-label="Azure Tenant Inventory (AZTI)" data-md-component="logo">
       
-  <img src="../../images/ARI_Logo.png" alt="logo">
+  <img src="../../images/AZTI_Logo.png" alt="logo">
 
     </a>
-    Azure Resource Inventory (ARI)
+    Azure Tenant Inventory (AZTI)
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/microsoft/ARI" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/thisismydemo/azure-inventory" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
-    microsoft/ARI
+    thisismydemo/azure-inventory
   </div>
 </a>
     </div>
@@ -516,8 +516,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#updating-ari" class="md-nav__link">
-    Updating ARI
+  <a href="#updating-azti" class="md-nav__link">
+    Updating AZTI
   </a>
   
 </li>
@@ -1267,8 +1267,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#updating-ari" class="md-nav__link">
-    Updating ARI
+  <a href="#updating-azti" class="md-nav__link">
+    Updating AZTI
   </a>
   
 </li>
@@ -1306,9 +1306,9 @@
 
 
 <h1 id="installation-guide">Installation Guide</h1>
-<p>Azure Resource Inventory (ARI) is a PowerShell module that can be installed directly from the PowerShell Gallery. This guide will walk you through the necessary steps to get ARI up and running on your system.</p>
+<p>Azure Tenant Inventory (AZTI) is a PowerShell module that can be installed directly from the PowerShell Gallery. This guide will walk you through the necessary steps to get AZTI up and running on your system.</p>
 <h2 id="prerequisites">Prerequisites</h2>
-<p>Before installing ARI, ensure you have the following prerequisites:</p>
+<p>Before installing AZTI, ensure you have the following prerequisites:</p>
 <ul>
 <li><strong>PowerShell Version</strong>:</li>
 <li>
@@ -1331,39 +1331,39 @@
 </ul>
 <h2 id="installation-methods">Installation Methods</h2>
 <h3 id="method-1-install-from-powershell-gallery-recommended">Method 1: Install from PowerShell Gallery (Recommended)</h3>
-<p>The easiest way to install ARI is directly from the PowerShell Gallery:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">AzureResourceInventory</span>
+<p>The easiest way to install AZTI is directly from the PowerShell Gallery:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">AzureTenantInventory</span>
 </code></pre></div>
 <div align="center">
-<img src="../../images/InstallARI.gif" width="700">
+<img src="../../images/InstallAZTI.gif" width="700">
 </div>
 
 <p>If you encounter any permission issues during installation, try running PowerShell as an administrator or add the <code>-Scope CurrentUser</code> parameter:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">AzureResourceInventory</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">AzureTenantInventory</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
 </code></pre></div>
 <h3 id="method-2-manual-installation">Method 2: Manual Installation</h3>
 <p>If you prefer to install the module manually:</p>
 <ol>
-<li>Download the latest release from the <a href="https://github.com/microsoft/ARI/releases">GitHub Releases page</a></li>
+<li>Download the latest release from the <a href="https://github.com/thisismydemo/azure-inventory/releases">GitHub Releases page</a></li>
 <li>Extract the ZIP file to your PowerShell modules directory (typically <code>$HOME\Documents\PowerShell\Modules\</code>)</li>
-<li>Ensure the module folder is named "AzureResourceInventory"</li>
+<li>Ensure the module folder is named "AzureTenantInventory"</li>
 </ol>
 <h2 id="verification">Verification</h2>
-<p>To verify that ARI is installed correctly, run:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span> <span class="n">AzureResourceInventory</span>
+<p>To verify that AZTI is installed correctly, run:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span> <span class="n">AzureTenantInventory</span>
 </code></pre></div>
-<p>You should see the AzureResourceInventory module listed with its version number.</p>
+<p>You should see the AzureTenantInventory module listed with its version number.</p>
 <h2 id="importing-the-module">Importing the Module</h2>
 <p>After installation, you need to import the module before using it:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Import-Module</span> <span class="n">AzureResourceInventory</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Import-Module</span> <span class="n">AzureTenantInventory</span>
 </code></pre></div>
 <div align="center">
-<img src="../../images/ImportingARI.gif" width="700">
+<img src="../../images/ImportingAZTI.gif" width="700">
 </div>
 
-<h2 id="updating-ari">Updating ARI</h2>
-<p>To update to the latest version of ARI from the PowerShell Gallery:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Update-Module</span> <span class="n">-Name</span> <span class="n">AzureResourceInventory</span>
+<h2 id="updating-azti">Updating AZTI</h2>
+<p>To update to the latest version of AZTI from the PowerShell Gallery:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Update-Module</span> <span class="n">-Name</span> <span class="n">AzureTenantInventory</span>
 </code></pre></div>
 <h2 id="troubleshooting-installation-issues">Troubleshooting Installation Issues</h2>
 <p>If you encounter issues during installation:</p>
@@ -1386,7 +1386,7 @@
 </li>
 </ol>
 <h2 id="next-steps">Next Steps</h2>
-<p>Now that you've installed ARI, proceed to the <a href="../quick-start/">Quick Start Guide</a> to generate your first Azure inventory report. </p>
+<p>Now that you've installed AZTI, proceed to the <a href="../quick-start/">Quick Start Guide</a> to generate your first Azure inventory report. </p>
 
 
 
@@ -1432,7 +1432,7 @@
       
       
     
-    <a href="https://github.com/microsoft/ARI" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+    <a href="https://github.com/thisismydemo/azure-inventory" target="_blank" rel="noopener" title="github.com" class="md-social__link">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
     </a>
   

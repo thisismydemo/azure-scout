@@ -6,13 +6,13 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentation for the Azure Resource Inventory PowerShell module">
+        <meta name="description" content="Documentation for the Azure Tenant Inventory PowerShell module">
       
       
         <meta name="author" content="Microsoft">
       
       
-        <link rel="canonical" href="https://microsoft.github.io/ARI/user-guide/troubleshooting/">
+        <link rel="canonical" href="https://thisismydemo.github.io/azure-inventory/user-guide/troubleshooting/">
       
       
         <link rel="prev" href="../common-scenarios/">
@@ -21,12 +21,12 @@
         <link rel="next" href="../faq/">
       
       
-      <link rel="icon" href="../../images/ARI_Logo.png">
+      <link rel="icon" href="../../images/AZTI_Logo.png">
       <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.5">
     
     
       
-        <title>Troubleshooting - Azure Resource Inventory (ARI)</title>
+        <title>Troubleshooting - Azure Tenant Inventory (AZTI)</title>
       
     
     
@@ -91,9 +91,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Azure Resource Inventory (ARI)" class="md-header__button md-logo" aria-label="Azure Resource Inventory (ARI)" data-md-component="logo">
+    <a href="../.." title="Azure Tenant Inventory (AZTI)" class="md-header__button md-logo" aria-label="Azure Tenant Inventory (AZTI)" data-md-component="logo">
       
-  <img src="../../images/ARI_Logo.png" alt="logo">
+  <img src="../../images/AZTI_Logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -104,7 +104,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Azure Resource Inventory (ARI)
+            Azure Tenant Inventory (AZTI)
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -160,13 +160,13 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/microsoft/ARI" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/thisismydemo/azure-inventory" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
-    microsoft/ARI
+    thisismydemo/azure-inventory
   </div>
 </a>
       </div>
@@ -334,22 +334,22 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Azure Resource Inventory (ARI)" class="md-nav__button md-logo" aria-label="Azure Resource Inventory (ARI)" data-md-component="logo">
+    <a href="../.." title="Azure Tenant Inventory (AZTI)" class="md-nav__button md-logo" aria-label="Azure Tenant Inventory (AZTI)" data-md-component="logo">
       
-  <img src="../../images/ARI_Logo.png" alt="logo">
+  <img src="../../images/AZTI_Logo.png" alt="logo">
 
     </a>
-    Azure Resource Inventory (ARI)
+    Azure Tenant Inventory (AZTI)
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/microsoft/ARI" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/thisismydemo/azure-inventory" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
-    microsoft/ARI
+    thisismydemo/azure-inventory
   </div>
 </a>
     </div>
@@ -693,8 +693,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ari-runs-slowly" class="md-nav__link">
-    ARI Runs Slowly
+  <a href="#azti-runs-slowly" class="md-nav__link">
+    AZTI Runs Slowly
   </a>
   
 </li>
@@ -1437,8 +1437,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ari-runs-slowly" class="md-nav__link">
-    ARI Runs Slowly
+  <a href="#azti-runs-slowly" class="md-nav__link">
+    AZTI Runs Slowly
   </a>
   
 </li>
@@ -1588,17 +1588,17 @@
 
 
 <h1 id="troubleshooting-guide">Troubleshooting Guide</h1>
-<p>This guide helps you diagnose and resolve common issues with Azure Resource Inventory.</p>
+<p>This guide helps you diagnose and resolve common issues with Azure Tenant Inventory.</p>
 <h2 id="common-issues-and-solutions">Common Issues and Solutions</h2>
 <h3 id="installation-issues">Installation Issues</h3>
 <h4 id="module-not-found">Module Not Found</h4>
-<p><strong>Issue</strong>: <code>Import-Module AzureResourceInventory</code> results in "Module not found" error.</p>
+<p><strong>Issue</strong>: <code>Import-Module AzureTenantInventory</code> results in "Module not found" error.</p>
 <p><strong>Solutions</strong>:
 1. Verify the module is installed:
-   <div class="highlight"><pre><span></span><code><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span> <span class="n">AzureResourceInventory</span>
+   <div class="highlight"><pre><span></span><code><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span> <span class="n">AzureTenantInventory</span>
 </code></pre></div>
 2. If not installed, install it:
-   <div class="highlight"><pre><span></span><code><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">AzureResourceInventory</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
+   <div class="highlight"><pre><span></span><code><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">AzureTenantInventory</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
 </code></pre></div>
 3. If installed but still not found, check your PSModulePath:
    <div class="highlight"><pre><span></span><code><span class="nv">$env:PSModulePath</span> <span class="n">-split</span> <span class="s1">&#39;;&#39;</span>
@@ -1608,7 +1608,7 @@
 <p><strong>Solutions</strong>:
 1. Run PowerShell as Administrator
 2. Use the CurrentUser scope:
-   <div class="highlight"><pre><span></span><code><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">AzureResourceInventory</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
+   <div class="highlight"><pre><span></span><code><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">AzureTenantInventory</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
 </code></pre></div></p>
 <h4 id="missing-dependencies">Missing Dependencies</h4>
 <p><strong>Issue</strong>: Error about missing required modules.</p>
@@ -1617,7 +1617,7 @@
 </code></pre></div></p>
 <h3 id="authentication-issues">Authentication Issues</h3>
 <h4 id="unable-to-connect-to-azure">Unable to Connect to Azure</h4>
-<p><strong>Issue</strong>: Authentication errors when running ARI.</p>
+<p><strong>Issue</strong>: Authentication errors when running AZTI.</p>
 <p><strong>Solutions</strong>:
 1. Ensure you're logged in:
    <div class="highlight"><pre><span></span><code><span class="nb">Connect-AzAccount</span>
@@ -1638,20 +1638,20 @@
 2. Check for typos in the IDs
 3. Ensure you have access to the specified tenant/subscription</p>
 <h3 id="execution-issues">Execution Issues</h3>
-<h4 id="ari-runs-slowly">ARI Runs Slowly</h4>
-<p><strong>Issue</strong>: ARI takes a long time to complete.</p>
+<h4 id="azti-runs-slowly">AZTI Runs Slowly</h4>
+<p><strong>Issue</strong>: AZTI takes a long time to complete.</p>
 <p><strong>Solutions</strong>:
 1. Use lightweight mode:
-   <div class="highlight"><pre><span></span><code><span class="nb">Invoke-ARI</span> <span class="n">-Heavy</span>
+   <div class="highlight"><pre><span></span><code><span class="nb">Invoke-AzureTenantInventory</span> <span class="n">-Heavy</span>
 </code></pre></div>
 2. Skip diagram generation:
-   <div class="highlight"><pre><span></span><code><span class="nb">Invoke-ARI</span> <span class="n">-SkipDiagram</span>
+   <div class="highlight"><pre><span></span><code><span class="nb">Invoke-AzureTenantInventory</span> <span class="n">-SkipDiagram</span>
 </code></pre></div>
 3. Skip advisory collection:
-   <div class="highlight"><pre><span></span><code><span class="nb">Invoke-ARI</span> <span class="n">-SkipAdvisory</span>
+   <div class="highlight"><pre><span></span><code><span class="nb">Invoke-AzureTenantInventory</span> <span class="n">-SkipAdvisory</span>
 </code></pre></div>
 4. Limit to specific subscriptions:
-   <div class="highlight"><pre><span></span><code><span class="nb">Invoke-ARI</span> <span class="n">-SubscriptionID</span> <span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
+   <div class="highlight"><pre><span></span><code><span class="nb">Invoke-AzureTenantInventory</span> <span class="n">-SubscriptionID</span> <span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
 </code></pre></div></p>
 <h4 id="memory-errors">Memory Errors</h4>
 <p><strong>Issue</strong>: Out of memory errors during execution.</p>
@@ -1661,15 +1661,15 @@
 3. Scope to fewer subscriptions at a time
 4. Skip diagram generation with <code>-SkipDiagram</code></p>
 <h4 id="powershell-crashes">PowerShell Crashes</h4>
-<p><strong>Issue</strong>: PowerShell crashes during ARI execution.</p>
+<p><strong>Issue</strong>: PowerShell crashes during AZTI execution.</p>
 <p><strong>Solutions</strong>:
 1. Update to the latest PowerShell version
-2. Update ARI and all dependencies:
-   <div class="highlight"><pre><span></span><code><span class="nb">Update-Module</span> <span class="n">AzureResourceInventory</span>
+2. Update AZTI and all dependencies:
+   <div class="highlight"><pre><span></span><code><span class="nb">Update-Module</span> <span class="n">AzureTenantInventory</span>
 <span class="nb">Update-Module</span> <span class="n">Az</span><span class="p">.*</span> 
 </code></pre></div>
 3. Run with debug enabled to identify the issue:
-   <div class="highlight"><pre><span></span><code><span class="nb">Invoke-ARI</span> <span class="n">-Debug</span>
+   <div class="highlight"><pre><span></span><code><span class="nb">Invoke-AzureTenantInventory</span> <span class="n">-Debug</span>
 </code></pre></div></p>
 <h3 id="output-issues">Output Issues</h3>
 <h4 id="excel-report-format-problems">Excel Report Format Problems</h4>
@@ -1691,10 +1691,10 @@
 <p><strong>Issue</strong>: Error generating network diagrams.</p>
 <p><strong>Solutions</strong>:
 1. Skip diagram generation:
-   <div class="highlight"><pre><span></span><code><span class="nb">Invoke-ARI</span> <span class="n">-SkipDiagram</span>
+   <div class="highlight"><pre><span></span><code><span class="nb">Invoke-AzureTenantInventory</span> <span class="n">-SkipDiagram</span>
 </code></pre></div>
 2. Run with debug to identify the issue:
-   <div class="highlight"><pre><span></span><code><span class="nb">Invoke-ARI</span> <span class="n">-Debug</span>
+   <div class="highlight"><pre><span></span><code><span class="nb">Invoke-AzureTenantInventory</span> <span class="n">-Debug</span>
 </code></pre></div>
 3. Ensure you have permissions to view network resources</p>
 <h3 id="cloud-shell-issues">Cloud Shell Issues</h3>
@@ -1704,22 +1704,22 @@
 1. Use the <code>-Lite</code> and <code>-SkipDiagram</code> parameters
 2. Scope to fewer subscriptions
 3. Increase CloudShell timeout in settings (if possible)
-4. Run ARI in an Azure VM instead</p>
+4. Run AZTI in an Azure VM instead</p>
 <h4 id="excel-formatting-in-cloudshell">Excel Formatting in CloudShell</h4>
 <p><strong>Issue</strong>: Excel formatting warnings in CloudShell.</p>
 <p><strong>Solution</strong>: This is expected in CloudShell. The inventory will be correct, but some formatting and auto-fit columns might not work properly. Use <code>-Debug</code> parameter in CloudShell.</p>
 <h2 id="advanced-troubleshooting">Advanced Troubleshooting</h2>
 <h3 id="detailed-logging">Detailed Logging</h3>
 <p>For detailed troubleshooting information:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Invoke-ARI</span> <span class="n">-Debug</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Invoke-AzureTenantInventory</span> <span class="n">-Debug</span>
 </code></pre></div>
 <p>This will display detailed information about each step of the process.</p>
 <h3 id="module-version-check">Module Version Check</h3>
 <p>If you encounter issues, verify you're using the latest version:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span> <span class="n">AzureResourceInventory</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span> <span class="n">AzureTenantInventory</span>
 </code></pre></div>
 <p>Update to the latest version:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">Update-Module</span> <span class="n">AzureResourceInventory</span>
+<div class="highlight"><pre><span></span><code><span class="nb">Update-Module</span> <span class="n">AzureTenantInventory</span>
 </code></pre></div>
 <h3 id="testing-specific-components">Testing Specific Components</h3>
 <p>Test Azure Resource Graph access:</p>
@@ -1733,9 +1733,9 @@
 <h2 id="getting-help">Getting Help</h2>
 <p>If you've tried the solutions above and still have issues:</p>
 <ol>
-<li>Check the <a href="https://github.com/microsoft/ARI/issues">GitHub Issues</a> to see if it's a known issue</li>
+<li>Check the <a href="https://github.com/thisismydemo/azure-inventory/issues">GitHub Issues</a> to see if it's a known issue</li>
 <li>Submit a new issue with detailed information about your problem</li>
-<li>Include error messages and the output of running ARI with the <code>-Debug</code> parameter </li>
+<li>Include error messages and the output of running AZTI with the <code>-Debug</code> parameter </li>
 </ol>
 
 
@@ -1782,7 +1782,7 @@
       
       
     
-    <a href="https://github.com/microsoft/ARI" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+    <a href="https://github.com/thisismydemo/azure-inventory" target="_blank" rel="noopener" title="github.com" class="md-social__link">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
     </a>
   

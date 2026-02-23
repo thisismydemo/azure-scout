@@ -6,13 +6,13 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentation for the Azure Resource Inventory PowerShell module">
+        <meta name="description" content="Documentation for the Azure Tenant Inventory PowerShell module">
       
       
         <meta name="author" content="Microsoft">
       
       
-        <link rel="canonical" href="https://microsoft.github.io/ARI/advanced/github-actions/">
+        <link rel="canonical" href="https://thisismydemo.github.io/azure-inventory/advanced/github-actions/">
       
       
         <link rel="prev" href="../automation/">
@@ -21,12 +21,12 @@
         <link rel="next" href="../azure-devops/">
       
       
-      <link rel="icon" href="../../images/ARI_Logo.png">
+      <link rel="icon" href="../../images/AZTI_Logo.png">
       <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.5">
     
     
       
-        <title>GitHub Actions - Azure Resource Inventory (ARI)</title>
+        <title>GitHub Actions - Azure Tenant Inventory (AZTI)</title>
       
     
     
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#running-ari-with-github-actions" class="md-skip">
+        <a href="#running-azti-with-github-actions" class="md-skip">
           Skip to content
         </a>
       
@@ -91,9 +91,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Azure Resource Inventory (ARI)" class="md-header__button md-logo" aria-label="Azure Resource Inventory (ARI)" data-md-component="logo">
+    <a href="../.." title="Azure Tenant Inventory (AZTI)" class="md-header__button md-logo" aria-label="Azure Tenant Inventory (AZTI)" data-md-component="logo">
       
-  <img src="../../images/ARI_Logo.png" alt="logo">
+  <img src="../../images/AZTI_Logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -104,7 +104,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Azure Resource Inventory (ARI)
+            Azure Tenant Inventory (AZTI)
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -160,13 +160,13 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/microsoft/ARI" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/thisismydemo/azure-inventory" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
-    microsoft/ARI
+    thisismydemo/azure-inventory
   </div>
 </a>
       </div>
@@ -334,22 +334,22 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Azure Resource Inventory (ARI)" class="md-nav__button md-logo" aria-label="Azure Resource Inventory (ARI)" data-md-component="logo">
+    <a href="../.." title="Azure Tenant Inventory (AZTI)" class="md-nav__button md-logo" aria-label="Azure Tenant Inventory (AZTI)" data-md-component="logo">
       
-  <img src="../../images/ARI_Logo.png" alt="logo">
+  <img src="../../images/AZTI_Logo.png" alt="logo">
 
     </a>
-    Azure Resource Inventory (ARI)
+    Azure Tenant Inventory (AZTI)
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/microsoft/ARI" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/thisismydemo/azure-inventory" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
-    microsoft/ARI
+    thisismydemo/azure-inventory
   </div>
 </a>
     </div>
@@ -922,8 +922,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ari-parameters" class="md-nav__link">
-    ARI Parameters
+  <a href="#azti-parameters" class="md-nav__link">
+    AZTI Parameters
   </a>
   
 </li>
@@ -1397,8 +1397,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ari-parameters" class="md-nav__link">
-    ARI Parameters
+  <a href="#azti-parameters" class="md-nav__link">
+    AZTI Parameters
   </a>
   
 </li>
@@ -1521,10 +1521,10 @@
   
 
 
-<h1 id="running-ari-with-github-actions">Running ARI with GitHub Actions</h1>
-<p>This guide explains how to use GitHub Actions to run Azure Resource Inventory automatically, providing an alternative to Azure Automation Accounts.</p>
+<h1 id="running-azti-with-github-actions">Running AZTI with GitHub Actions</h1>
+<p>This guide explains how to use GitHub Actions to run Azure Tenant Inventory automatically, providing an alternative to Azure Automation Accounts.</p>
 <h2 id="overview">Overview</h2>
-<p>GitHub Actions offers a flexible way to automate the execution of Azure Resource Inventory on a schedule or in response to events. This can be useful if:</p>
+<p>GitHub Actions offers a flexible way to automate the execution of Azure Tenant Inventory on a schedule or in response to events. This can be useful if:</p>
 <ul>
 <li>You want to avoid creating and maintaining Azure Automation Accounts</li>
 <li>You're already using GitHub for infrastructure-as-code (e.g., Terraform, Bicep)</li>
@@ -1543,7 +1543,7 @@
 <ol>
 <li>Create a service principal in Azure:</li>
 </ol>
-<div class="highlight"><pre><span></span><code>az<span class="w"> </span>ad<span class="w"> </span>sp<span class="w"> </span>create-for-rbac<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;ARI-GitHub-Action&quot;</span><span class="w"> </span>--role<span class="w"> </span><span class="s2">&quot;Reader&quot;</span><span class="w"> </span>--scopes<span class="w"> </span><span class="s2">&quot;/subscriptions/YOUR_SUBSCRIPTION_ID&quot;</span><span class="w"> </span>--sdk-auth
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>ad<span class="w"> </span>sp<span class="w"> </span>create-for-rbac<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;AZTI-GitHub-Action&quot;</span><span class="w"> </span>--role<span class="w"> </span><span class="s2">&quot;Reader&quot;</span><span class="w"> </span>--scopes<span class="w"> </span><span class="s2">&quot;/subscriptions/YOUR_SUBSCRIPTION_ID&quot;</span><span class="w"> </span>--sdk-auth
 </code></pre></div>
 <ol>
 <li>Save the JSON output from this command. It will look similar to:</li>
@@ -1595,7 +1595,7 @@
 <p>Assign reader role with appropiate scope:
 <div class="highlight"><pre><span></span><code>az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span>--assignee<span class="w"> </span>&lt;principal-id&gt;<span class="w"> </span>--role<span class="w"> </span><span class="s2">&quot;Reader&quot;</span><span class="w"> </span>--scope<span class="w"> </span>&lt;scope&gt;
 </code></pre></div>
-The scope of the role assignement will define if ARI will be able to find resources. It is adviseable to use the subscription/management group that contains everything you want to document.</p>
+The scope of the role assignement will define if AZTI will be able to find resources. It is adviseable to use the subscription/management group that contains everything you want to document.</p>
 </li>
 <li>
 <p>Create Federated Credentials<br />
@@ -1647,7 +1647,7 @@ If you forgot to save the output of the user-assigned identity, you can retrieve
 </ol>
 <h2 id="github-action-workflow-template-for-service-principal">GitHub Action Workflow Template For Service Principal</h2>
 <p>Create a file named <code>.github/workflows/azure-inventory.yml</code> in your repository with the following content:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Azure Resource Inventory</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Azure Tenant Inventory</span>
 
 <span class="nt">on</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">schedule</span><span class="p">:</span>
@@ -1682,15 +1682,15 @@ If you forgot to save the output of the user-assigned identity, you can retrieve
 <span class="w">          </span><span class="nt">creds</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{&quot;clientId&quot;:&quot;${{</span><span class="nv"> </span><span class="s">secrets.AZURE_CLIENT_ID</span><span class="nv"> </span><span class="s">}}&quot;,&quot;clientSecret&quot;:&quot;${{</span><span class="nv"> </span><span class="s">secrets.AZURE_CLIENT_SECRET</span><span class="nv"> </span><span class="s">}}&quot;,&quot;subscriptionId&quot;:&quot;${{</span><span class="nv"> </span><span class="s">secrets.AZURE_SUBSCRIPTION_ID</span><span class="nv"> </span><span class="s">}}&quot;,&quot;tenantId&quot;:&quot;${{</span><span class="nv"> </span><span class="s">secrets.AZURE_TENANT_ID</span><span class="nv"> </span><span class="s">}}&quot;}&#39;</span>
 <span class="w">          </span><span class="nt">enable-AzPSSession</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install ARI and dependencies</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install AZTI and dependencies</span>
 <span class="w">        </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pwsh</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">Install-Module -Name AzureResourceInventory -Force -Scope CurrentUser</span>
+<span class="w">          </span><span class="no">Install-Module -Name AzureTenantInventory -Force -Scope CurrentUser</span>
 <span class="w">          </span><span class="no">Install-Module -Name Az.Accounts -Force -Scope CurrentUser</span>
 <span class="w">          </span><span class="no">Install-Module -Name ImportExcel -Force -Scope CurrentUser</span>
-<span class="w">          </span><span class="no">Import-Module AzureResourceInventory</span>
+<span class="w">          </span><span class="no">Import-Module AzureTenantInventory</span>
 
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run ARI</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run AZTI</span>
 <span class="w">        </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pwsh</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">          </span><span class="no">$params = @{}</span>
@@ -1715,24 +1715,24 @@ If you forgot to save the output of the user-assigned identity, you can retrieve
 <span class="w">          </span><span class="no"># Add any other parameters you want to use here</span>
 <span class="w">          </span><span class="no"># For example: $params.Add(&quot;SecurityCenter&quot;, $true)</span>
 
-<span class="w">          </span><span class="no"># Run ARI</span>
-<span class="w">          </span><span class="no">Invoke-ARI @params</span>
+<span class="w">          </span><span class="no"># Run AZTI</span>
+<span class="w">          </span><span class="no">Invoke-AzureTenantInventory @params</span>
 
 <span class="w">          </span><span class="no"># Create artifacts directory</span>
-<span class="w">          </span><span class="no">New-Item -Path &quot;$env:GITHUB_WORKSPACE/ari-reports&quot; -ItemType Directory -Force</span>
+<span class="w">          </span><span class="no">New-Item -Path &quot;$env:GITHUB_WORKSPACE/AZTI-Reports&quot; -ItemType Directory -Force</span>
 
 <span class="w">          </span><span class="no"># Move reports to artifacts directory</span>
-<span class="w">          </span><span class="no">Move-Item -Path &quot;$HOME/AzureResourceInventory/*.xlsx&quot; -Destination &quot;$env:GITHUB_WORKSPACE/ari-reports/&quot; -Force</span>
+<span class="w">          </span><span class="no">Move-Item -Path &quot;$HOME/AzureTenantInventory/*.xlsx&quot; -Destination &quot;$env:GITHUB_WORKSPACE/AZTI-Reports/&quot; -Force</span>
 
-<span class="w">          </span><span class="no">if (Test-Path &quot;$HOME/AzureResourceInventory/*.xml&quot;) {</span>
-<span class="w">            </span><span class="no">Move-Item -Path &quot;&quot;$HOME/AzureResourceInventory/*.xml&quot; -Destination &quot;$env:GITHUB_WORKSPACE/ari-reports/&quot; -Force</span>
+<span class="w">          </span><span class="no">if (Test-Path &quot;$HOME/AzureTenantInventory/*.xml&quot;) {</span>
+<span class="w">            </span><span class="no">Move-Item -Path &quot;&quot;$HOME/AzureTenantInventory/*.xml&quot; -Destination &quot;$env:GITHUB_WORKSPACE/AZTI-Reports/&quot; -Force</span>
 <span class="w">          </span><span class="no">}</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upload Reports as Artifacts</span>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ARI-Reports</span>
-<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ari-reports/</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AZTI-Reports</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AZTI-Reports/</span>
 <span class="w">          </span><span class="nt">retention-days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
 
 <span class="w">      </span><span class="c1"># Optional: Upload to Azure Storage</span>
@@ -1740,13 +1740,13 @@ If you forgot to save the output of the user-assigned identity, you can retrieve
 <span class="w">      </span><span class="c1">#   shell: pwsh</span>
 <span class="w">      </span><span class="c1">#   run: |</span>
 <span class="w">      </span><span class="c1">#     $storageAccount = &quot;yourstorageaccount&quot;</span>
-<span class="w">      </span><span class="c1">#     $container = &quot;ari-reports&quot;</span>
+<span class="w">      </span><span class="c1">#     $container = &quot;AZTI-Reports&quot;</span>
 <span class="w">      </span><span class="c1">#</span>
 <span class="w">      </span><span class="c1">#     # Create the storage context</span>
 <span class="w">      </span><span class="c1">#     $ctx = New-AzStorageContext -StorageAccountName $storageAccount -UseConnectedAccount</span>
 <span class="w">      </span><span class="c1">#</span>
 <span class="w">      </span><span class="c1">#     # Upload files to Azure Storage</span>
-<span class="w">      </span><span class="c1">#     Get-ChildItem -Path &quot;$env:GITHUB_WORKSPACE/ari-reports&quot; -File | ForEach-Object {</span>
+<span class="w">      </span><span class="c1">#     Get-ChildItem -Path &quot;$env:GITHUB_WORKSPACE/AZTI-Reports&quot; -File | ForEach-Object {</span>
 <span class="w">      </span><span class="c1">#       Set-AzStorageBlobContent -File $_.FullName -Container $container -Blob $_.Name -Context $ctx -Force</span>
 <span class="w">      </span><span class="c1">#     }</span>
 
@@ -1758,14 +1758,14 @@ If you forgot to save the output of the user-assigned identity, you can retrieve
 <span class="w">      </span><span class="c1">#     server_port: 465</span>
 <span class="w">      </span><span class="c1">#     username: ${{ secrets.EMAIL_USERNAME }}</span>
 <span class="w">      </span><span class="c1">#     password: ${{ secrets.EMAIL_PASSWORD }}</span>
-<span class="w">      </span><span class="c1">#     subject: Azure Resource Inventory Report</span>
-<span class="w">      </span><span class="c1">#     body: Azure Resource Inventory has completed. Reports are attached.</span>
+<span class="w">      </span><span class="c1">#     subject: Azure Tenant Inventory Report</span>
+<span class="w">      </span><span class="c1">#     body: Azure Tenant Inventory has completed. Reports are attached.</span>
 <span class="w">      </span><span class="c1">#     to: recipient@example.com</span>
 <span class="w">      </span><span class="c1">#     from: Azure Inventory &lt;sender@example.com&gt;</span>
 </code></pre></div>
 <h2 id="github-action-workflow-template-for-user-assigned-identity">GitHub Action Workflow Template For User-Assigned Identity</h2>
 <p>Create a file named <code>.github/workflows/azure-inventory.yml</code> in your repository with the following content:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Azure Resource Inventory</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Azure Tenant Inventory</span>
 
 <span class="nt">on</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">schedule</span><span class="p">:</span>
@@ -1802,15 +1802,15 @@ If you forgot to save the output of the user-assigned identity, you can retrieve
 <span class="w">          </span><span class="nt">subscription-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AZURE_SUBSCRIPTION_ID }}</span>
 <span class="w">          </span><span class="nt">enable-AzPSSession</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install ARI and dependencies</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install AZTI and dependencies</span>
 <span class="w">        </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pwsh</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">Install-Module -Name AzureResourceInventory -Force -Scope CurrentUser</span>
+<span class="w">          </span><span class="no">Install-Module -Name AzureTenantInventory -Force -Scope CurrentUser</span>
 <span class="w">          </span><span class="no">Install-Module -Name Az.Accounts -Force -Scope CurrentUser</span>
 <span class="w">          </span><span class="no">Install-Module -Name ImportExcel -Force -Scope CurrentUser</span>
-<span class="w">          </span><span class="no">Import-Module AzureResourceInventory</span>
+<span class="w">          </span><span class="no">Import-Module AzureTenantInventory</span>
 
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run ARI</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run AZTI</span>
 <span class="w">        </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pwsh</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">          </span><span class="no">$params = @{}</span>
@@ -1835,24 +1835,24 @@ If you forgot to save the output of the user-assigned identity, you can retrieve
 <span class="w">          </span><span class="no"># Add any other parameters you want to use here</span>
 <span class="w">          </span><span class="no"># For example: $params.Add(&quot;SecurityCenter&quot;, $true)</span>
 
-<span class="w">          </span><span class="no"># Run ARI</span>
-<span class="w">          </span><span class="no">Invoke-ARI @params</span>
+<span class="w">          </span><span class="no"># Run AZTI</span>
+<span class="w">          </span><span class="no">Invoke-AzureTenantInventory @params</span>
 
 <span class="w">          </span><span class="no"># Create artifacts directory</span>
-<span class="w">          </span><span class="no">New-Item -Path &quot;$env:GITHUB_WORKSPACE/ari-reports&quot; -ItemType Directory -Force</span>
+<span class="w">          </span><span class="no">New-Item -Path &quot;$env:GITHUB_WORKSPACE/AZTI-Reports&quot; -ItemType Directory -Force</span>
 
 <span class="w">          </span><span class="no"># Move reports to artifacts directory</span>
-<span class="w">          </span><span class="no">Move-Item -Path &quot;$HOME/AzureResourceInventory/*.xlsx&quot; -Destination &quot;$env:GITHUB_WORKSPACE/ari-reports/&quot; -Force</span>
+<span class="w">          </span><span class="no">Move-Item -Path &quot;$HOME/AzureTenantInventory/*.xlsx&quot; -Destination &quot;$env:GITHUB_WORKSPACE/AZTI-Reports/&quot; -Force</span>
 
-<span class="w">          </span><span class="no">if (Test-Path &quot;$HOME/AzureResourceInventory/*.xml&quot;) {</span>
-<span class="w">            </span><span class="no">Move-Item -Path &quot;&quot;$HOME/AzureResourceInventory/*.xml&quot; -Destination &quot;$env:GITHUB_WORKSPACE/ari-reports/&quot; -Force</span>
+<span class="w">          </span><span class="no">if (Test-Path &quot;$HOME/AzureTenantInventory/*.xml&quot;) {</span>
+<span class="w">            </span><span class="no">Move-Item -Path &quot;&quot;$HOME/AzureTenantInventory/*.xml&quot; -Destination &quot;$env:GITHUB_WORKSPACE/AZTI-Reports/&quot; -Force</span>
 <span class="w">          </span><span class="no">}</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upload Reports as Artifacts</span>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ARI-Reports</span>
-<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ari-reports/</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AZTI-Reports</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AZTI-Reports/</span>
 <span class="w">          </span><span class="nt">retention-days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
 
 <span class="w">      </span><span class="c1"># Optional: Upload to Azure Storage</span>
@@ -1860,13 +1860,13 @@ If you forgot to save the output of the user-assigned identity, you can retrieve
 <span class="w">      </span><span class="c1">#   shell: pwsh</span>
 <span class="w">      </span><span class="c1">#   run: |</span>
 <span class="w">      </span><span class="c1">#     $storageAccount = &quot;yourstorageaccount&quot;</span>
-<span class="w">      </span><span class="c1">#     $container = &quot;ari-reports&quot;</span>
+<span class="w">      </span><span class="c1">#     $container = &quot;AZTI-Reports&quot;</span>
 <span class="w">      </span><span class="c1">#</span>
 <span class="w">      </span><span class="c1">#     # Create the storage context</span>
 <span class="w">      </span><span class="c1">#     $ctx = New-AzStorageContext -StorageAccountName $storageAccount -UseConnectedAccount</span>
 <span class="w">      </span><span class="c1">#</span>
 <span class="w">      </span><span class="c1">#     # Upload files to Azure Storage</span>
-<span class="w">      </span><span class="c1">#     Get-ChildItem -Path &quot;$env:GITHUB_WORKSPACE/ari-reports&quot; -File | ForEach-Object {</span>
+<span class="w">      </span><span class="c1">#     Get-ChildItem -Path &quot;$env:GITHUB_WORKSPACE/AZTI-Reports&quot; -File | ForEach-Object {</span>
 <span class="w">      </span><span class="c1">#       Set-AzStorageBlobContent -File $_.FullName -Container $container -Blob $_.Name -Context $ctx -Force</span>
 <span class="w">      </span><span class="c1">#     }</span>
 
@@ -1878,8 +1878,8 @@ If you forgot to save the output of the user-assigned identity, you can retrieve
 <span class="w">      </span><span class="c1">#     server_port: 465</span>
 <span class="w">      </span><span class="c1">#     username: ${{ secrets.EMAIL_USERNAME }}</span>
 <span class="w">      </span><span class="c1">#     password: ${{ secrets.EMAIL_PASSWORD }}</span>
-<span class="w">      </span><span class="c1">#     subject: Azure Resource Inventory Report</span>
-<span class="w">      </span><span class="c1">#     body: Azure Resource Inventory has completed. Reports are attached.</span>
+<span class="w">      </span><span class="c1">#     subject: Azure Tenant Inventory Report</span>
+<span class="w">      </span><span class="c1">#     body: Azure Tenant Inventory has completed. Reports are attached.</span>
 <span class="w">      </span><span class="c1">#     to: recipient@example.com</span>
 <span class="w">      </span><span class="c1">#     from: Azure Inventory &lt;sender@example.com&gt;</span>
 </code></pre></div>
@@ -1890,8 +1890,8 @@ If you forgot to save the output of the user-assigned identity, you can retrieve
 <div class="highlight"><pre><span></span><code><span class="nt">schedule</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cron</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0</span><span class="nv"> </span><span class="s">8</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1&#39;</span><span class="w">  </span><span class="c1"># Monday at 8:00 AM UTC</span>
 </code></pre></div>
-<h3 id="ari-parameters">ARI Parameters</h3>
-<p>You can add any ARI parameters in the PowerShell script section. For example:</p>
+<h3 id="azti-parameters">AZTI Parameters</h3>
+<p>You can add any AZTI parameters in the PowerShell script section. For example:</p>
 <div class="highlight"><pre><span></span><code><span class="c"># Add parameters</span>
 <span class="nv">$params</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s2">&quot;SecurityCenter&quot;</span><span class="p">,</span> <span class="nv">$true</span><span class="p">)</span>
 <span class="nv">$params</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s2">&quot;IncludeTags&quot;</span><span class="p">,</span> <span class="nv">$true</span><span class="p">)</span>
@@ -1906,7 +1906,7 @@ If you forgot to save the output of the user-assigned identity, you can retrieve
 <h2 id="examples">Examples</h2>
 <h3 id="running-for-specific-subscriptions">Running for Specific Subscriptions</h3>
 <p>To inventory specific subscriptions, you can modify the workflow:</p>
-<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run ARI for multiple subscriptions</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run AZTI for multiple subscriptions</span>
 <span class="w">  </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pwsh</span>
 <span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">$subscriptionIds = @(</span>
@@ -1915,7 +1915,7 @@ If you forgot to save the output of the user-assigned identity, you can retrieve
 <span class="w">    </span><span class="no">)</span>
 
 <span class="w">    </span><span class="no">foreach ($subId in $subscriptionIds) {</span>
-<span class="w">      </span><span class="no">Invoke-ARI -SubscriptionID $subId -ReportName &quot;AzureInventory_${subId}_$(Get-Date -Format &#39;yyyyMMdd&#39;)&quot;</span>
+<span class="w">      </span><span class="no">Invoke-AzureTenantInventory -SubscriptionID $subId -ReportName &quot;AzureInventory_${subId}_$(Get-Date -Format &#39;yyyyMMdd&#39;)&quot;</span>
 <span class="w">    </span><span class="no">}</span>
 </code></pre></div>
 <h3 id="adding-email-notifications">Adding Email Notifications</h3>
@@ -1927,8 +1927,8 @@ If you forgot to save the output of the user-assigned identity, you can retrieve
 <span class="w">    </span><span class="nt">server_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">465</span>
 <span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.EMAIL_USERNAME }}</span>
 <span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.EMAIL_PASSWORD }}</span>
-<span class="w">    </span><span class="nt">subject</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Azure Resource Inventory Report</span>
-<span class="w">    </span><span class="nt">body</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Azure Resource Inventory has completed. Reports are attached.</span>
+<span class="w">    </span><span class="nt">subject</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Azure Tenant Inventory Report</span>
+<span class="w">    </span><span class="nt">body</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Azure Tenant Inventory has completed. Reports are attached.</span>
 <span class="w">    </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">recipient@example.com</span>
 <span class="w">    </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Azure Inventory &lt;sender@example.com&gt;</span>
 </code></pre></div>
@@ -1967,7 +1967,7 @@ If you forgot to save the output of the user-assigned identity, you can retrieve
 <li>Better integration with Azure Monitor and Log Analytics</li>
 </ul>
 <h2 id="conclusion">Conclusion</h2>
-<p>GitHub Actions provides a flexible alternative to Azure Automation for running ARI on a schedule. This approach is particularly useful for teams already using GitHub for infrastructure management, allowing them to keep their inventory process alongside their infrastructure code.</p>
+<p>GitHub Actions provides a flexible alternative to Azure Automation for running AZTI on a schedule. This approach is particularly useful for teams already using GitHub for infrastructure management, allowing them to keep their inventory process alongside their infrastructure code.</p>
 
 
 
@@ -2013,7 +2013,7 @@ If you forgot to save the output of the user-assigned identity, you can retrieve
       
       
     
-    <a href="https://github.com/microsoft/ARI" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+    <a href="https://github.com/thisismydemo/azure-inventory" target="_blank" rel="noopener" title="github.com" class="md-social__link">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
     </a>
   

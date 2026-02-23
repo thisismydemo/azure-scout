@@ -6,13 +6,13 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentation for the Azure Resource Inventory PowerShell module">
+        <meta name="description" content="Documentation for the Azure Tenant Inventory PowerShell module">
       
       
         <meta name="author" content="Microsoft">
       
       
-        <link rel="canonical" href="https://microsoft.github.io/ARI/development/module-structure/">
+        <link rel="canonical" href="https://thisismydemo.github.io/azure-inventory/development/module-structure/">
       
       
         <link rel="prev" href="../contributing/">
@@ -21,12 +21,12 @@
         <link rel="next" href="../../about/license/">
       
       
-      <link rel="icon" href="../../images/ARI_Logo.png">
+      <link rel="icon" href="../../images/AZTI_Logo.png">
       <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.5">
     
     
       
-        <title>Module Structure - Azure Resource Inventory (ARI)</title>
+        <title>Module Structure - Azure Tenant Inventory (AZTI)</title>
       
     
     
@@ -91,9 +91,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Azure Resource Inventory (ARI)" class="md-header__button md-logo" aria-label="Azure Resource Inventory (ARI)" data-md-component="logo">
+    <a href="../.." title="Azure Tenant Inventory (AZTI)" class="md-header__button md-logo" aria-label="Azure Tenant Inventory (AZTI)" data-md-component="logo">
       
-  <img src="../../images/ARI_Logo.png" alt="logo">
+  <img src="../../images/AZTI_Logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -104,7 +104,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Azure Resource Inventory (ARI)
+            Azure Tenant Inventory (AZTI)
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -160,13 +160,13 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/microsoft/ARI" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/thisismydemo/azure-inventory" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
-    microsoft/ARI
+    thisismydemo/azure-inventory
   </div>
 </a>
       </div>
@@ -334,22 +334,22 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Azure Resource Inventory (ARI)" class="md-nav__button md-logo" aria-label="Azure Resource Inventory (ARI)" data-md-component="logo">
+    <a href="../.." title="Azure Tenant Inventory (AZTI)" class="md-nav__button md-logo" aria-label="Azure Tenant Inventory (AZTI)" data-md-component="logo">
       
-  <img src="../../images/ARI_Logo.png" alt="logo">
+  <img src="../../images/AZTI_Logo.png" alt="logo">
 
     </a>
-    Azure Resource Inventory (ARI)
+    Azure Tenant Inventory (AZTI)
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/microsoft/ARI" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/thisismydemo/azure-inventory" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
-    microsoft/ARI
+    thisismydemo/azure-inventory
   </div>
 </a>
     </div>
@@ -1388,12 +1388,12 @@
 
 
 <h1 id="module-structure">Module Structure</h1>
-<p>This page provides an overview of the Azure Resource Inventory (ARI) module structure, explaining how the different components work together.</p>
+<p>This page provides an overview of the Azure Tenant Inventory (AZTI) module structure, explaining how the different components work together.</p>
 <h2 id="overview">Overview</h2>
-<p>The ARI module is organized into a hierarchical structure with the main module file (<code>AzureResourceInventory.psm1</code>) loading a collection of specialized modules and functions.</p>
-<div class="highlight"><pre><span></span><code>AzureResourceInventory
-├── AzureResourceInventory.psd1      # Module manifest
-├── AzureResourceInventory.psm1      # Main module file
+<p>The AZTI module is organized into a hierarchical structure with the main module file (<code>AzureTenantInventory.psm1</code>) loading a collection of specialized modules and functions.</p>
+<div class="highlight"><pre><span></span><code>AzureTenantInventory
+├── AzureTenantInventory.psd1      # Module manifest
+├── AzureTenantInventory.psm1      # Main module file
 ├── Modules/                         # Module components
 │   ├── Private/                     # Internal helper functions
 │   │   └── ...
@@ -1403,7 +1403,7 @@
 │       │   │   └── ...
 │       │   ├── Jobs/                # Background job handling
 │       │   │   └── ...
-│       │   ├── Invoke-ARI.ps1       # Main command implementation
+│       │   ├── Invoke-AzureTenantInventory.ps1       # Main command implementation
 │       │   └── ...
 │       └── InventoryModules/        # Resource-specific modules
 │           ├── AI/                  # AI resource modules
@@ -1415,8 +1415,8 @@
 <h2 id="main-components">Main Components</h2>
 <h3 id="module-entry-points">Module Entry Points</h3>
 <ul>
-<li><strong>AzureResourceInventory.psd1</strong>: The module manifest that defines metadata, dependencies, and exported functions.</li>
-<li><strong>AzureResourceInventory.psm1</strong>: The root module file that loads all submodules and defines the module's behavior.</li>
+<li><strong>AzureTenantInventory.psd1</strong>: The module manifest that defines metadata, dependencies, and exported functions.</li>
+<li><strong>AzureTenantInventory.psm1</strong>: The root module file that loads all submodules and defines the module's behavior.</li>
 </ul>
 <h3 id="functional-organization">Functional Organization</h3>
 <p>The module is organized into two main categories:</p>
@@ -1427,28 +1427,28 @@
 <h2 id="public-function-types">Public Function Types</h2>
 <h3 id="core-functions">Core Functions</h3>
 <ul>
-<li><strong>Invoke-ARI</strong>: The main function that orchestrates the inventory process.</li>
+<li><strong>Invoke-AzureTenantInventory</strong>: The main function that orchestrates the inventory process.</li>
 <li><strong>Invoke-AzureRAMPInventory</strong>: Alias function for backward compatibility.</li>
 </ul>
 <h3 id="job-management-functions">Job Management Functions</h3>
 <p>Functions that handle background job processing for parallel execution:</p>
 <ul>
-<li><strong>Start-ARIAdvisoryJob</strong>: Manages collecting Azure Advisor recommendations.</li>
-<li><strong>Start-ARIPolicyJob</strong>: Handles Azure Policy data collection.</li>
-<li><strong>Start-ARISecCenterJob</strong>: Collects Security Center information.</li>
-<li><strong>Start-ARISubscriptionJob</strong>: Manages subscription data collection.</li>
-<li><strong>Wait-ARIJob</strong>: Waits for job completion and handles results.</li>
+<li><strong>Start-AZTIAdvisoryJob</strong>: Manages collecting Azure Advisor recommendations.</li>
+<li><strong>Start-AZTIPolicyJob</strong>: Handles Azure Policy data collection.</li>
+<li><strong>Start-AZTISecCenterJob</strong>: Collects Security Center information.</li>
+<li><strong>Start-AZTISubscriptionJob</strong>: Manages subscription data collection.</li>
+<li><strong>Wait-AZTIJob</strong>: Waits for job completion and handles results.</li>
 </ul>
 <h3 id="diagram-functions">Diagram Functions</h3>
 <p>Functions dedicated to creating network diagrams:</p>
 <ul>
-<li><strong>Build-ARIDiagramSubnet</strong>: Creates subnet-level diagrams.</li>
-<li><strong>Set-ARIDiagramFile</strong>: Prepares diagram file structure.</li>
-<li><strong>Start-ARIDiagramJob</strong>: Manages diagram generation jobs.</li>
-<li><strong>Start-ARIDiagramNetwork</strong>: Generates network topology diagrams.</li>
-<li><strong>Start-ARIDiagramOrganization</strong>: Creates organizational hierarchy diagrams.</li>
-<li><strong>Start-ARIDiagramSubscription</strong>: Generates subscription-level diagrams.</li>
-<li><strong>Start-ARIDrawIODiagram</strong>: Converts data to Draw.io format.</li>
+<li><strong>Build-AZTIDiagramSubnet</strong>: Creates subnet-level diagrams.</li>
+<li><strong>Set-AZTIDiagramFile</strong>: Prepares diagram file structure.</li>
+<li><strong>Start-AZTIDiagramJob</strong>: Manages diagram generation jobs.</li>
+<li><strong>Start-AZTIDiagramNetwork</strong>: Generates network topology diagrams.</li>
+<li><strong>Start-AZTIDiagramOrganization</strong>: Creates organizational hierarchy diagrams.</li>
+<li><strong>Start-AZTIDiagramSubscription</strong>: Generates subscription-level diagrams.</li>
+<li><strong>Start-AZTIDrawIODiagram</strong>: Converts data to Draw.io format.</li>
 </ul>
 <h2 id="inventory-modules">Inventory Modules</h2>
 <p>The <code>InventoryModules</code> directory contains specialized modules for each Azure resource type, organized by service category:</p>
@@ -1465,7 +1465,7 @@
 <li><strong>Web</strong>: App Service, etc.</li>
 </ul>
 <p>Each resource type module follows a standard pattern:</p>
-<div class="highlight"><pre><span></span><code><span class="k">function</span> <span class="k">global:</span><span class="nb">Get-ARIResourceName</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="k">function</span> <span class="k">global:</span><span class="nb">Get-AZTIResourceName</span> <span class="p">{</span>
     <span class="c"># Input parameters and validation</span>
     <span class="c"># Resource collection logic</span>
     <span class="c"># Data transformation</span>
@@ -1473,7 +1473,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="execution-flow">Execution Flow</h2>
-<p>When <code>Invoke-ARI</code> is called, the following process occurs:</p>
+<p>When <code>Invoke-AzureTenantInventory</code> is called, the following process occurs:</p>
 <ol>
 <li><strong>Authentication and Validation</strong>: Verify credentials and parameters.</li>
 <li><strong>Subscription Enumeration</strong>: Identify target subscriptions.</li>
@@ -1547,7 +1547,7 @@
       
       
     
-    <a href="https://github.com/microsoft/ARI" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+    <a href="https://github.com/thisismydemo/azure-inventory" target="_blank" rel="noopener" title="github.com" class="md-social__link">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
     </a>
   
