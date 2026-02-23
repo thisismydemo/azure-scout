@@ -90,13 +90,13 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ## Phase 3 — Pre-Flight Permission Checker
 
-- [ ] **3.1** Create `Test-AZTIPermissions` public function
-- [ ] **3.2** Implement ARM permission checks (subscription enumeration, role assignment)
-- [ ] **3.3** Implement Graph permission checks (organization, users, CA policies)
-- [ ] **3.4** Create structured result object with remediation guidance
-- [ ] **3.5** Integrate into `Invoke-AzureTenantInventory` (auto-run, warn-only)
-- [ ] **3.6** Add `-SkipPermissionCheck` switch
-- [ ] **3.7** Commit Phase 3
+- [x] **3.1** Create `Test-AZTIPermissions` public function
+- [x] **3.2** Implement ARM permission checks (subscription enumeration, role assignment)
+- [x] **3.3** Implement Graph permission checks (organization, users, CA policies)
+- [x] **3.4** Create structured result object with remediation guidance
+- [x] **3.5** Integrate into `Invoke-AzureTenantInventory` (auto-run, warn-only)
+- [x] **3.6** Add `-SkipPermissionCheck` switch
+- [x] **3.7** Commit Phase 3
 
 ---
 

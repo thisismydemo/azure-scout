@@ -58,6 +58,10 @@
 .PARAMETER Scope
     Controls which data sources are queried. Valid values: All, ArmOnly, EntraOnly. Default is All.
 
+.PARAMETER SkipPermissionCheck
+    Skip the pre-flight permission validation. By default, AZTI checks ARM and Graph
+    permissions before running and displays warnings for any missing access.
+
 .PARAMETER ResourceGroup
     Specifies one or more unique Resource Groups to be inventoried. Requires SubscriptionID.
 
@@ -167,7 +171,8 @@ Function Invoke-AzureTenantInventory {
         [switch]$DeviceLogin,
         [switch]$DiagramFullEnvironment,
         [ValidateSet('All', 'ArmOnly', 'EntraOnly')]
-        [string]$Scope = 'All'
+        [string]$Scope = 'All',
+        [switch]$SkipPermissionCheck
         )
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Debugging Mode: On. ErrorActionPreference was set to "Continue", every error will be presented.')
@@ -296,6 +301,20 @@ Function Invoke-AzureTenantInventory {
         }
 
     $Subscriptions = Get-AZTISubscriptions -TenantID $TenantID -SubscriptionID $SubscriptionID -PlatOS $PlatOS
+
+    # --- Pre-flight permission check ---
+    if (-not $SkipPermissionCheck.IsPresent) {
+        Write-Host 'Running pre-flight permission checks...' -ForegroundColor Cyan
+        $permResult = Test-AZTIPermissions -TenantID $TenantID -SubscriptionID $SubscriptionID -Scope $Scope
+        foreach ($detail in $permResult.Details) {
+            switch ($detail.Status) {
+                'Pass' { Write-Host "  [PASS] $($detail.Check): $($detail.Message)" -ForegroundColor Green }
+                'Warn' { Write-Warning "[WARN] $($detail.Check): $($detail.Message). $($detail.Remediation)" }
+                'Fail' { Write-Warning "[FAIL] $($detail.Check): $($detail.Message). $($detail.Remediation)" }
+            }
+        }
+        Write-Host ''
+    }
 
     $ReportingPath = Set-AZTIReportPath -ReportDir $ReportDir
 
