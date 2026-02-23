@@ -1,21 +1,19 @@
 <#
 .SYNOPSIS
-    Azure Resource Inventory - A powerful tool to create an Excel inventory from Azure resources with minimal effort.
+    AzureTenantInventory — Single-tenant Azure ARM + Entra ID inventory tool.
 
 .DESCRIPTION
-    This module orchestrates the process of dot sourcing the modules (and functions) that will be triggered by the Invoke-ARI cmdlet.
+    This module orchestrates dot-sourcing of all private and public functions
+    that are triggered by the Invoke-AzureTenantInventory cmdlet.
 
 .AUTHOR
-    Claudio Merola
-
-.COMPANYNAME
-    Claudio Merola
+    thisismydemo
 
 .COPYRIGHT
-    (c) Claudio Merola. All rights reserved.
+    (c) 2026 thisismydemo. All rights reserved.
 
 .VERSION
-    3.6.2
+    1.0.0
 
 #>
 

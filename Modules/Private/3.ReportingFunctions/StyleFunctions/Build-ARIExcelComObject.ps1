@@ -41,7 +41,6 @@ function Build-ARIExcelComObject {
                     {
                         Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Error Opening Excel File.')
                         Write-Error $_
-                        Remove-ARIExcelProcess -Debug $Debug
                         return
                     }
 
@@ -120,7 +119,6 @@ function Build-ARIExcelComObject {
                 $ExApp.Save()
                 $ExApp.Close()
                 $application.Quit()
-                Remove-ARIExcelProcess -Debug $Debug
 
                 Start-Sleep -Seconds 2
 
@@ -153,7 +151,6 @@ function Build-ARIExcelComObject {
         {
             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Error Interacting with Excel COM Object.')
             Write-Error $_
-            Remove-ARIExcelProcess -Debug $Debug
             return
         }
 }

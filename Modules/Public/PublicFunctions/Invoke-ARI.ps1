@@ -64,9 +64,6 @@
 .PARAMETER Heavy
     Use this parameter to enable heavy mode. This will force the job's load to be split into smaller batches. Avoiding CPU overload.
 
-.PARAMETER NoAutoUpdate
-    Use this parameter to skip automatic module updates.
-
 .PARAMETER SkipAPIs
     Use this parameter to skip the capture of resources trough REST API.
 
@@ -124,7 +121,7 @@ Function Invoke-ARI {
     [CmdletBinding(PositionalBinding=$false)]
     param (
         [ValidateSet(1, 2, 3)]
-        [int]$Overview = 1,    
+        [int]$Overview = 1,
         [ValidateSet('AzureCloud', 'AzureUSGovernment', 'AzureChinaCloud', 'AzureGermanCloud')]
         [string]$AzureEnvironment = 'AzureCloud',
         [string]$TenantID,
@@ -144,8 +141,6 @@ Function Invoke-ARI {
         [switch]$Heavy,
         [Alias("SkipAdvisories","NoAdvisory","SkipAdvisor")]
         [switch]$SkipAdvisory,
-        [Alias("DisableAutoUpdate","SkipAutoUpdate")]
-        [switch]$NoAutoUpdate,
         [Alias("NoPolicy","SkipPolicies")]
         [switch]$SkipPolicy,
         [Alias("NoAPI","SkipAPI")]
@@ -182,7 +177,7 @@ Function Invoke-ARI {
 
     if ($Lite.IsPresent) { $RunLite = $true }else { $RunLite = $false }
     if ($DiagramFullEnvironment.IsPresent) {$FullEnv = $true}else{$FullEnv = $false}
-    if ($Automation.IsPresent) 
+    if ($Automation.IsPresent)
         {
             $SkipAPIs = $true
             $RunLite = $true
@@ -265,11 +260,7 @@ Function Invoke-ARI {
         {
             $TenantID = Connect-ARILoginSession -AzureEnvironment $AzureEnvironment -TenantID $TenantID -SubscriptionID $SubscriptionID -DeviceLogin $DeviceLogin -AppId $AppId -Secret $Secret -CertificatePath $CertificatePath
 
-            if (!$NoAutoUpdate.IsPresent)
-                {
-                    Write-Host ('Checking for Powershell Module Updates..')
-                    Update-Module -Name AzureResourceInventory -AcceptLicense
-                }
+
         }
     elseif ($Automation.IsPresent)
         {
@@ -279,7 +270,7 @@ Function Invoke-ARI {
                 Set-AzContext -SubscriptionName $AzureConnection.Subscription -DefaultProfile $AzureConnection
             }
             catch {
-                Write-Output "Failed to set Automation Account requirements. Aborting." 
+                Write-Output "Failed to set Automation Account requirements. Aborting."
                 exit
             }
         }
@@ -355,7 +346,7 @@ Function Invoke-ARI {
     $File = Join-Path $DefaultPath $FileName
     #$DFile = ($DefaultPath + $Global:ReportName + "_Diagram_" + (get-date -Format "yyyy-MM-dd_HH_mm") + ".vsdx")
     $DDName = ($ReportName + "_Diagram_" + (get-date -Format "yyyy-MM-dd_HH_mm") + ".xml")
-    $DDFile = Join-Path $DefaultPath $DDName 
+    $DDFile = Join-Path $DefaultPath $DDName
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Excel file: ' + $File)
 
@@ -416,8 +407,6 @@ Function Invoke-ARI {
         # Clear Cache Folder for future runs
         Clear-ARICacheFolder -ReportCache $ReportCache
 
-        # Kills any automated Excel process that might be running
-        Remove-ARIExcelProcess
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Finished Charts Phase.')
 

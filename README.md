@@ -1,168 +1,136 @@
 ---
-ArtifactType: Excel spreadsheet with the full Azure environment
+ArtifactType: Excel spreadsheet and JSON with full Azure tenant inventory
 Language: PowerShell
 Platform: Windows / Linux / Mac
-Tags: PowerShell, Azure, Inventory, Excel Report, Customer Engineer
+Tags: PowerShell, Azure, Inventory, Entra ID, Excel Report, JSON
 ---
 
 <div align="center">
 
-# Azure Resource Inventory (ARI)
+# Azure Tenant Inventory (AZTI)
 
-<img src="images/ARI_Logo.png" width="300">
+### A PowerShell module for generating comprehensive Azure ARM and Entra ID inventory reports
 
-### A powerful PowerShell module for generating comprehensive Azure environment reports
-
-[![GitHub](https://img.shields.io/github/license/microsoft/ARI)](https://github.com/microsoft/ARI/blob/main/LICENSE)
-[![GitHub repo size](https://img.shields.io/github/repo-size/microsoft/ARI)](https://github.com/microsoft/ARI)
-[![GitHub last commit](https://img.shields.io/github/last-commit/microsoft/ARI)](https://github.com/microsoft/ARI/commits/main)
-[![GitHub top language](https://img.shields.io/github/languages/top/microsoft/ARI)](https://github.com/microsoft/ARI)
+[![GitHub](https://img.shields.io/github/license/thisismydemo/azure-inventory)](https://github.com/thisismydemo/azure-inventory/blob/main/LICENSE)
+[![GitHub repo size](https://img.shields.io/github/repo-size/thisismydemo/azure-inventory)](https://github.com/thisismydemo/azure-inventory)
+[![GitHub last commit](https://img.shields.io/github/last-commit/thisismydemo/azure-inventory)](https://github.com/thisismydemo/azure-inventory/commits/main)
+[![GitHub top language](https://img.shields.io/github/languages/top/thisismydemo/azure-inventory)](https://github.com/thisismydemo/azure-inventory)
 [![Azure](https://badgen.net/badge/icon/azure?icon=azure&label)](https://azure.microsoft.com)
 
 </div>
 
-## 📋 Table of Contents
+## Overview
 
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [Getting Started](#-getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Quick Start](#quick-start)
-- [Usage Guide](#-usage-guide)
-  - [Basic Commands](#basic-commands)
-  - [Common Scenarios](#common-scenarios)
-- [Parameters Reference](#-parameters-reference)
-- [Output Examples](#-output-examples)
-  - [Excel Report](#excel-report)
-  - [Network Topology View](#network-topology-view)
-  - [Organization View](#organization-view)
-  - [Resources View](#resources-view)
-- [Important Notes](#-important-notes)
-- [Authors & Acknowledgments](#-authors--acknowledgments)
-- [Contributing](#-contributing)
-- [License](#-license)
+**AzureTenantInventory** (AZTI) is a PowerShell module for generating detailed Excel and JSON reports of an Azure tenant, covering both ARM resources and Entra ID (Azure AD) objects. It is designed for Cloud Administrators and technical professionals who need a consolidated view of their Azure environment.
 
-## 🔍 Overview
+AZTI is forked from [microsoft/ARI](https://github.com/microsoft/ARI) (Azure Resource Inventory) v3.6.11 and extends it with single-tenant Entra ID inventory capabilities, dual Excel + JSON output, and a streamlined authentication model with no dependency on Microsoft.Graph SDK.
 
-Azure Resource Inventory (ARI) is a comprehensive PowerShell module that generates detailed Excel reports of any Azure environment you have read access to. It is designed for Cloud Administrators and technical professionals who need an easy and fast way to document their Azure environments.
+## Key Features
 
-<p align="center">
-  <img src="images/ARIv35-Overview.png" width="700">
-</p>
-
-## ✨ Key Features
-
-- **Complete Resource Documentation**: Detailed inventory of all Azure resources
+- **ARM Resource Inventory**: Detailed inventory of all Azure resources via Azure Resource Graph
+- **Entra ID Inventory**: Users, groups, service principals, app registrations, roles, and more (planned)
+- **Dual Output**: Excel reports and JSON output for every run
+- **Scoped Execution**: `-Scope All|ArmOnly|EntraOnly` to control what gets inventoried
 - **Interactive Excel Reports**: Well-formatted spreadsheets with resources organized by type
 - **Visual Network Diagrams**: Generate interactive topology maps of your Azure environment
 - **Security Analysis**: Integration with Azure Security Center (optional)
-- **Cross-Platform Support**: Works on Windows, Linux, Mac, and Azure Cloud Shell
-- **Automation-Ready**: Can be deployed via Azure Automation Accounts
+- **Cross-Platform Support**: Works on Windows, Linux, and Mac
+- **Multiple Auth Methods**: Current user, SPN+secret, SPN+certificate, device code, managed identity
+- **No Microsoft.Graph Dependency**: Uses `Get-AzAccessToken -ResourceTypeName MSGraph` + REST API calls
 - **Low-Impact**: Read-only operations with no changes to your environment
 
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
 - PowerShell 7.0+ (required)
-- Azure Account with read access to resources you want to inventory
-- Administrator privileges during script execution (for module installation)
+- Azure account with read access to resources you want to inventory
+- For Entra ID inventory: appropriate directory read permissions (e.g., `Directory.Read.All`)
+
+### Required Modules
+
+| Module | Purpose |
+|--------|---------|
+| `Az.Accounts` | Azure authentication |
+| `Az.ResourceGraph` | ARM resource queries |
+| `Az.Storage` | Storage account output (optional) |
+| `Az.Compute` | VM detail collection |
+| `ImportExcel` | Excel report generation |
 
 ### Installation
 
-Install the module directly from PowerShell Gallery:
+> **Note**: AZTI is not yet published to PowerShell Gallery. Install from source:
 
 ```powershell
-Install-Module -Name AzureResourceInventory
+git clone https://github.com/thisismydemo/azure-inventory.git
+Import-Module ./azure-inventory/AzureTenantInventory.psd1
 ```
-
-<p align="center">
-  <img src="images/InstallARI.gif" width="700">
-</p>
-
 
 ### Quick Start
 
-To generate a basic inventory report:
-
 ```powershell
-Import-Module AzureResourceInventory
+# Import the module
+Import-Module AzureTenantInventory
+
+# Run full inventory (ARM + Entra ID)
+Invoke-AzureTenantInventory -TenantID <Azure-Tenant-ID>
+
+# ARM resources only
+Invoke-AzureTenantInventory -TenantID <Azure-Tenant-ID> -Scope ArmOnly
+
+# Entra ID only (planned)
+Invoke-AzureTenantInventory -TenantID <Azure-Tenant-ID> -Scope EntraOnly
 ```
 
-<p align="center">
-  <img src="images/ImportingARI.gif" width="700">
-</p>
-
-
-```powershell
-Invoke-ARI
-```
-
-<p align="center">
-  <img src="images/RunningARI.gif" width="700">
-</p>
-
-## 📖 Usage Guide
+## Usage Guide
 
 ### Basic Commands
 
-Run ARI with specific tenant:
+Run inventory with specific tenant:
 
 ```powershell
-Invoke-ARI -TenantID <Azure-Tenant-ID>
+Invoke-AzureTenantInventory -TenantID <Azure-Tenant-ID>
 ```
 
 Scope to specific subscription:
 
 ```powershell
-Invoke-ARI -TenantID <Azure-Tenant-ID> -SubscriptionID <Subscription-ID>
+Invoke-AzureTenantInventory -TenantID <Azure-Tenant-ID> -SubscriptionID <Subscription-ID>
 ```
 
 Include resource tags in the report:
 
 ```powershell
-Invoke-ARI -TenantID <Azure-Tenant-ID> -IncludeTags
+Invoke-AzureTenantInventory -TenantID <Azure-Tenant-ID> -IncludeTags
 ```
 
 ### Common Scenarios
 
-**Run in Azure Cloud Shell:**
-
-```powershell
-Invoke-ARI -Debug
-```
-
 **Include Security Center Data:**
 
 ```powershell
-Invoke-ARI -TenantID <Azure-Tenant-ID> -SubscriptionID <Subscription-ID> -SecurityCenter
+Invoke-AzureTenantInventory -TenantID <Azure-Tenant-ID> -SecurityCenter
 ```
 
 **Skip Azure Advisor Data Collection:**
 
 ```powershell
-Invoke-ARI -TenantID <Azure-Tenant-ID> -SubscriptionID <Subscription-ID> -SkipAdvisory
+Invoke-AzureTenantInventory -TenantID <Azure-Tenant-ID> -SkipAdvisory
 ```
 
 **Skip Network Diagram Generation:**
 
 ```powershell
-Invoke-ARI -TenantID <Azure-Tenant-ID> -SkipDiagram
+Invoke-AzureTenantInventory -TenantID <Azure-Tenant-ID> -SkipDiagram
 ```
 
-### Automation Account Integration
+**Service Principal Authentication:**
 
-If you want to automatically run ARI, there is a way to do it using Automation Accounts:
+```powershell
+Invoke-AzureTenantInventory -TenantID <Azure-Tenant-ID> -AppId <App-ID> -Secret <Secret>
+```
 
-<p align="center">
-  <img src="images/Automation.png" width="600">
-</p>
-
-See the [Automation Guide](https://github.com/microsoft/ARI/blob/main/docs/advanced/automation.md) for implementation details.
-
-## 📝 Parameters Reference
+## Parameters Reference
 
 | Parameter | Description | Usage |
 |-----------|-------------|-------|
@@ -170,6 +138,7 @@ See the [Automation Guide](https://github.com/microsoft/ARI/blob/main/docs/advan
 | TenantID | Specify the tenant ID for inventory | `-TenantID <ID>` |
 | SubscriptionID | Specify subscription(s) to inventory | `-SubscriptionID <ID>` |
 | ResourceGroup | Limit inventory to specific resource group(s) | `-ResourceGroup <NAME>` |
+| Scope | Control inventory scope: All, ArmOnly, EntraOnly | `-Scope <SCOPE>` |
 | **Authentication** | | |
 | AppId | Application ID for service principal auth | `-AppId <ID>` |
 | Secret | Secret for service principal authentication | `-Secret <VALUE>` |
@@ -185,8 +154,6 @@ See the [Automation Guide](https://github.com/microsoft/ARI/blob/main/docs/advan
 | SkipPolicy | Skip Azure Policy collection | `-SkipPolicy` |
 | SkipVMDetails | Skip Azure VM Extra Details collection | `-SkipVMDetails` |
 | SkipAdvisory | Skip Azure Advisory collection | `-SkipAdvisory` |
-| IncludeCosts | Includes Azure Cost details for the Subscriptions (Requires the module Az.CostManagement) | `-IncludeCosts` |
-| SkipVMDetails | Skip extra details for the VM Families (Quota, vCPUs and memory) | `-SkipVMDetails` |
 | **Output Options** | | |
 | ReportName | Custom report filename | `-ReportName <NAME>` |
 | ReportDir | Custom directory for report | `-ReportDir "<Path>"` |
@@ -196,89 +163,35 @@ See the [Automation Guide](https://github.com/microsoft/ARI/blob/main/docs/advan
 | DiagramFullEnvironment | Include all network components in diagram | `-DiagramFullEnvironment` |
 | **Other Options** | | |
 | Debug | Run in debug mode | `-Debug` |
-| NoAutoUpdate | Skip the auto update of the ARI Module | `-NoAutoUpdate` |
 | AzureEnvironment | Specify Azure cloud environment | `-AzureEnvironment <NAME>` |
-| Automation | Run using Automation Account | `-Automation` |
-| StorageAccount | Storage account for automation output | `-StorageAccount <NAME>` |
-| StorageContainer | Storage container for automation output | `-StorageContainer <NAME>` |
 
-## 📊 Output Examples
+## Output
 
-### Excel Report
+### Default Locations
 
-<p align="center">
-  <img src="images/ARIv3ExcelExample.png" width="800">
-</p>
+- **Windows**: `C:\AzureTenantInventory\`
+- **Linux/Mac**: `$HOME/AzureTenantInventory/`
 
-### Network Topology View
+### Output Files
 
-#### To view the XML files in draw.io format, open them at [https://draw.io](https://draw.io).
+| File | Format | Description |
+|------|--------|-------------|
+| `AzureTenantInventory_Report_<timestamp>.xlsx` | Excel | Interactive spreadsheet with all inventory data |
+| `AzureTenantInventory_Report_<timestamp>.json` | JSON | Machine-readable inventory output |
+| `AzureTenantInventory_Diagram_<timestamp>.xml` | Draw.io XML | Network topology diagram |
 
-<p align="center">
-  <img src="images/DrawioImage.png" width="700">
-</p>
+## Attribution
 
-Interactive features show resource details on hover:
+This project is forked from [microsoft/ARI](https://github.com/microsoft/ARI) (Azure Resource Inventory) v3.6.11, originally created by **Claudio Merola** and **Renato Gregio**. See [LICENSE](LICENSE) for full copyright details.
 
-<p align="center">
-  <img src="images/ARIv3DrawioHover.png" width="400">
-  <img src="images/ARIv3DrawioPeer.png" width="400">
-</p>
+Special thanks to **Doug Finke**, the author of the PowerShell [ImportExcel](https://github.com/dfinke/ImportExcel) module.
 
-### Organization View
-
-<p align="center">
-  <img src="images/DrawioOrganization.png" width="700">
-</p>
-
-### Resources View
-
-<p align="center">
-  <img src="images/drawiosubs.png" width="700">
-</p>
-
-## ⚠️ Important Notes
-
-> **Very Important:** ARI will not upgrade existing PowerShell modules. Ensure you have the required modules installed.
-
-> **CloudShell Limitation:** When running in Azure CloudShell, the Excel output will not have auto-fit columns and you may see warnings during execution. The inventory results will still be correct.
-
-<p align="center">
-  <img src="images/cloudshell-warning-lib.png" width="600">
-</p>
-
-### Our Test Environment
-
-| Tool | Version |
-|------|---------|
-| Windows | 11 22H2 |
-| PowerShell | 7.4.4 |
-
-### Output Details
-
-- Default output location:
-  - Windows: `C:\AzureResourceInventory\`
-  - Linux/CloudShell: `$HOME/AzureResourceInventory/`
-- Output filename format: `AzureResourceInventory_Report_yyyy-MM-dd_HH_mm.xlsx`
-- Diagram filename format: `AzureResourceInventory_Diagram_yyyy-MM-dd_HH_mm.xml` (Draw.io format)
-
-## 👥 Authors & Acknowledgments
-
-- **Claudio Merola** (<claudio.merola@microsoft.com>)
-- **Renato Gregio**
-
-Special thanks to **Doug Finke**, the author of PowerShell [ImportExcel](https://github.com/dfinke/ImportExcel) module.
-
-## 🤝 Contributing
+## Contributing
 
 Please read our [CONTRIBUTING.md](CONTRIBUTING.md) which outlines all policies, procedures, and requirements for contributing to this project.
 
-## 📜 License
+## License
 
-Copyright (c) 2025 Microsoft Corporation. All rights reserved.
+Copyright (c) 2026 thisismydemo. Copyright (c) 2020 RenatoGregio (original AzureResourceInventory).
 
 Licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft trademarks or logos is subject to and must follow [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks). Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship. Any use of third-party trademarks or logos are subject to those third-party's policies.

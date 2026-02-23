@@ -97,12 +97,18 @@ temp/
 .$*.drawio.bkp
 .$*.drawio.dtmp
 
-# Azure Resource Inventory specific
+# Azure Resource Inventory / Azure Tenant Inventory specific
 ari-reports/
+azti-reports/
 *.xlsx
 *.drawio
 !docs/images/*.xlsx
 !docs/images/*.drawio
+
+# Environment files
+.env
+.env.*
+!.env.example
 
 # Local test files
 local-test/
