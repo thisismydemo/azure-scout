@@ -41,14 +41,17 @@
 
 ## Phase 1 — Global Rename (ARI → AZTI)
 
-- [ ] **1.1** Rename all `*-ARI*` functions to `*-AZTI*` (~40 functions)
-- [ ] **1.2** Rename entry point: `Invoke-ARI.ps1` → `Invoke-AzureTenantInventory.ps1`
-- [ ] **1.3** Update all string/log references from `ARI` to `AZTI`/`AzureTenantInventory`
-- [ ] **1.4** Update default paths: `AzureResourceInventory` → `AzureTenantInventory`
-- [ ] **1.5** Update all internal function call sites
-- [ ] **1.6** Update manifest `FunctionsToExport` with new names
-- [ ] **1.7** Verify module loads: `Import-Module ./AzureTenantInventory.psd1`
-- [ ] **1.8** Commit Phase 1
+- [x] **1.1** Rename all `*-ARI*` functions to `*-AZTI*` (~40 functions) — commit `e91eaea`
+- [x] **1.2** Rename entry point: `Invoke-ARI.ps1` → `Invoke-AzureTenantInventory.ps1` — commit `e91eaea`
+- [x] **1.3** Update all string/log references from `ARI` to `AZTI`/`AzureTenantInventory` — commits `e91eaea`, `88592ec`
+- [x] **1.4** Update default paths: `AzureResourceInventory` → `AzureTenantInventory` — commit `e91eaea`
+- [x] **1.5** Update all internal function call sites — commit `e91eaea`
+- [x] **1.6** Update manifest `FunctionsToExport` with new names — commit `e91eaea`
+- [x] **1.7** Verify module loads: `Import-Module ./AzureTenantInventory.psd1` — 13 public functions confirmed
+- [x] **1.8** Rename .ps2 files (legacy functions) — commit `cfac9a9`
+- [x] **1.9** Update all non-PowerShell files (docs, YAML, shell scripts, templates) — commit `88592ec`
+- [x] **1.10** Rename ARI-named files (images, pipelines YAML) — commit `88592ec`
+- [x] **1.11** Commit & push Phase 1 — commits `e91eaea`, `cfac9a9`, `88592ec`
 
 ---
 
@@ -152,7 +155,7 @@
 
 **Version Control**
 - Created: 2026-02-22 by Product Technology Team
-- Last Edited: 2026-02-23 by Product Technology Team
+- Last Edited: 2026-02-24 by Product Technology Team
 - Version: 1.0.0
 - Tags: todo, tracking, implementation
 - Keywords: azure-inventory, progress, checklist
