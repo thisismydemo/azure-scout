@@ -81,12 +81,12 @@ This page documents the version history and key changes for Azure Resource Inven
 
 ## Pre-Release History
 
-Early development versions of ARI were used internally at Microsoft before the public release.
+Early development versions of the upstream project (ARI) were used internally at Microsoft before the public release.
 
 ## Reporting Issues
 
-If you encounter problems with any version of ARI, please report them on the [GitHub Issues page](https://github.com/microsoft/ARI/issues).
+If you encounter problems with any version of AZTI, please report them on the [GitHub Issues page](https://github.com/thisismydemo/azure-inventory/issues).
 
 ## Contributing
 
-Interested in contributing to future versions? See our [Contributing Guide](../development/contributing.md). 
+Interested in contributing to future versions? See our [Contributing Guide](../development/contributing.md).

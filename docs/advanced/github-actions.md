@@ -1,10 +1,10 @@
-# Running ARI with GitHub Actions
+# Running AZTI with GitHub Actions
 
-This guide explains how to use GitHub Actions to run Azure Resource Inventory automatically, providing an alternative to Azure Automation Accounts.
+This guide explains how to use GitHub Actions to run Azure Tenant Inventory automatically, providing an alternative to Azure Automation Accounts.
 
 ## Overview
 
-GitHub Actions offers a flexible way to automate the execution of Azure Resource Inventory on a schedule or in response to events. This can be useful if:
+GitHub Actions offers a flexible way to automate the execution of Azure Tenant Inventory on a schedule or in response to events. This can be useful if:
 
 - You want to avoid creating and maintaining Azure Automation Accounts
 - You're already using GitHub for infrastructure-as-code (e.g., Terraform, Bicep)
@@ -26,7 +26,7 @@ To use this approach, you'll need:
 1. Create a service principal in Azure:
 
 ```bash
-az ad sp create-for-rbac --name "ARI-GitHub-Action" --role "Reader" --scopes "/subscriptions/YOUR_SUBSCRIPTION_ID" --sdk-auth
+az ad sp create-for-rbac --name "AZTI-GitHub-Action" --role "Reader" --scopes "/subscriptions/YOUR_SUBSCRIPTION_ID" --sdk-auth
 ```
 
 2. Save the JSON output from this command. It will look similar to:
@@ -87,7 +87,7 @@ You should save this for later steps.
 ``` bash
 az role assignment create --assignee <principal-id> --role "Reader" --scope <scope>
 ```
-The scope of the role assignement will define if ARI will be able to find resources. It is adviseable to use the subscription/management group that contains everything you want to document.
+The scope of the role assignement will define if AZTI will be able to find resources. It is adviseable to use the subscription/management group that contains everything you want to document.
 
 3. Create Federated Credentials  
 To log in with the created user-assigned identity, we need to create a federated credential, to be able to use OIDC to connect.
@@ -133,7 +133,7 @@ az identity show --name <identity-name> --resource-group <resource-group>
 Create a file named `.github/workflows/azure-inventory.yml` in your repository with the following content:
 
 ```yaml
-name: Azure Resource Inventory
+name: Azure Tenant Inventory
 
 on:
   schedule:
@@ -168,15 +168,15 @@ jobs:
           creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
           enable-AzPSSession: true
 
-      - name: Install ARI and dependencies
+      - name: Install AZTI and dependencies
         shell: pwsh
         run: |
-          Install-Module -Name AzureResourceInventory -Force -Scope CurrentUser
+          Install-Module -Name AzureTenantInventory -Force -Scope CurrentUser
           Install-Module -Name Az.Accounts -Force -Scope CurrentUser
           Install-Module -Name ImportExcel -Force -Scope CurrentUser
-          Import-Module AzureResourceInventory
+          Import-Module AzureTenantInventory
 
-      - name: Run ARI
+      - name: Run AZTI
         shell: pwsh
         run: |
           $params = @{}
@@ -201,24 +201,24 @@ jobs:
           # Add any other parameters you want to use here
           # For example: $params.Add("SecurityCenter", $true)
 
-          # Run ARI
-          Invoke-ARI @params
+          # Run AZTI
+          Invoke-AzureTenantInventory @params
 
           # Create artifacts directory
-          New-Item -Path "$env:GITHUB_WORKSPACE/ari-reports" -ItemType Directory -Force
+          New-Item -Path "$env:GITHUB_WORKSPACE/AZTI-Reports" -ItemType Directory -Force
 
           # Move reports to artifacts directory
-          Move-Item -Path "$HOME/AzureResourceInventory/*.xlsx" -Destination "$env:GITHUB_WORKSPACE/ari-reports/" -Force
+          Move-Item -Path "$HOME/AzureTenantInventory/*.xlsx" -Destination "$env:GITHUB_WORKSPACE/AZTI-Reports/" -Force
 
-          if (Test-Path "$HOME/AzureResourceInventory/*.xml") {
-            Move-Item -Path ""$HOME/AzureResourceInventory/*.xml" -Destination "$env:GITHUB_WORKSPACE/ari-reports/" -Force
+          if (Test-Path "$HOME/AzureTenantInventory/*.xml") {
+            Move-Item -Path ""$HOME/AzureTenantInventory/*.xml" -Destination "$env:GITHUB_WORKSPACE/AZTI-Reports/" -Force
           }
 
       - name: Upload Reports as Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ARI-Reports
-          path: ari-reports/
+          name: AZTI-Reports
+          path: AZTI-Reports/
           retention-days: 90
 
       # Optional: Upload to Azure Storage
@@ -226,13 +226,13 @@ jobs:
       #   shell: pwsh
       #   run: |
       #     $storageAccount = "yourstorageaccount"
-      #     $container = "ari-reports"
+      #     $container = "AZTI-Reports"
       #
       #     # Create the storage context
       #     $ctx = New-AzStorageContext -StorageAccountName $storageAccount -UseConnectedAccount
       #
       #     # Upload files to Azure Storage
-      #     Get-ChildItem -Path "$env:GITHUB_WORKSPACE/ari-reports" -File | ForEach-Object {
+      #     Get-ChildItem -Path "$env:GITHUB_WORKSPACE/AZTI-Reports" -File | ForEach-Object {
       #       Set-AzStorageBlobContent -File $_.FullName -Container $container -Blob $_.Name -Context $ctx -Force
       #     }
 
@@ -244,8 +244,8 @@ jobs:
       #     server_port: 465
       #     username: ${{ secrets.EMAIL_USERNAME }}
       #     password: ${{ secrets.EMAIL_PASSWORD }}
-      #     subject: Azure Resource Inventory Report
-      #     body: Azure Resource Inventory has completed. Reports are attached.
+      #     subject: Azure Tenant Inventory Report
+      #     body: Azure Tenant Inventory has completed. Reports are attached.
       #     to: recipient@example.com
       #     from: Azure Inventory <sender@example.com>
 ```
@@ -255,7 +255,7 @@ jobs:
 Create a file named `.github/workflows/azure-inventory.yml` in your repository with the following content:
 
 ```yaml
-name: Azure Resource Inventory
+name: Azure Tenant Inventory
 
 on:
   schedule:
@@ -292,15 +292,15 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           enable-AzPSSession: true
 
-      - name: Install ARI and dependencies
+      - name: Install AZTI and dependencies
         shell: pwsh
         run: |
-          Install-Module -Name AzureResourceInventory -Force -Scope CurrentUser
+          Install-Module -Name AzureTenantInventory -Force -Scope CurrentUser
           Install-Module -Name Az.Accounts -Force -Scope CurrentUser
           Install-Module -Name ImportExcel -Force -Scope CurrentUser
-          Import-Module AzureResourceInventory
+          Import-Module AzureTenantInventory
 
-      - name: Run ARI
+      - name: Run AZTI
         shell: pwsh
         run: |
           $params = @{}
@@ -325,24 +325,24 @@ jobs:
           # Add any other parameters you want to use here
           # For example: $params.Add("SecurityCenter", $true)
 
-          # Run ARI
-          Invoke-ARI @params
+          # Run AZTI
+          Invoke-AzureTenantInventory @params
 
           # Create artifacts directory
-          New-Item -Path "$env:GITHUB_WORKSPACE/ari-reports" -ItemType Directory -Force
+          New-Item -Path "$env:GITHUB_WORKSPACE/AZTI-Reports" -ItemType Directory -Force
 
           # Move reports to artifacts directory
-          Move-Item -Path "$HOME/AzureResourceInventory/*.xlsx" -Destination "$env:GITHUB_WORKSPACE/ari-reports/" -Force
+          Move-Item -Path "$HOME/AzureTenantInventory/*.xlsx" -Destination "$env:GITHUB_WORKSPACE/AZTI-Reports/" -Force
 
-          if (Test-Path "$HOME/AzureResourceInventory/*.xml") {
-            Move-Item -Path ""$HOME/AzureResourceInventory/*.xml" -Destination "$env:GITHUB_WORKSPACE/ari-reports/" -Force
+          if (Test-Path "$HOME/AzureTenantInventory/*.xml") {
+            Move-Item -Path ""$HOME/AzureTenantInventory/*.xml" -Destination "$env:GITHUB_WORKSPACE/AZTI-Reports/" -Force
           }
 
       - name: Upload Reports as Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ARI-Reports
-          path: ari-reports/
+          name: AZTI-Reports
+          path: AZTI-Reports/
           retention-days: 90
 
       # Optional: Upload to Azure Storage
@@ -350,13 +350,13 @@ jobs:
       #   shell: pwsh
       #   run: |
       #     $storageAccount = "yourstorageaccount"
-      #     $container = "ari-reports"
+      #     $container = "AZTI-Reports"
       #
       #     # Create the storage context
       #     $ctx = New-AzStorageContext -StorageAccountName $storageAccount -UseConnectedAccount
       #
       #     # Upload files to Azure Storage
-      #     Get-ChildItem -Path "$env:GITHUB_WORKSPACE/ari-reports" -File | ForEach-Object {
+      #     Get-ChildItem -Path "$env:GITHUB_WORKSPACE/AZTI-Reports" -File | ForEach-Object {
       #       Set-AzStorageBlobContent -File $_.FullName -Container $container -Blob $_.Name -Context $ctx -Force
       #     }
 
@@ -368,8 +368,8 @@ jobs:
       #     server_port: 465
       #     username: ${{ secrets.EMAIL_USERNAME }}
       #     password: ${{ secrets.EMAIL_PASSWORD }}
-      #     subject: Azure Resource Inventory Report
-      #     body: Azure Resource Inventory has completed. Reports are attached.
+      #     subject: Azure Tenant Inventory Report
+      #     body: Azure Tenant Inventory has completed. Reports are attached.
       #     to: recipient@example.com
       #     from: Azure Inventory <sender@example.com>
 ```
@@ -387,9 +387,9 @@ schedule:
   - cron: '0 8 * * 1'  # Monday at 8:00 AM UTC
 ```
 
-### ARI Parameters
+### AZTI Parameters
 
-You can add any ARI parameters in the PowerShell script section. For example:
+You can add any AZTI parameters in the PowerShell script section. For example:
 
 ```powershell
 # Add parameters
@@ -412,7 +412,7 @@ The template includes two storage options:
 To inventory specific subscriptions, you can modify the workflow:
 
 ```yaml
-- name: Run ARI for multiple subscriptions
+- name: Run AZTI for multiple subscriptions
   shell: pwsh
   run: |
     $subscriptionIds = @(
@@ -421,7 +421,7 @@ To inventory specific subscriptions, you can modify the workflow:
     )
 
     foreach ($subId in $subscriptionIds) {
-      Invoke-ARI -SubscriptionID $subId -ReportName "AzureInventory_${subId}_$(Get-Date -Format 'yyyyMMdd')"
+      Invoke-AzureTenantInventory -SubscriptionID $subId -ReportName "AzureInventory_${subId}_$(Get-Date -Format 'yyyyMMdd')"
     }
 ```
 
@@ -437,8 +437,8 @@ You can add email notifications using GitHub Actions by uncommenting the email n
     server_port: 465
     username: ${{ secrets.EMAIL_USERNAME }}
     password: ${{ secrets.EMAIL_PASSWORD }}
-    subject: Azure Resource Inventory Report
-    body: Azure Resource Inventory has completed. Reports are attached.
+    subject: Azure Tenant Inventory Report
+    body: Azure Tenant Inventory has completed. Reports are attached.
     to: recipient@example.com
     from: Azure Inventory <sender@example.com>
 ```
@@ -483,4 +483,4 @@ If reports aren't generated:
 
 ## Conclusion
 
-GitHub Actions provides a flexible alternative to Azure Automation for running ARI on a schedule. This approach is particularly useful for teams already using GitHub for infrastructure management, allowing them to keep their inventory process alongside their infrastructure code.
+GitHub Actions provides a flexible alternative to Azure Automation for running AZTI on a schedule. This approach is particularly useful for teams already using GitHub for infrastructure management, allowing them to keep their inventory process alongside their infrastructure code.

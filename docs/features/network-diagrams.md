@@ -1,10 +1,10 @@
 # Network Diagrams
 
-Azure Resource Inventory (ARI) creates interactive network topology diagrams that provide a visual representation of your Azure networking environment. This page explains the diagram types, features, and usage.
+Azure Tenant Inventory (AZTI) creates interactive network topology diagrams that provide a visual representation of your Azure networking environment. This page explains the diagram types, features, and usage.
 
 ## Diagram Overview
 
-ARI generates network diagrams in Draw.io format, offering visual insights into your Azure network architecture. These diagrams are designed to be:
+AZTI generates network diagrams in Draw.io format, offering visual insights into your Azure network architecture. These diagrams are designed to be:
 
 - **Interactive**: Clickable elements with detailed information on hover
 - **Comprehensive**: Complete view of network resources and their relationships
@@ -28,8 +28,8 @@ The main network diagram displays all virtual networks, subnets, peerings, gatew
 Interactive features show resource details on hover:
 
 <div align="center">
-<img src="../../images/ARIv3DrawioHover.png" width="400">
-<img src="../../images/ARIv3DrawioPeer.png" width="400">
+<img src="../../images/AZTIv3DrawioHover.png" width="400">
+<img src="../../images/AZTIv3DrawioPeer.png" width="400">
 </div>
 
 ### Organization View
@@ -50,14 +50,14 @@ The resources view presents subscriptions with their contained resources:
 
 ## Diagram Generation
 
-By default, ARI creates network diagrams when you run `Invoke-ARI`. You can control diagram generation with these parameters:
+By default, AZTI creates network diagrams when you run `Invoke-AzureTenantInventory`. You can control diagram generation with these parameters:
 
 ### Skip Diagram Creation
 
 If you're only interested in the Excel report or want faster execution, you can skip diagram generation:
 
 ```powershell
-Invoke-ARI -SkipDiagram
+Invoke-AzureTenantInventory -SkipDiagram
 ```
 
 ### Generate Full Environment Diagram
@@ -65,7 +65,7 @@ Invoke-ARI -SkipDiagram
 For a more comprehensive diagram that includes all network components:
 
 ```powershell
-Invoke-ARI -DiagramFullEnvironment
+Invoke-AzureTenantInventory -DiagramFullEnvironment
 ```
 
 This option includes additional details such as:
@@ -114,4 +114,4 @@ Three separate files are created:
 - Very large environments with many networks may result in complex diagrams
 - Some resource properties may be abbreviated or simplified in the visualization
 - Custom routes and complex networking patterns may require manual adjustments for clarity
-- When using ARI with `-Automation`, diagrams are still generated but stored in blob storage 
+- When using AZTI with `-Automation`, diagrams are still generated but stored in blob storage 

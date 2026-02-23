@@ -1,4 +1,4 @@
-name: Azure Resource Inventory
+name: Azure Tenant Inventory
 
 on:
   workflow_dispatch:
@@ -28,24 +28,24 @@ jobs:
         run: |
           echo "Azure login simulated for local testing"
 
-      # For local testing with act, we'll simulate the module installation and ARI execution
-      - name: Simulate ARI Installation and Run
+      # For local testing with act, we'll simulate the module installation and AZTI execution
+      - name: Simulate AZTI Installation and Run
         shell: bash
         run: |
-          echo "Installing ARI modules (simulation for testing)"
-          echo "Running Invoke-ARI with parameters:"
+          echo "Installing AZTI modules (simulation for testing)"
+          echo "Running Invoke-AzureTenantInventory with parameters:"
           echo "- ReportName: ${{ github.event.inputs.reportName }}"
           echo "- SubscriptionID: ${{ github.event.inputs.subscriptionId }}"
           echo "- ResourceGroup: ${{ github.event.inputs.resourceGroup }}"
           
           # Create dummy report files
-          mkdir -p ari-reports
-          echo "This is a test Excel report" > ari-reports/test_report.xlsx
-          echo "This is a test diagram file" > ari-reports/test_diagram.drawio
+          mkdir -p AZTI-Reports
+          echo "This is a test Excel report" > AZTI-Reports/test_report.xlsx
+          echo "This is a test diagram file" > AZTI-Reports/test_diagram.drawio
           
           # List the created files
           echo "Created files:"
-          ls -la ari-reports/
+          ls -la AZTI-Reports/
           
           echo "Workflow execution completed successfully"
 
@@ -54,13 +54,13 @@ jobs:
       #   shell: pwsh
       #   run: |
       #     $storageAccount = "yourstorageaccount"
-      #     $container = "ari-reports"
+      #     $container = "AZTI-Reports"
       #     
       #     # Create the storage context
       #     $ctx = New-AzStorageContext -StorageAccountName $storageAccount -UseConnectedAccount
       #     
       #     # Upload files to Azure Storage
-      #     Get-ChildItem -Path "$env:GITHUB_WORKSPACE/ari-reports" -File | ForEach-Object {
+      #     Get-ChildItem -Path "$env:GITHUB_WORKSPACE/AZTI-Reports" -File | ForEach-Object {
       #       Set-AzStorageBlobContent -File $_.FullName -Container $container -Blob $_.Name -Context $ctx -Force
       #     }
 
@@ -72,7 +72,7 @@ jobs:
       #     server_port: 465
       #     username: ${{ secrets.EMAIL_USERNAME }}
       #     password: ${{ secrets.EMAIL_PASSWORD }}
-      #     subject: Azure Resource Inventory Report
-      #     body: Azure Resource Inventory has completed. Reports are attached.
+      #     subject: Azure Tenant Inventory Report
+      #     body: Azure Tenant Inventory has completed. Reports are attached.
       #     to: recipient@example.com
       #     from: Azure Inventory <sender@example.com> 

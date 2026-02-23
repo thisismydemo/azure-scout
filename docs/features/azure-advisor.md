@@ -1,10 +1,10 @@
 # Azure Advisor Integration
 
-Azure Resource Inventory integrates with Azure Advisor to include recommendations and best practices in your inventory reports. This page explains how to use and interpret Azure Advisor data in ARI.
+Azure Tenant Inventory integrates with Azure Advisor to include recommendations and best practices in your inventory reports. This page explains how to use and interpret Azure Advisor data in AZTI.
 
 ## Overview
 
-Azure Advisor is a personalized cloud consultant that provides recommendations to help you optimize your Azure deployments. When you run ARI, it collects Azure Advisor recommendations by default, giving you insights into:
+Azure Advisor is a personalized cloud consultant that provides recommendations to help you optimize your Azure deployments. When you run AZTI, it collects Azure Advisor recommendations by default, giving you insights into:
 
 - Cost optimization opportunities
 - Performance improvement suggestions
@@ -14,15 +14,15 @@ Azure Advisor is a personalized cloud consultant that provides recommendations t
 
 ## Azure Advisor Data Collection
 
-ARI collects Azure Advisor data by default. If you want to skip this collection to make the report generation faster, use the `-SkipAdvisory` parameter:
+AZTI collects Azure Advisor data by default. If you want to skip this collection to make the report generation faster, use the `-SkipAdvisory` parameter:
 
 ```powershell
-Invoke-ARI -SkipAdvisory
+Invoke-AzureTenantInventory -SkipAdvisory
 ```
 
 ## Advisor Information Collected
 
-ARI collects the following information from Azure Advisor:
+AZTI collects the following information from Azure Advisor:
 
 ### Cost Recommendations
 
@@ -73,7 +73,7 @@ Azure Advisor recommendations are integrated into the Excel report in these ways
 Azure Advisor helps you identify immediate improvements:
 
 ```powershell
-Invoke-ARI -ReportName "OptimizationOpportunities"
+Invoke-AzureTenantInventory -ReportName "OptimizationOpportunities"
 ```
 
 Then look for "High" impact recommendations in the Advisor tab.
@@ -83,7 +83,7 @@ Then look for "High" impact recommendations in the Advisor tab.
 Generate a report focused on cost savings:
 
 ```powershell
-Invoke-ARI -IncludeCosts
+Invoke-AzureTenantInventory -IncludeCosts
 ```
 
 Review both the Advisor tab and the cost data for complete optimization opportunities.
@@ -93,7 +93,7 @@ Review both the Advisor tab and the cost data for complete optimization opportun
 Use Advisor recommendations to improve your environment's adherence to best practices:
 
 ```powershell
-Invoke-ARI -TenantID "00000000-0000-0000-0000-000000000000"
+Invoke-AzureTenantInventory -TenantID "00000000-0000-0000-0000-000000000000"
 ```
 
 ## Combining with Other Features
@@ -103,7 +103,7 @@ Invoke-ARI -TenantID "00000000-0000-0000-0000-000000000000"
 For a comprehensive view of optimization and security:
 
 ```powershell
-Invoke-ARI -SecurityCenter
+Invoke-AzureTenantInventory -SecurityCenter
 ```
 
 ### Automated Optimization Reviews
@@ -111,7 +111,7 @@ Invoke-ARI -SecurityCenter
 Schedule regular optimization reviews using automation:
 
 ```powershell
-Invoke-ARI -Automation -StorageAccount "mystorageaccount" -StorageContainer "advisorreports"
+Invoke-AzureTenantInventory -Automation -StorageAccount "mystorageaccount" -StorageContainer "advisorreports"
 ```
 
 ## Limitations
@@ -127,7 +127,7 @@ Invoke-ARI -Automation -StorageAccount "mystorageaccount" -StorageContainer "adv
 If you want to generate reports without Azure Advisor data (for faster report generation):
 
 ```powershell
-Invoke-ARI -SkipAdvisory
+Invoke-AzureTenantInventory -SkipAdvisory
 ```
 
 This can be useful for:

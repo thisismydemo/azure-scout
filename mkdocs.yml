@@ -1,16 +1,16 @@
-site_name: Azure Resource Inventory (ARI)
-site_description: Documentation for the Azure Resource Inventory PowerShell module
+site_name: Azure Tenant Inventory (AZTI)
+site_description: Documentation for the Azure Tenant Inventory PowerShell module
 site_author: Microsoft
-site_url: https://microsoft.github.io/ARI
+site_url: https://thisismydemo.github.io/azure-inventory
 
-repo_name: microsoft/ARI
-repo_url: https://github.com/microsoft/ARI
+repo_name: thisismydemo/azure-inventory
+repo_url: https://github.com/thisismydemo/azure-inventory
 edit_uri: edit/main/docs/
 
 theme:
   name: material
-  logo: images/ARI_Logo.png
-  favicon: images/ARI_Logo.png
+  logo: images/AZTI_Logo.png
+  favicon: images/AZTI_Logo.png
   palette:
     primary: indigo
     accent: blue
@@ -41,7 +41,7 @@ markdown_extensions:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/microsoft/ARI
+      link: https://github.com/thisismydemo/azure-inventory
 
 nav:
   - Home: index.md

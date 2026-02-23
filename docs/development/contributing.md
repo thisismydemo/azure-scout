@@ -1,16 +1,16 @@
-# Contributing to Azure Resource Inventory
+# Contributing to Azure Tenant Inventory
 
-Thank you for your interest in contributing to Azure Resource Inventory! This guide will help you get started with contributing to the project.
+Thank you for your interest in contributing to Azure Tenant Inventory! This guide will help you get started with contributing to the project.
 
 ## Ways to Contribute
 
-There are many ways to contribute to Azure Resource Inventory:
+There are many ways to contribute to Azure Tenant Inventory:
 
 - Report bugs and issues
 - Suggest new features or improvements
 - Improve documentation
 - Submit pull requests with code changes
-- Share your experiences using ARI
+- Share your experiences using AZTI
 
 ## Getting Started
 
@@ -29,11 +29,11 @@ To contribute to the codebase, you'll need:
 1. Fork the repository on GitHub
 2. Clone your fork to your local machine:
    ```
-   git clone https://github.com/your-username/ARI.git
+   git clone https://github.com/your-username/AZTI.git
    ```
 3. Add the upstream repository as a remote:
    ```
-   git remote add upstream https://github.com/microsoft/ARI.git
+   git remote add upstream https://github.com/thisismydemo/azure-inventory.git
    ```
 4. Create a new branch for your changes:
    ```
@@ -97,7 +97,7 @@ When contributing new features or changes:
 
 If you find a bug or have a feature request:
 
-1. Check if the issue already exists in the [GitHub issue tracker](https://github.com/microsoft/ARI/issues)
+1. Check if the issue already exists in the [GitHub issue tracker](https://github.com/thisismydemo/azure-inventory/issues)
 2. If not, create a new issue with a clear description
 3. For bugs, include:
    - Steps to reproduce
@@ -112,7 +112,7 @@ If you need help with your contribution:
 
 - Ask questions in the issue for your pull request
 - Reach out to the maintainers
-- Check the [README](https://github.com/microsoft/ARI/blob/main/README.md) for additional information
+- Check the [README](https://github.com/thisismydemo/azure-inventory/blob/main/README.md) for additional information
 
 ## Code of Conduct
 
@@ -121,4 +121,4 @@ For more information see the [Code of Conduct FAQ](https://opensource.microsoft.
 
 ## Thank You
 
-Your contributions to Azure Resource Inventory help improve the tool for everyone. We appreciate your time and effort! 
+Your contributions to Azure Tenant Inventory help improve the tool for everyone. We appreciate your time and effort! 

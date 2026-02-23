@@ -1,10 +1,10 @@
 # Installation Guide
 
-Azure Resource Inventory (ARI) is a PowerShell module that can be installed directly from the PowerShell Gallery. This guide will walk you through the necessary steps to get ARI up and running on your system.
+Azure Tenant Inventory (AZTI) is a PowerShell module that can be installed directly from the PowerShell Gallery. This guide will walk you through the necessary steps to get AZTI up and running on your system.
 
 ## Prerequisites
 
-Before installing ARI, ensure you have the following prerequisites:
+Before installing AZTI, ensure you have the following prerequisites:
 
 - **PowerShell Version**:
   - PowerShell 7.0 or newer (Required)
@@ -23,58 +23,58 @@ Before installing ARI, ensure you have the following prerequisites:
 
 ### Method 1: Install from PowerShell Gallery (Recommended)
 
-The easiest way to install ARI is directly from the PowerShell Gallery:
+The easiest way to install AZTI is directly from the PowerShell Gallery:
 
 ```powershell
-Install-Module -Name AzureResourceInventory
+Install-Module -Name AzureTenantInventory
 ```
 
 <div align="center">
-<img src="../../images/InstallARI.gif" width="700">
+<img src="../../images/InstallAZTI.gif" width="700">
 </div>
 
 If you encounter any permission issues during installation, try running PowerShell as an administrator or add the `-Scope CurrentUser` parameter:
 
 ```powershell
-Install-Module -Name AzureResourceInventory -Scope CurrentUser
+Install-Module -Name AzureTenantInventory -Scope CurrentUser
 ```
 
 ### Method 2: Manual Installation
 
 If you prefer to install the module manually:
 
-1. Download the latest release from the [GitHub Releases page](https://github.com/microsoft/ARI/releases)
+1. Download the latest release from the [GitHub Releases page](https://github.com/thisismydemo/azure-inventory/releases)
 2. Extract the ZIP file to your PowerShell modules directory (typically `$HOME\Documents\PowerShell\Modules\`)
-3. Ensure the module folder is named "AzureResourceInventory"
+3. Ensure the module folder is named "AzureTenantInventory"
 
 ## Verification
 
-To verify that ARI is installed correctly, run:
+To verify that AZTI is installed correctly, run:
 
 ```powershell
-Get-Module -ListAvailable AzureResourceInventory
+Get-Module -ListAvailable AzureTenantInventory
 ```
 
-You should see the AzureResourceInventory module listed with its version number.
+You should see the AzureTenantInventory module listed with its version number.
 
 ## Importing the Module
 
 After installation, you need to import the module before using it:
 
 ```powershell
-Import-Module AzureResourceInventory
+Import-Module AzureTenantInventory
 ```
 
 <div align="center">
-<img src="../../images/ImportingARI.gif" width="700">
+<img src="../../images/ImportingAZTI.gif" width="700">
 </div>
 
-## Updating ARI
+## Updating AZTI
 
-To update to the latest version of ARI from the PowerShell Gallery:
+To update to the latest version of AZTI from the PowerShell Gallery:
 
 ```powershell
-Update-Module -Name AzureResourceInventory
+Update-Module -Name AzureTenantInventory
 ```
 
 ## Troubleshooting Installation Issues
@@ -97,4 +97,4 @@ If you encounter issues during installation:
 
 ## Next Steps
 
-Now that you've installed ARI, proceed to the [Quick Start Guide](quick-start.md) to generate your first Azure inventory report. 
+Now that you've installed AZTI, proceed to the [Quick Start Guide](quick-start.md) to generate your first Azure inventory report. 

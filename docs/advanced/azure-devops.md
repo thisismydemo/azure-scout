@@ -1,10 +1,10 @@
-# Running ARI with Azure DevOps Pipelines
+# Running AZTI with Azure DevOps Pipelines
 
-This guide explains how to use Azure DevOps Pipelines to run Azure Resource Inventory automatically, providing another automation option besides Azure Automation Accounts and GitHub Actions.
+This guide explains how to use Azure DevOps Pipelines to run Azure Tenant Inventory automatically, providing another automation option besides Azure Automation Accounts and GitHub Actions.
 
 ## Overview
 
-Azure DevOps Pipelines offer a robust way to automate the execution of Azure Resource Inventory on a schedule or in response to events. This can be useful if:
+Azure DevOps Pipelines offer a robust way to automate the execution of Azure Tenant Inventory on a schedule or in response to events. This can be useful if:
 
 - You're already using Azure DevOps for your development and operations workflows
 - You want to integrate Azure inventory reporting into your existing CI/CD processes
@@ -28,7 +28,7 @@ To use this approach, you'll need:
 3. Click **New service connection**
 4. Select **Azure Resource Manager**
 5. Choose **Service principal (automatic)** for authentication
-6. Select your subscription and provide a name for the connection (e.g., "ARI-ServiceConnection")
+6. Select your subscription and provide a name for the connection (e.g., "AZTI-ServiceConnection")
 7. Set an appropriate scope (subscription level is usually sufficient)
 8. Click **Save**
 
@@ -45,7 +45,7 @@ If you need to inventory multiple subscriptions or management groups:
 
 ## Azure DevOps Pipeline YAML
 
-Create a new file in your repository named `azure-pipelines/ari-inventory.yml` with the following content:
+Create a new file in your repository named `azure-pipelines/azti-inventory.yml` with the following content:
 
 ```yaml
 trigger: none # Don't trigger on code changes
@@ -76,23 +76,23 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  azureServiceConnection: 'ARI-ServiceConnection' # Replace with your service connection name
+  azureServiceConnection: 'AZTI-ServiceConnection' # Replace with your service connection name
 
 steps:
 - task: AzureCLI@2
-  displayName: 'Install and Run Azure Resource Inventory'
+  displayName: 'Install and Run Azure Tenant Inventory'
   inputs:
     azureSubscription: $(azureServiceConnection)
     scriptType: 'ps'
     scriptLocation: 'inlineScript'
     inlineScript: |
       # Install required modules
-      Install-Module -Name AzureResourceInventory -Force -Scope CurrentUser
+      Install-Module -Name AzureTenantInventory -Force -Scope CurrentUser
       Install-Module -Name Az.Accounts -Force -Scope CurrentUser
       Install-Module -Name ImportExcel -Force -Scope CurrentUser
       
-      # Import ARI module
-      Import-Module AzureResourceInventory
+      # Import AZTI module
+      Import-Module AzureTenantInventory
       
       # Prepare parameters
       $params = @{}
@@ -120,24 +120,24 @@ steps:
       # $params.Add("IncludeTags", $true)
       # $params.Add("DiagramFullEnvironment", $true)
       
-      # Run ARI
-      Invoke-ARI @params
+      # Run AZTI
+      Invoke-AzureTenantInventory @params
       
       # Create artifacts directory
-      New-Item -Path "$(Build.ArtifactStagingDirectory)/ari-reports" -ItemType Directory -Force
+      New-Item -Path "$(Build.ArtifactStagingDirectory)/AZTI-Reports" -ItemType Directory -Force
       
       # Move reports to artifacts directory
-      Move-Item -Path "*.xlsx" -Destination "$(Build.ArtifactStagingDirectory)/ari-reports/" -Force
+      Move-Item -Path "*.xlsx" -Destination "$(Build.ArtifactStagingDirectory)/AZTI-Reports/" -Force
       
       if (Test-Path "*.drawio") {
-        Move-Item -Path "*.drawio" -Destination "$(Build.ArtifactStagingDirectory)/ari-reports/" -Force
+        Move-Item -Path "*.drawio" -Destination "$(Build.ArtifactStagingDirectory)/AZTI-Reports/" -Force
       }
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Inventory Reports'
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/ari-reports'
-    ArtifactName: 'ARI-Reports'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/AZTI-Reports'
+    ArtifactName: 'AZTI-Reports'
     publishLocation: 'Container'
 
 # Optional: Upload to Azure Storage
@@ -149,13 +149,13 @@ steps:
 #     scriptLocation: 'inlineScript'
 #     inlineScript: |
 #       $storageAccount = "yourstorageaccount"
-#       $container = "ari-reports"
+#       $container = "AZTI-Reports"
 #       
 #       # Create storage context
 #       $ctx = New-AzStorageContext -StorageAccountName $storageAccount
 #       
 #       # Upload files to Azure Storage
-#       Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/ari-reports" -File | ForEach-Object {
+#       Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/AZTI-Reports" -File | ForEach-Object {
 #         Set-AzStorageBlobContent -File $_.FullName -Container $container -Blob $_.Name -Context $ctx -Force
 #       }
 ```
@@ -167,7 +167,7 @@ steps:
 3. Click **New pipeline**
 4. Select your repository source
 5. Choose **Existing Azure Pipelines YAML file**
-6. Select the `azure-pipelines/ari-inventory.yml` file
+6. Select the `azure-pipelines/azti-inventory.yml` file
 7. Click **Continue**
 8. Review the pipeline and click **Save** (or **Save and run** if you want to run it immediately)
 
@@ -184,9 +184,9 @@ schedules:
 - cron: "0 8 * * 1" # Run weekly on Monday at 8:00 AM UTC
 ```
 
-### ARI Parameters
+### AZTI Parameters
 
-You can add any ARI parameters in the PowerShell script section. For example:
+You can add any AZTI parameters in the PowerShell script section. For example:
 
 ```powershell
 # Add parameters
@@ -217,7 +217,7 @@ $subscriptionIds = @(
 )
 
 foreach ($subId in $subscriptionIds) {
-  Invoke-ARI -SubscriptionID $subId -ReportName "AzureInventory_${subId}_$(Get-Date -Format 'yyyyMMdd')"
+  Invoke-AzureTenantInventory -SubscriptionID $subId -ReportName "AzureInventory_${subId}_$(Get-Date -Format 'yyyyMMdd')"
 }
 ```
 
@@ -238,7 +238,7 @@ Instead of using the YAML pipeline, you can create a classic release pipeline:
 
 1. Create a new release pipeline
 2. Add an Azure PowerShell task
-3. Configure the task to run the ARI commands
+3. Configure the task to run the AZTI commands
 4. Add a schedule trigger
 5. Configure artifact storage as needed
 
@@ -290,4 +290,4 @@ If reports aren't generated:
 
 ## Conclusion
 
-Azure DevOps Pipelines provide a powerful way to automate Azure Resource Inventory, especially for organizations already using Azure DevOps for their DevOps workflows. This approach integrates well with existing CI/CD processes and offers robust scheduling, reporting, and storage options. 
+Azure DevOps Pipelines provide a powerful way to automate Azure Tenant Inventory, especially for organizations already using Azure DevOps for their DevOps workflows. This approach integrates well with existing CI/CD processes and offers robust scheduling, reporting, and storage options. 

@@ -1,4 +1,4 @@
-﻿<#
+<#
 .Synopsis
 Short Module Description
 
@@ -8,10 +8,10 @@ Long Module Description referring Resource Provider
 Excel Sheet Name: Sheet Generated in Excel
 
 .Link
-https://github.com/azureinventory/ARI/<full_URI>.ps1
+https://github.com/thisismydemo/azure-inventory/<full_URI>.ps1
 
 .COMPONENT
-   This powershell Module is part of Azure Resource Inventory (ARI)
+   This powershell Module is part of Azure Tenant Inventory (AZTI)
 
 .NOTES
 Version: 3.6.0
@@ -129,7 +129,7 @@ Else
 
         $excel = Open-ExcelPackage -Path $File
 
-        $null = $excel.'Event Hubs'.Cells["I1"].AddComment("The Auto-inflate feature of Event Hubs automatically scales up by increasing the number of throughput units, to meet usage needs. Increasing throughput units prevents throttling scenarios.", "Azure Resource Inventory")
+        $null = $excel.'Event Hubs'.Cells["I1"].AddComment("The Auto-inflate feature of Event Hubs automatically scales up by increasing the number of throughput units, to meet usage needs. Increasing throughput units prevents throttling scenarios.", "Azure Tenant Inventory")
         $excel.'Event Hubs'.Cells["I1"].Hyperlink = 'https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-auto-inflate'
 
         Close-ExcelPackage $excel 

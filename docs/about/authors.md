@@ -1,10 +1,10 @@
 # Authors & Acknowledgments
 
-Azure Resource Inventory was created by Microsoft engineers to help customers document and manage their Azure environments. This page acknowledges the contributors and maintainers of the project.
+Azure Tenant Inventory was created by Microsoft engineers to help customers document and manage their Azure environments. This page acknowledges the contributors and maintainers of the project.
 
 ## Original Authors
 
-Azure Resource Inventory was originally created by:
+Azure Tenant Inventory was originally created by:
 
 - **Claudio Merola** - *Initial work and core functionality*
 
@@ -16,7 +16,7 @@ The project is currently maintained by:
 
 ## Contributors
 
-Many people have contributed to Azure Resource Inventory over time. Contributors include (alphabetically):
+Many people have contributed to Azure Tenant Inventory over time. Contributors include (alphabetically):
 
 - Alexandre Verkinderen
 - Claudio Merola
@@ -38,19 +38,19 @@ Special thanks go to:
 
 ## How to Get Involved
 
-If you'd like to contribute to Azure Resource Inventory, please read our [Contributing Guide](../development/contributing.md) for information on how to get started.
+If you'd like to contribute to Azure Tenant Inventory, please read our [Contributing Guide](../development/contributing.md) for information on how to get started.
 
 ## Report Issues
 
-Found a bug or have a feature request? Please report it in the [GitHub repository issues page](https://github.com/microsoft/ARI/issues).
+Found a bug or have a feature request? Please report it in the [GitHub repository issues page](https://github.com/thisismydemo/azure-inventory/issues).
 
 ## Community
 
-Azure Resource Inventory has been used by many organizations across the world to document and inventory their Azure environments. We're grateful for the community adoption and feedback that continues to improve the tool.
+Azure Tenant Inventory has been used by many organizations across the world to document and inventory their Azure environments. We're grateful for the community adoption and feedback that continues to improve the tool.
 
 ## Further Information
 
-For more information about the project, please visit the [GitHub repository](https://github.com/microsoft/ARI).
+For more information about the project, please visit the [GitHub repository](https://github.com/thisismydemo/azure-inventory).
 
 ---
 

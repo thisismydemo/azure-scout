@@ -1,11 +1,11 @@
-# Support for Azure Resource Inventory
+# Support for Azure Tenant Inventory
 
 <div align="center">
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/512px-Microsoft_logo.svg.png" alt="Microsoft Logo" width="200">
   <br><br>
   <p>
-    <a href="https://github.com/microsoft/ARI/issues"><img src="https://img.shields.io/github/issues/microsoft/ARI" alt="GitHub Issues"></a>
-    <a href="https://github.com/microsoft/ARI/pulls"><img src="https://img.shields.io/github/issues-pr/microsoft/ARI" alt="GitHub Pull Requests"></a>
+    <a href="https://github.com/thisismydemo/azure-inventory/issues"><img src="https://img.shields.io/github/issues/thisismydemo/azure-inventory" alt="GitHub Issues"></a>
+    <a href="https://github.com/thisismydemo/azure-inventory/pulls"><img src="https://img.shields.io/github/issues-pr/thisismydemo/azure-inventory" alt="GitHub Pull Requests"></a>
   </p>
 </div>
 
@@ -13,9 +13,9 @@
 
 This project uses GitHub Issues to track bugs, feature requests, and questions. Before creating a new issue, please follow these steps:
 
-1. **Search existing issues**: Check the [existing issues](https://github.com/microsoft/ARI/issues) to see if your problem or request has already been reported.
+1. **Search existing issues**: Check the [existing issues](https://github.com/thisismydemo/azure-inventory/issues) to see if your problem or request has already been reported.
 
-2. **Create a detailed issue**: If no existing issue addresses your needs, create a [new issue](https://github.com/microsoft/ARI/issues/new) with:
+2. **Create a detailed issue**: If no existing issue addresses your needs, create a [new issue](https://github.com/thisismydemo/azure-inventory/issues/new) with:
    - A clear, descriptive title
    - Detailed steps to reproduce bugs or clear descriptions of feature requests
    - Version information (PowerShell version, module version, OS)
@@ -36,7 +36,7 @@ This project uses GitHub Issues to track bugs, feature requests, and questions. 
 
 Official support for this project is limited to the GitHub issues system as described above.
 
-> **Note**: Azure Resource Inventory is an open-source project maintained by the community. While we strive to address issues in a timely manner, response times may vary based on priority and maintainer availability. Microsoft offers no official support for this project.
+> **Note**: Azure Tenant Inventory is an open-source project maintained by the community. While we strive to address issues in a timely manner, response times may vary based on priority and maintainer availability. Microsoft offers no official support for this project.
 
 ## 🔄 Issue Lifecycle
 

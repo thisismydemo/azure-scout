@@ -1,15 +1,15 @@
-# Azure Resource Inventory (ARI)
+# Azure Tenant Inventory (AZTI)
 
 <div align="center">
-<img src="images/ARI_Logo.png" width="300">
+<img src="images/AZTI_Logo.png" width="300">
 </div>
 
 ## Overview
 
-Azure Resource Inventory (ARI) is a comprehensive PowerShell module that generates detailed Excel reports of any Azure environment you have read access to. It is designed for Cloud Administrators and technical professionals who need an easy and fast way to document their Azure environments.
+Azure Tenant Inventory (AZTI) is a comprehensive PowerShell module that generates detailed Excel reports of any Azure environment you have read access to. It is designed for Cloud Administrators and technical professionals who need an easy and fast way to document their Azure environments.
 
 <div align="center">
-<img src="images/ARIv35-Overview.png" width="700">
+<img src="images/AZTIv35-Overview.png" width="700">
 </div>
 
 ## Key Features
@@ -35,7 +35,7 @@ Azure Resource Inventory (ARI) is a comprehensive PowerShell module that generat
 ### Excel Report
 
 <div align="center">
-<img src="images/ARIv3ExcelExample.png" width="800">
+<img src="images/AZTIv3ExcelExample.png" width="800">
 </div>
 
 ### Network Topology View
@@ -47,8 +47,8 @@ Azure Resource Inventory (ARI) is a comprehensive PowerShell module that generat
 Interactive features show resource details on hover:
 
 <div align="center">
-<img src="images/ARIv3DrawioHover.png" width="400">
-<img src="images/ARIv3DrawioPeer.png" width="400">
+<img src="images/AZTIv3DrawioHover.png" width="400">
+<img src="images/AZTIv3DrawioPeer.png" width="400">
 </div>
 
 ### Organization View

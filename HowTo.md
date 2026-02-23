@@ -1,8 +1,8 @@
-# Azure Resource Inventory User Guide
+# Azure Tenant Inventory User Guide
 
 <div align="center">
-  <img src="images/ARI_Logo.png" width="250">
-  <h3>How to install, configure, and use ARI</h3>
+  <img src="images/AZTI_Logo.png" width="250">
+  <h3>How to install, configure, and use AZTI</h3>
 </div>
 
 ## Table of Contents
@@ -17,28 +17,28 @@
 
 ## Installation
 
-ARI is available as a PowerShell module that can be installed directly from the PowerShell Gallery:
+AZTI is available as a PowerShell module that can be installed directly from the PowerShell Gallery:
 
 ```powershell
-Install-Module -Name AzureResourceInventory
+Install-Module -Name AzureTenantInventory
 ```
 
 <p align="center">
-  <img src="images/InstallARI.gif" width="700" style="border: 1px solid #ccc;">
+  <img src="images/InstallAZTI.gif" width="700" style="border: 1px solid #ccc;">
 </p>
 
 ## Basic Usage
 
-Once installed, you can run ARI with a simple command:
+Once installed, you can run AZTI with a simple command:
 
 ```powershell
-Invoke-ARI
+Invoke-AzureTenantInventory
 ```
 
 This will authenticate you to Azure and begin collecting inventory data from all accessible subscriptions.
 
 <p align="center">
-  <img src="images/RunningARI.gif" width="700" style="border: 1px solid #ccc;">
+  <img src="images/RunningAZTI.gif" width="700" style="border: 1px solid #ccc;">
 </p>
 
 ## Command Reference
@@ -82,10 +82,10 @@ This will authenticate you to Azure and begin collecting inventory data from all
 
 #### Running in Azure Cloud Shell
 
-The simplest way to run ARI is directly in Azure Cloud Shell, where authentication is already handled:
+The simplest way to run AZTI is directly in Azure Cloud Shell, where authentication is already handled:
 
 ```powershell
-Invoke-ARI -Debug
+Invoke-AzureTenantInventory -Debug
 ```
 
 #### Inventory a Specific Tenant and Subscription
@@ -93,17 +93,17 @@ Invoke-ARI -Debug
 To target a specific tenant and subscription:
 
 ```powershell
-Invoke-ARI -TenantID <Azure-Tenant-ID> -SubscriptionID <Subscription-ID>
+Invoke-AzureTenantInventory -TenantID <Azure-Tenant-ID> -SubscriptionID <Subscription-ID>
 ```
 
-> If you do not specify a subscription, ARI will inventory all subscriptions in the selected tenant.
+> If you do not specify a subscription, AZTI will inventory all subscriptions in the selected tenant.
 
 #### Include Resource Tags
 
-By default, ARI does not include resource tags. To include them:
+By default, AZTI does not include resource tags. To include them:
 
 ```powershell
-Invoke-ARI -TenantID <Azure-Tenant-ID> -IncludeTags
+Invoke-AzureTenantInventory -TenantID <Azure-Tenant-ID> -IncludeTags
 ```
 
 #### Include Security Center Data
@@ -111,7 +111,7 @@ Invoke-ARI -TenantID <Azure-Tenant-ID> -IncludeTags
 To include Security Center assessments:
 
 ```powershell
-Invoke-ARI -TenantID <Azure-Tenant-ID> -SecurityCenter
+Invoke-AzureTenantInventory -TenantID <Azure-Tenant-ID> -SecurityCenter
 ```
 
 #### Skip Azure Advisor Data
@@ -119,7 +119,7 @@ Invoke-ARI -TenantID <Azure-Tenant-ID> -SecurityCenter
 To skip collection of Azure Advisor recommendations (which can speed up the process):
 
 ```powershell
-Invoke-ARI -TenantID <Azure-Tenant-ID> -SkipAdvisory
+Invoke-AzureTenantInventory -TenantID <Azure-Tenant-ID> -SkipAdvisory
 ```
 
 #### Skip Network Diagram Generation
@@ -127,12 +127,12 @@ Invoke-ARI -TenantID <Azure-Tenant-ID> -SkipAdvisory
 To skip the creation of network diagrams (faster execution):
 
 ```powershell
-Invoke-ARI -TenantID <Azure-Tenant-ID> -SkipDiagram
+Invoke-AzureTenantInventory -TenantID <Azure-Tenant-ID> -SkipDiagram
 ```
 
 ## Multi-Tenant Support
 
-If you have access to multiple Azure tenants, ARI will detect this and provide a menu of available tenants:
+If you have access to multiple Azure tenants, AZTI will detect this and provide a menu of available tenants:
 
 <p align="center">
   <img src="images/multitenant.png" width="600" style="border: 1px solid #ddd;">
@@ -146,17 +146,17 @@ You can either select from this menu or specify the tenant directly using the `-
 
 ## Working with Network Diagrams
 
-ARI can generate detailed network topology diagrams in Draw.io format (.xml).
+AZTI can generate detailed network topology diagrams in Draw.io format (.xml).
 
 ### Diagram Location
 
 By default, the diagram files are saved to:
 
-- Windows: `C:\AzureResourceInventory\`
-- Linux/CloudShell: `$HOME/AzureResourceInventory/`
+- Windows: `C:\AzureTenantInventory\`
+- Linux/CloudShell: `$HOME/AzureTenantInventory/`
 
 <p align="center">
-  <img src="images/ARIFiles.png" width="600" style="border: 1px solid #ddd;">
+  <img src="images/AZTIFiles.png" width="600" style="border: 1px solid #ddd;">
 </p>
 
 ### Opening Diagrams
@@ -165,7 +165,7 @@ To view the generated diagram:
 
 1. Open [draw.io](https://app.diagrams.net/) in your browser
 2. Select "Open Existing Diagram"
-3. Navigate to your ARI output folder and select the XML file
+3. Navigate to your AZTI output folder and select the XML file
 
 <p align="center">
   <img src="images/drawioopen.png" width="600" style="border: 1px solid #ddd;">
@@ -182,4 +182,4 @@ The diagrams provide interactive features:
 
 ---
 
-For more detailed information, visit the [project repository](https://github.com/microsoft/ARI).
+For more detailed information, visit the [project repository](https://github.com/thisismydemo/azure-inventory).

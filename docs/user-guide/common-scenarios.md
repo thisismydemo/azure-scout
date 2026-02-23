@@ -1,13 +1,13 @@
 # Common Scenarios
 
-This guide covers common usage scenarios for Azure Resource Inventory. Each scenario includes the required commands and explains when you might want to use each approach.
+This guide covers common usage scenarios for Azure Tenant Inventory. Each scenario includes the required commands and explains when you might want to use each approach.
 
 ## Scenario 1: Complete Enterprise Documentation
 
 When you need comprehensive documentation of your entire Azure estate across multiple subscriptions:
 
 ```powershell
-Invoke-ARI -TenantID "00000000-0000-0000-0000-000000000000" -IncludeTags -SecurityCenter -IncludeCosts
+Invoke-AzureTenantInventory -TenantID "00000000-0000-0000-0000-000000000000" -IncludeTags -SecurityCenter -IncludeCosts
 ```
 
 This command will:
@@ -21,7 +21,7 @@ This command will:
 When you need a fast overview of a specific subscription:
 
 ```powershell
-Invoke-ARI -SubscriptionID "00000000-0000-0000-0000-000000000000" -Lite -SkipDiagram
+Invoke-AzureTenantInventory -SubscriptionID "00000000-0000-0000-0000-000000000000" -Lite -SkipDiagram
 ```
 
 This command will:
@@ -34,7 +34,7 @@ This command will:
 When you need to assess the security posture of your Azure environment:
 
 ```powershell
-Invoke-ARI -SecurityCenter -ReportName "SecurityInventory"
+Invoke-AzureTenantInventory -SecurityCenter -ReportName "SecurityInventory"
 ```
 
 This command will:
@@ -46,7 +46,7 @@ This command will:
 When you need detailed network diagrams:
 
 ```powershell
-Invoke-ARI -DiagramFullEnvironment -ReportName "NetworkDiagrams"
+Invoke-AzureTenantInventory -DiagramFullEnvironment -ReportName "NetworkDiagrams"
 ```
 
 This command will:
@@ -59,7 +59,7 @@ This command will:
 When you need to focus on your production resources:
 
 ```powershell
-Invoke-ARI -TagKey "Environment" -TagValue "Production" -IncludeTags
+Invoke-AzureTenantInventory -TagKey "Environment" -TagValue "Production" -IncludeTags
 ```
 
 This command will:
@@ -71,7 +71,7 @@ This command will:
 When you need to set up regular reports using Azure Automation:
 
 ```powershell
-Invoke-ARI -TenantID "00000000-0000-0000-0000-000000000000" -Automation -StorageAccount "mystorageaccount" -StorageContainer "reports"
+Invoke-AzureTenantInventory -TenantID "00000000-0000-0000-0000-000000000000" -Automation -StorageAccount "mystorageaccount" -StorageContainer "reports"
 ```
 
 This command will:
@@ -82,10 +82,10 @@ See the [Automation Guide](../advanced/automation.md) for detailed setup instruc
 
 ## Scenario 7: Non-Interactive Service Principal Access
 
-When you need to run ARI without interactive login:
+When you need to run AZTI without interactive login:
 
 ```powershell
-Invoke-ARI -TenantID "00000000-0000-0000-0000-000000000000" -AppId "00000000-0000-0000-0000-000000000000" -Secret "your-client-secret"
+Invoke-AzureTenantInventory -TenantID "00000000-0000-0000-0000-000000000000" -AppId "00000000-0000-0000-0000-000000000000" -Secret "your-client-secret"
 ```
 
 This command will:
@@ -97,7 +97,7 @@ This command will:
 When you need to focus on governance and compliance:
 
 ```powershell
-Invoke-ARI -ManagementGroup "governance-mg" -SkipDiagram
+Invoke-AzureTenantInventory -ManagementGroup "governance-mg" -SkipDiagram
 ```
 
 This command will:
@@ -110,9 +110,9 @@ When you need to compare development, staging, and production environments:
 
 ```powershell
 # Run these separately to create three different reports
-Invoke-ARI -SubscriptionID "00000000-0000-0000-0000-000000000000" -ResourceGroup "dev-rg" -ReportName "Dev-Inventory"
-Invoke-ARI -SubscriptionID "00000000-0000-0000-0000-000000000000" -ResourceGroup "staging-rg" -ReportName "Staging-Inventory"
-Invoke-ARI -SubscriptionID "00000000-0000-0000-0000-000000000000" -ResourceGroup "prod-rg" -ReportName "Prod-Inventory"
+Invoke-AzureTenantInventory -SubscriptionID "00000000-0000-0000-0000-000000000000" -ResourceGroup "dev-rg" -ReportName "Dev-Inventory"
+Invoke-AzureTenantInventory -SubscriptionID "00000000-0000-0000-0000-000000000000" -ResourceGroup "staging-rg" -ReportName "Staging-Inventory"
+Invoke-AzureTenantInventory -SubscriptionID "00000000-0000-0000-0000-000000000000" -ResourceGroup "prod-rg" -ReportName "Prod-Inventory"
 ```
 
 This set of commands will:
@@ -121,10 +121,10 @@ This set of commands will:
 
 ## Scenario 10: Running in Cloud Shell
 
-When you need to run ARI in Azure Cloud Shell:
+When you need to run AZTI in Azure Cloud Shell:
 
 ```powershell
-Invoke-ARI -Debug -Lite -ReportName "CloudShellInventory"
+Invoke-AzureTenantInventory -Debug -Lite -ReportName "CloudShellInventory"
 ```
 
 This command will:

@@ -26,23 +26,23 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  azureServiceConnection: 'ARI-ServiceConnection' # Replace with your service connection name
+  azureServiceConnection: 'AZTI-ServiceConnection' # Replace with your service connection name
 
 steps:
 - task: AzureCLI@2
-  displayName: 'Install and Run Azure Resource Inventory'
+  displayName: 'Install and Run Azure Tenant Inventory'
   inputs:
     azureSubscription: $(azureServiceConnection)
     scriptType: 'ps'
     scriptLocation: 'inlineScript'
     inlineScript: |
       # Install required modules
-      Install-Module -Name AzureResourceInventory -Force -Scope CurrentUser
+      Install-Module -Name AzureTenantInventory -Force -Scope CurrentUser
       Install-Module -Name Az.Accounts -Force -Scope CurrentUser
       Install-Module -Name ImportExcel -Force -Scope CurrentUser
       
-      # Import ARI module
-      Import-Module AzureResourceInventory
+      # Import AZTI module
+      Import-Module AzureTenantInventory
       
       # Prepare parameters
       $params = @{}
@@ -70,24 +70,24 @@ steps:
       # $params.Add("IncludeTags", $true)
       # $params.Add("DiagramFullEnvironment", $true)
       
-      # Run ARI
-      Invoke-ARI @params
+      # Run AZTI
+      Invoke-AzureTenantInventory @params
       
       # Create artifacts directory
-      New-Item -Path "$(Build.ArtifactStagingDirectory)/ari-reports" -ItemType Directory -Force
+      New-Item -Path "$(Build.ArtifactStagingDirectory)/AZTI-Reports" -ItemType Directory -Force
       
       # Move reports to artifacts directory
-      Move-Item -Path "*.xlsx" -Destination "$(Build.ArtifactStagingDirectory)/ari-reports/" -Force
+      Move-Item -Path "*.xlsx" -Destination "$(Build.ArtifactStagingDirectory)/AZTI-Reports/" -Force
       
       if (Test-Path "*.drawio") {
-        Move-Item -Path "*.drawio" -Destination "$(Build.ArtifactStagingDirectory)/ari-reports/" -Force
+        Move-Item -Path "*.drawio" -Destination "$(Build.ArtifactStagingDirectory)/AZTI-Reports/" -Force
       }
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Inventory Reports'
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/ari-reports'
-    ArtifactName: 'ARI-Reports'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/AZTI-Reports'
+    ArtifactName: 'AZTI-Reports'
     publishLocation: 'Container'
 
 # Optional: Upload to Azure Storage
@@ -99,13 +99,13 @@ steps:
 #     scriptLocation: 'inlineScript'
 #     inlineScript: |
 #       $storageAccount = "yourstorageaccount"
-#       $container = "ari-reports"
+#       $container = "AZTI-Reports"
 #       
 #       # Create storage context
 #       $ctx = New-AzStorageContext -StorageAccountName $storageAccount
 #       
 #       # Upload files to Azure Storage
-#       Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/ari-reports" -File | ForEach-Object {
+#       Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/AZTI-Reports" -File | ForEach-Object {
 #         Set-AzStorageBlobContent -File $_.FullName -Container $container -Blob $_.Name -Context $ctx -Force
 #       }
 
@@ -123,8 +123,8 @@ steps:
 #       
 #       # Construct payload
 #       $payload = @{
-#         subject = "Azure Resource Inventory Report"
-#         message = "The Azure Resource Inventory report has been generated successfully."
+#         subject = "Azure Tenant Inventory Report"
+#         message = "The Azure Tenant Inventory report has been generated successfully."
 #         runUrl = "$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)"
 #         date = (Get-Date -Format "yyyy-MM-dd HH:mm:ss")
 #       } | ConvertTo-Json

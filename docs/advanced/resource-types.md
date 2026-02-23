@@ -1,8 +1,8 @@
 # Supported Azure Resource Types
 
-Azure Resource Inventory (ARI) supports a wide range of Azure resource types. This page provides a comprehensive list of all supported resource types organized by resource provider category.
+Azure Tenant Inventory (AZTI) supports a wide range of Azure resource types. This page provides a comprehensive list of all supported resource types organized by resource provider category.
 
-Each section corresponds to a subfolder within the `Modules/Public/InventoryModules` directory in the ARI codebase, and represents an Azure Resource Provider Category as defined in [Microsoft's documentation](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/azure-services-resource-providers).
+Each section corresponds to a subfolder within the `Modules/Public/InventoryModules` directory in the AZTI codebase, and represents an Azure Resource Provider Category as defined in [Microsoft's documentation](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/azure-services-resource-providers).
 
 ## Supported Provider Categories
 

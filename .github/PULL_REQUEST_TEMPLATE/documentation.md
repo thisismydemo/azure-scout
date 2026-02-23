@@ -28,7 +28,7 @@ This PR adds a comprehensive documentation system using MkDocs with the Material
 4. Enable GitHub Pages in repository settings:
    - Go to Settings > Pages
    - Select "GitHub Actions" as the source
-   - The documentation will be available at `https://[organization].github.io/ARI/`
+   - The documentation will be available at `https://[organization].github.io/AZTI/`
 
 ## Screenshots
 

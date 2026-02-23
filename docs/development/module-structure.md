@@ -1,15 +1,15 @@
 # Module Structure
 
-This page provides an overview of the Azure Resource Inventory (ARI) module structure, explaining how the different components work together.
+This page provides an overview of the Azure Tenant Inventory (AZTI) module structure, explaining how the different components work together.
 
 ## Overview
 
-The ARI module is organized into a hierarchical structure with the main module file (`AzureResourceInventory.psm1`) loading a collection of specialized modules and functions.
+The AZTI module is organized into a hierarchical structure with the main module file (`AzureTenantInventory.psm1`) loading a collection of specialized modules and functions.
 
 ```
-AzureResourceInventory
-├── AzureResourceInventory.psd1      # Module manifest
-├── AzureResourceInventory.psm1      # Main module file
+AzureTenantInventory
+├── AzureTenantInventory.psd1      # Module manifest
+├── AzureTenantInventory.psm1      # Main module file
 ├── Modules/                         # Module components
 │   ├── Private/                     # Internal helper functions
 │   │   └── ...
@@ -19,7 +19,7 @@ AzureResourceInventory
 │       │   │   └── ...
 │       │   ├── Jobs/                # Background job handling
 │       │   │   └── ...
-│       │   ├── Invoke-ARI.ps1       # Main command implementation
+│       │   ├── Invoke-AzureTenantInventory.ps1       # Main command implementation
 │       │   └── ...
 │       └── InventoryModules/        # Resource-specific modules
 │           ├── AI/                  # AI resource modules
@@ -33,8 +33,8 @@ AzureResourceInventory
 
 ### Module Entry Points
 
-- **AzureResourceInventory.psd1**: The module manifest that defines metadata, dependencies, and exported functions.
-- **AzureResourceInventory.psm1**: The root module file that loads all submodules and defines the module's behavior.
+- **AzureTenantInventory.psd1**: The module manifest that defines metadata, dependencies, and exported functions.
+- **AzureTenantInventory.psm1**: The root module file that loads all submodules and defines the module's behavior.
 
 ### Functional Organization
 
@@ -47,30 +47,30 @@ The module is organized into two main categories:
 
 ### Core Functions
 
-- **Invoke-ARI**: The main function that orchestrates the inventory process.
+- **Invoke-AzureTenantInventory**: The main function that orchestrates the inventory process.
 - **Invoke-AzureRAMPInventory**: Alias function for backward compatibility.
 
 ### Job Management Functions
 
 Functions that handle background job processing for parallel execution:
 
-- **Start-ARIAdvisoryJob**: Manages collecting Azure Advisor recommendations.
-- **Start-ARIPolicyJob**: Handles Azure Policy data collection.
-- **Start-ARISecCenterJob**: Collects Security Center information.
-- **Start-ARISubscriptionJob**: Manages subscription data collection.
-- **Wait-ARIJob**: Waits for job completion and handles results.
+- **Start-AZTIAdvisoryJob**: Manages collecting Azure Advisor recommendations.
+- **Start-AZTIPolicyJob**: Handles Azure Policy data collection.
+- **Start-AZTISecCenterJob**: Collects Security Center information.
+- **Start-AZTISubscriptionJob**: Manages subscription data collection.
+- **Wait-AZTIJob**: Waits for job completion and handles results.
 
 ### Diagram Functions
 
 Functions dedicated to creating network diagrams:
 
-- **Build-ARIDiagramSubnet**: Creates subnet-level diagrams.
-- **Set-ARIDiagramFile**: Prepares diagram file structure.
-- **Start-ARIDiagramJob**: Manages diagram generation jobs.
-- **Start-ARIDiagramNetwork**: Generates network topology diagrams.
-- **Start-ARIDiagramOrganization**: Creates organizational hierarchy diagrams.
-- **Start-ARIDiagramSubscription**: Generates subscription-level diagrams.
-- **Start-ARIDrawIODiagram**: Converts data to Draw.io format.
+- **Build-AZTIDiagramSubnet**: Creates subnet-level diagrams.
+- **Set-AZTIDiagramFile**: Prepares diagram file structure.
+- **Start-AZTIDiagramJob**: Manages diagram generation jobs.
+- **Start-AZTIDiagramNetwork**: Generates network topology diagrams.
+- **Start-AZTIDiagramOrganization**: Creates organizational hierarchy diagrams.
+- **Start-AZTIDiagramSubscription**: Generates subscription-level diagrams.
+- **Start-AZTIDrawIODiagram**: Converts data to Draw.io format.
 
 ## Inventory Modules
 
@@ -90,7 +90,7 @@ The `InventoryModules` directory contains specialized modules for each Azure res
 Each resource type module follows a standard pattern:
 
 ```powershell
-function global:Get-ARIResourceName {
+function global:Get-AZTIResourceName {
     # Input parameters and validation
     # Resource collection logic
     # Data transformation
@@ -100,7 +100,7 @@ function global:Get-ARIResourceName {
 
 ## Execution Flow
 
-When `Invoke-ARI` is called, the following process occurs:
+When `Invoke-AzureTenantInventory` is called, the following process occurs:
 
 1. **Authentication and Validation**: Verify credentials and parameters.
 2. **Subscription Enumeration**: Identify target subscriptions.

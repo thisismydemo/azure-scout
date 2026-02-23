@@ -17,9 +17,9 @@ echo "========================================================"
 
 # Step 1: Clean up any previous test artifacts
 echo "Step 1: Cleaning up previous test artifacts..."
-if [ -d "ari-reports" ]; then
-    echo "Removing existing ari-reports directory..."
-    rm -rf ari-reports
+if [ -d "AZTI-Reports" ]; then
+    echo "Removing existing AZTI-Reports directory..."
+    rm -rf AZTI-Reports
 fi
 echo "Cleanup completed"
 echo "========================================================"
@@ -29,10 +29,10 @@ echo "Step 2: Simulating Azure login..."
 echo "Azure login simulated for local testing"
 echo "========================================================"
 
-# Step 3: Simulate ARI Installation and Run
-echo "Step 3: Simulating ARI Installation and Run..."
-echo "Installing ARI modules (simulation for testing)"
-echo "Running Invoke-ARI with parameters:"
+# Step 3: Simulate AZTI Installation and Run
+echo "Step 3: Simulating AZTI Installation and Run..."
+echo "Installing AZTI modules (simulation for testing)"
+echo "Running Invoke-AzureTenantInventory with parameters:"
 echo "- ReportName: $REPORT_NAME"
 echo "- SubscriptionID: $SUBSCRIPTION_ID"
 echo "- ResourceGroup: $RESOURCE_GROUP"
@@ -40,12 +40,12 @@ echo "========================================================"
 
 # Step 4: Create dummy report files
 echo "Step 4: Creating dummy report files..."
-mkdir -p ari-reports
-echo "This is a test Excel report for $REPORT_NAME" > "ari-reports/${REPORT_NAME}.xlsx"
-echo "This is a test diagram file for $REPORT_NAME" > "ari-reports/${REPORT_NAME}.drawio"
+mkdir -p AZTI-Reports
+echo "This is a test Excel report for $REPORT_NAME" > "AZTI-Reports/${REPORT_NAME}.xlsx"
+echo "This is a test diagram file for $REPORT_NAME" > "AZTI-Reports/${REPORT_NAME}.drawio"
 
 echo "Created files:"
-ls -la ari-reports/
+ls -la AZTI-Reports/
 echo "========================================================"
 
 echo "Azure Inventory workflow test completed successfully!"

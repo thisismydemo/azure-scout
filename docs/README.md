@@ -1,6 +1,6 @@
-# Azure Resource Inventory Documentation
+# Azure Tenant Inventory Documentation
 
-This directory contains the source files for the Azure Resource Inventory (ARI) documentation site.
+This directory contains the source files for the Azure Tenant Inventory (AZTI) documentation site.
 
 ## Overview
 
@@ -77,4 +77,4 @@ When adding new content:
 
 - `mkdocs build` - Build the documentation site
 - `mkdocs serve` - Start the live-reloading docs server
-- `mkdocs gh-deploy` - Deploy the documentation to GitHub Pages (manual deployment) 
+- `mkdocs gh-deploy` - Deploy the documentation to GitHub Pages (manual deployment)

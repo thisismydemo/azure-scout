@@ -1,89 +1,89 @@
 # Basic Usage
 
-This guide covers the fundamental usage patterns for Azure Resource Inventory (ARI). For a quick start, see the [Quick Start Guide](../getting-started/quick-start.md).
+This guide covers the fundamental usage patterns for Azure Tenant Inventory (AZTI). For a quick start, see the [Quick Start Guide](../getting-started/quick-start.md).
 
 ## Command Structure
 
-The basic syntax for ARI is:
+The basic syntax for AZTI is:
 
 ```powershell
-Invoke-ARI [parameters]
+Invoke-AzureTenantInventory [parameters]
 ```
 
 ## Authentication
 
-ARI supports multiple authentication methods:
+AZTI supports multiple authentication methods:
 
 ### Interactive Login
 
 ```powershell
-# ARI will prompt for interactive login if not already authenticated
-Invoke-ARI
+# AZTI will prompt for interactive login if not already authenticated
+Invoke-AzureTenantInventory
 ```
 
 ### Specific Tenant
 
 ```powershell
-Invoke-ARI -TenantID "00000000-0000-0000-0000-000000000000"
+Invoke-AzureTenantInventory -TenantID "00000000-0000-0000-0000-000000000000"
 ```
 
 ### Service Principal
 
 ```powershell
-Invoke-ARI -TenantID "00000000-0000-0000-0000-000000000000" -AppId "00000000-0000-0000-0000-000000000000" -Secret "your-client-secret"
+Invoke-AzureTenantInventory -TenantID "00000000-0000-0000-0000-000000000000" -AppId "00000000-0000-0000-0000-000000000000" -Secret "your-client-secret"
 ```
 
 ### Certificate-Based Authentication
 
 ```powershell
-Invoke-ARI -TenantID "00000000-0000-0000-0000-000000000000" -AppId "00000000-0000-0000-0000-000000000000" -CertificatePath "C:\Certificates\cert.pfx"
+Invoke-AzureTenantInventory -TenantID "00000000-0000-0000-0000-000000000000" -AppId "00000000-0000-0000-0000-000000000000" -CertificatePath "C:\Certificates\cert.pfx"
 ```
 
 ### Device Code Authentication
 
 ```powershell
-Invoke-ARI -TenantID "00000000-0000-0000-0000-000000000000" -DeviceLogin
+Invoke-AzureTenantInventory -TenantID "00000000-0000-0000-0000-000000000000" -DeviceLogin
 ```
 
 ## Scoping Your Inventory
 
-ARI can be scoped to different levels:
+AZTI can be scoped to different levels:
 
 ### All Accessible Resources
 
 ```powershell
-Invoke-ARI
+Invoke-AzureTenantInventory
 ```
 
 ### Specific Subscription
 
 ```powershell
-Invoke-ARI -SubscriptionID "00000000-0000-0000-0000-000000000000"
+Invoke-AzureTenantInventory -SubscriptionID "00000000-0000-0000-0000-000000000000"
 ```
 
 ### Specific Resource Group
 
 ```powershell
-Invoke-ARI -SubscriptionID "00000000-0000-0000-0000-000000000000" -ResourceGroup "MyResourceGroup"
+Invoke-AzureTenantInventory -SubscriptionID "00000000-0000-0000-0000-000000000000" -ResourceGroup "MyResourceGroup"
 ```
 
 ### Management Group
 
 ```powershell
-Invoke-ARI -ManagementGroup "MyManagementGroup"
+Invoke-AzureTenantInventory -ManagementGroup "MyManagementGroup"
 ```
 
 ### Tag-Based Filtering
 
 ```powershell
 # Resources with specific tag key
-Invoke-ARI -TagKey "Environment"
+Invoke-AzureTenantInventory -TagKey "Environment"
 
 # Resources with specific tag value
-Invoke-ARI -TagValue "Production"
+Invoke-AzureTenantInventory -TagValue "Production"
 
 # Resources with specific tag key and value
-Invoke-ARI -TagKey "Environment" -TagValue "Production"
+Invoke-AzureTenantInventory -TagKey "Environment" -TagValue "Production"
 ```
 
 ## Report Content Control
@@ -93,38 +93,38 @@ Control what information is included in your reports:
 ### Include Resource Tags
 
 ```powershell
-Invoke-ARI -IncludeTags
+Invoke-AzureTenantInventory -IncludeTags
 ```
 
 ### Include Security Center Data
 
 ```powershell
-Invoke-ARI -SecurityCenter
+Invoke-AzureTenantInventory -SecurityCenter
 ```
 
 ### Skip Azure Policy Data
 
 ```powershell
-Invoke-ARI -SkipPolicy
+Invoke-AzureTenantInventory -SkipPolicy
 ```
 
 ### Skip Azure VM Details
 
 ```powershell
-Invoke-ARI -SkipVMDetails
+Invoke-AzureTenantInventory -SkipVMDetails
 ```
 
 ### Skip Azure Advisory Collection
 
 ```powershell
-Invoke-ARI -SkipAdvisory
+Invoke-AzureTenantInventory -SkipAdvisory
 ```
 
 ### Include Cost Data
 
 ```powershell
 # Note: Requires Az.CostManagement module
-Invoke-ARI -IncludeCosts
+Invoke-AzureTenantInventory -IncludeCosts
 ```
 
 ## Report Output Options
@@ -134,20 +134,20 @@ Customize how the report is generated and saved:
 ### Custom Report Name
 
 ```powershell
-Invoke-ARI -ReportName "MyAzureInventory"
+Invoke-AzureTenantInventory -ReportName "MyAzureInventory"
 ```
 
 ### Custom Output Directory
 
 ```powershell
-Invoke-ARI -ReportDir "C:\Reports"
+Invoke-AzureTenantInventory -ReportDir "C:\Reports"
 ```
 
 ### Lightweight Report Format
 
 ```powershell
 # Generate report without charts for faster processing
-Invoke-ARI -Lite
+Invoke-AzureTenantInventory -Lite
 ```
 
 ## Diagram Options
@@ -157,38 +157,38 @@ Control network diagram generation:
 ### Skip Diagram Creation
 
 ```powershell
-Invoke-ARI -SkipDiagram
+Invoke-AzureTenantInventory -SkipDiagram
 ```
 
 ### Include All Network Components
 
 ```powershell
-Invoke-ARI -DiagramFullEnvironment
+Invoke-AzureTenantInventory -DiagramFullEnvironment
 ```
 
 ## Other Common Options
 
-Additional options to control ARI behavior:
+Additional options to control AZTI behavior:
 
 ### Debug Mode
 
 ```powershell
 # Run in debug mode for detailed logging
-Invoke-ARI -Debug
+Invoke-AzureTenantInventory -Debug
 ```
 
 ### Prevent Automatic Updates
 
 ```powershell
 # Skip automatic module updates
-Invoke-ARI -NoAutoUpdate
+Invoke-AzureTenantInventory -NoAutoUpdate
 ```
 
 ### Specify Azure Environment
 
 ```powershell
 # For non-standard Azure environments
-Invoke-ARI -AzureEnvironment "AzureUSGovernment"
+Invoke-AzureTenantInventory -AzureEnvironment "AzureUSGovernment"
 ```
 
 ## Using Cloud Shell
@@ -196,7 +196,7 @@ Invoke-ARI -AzureEnvironment "AzureUSGovernment"
 When running in Azure Cloud Shell, it's recommended to use:
 
 ```powershell
-Invoke-ARI -Debug
+Invoke-AzureTenantInventory -Debug
 ```
 
 This helps to work around certain limitations in the Cloud Shell environment. 

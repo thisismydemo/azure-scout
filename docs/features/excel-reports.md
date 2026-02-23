@@ -1,10 +1,10 @@
 # Excel Reports
 
-Azure Resource Inventory generates comprehensive Excel reports that provide detailed information about your Azure environment. This page explains the structure and content of these reports.
+Azure Tenant Inventory generates comprehensive Excel reports that provide detailed information about your Azure environment. This page explains the structure and content of these reports.
 
 ## Report Overview
 
-The Excel report is the primary output of Azure Resource Inventory. It contains multiple worksheets, each dedicated to a specific resource type or summary view. The report is designed to be:
+The Excel report is the primary output of Azure Tenant Inventory. It contains multiple worksheets, each dedicated to a specific resource type or summary view. The report is designed to be:
 
 - **Comprehensive**: Covering all resource types in your environment
 - **Well-formatted**: With consistent styling and visual aids
@@ -12,7 +12,7 @@ The Excel report is the primary output of Azure Resource Inventory. It contains 
 - **Interactive**: Including charts and visual summaries where appropriate
 
 <div align="center">
-<img src="../../images/ARIv3ExcelExample.png" width="800">
+<img src="../../images/AZTIv3ExcelExample.png" width="800">
 </div>
 
 ## Report Structure
@@ -36,7 +36,7 @@ Each Azure resource type has its own dedicated worksheet with relevant details. 
 
 ### Tag-Based Information
 
-When you run ARI with the `-IncludeTags` parameter, resource tags are included in each resource sheet, allowing you to:
+When you run AZTI with the `-IncludeTags` parameter, resource tags are included in each resource sheet, allowing you to:
 
 - Filter resources by tag values
 - Understand resource ownership
@@ -65,7 +65,7 @@ For faster report generation, you can use the `-Lite` parameter, which:
 You can customize the report name and location:
 
 ```powershell
-Invoke-ARI -ReportName "MyCustomReport" -ReportDir "C:\Reports"
+Invoke-AzureTenantInventory -ReportName "MyCustomReport" -ReportDir "C:\Reports"
 ```
 
 ### Filtering Options
@@ -99,8 +99,8 @@ The generated Excel report supports standard Excel filtering. You can:
 
 ## Automation Output
 
-When using ARI with `-Automation`, the Excel report is saved to the specified Storage Account and container:
+When using AZTI with `-Automation`, the Excel report is saved to the specified Storage Account and container:
 
 ```powershell
-Invoke-ARI -Automation -StorageAccount "mystorageaccount" -StorageContainer "reports"
+Invoke-AzureTenantInventory -Automation -StorageAccount "mystorageaccount" -StorageContainer "reports"
 ``` 

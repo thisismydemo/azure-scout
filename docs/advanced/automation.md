@@ -1,10 +1,10 @@
 # Automation Guide
 
-Azure Resource Inventory can be set up to run automatically using Azure Automation Accounts. This guide will walk you through the process of setting up an automated inventory system.
+Azure Tenant Inventory can be set up to run automatically using Azure Automation Accounts. This guide will walk you through the process of setting up an automated inventory system.
 
 ## Prerequisites
 
-To run ARI as an Automation Account, you need:
+To run AZTI as an Automation Account, you need:
 
 1. An Azure Automation Account
 2. An Azure Storage Account
@@ -22,7 +22,7 @@ If you don't already have an Automation Account, create one in the Azure Portal.
 2. Enable the **System Assigned** identity
 
 <div align="center">
-<img src="../images/ARIAUT_Identity.png">
+<img src="../images/AZTIAUT_Identity.png">
 </div>
 
 ### Step 3: Grant Required Permissions
@@ -51,13 +51,13 @@ Grant the Automation Account's identity the "Storage Blob Data Contributor" role
 2. Switch to the new Runtime Environment Experience
 
 <div align="center">
-<img src="../images/ARIAUT_Runtime.png">
+<img src="../images/AZTIAUT_Runtime.png">
 </div>
 
 3. Create a new Runtime Environment
 
 <div align="center">
-<img src="../images/ARIAUT_NewRunTime.png">
+<img src="../images/AZTIAUT_NewRunTime.png">
 </div>
 
 4. Use PowerShell version **7.4** (recommended and tested)
@@ -67,10 +67,10 @@ Grant the Automation Account's identity the "Storage Blob Data Contributor" role
 In the "Packages" pane of your Runtime Environment, import the following modules from the gallery:
 
 <div align="center">
-<img src="../images/ARIAUT_RuntimePackages.png">
+<img src="../images/AZTIAUT_RuntimePackages.png">
 </div>
 
-1. AzureResourceInventory
+1. AzureTenantInventory
 2. ImportExcel
 3. Az.ResourceGraph
 4. Az.Accounts
@@ -83,23 +83,23 @@ In the "Packages" pane of your Runtime Environment, import the following modules
 1. In your Automation Account, create a new PowerShell Runbook
 
 <div align="center">
-<img src="../images/ARIAUT_Runbook.png">
+<img src="../images/AZTIAUT_Runbook.png">
 </div>
 
-2. Add the Invoke-ARI command to the runbook:
+2. Add the Invoke-AzureTenantInventory command to the runbook:
 
 <div align="center">
-<img src="../images/ARIAUT_Runbookcmd.png">
+<img src="../images/AZTIAUT_Runbookcmd.png">
 </div>
 
 3. Make sure to select the Runtime Environment you created earlier
 
-### Step 7: Configure the ARI Command
+### Step 7: Configure the AZTI Command
 
-Add the Invoke-ARI command with the required parameters:
+Add the Invoke-AzureTenantInventory command with the required parameters:
 
 ```powershell
-Invoke-ARI -TenantID "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" -Automation -StorageAccount "mystorageaccount" -StorageContainer "reports"
+Invoke-AzureTenantInventory -TenantID "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" -Automation -StorageAccount "mystorageaccount" -StorageContainer "reports"
 ```
 
 Required parameters:
@@ -128,16 +128,16 @@ If you encounter issues with your automated inventory:
 
 ## Alternative Automation Options
 
-As alternatives to Azure Automation Accounts, you can use these options to run ARI on a schedule:
+As alternatives to Azure Automation Accounts, you can use these options to run AZTI on a schedule:
 
 ### GitHub Actions
 
-GitHub Actions provides a flexible way to automate ARI, especially if you're already using GitHub for infrastructure-as-code management. This approach is simpler to set up and maintain in GitHub-centric environments.
+GitHub Actions provides a flexible way to automate AZTI, especially if you're already using GitHub for infrastructure-as-code management. This approach is simpler to set up and maintain in GitHub-centric environments.
 
-See the [GitHub Actions Guide](github-actions.md) for a complete walkthrough of setting up ARI with GitHub Actions.
+See the [GitHub Actions Guide](github-actions.md) for a complete walkthrough of setting up AZTI with GitHub Actions.
 
 ### Azure DevOps Pipelines
 
-Azure DevOps Pipelines offer another robust option for running ARI automatically, particularly well-suited for organizations already using Azure DevOps for their development and operations workflows.
+Azure DevOps Pipelines offer another robust option for running AZTI automatically, particularly well-suited for organizations already using Azure DevOps for their development and operations workflows.
 
-See the [Azure DevOps Guide](azure-devops.md) for instructions on setting up ARI with Azure DevOps Pipelines. 
+See the [Azure DevOps Guide](azure-devops.md) for instructions on setting up AZTI with Azure DevOps Pipelines. 

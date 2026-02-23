@@ -1,6 +1,6 @@
 # License Information
 
-Azure Resource Inventory is licensed under the MIT License.
+Azure Tenant Inventory is licensed under the MIT License.
 
 ## MIT License
 
@@ -26,13 +26,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-## Using Azure Resource Inventory
+## Using Azure Tenant Inventory
 
-Azure Resource Inventory is a tool provided by Microsoft that can be used to generate Excel-based reports about your Azure resources. It is provided as-is, without warranty, and is not an officially supported Microsoft product.
+Azure Tenant Inventory is a tool provided by Microsoft that can be used to generate Excel-based reports about your Azure resources. It is provided as-is, without warranty, and is not an officially supported Microsoft product.
 
 ## Third-Party Software
 
-Azure Resource Inventory uses the following third-party software, which have their own licenses:
+Azure Tenant Inventory uses the following third-party software, which have their own licenses:
 
 ### PowerShell Modules
 
@@ -45,7 +45,7 @@ Azure Resource Inventory uses the following third-party software, which have the
 
 ## Contributing
 
-By contributing to Azure Resource Inventory, you agree that your contributions will be licensed under the project's MIT License.
+By contributing to Azure Tenant Inventory, you agree that your contributions will be licensed under the project's MIT License.
 
 ## No Additional Restrictions
 
@@ -53,8 +53,8 @@ The MIT License is a permissive open-source license that allows for reuse, modif
 
 ## Full License Text
 
-The full license text can be found in the [LICENSE](https://github.com/microsoft/ARI/blob/main/LICENSE) file in the project repository.
+The full license text can be found in the [LICENSE](https://github.com/thisismydemo/azure-inventory/blob/main/LICENSE) file in the project repository.
 
 ## Questions
 
-If you have any questions about the license or how you can use Azure Resource Inventory, please refer to the [Microsoft Open Source](https://opensource.microsoft.com/) website or create an issue in the [GitHub repository](https://github.com/microsoft/ARI/issues). 
+If you have any questions about the license or how you can use Azure Tenant Inventory, please refer to the [Microsoft Open Source](https://opensource.microsoft.com/) website or create an issue in the [GitHub repository](https://github.com/thisismydemo/azure-inventory/issues). 

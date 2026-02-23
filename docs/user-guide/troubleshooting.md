@@ -1,6 +1,6 @@
 # Troubleshooting Guide
 
-This guide helps you diagnose and resolve common issues with Azure Resource Inventory.
+This guide helps you diagnose and resolve common issues with Azure Tenant Inventory.
 
 ## Common Issues and Solutions
 
@@ -8,16 +8,16 @@ This guide helps you diagnose and resolve common issues with Azure Resource Inve
 
 #### Module Not Found
 
-**Issue**: `Import-Module AzureResourceInventory` results in "Module not found" error.
+**Issue**: `Import-Module AzureTenantInventory` results in "Module not found" error.
 
 **Solutions**:
 1. Verify the module is installed:
    ```powershell
-   Get-Module -ListAvailable AzureResourceInventory
+   Get-Module -ListAvailable AzureTenantInventory
    ```
 2. If not installed, install it:
    ```powershell
-   Install-Module -Name AzureResourceInventory -Scope CurrentUser
+   Install-Module -Name AzureTenantInventory -Scope CurrentUser
    ```
 3. If installed but still not found, check your PSModulePath:
    ```powershell
@@ -32,7 +32,7 @@ This guide helps you diagnose and resolve common issues with Azure Resource Inve
 1. Run PowerShell as Administrator
 2. Use the CurrentUser scope:
    ```powershell
-   Install-Module -Name AzureResourceInventory -Scope CurrentUser
+   Install-Module -Name AzureTenantInventory -Scope CurrentUser
    ```
 
 #### Missing Dependencies
@@ -48,7 +48,7 @@ Install-Module -Name ImportExcel, Az.Accounts, Az.ResourceGraph, Az.Storage, Az.
 
 #### Unable to Connect to Azure
 
-**Issue**: Authentication errors when running ARI.
+**Issue**: Authentication errors when running AZTI.
 
 **Solutions**:
 1. Ensure you're logged in:
@@ -79,26 +79,26 @@ Install-Module -Name ImportExcel, Az.Accounts, Az.ResourceGraph, Az.Storage, Az.
 
 ### Execution Issues
 
-#### ARI Runs Slowly
+#### AZTI Runs Slowly
 
-**Issue**: ARI takes a long time to complete.
+**Issue**: AZTI takes a long time to complete.
 
 **Solutions**:
 1. Use lightweight mode:
    ```powershell
-   Invoke-ARI -Heavy
+   Invoke-AzureTenantInventory -Heavy
    ```
 2. Skip diagram generation:
    ```powershell
-   Invoke-ARI -SkipDiagram
+   Invoke-AzureTenantInventory -SkipDiagram
    ```
 3. Skip advisory collection:
    ```powershell
-   Invoke-ARI -SkipAdvisory
+   Invoke-AzureTenantInventory -SkipAdvisory
    ```
 4. Limit to specific subscriptions:
    ```powershell
-   Invoke-ARI -SubscriptionID "00000000-0000-0000-0000-000000000000"
+   Invoke-AzureTenantInventory -SubscriptionID "00000000-0000-0000-0000-000000000000"
    ```
 
 #### Memory Errors
@@ -113,18 +113,18 @@ Install-Module -Name ImportExcel, Az.Accounts, Az.ResourceGraph, Az.Storage, Az.
 
 #### PowerShell Crashes
 
-**Issue**: PowerShell crashes during ARI execution.
+**Issue**: PowerShell crashes during AZTI execution.
 
 **Solutions**:
 1. Update to the latest PowerShell version
-2. Update ARI and all dependencies:
+2. Update AZTI and all dependencies:
    ```powershell
-   Update-Module AzureResourceInventory
+   Update-Module AzureTenantInventory
    Update-Module Az.* 
    ```
 3. Run with debug enabled to identify the issue:
    ```powershell
-   Invoke-ARI -Debug
+   Invoke-AzureTenantInventory -Debug
    ```
 
 ### Output Issues
@@ -158,11 +158,11 @@ Install-Module -Name ImportExcel, Az.Accounts, Az.ResourceGraph, Az.Storage, Az.
 **Solutions**:
 1. Skip diagram generation:
    ```powershell
-   Invoke-ARI -SkipDiagram
+   Invoke-AzureTenantInventory -SkipDiagram
    ```
 2. Run with debug to identify the issue:
    ```powershell
-   Invoke-ARI -Debug
+   Invoke-AzureTenantInventory -Debug
    ```
 3. Ensure you have permissions to view network resources
 
@@ -176,7 +176,7 @@ Install-Module -Name ImportExcel, Az.Accounts, Az.ResourceGraph, Az.Storage, Az.
 1. Use the `-Lite` and `-SkipDiagram` parameters
 2. Scope to fewer subscriptions
 3. Increase CloudShell timeout in settings (if possible)
-4. Run ARI in an Azure VM instead
+4. Run AZTI in an Azure VM instead
 
 #### Excel Formatting in CloudShell
 
@@ -191,7 +191,7 @@ Install-Module -Name ImportExcel, Az.Accounts, Az.ResourceGraph, Az.Storage, Az.
 For detailed troubleshooting information:
 
 ```powershell
-Invoke-ARI -Debug
+Invoke-AzureTenantInventory -Debug
 ```
 
 This will display detailed information about each step of the process.
@@ -201,13 +201,13 @@ This will display detailed information about each step of the process.
 If you encounter issues, verify you're using the latest version:
 
 ```powershell
-Get-Module -ListAvailable AzureResourceInventory
+Get-Module -ListAvailable AzureTenantInventory
 ```
 
 Update to the latest version:
 
 ```powershell
-Update-Module AzureResourceInventory
+Update-Module AzureTenantInventory
 ```
 
 ### Testing Specific Components
@@ -230,6 +230,6 @@ $data | Export-Excel -Path "test.xlsx"
 
 If you've tried the solutions above and still have issues:
 
-1. Check the [GitHub Issues](https://github.com/microsoft/ARI/issues) to see if it's a known issue
+1. Check the [GitHub Issues](https://github.com/thisismydemo/azure-inventory/issues) to see if it's a known issue
 2. Submit a new issue with detailed information about your problem
-3. Include error messages and the output of running ARI with the `-Debug` parameter 
+3. Include error messages and the output of running AZTI with the `-Debug` parameter 

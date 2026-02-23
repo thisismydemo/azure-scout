@@ -1,24 +1,24 @@
 # Quick Start Guide
 
-This quick start guide will help you generate your first Azure Resource Inventory report with just a few simple commands.
+This quick start guide will help you generate your first Azure Tenant Inventory report with just a few simple commands.
 
 ## Basic Usage
 
 ### Step 1: Import the Module
 
-First, import the AzureResourceInventory module:
+First, import the AzureTenantInventory module:
 
 ```powershell
-Import-Module AzureResourceInventory
+Import-Module AzureTenantInventory
 ```
 
 <div align="center">
-<img src="../../images/ImportingARI.gif" width="700">
+<img src="../../images/ImportingAZTI.gif" width="700">
 </div>
 
 ### Step 2: Authenticate to Azure
 
-If you're not already authenticated to Azure, ARI will prompt you to sign in when you run the command. Alternatively, you can authenticate explicitly first:
+If you're not already authenticated to Azure, AZTI will prompt you to sign in when you run the command. Alternatively, you can authenticate explicitly first:
 
 ```powershell
 Connect-AzAccount
@@ -29,11 +29,11 @@ Connect-AzAccount
 To generate a basic inventory report for all accessible resources and subscriptions:
 
 ```powershell
-Invoke-ARI
+Invoke-AzureTenantInventory
 ```
 
 <div align="center">
-<img src="../../images/RunningARI.gif" width="700">
+<img src="../../images/RunningAZTI.gif" width="700">
 </div>
 
 That's it! The command will:
@@ -51,7 +51,7 @@ That's it! The command will:
 If you have access to multiple tenants and want to target a specific one:
 
 ```powershell
-Invoke-ARI -TenantID <Your-Tenant-ID>
+Invoke-AzureTenantInventory -TenantID <Your-Tenant-ID>
 ```
 
 ### Target a Specific Subscription
@@ -59,7 +59,7 @@ Invoke-ARI -TenantID <Your-Tenant-ID>
 To limit the report to a single subscription:
 
 ```powershell
-Invoke-ARI -SubscriptionID <Your-Subscription-ID>
+Invoke-AzureTenantInventory -SubscriptionID <Your-Subscription-ID>
 ```
 
 ### Include Resource Tags
@@ -67,7 +67,7 @@ Invoke-ARI -SubscriptionID <Your-Subscription-ID>
 To include all resource tags in your report:
 
 ```powershell
-Invoke-ARI -IncludeTags
+Invoke-AzureTenantInventory -IncludeTags
 ```
 
 ### Skip Network Diagram Generation
@@ -75,7 +75,7 @@ Invoke-ARI -IncludeTags
 To speed up the process by skipping network diagram generation:
 
 ```powershell
-Invoke-ARI -SkipDiagram
+Invoke-AzureTenantInventory -SkipDiagram
 ```
 
 ### Include Security Center Data
@@ -83,7 +83,7 @@ Invoke-ARI -SkipDiagram
 To include Security Center information in your report:
 
 ```powershell
-Invoke-ARI -SecurityCenter
+Invoke-AzureTenantInventory -SecurityCenter
 ```
 
 ### Custom Report Name and Location
@@ -91,12 +91,12 @@ Invoke-ARI -SecurityCenter
 To specify a custom name and location for your report:
 
 ```powershell
-Invoke-ARI -ReportName "MyAzureInventory" -ReportDir "C:\Reports"
+Invoke-AzureTenantInventory -ReportName "MyAzureInventory" -ReportDir "C:\Reports"
 ```
 
 ## Understanding the Output
 
-After running Invoke-ARI, you will get:
+After running Invoke-AzureTenantInventory, you will get:
 
 1. **Excel Report**: A comprehensive spreadsheet with tabs for each resource type
 2. **Draw.io Diagrams**: Network topology diagrams in Draw.io format (if diagrams weren't skipped)

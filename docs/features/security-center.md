@@ -1,23 +1,23 @@
 # Security Center Integration
 
-Azure Resource Inventory can integrate with Azure Security Center to include security findings in your inventory reports. This page explains how to use this feature and interpret the results.
+Azure Tenant Inventory can integrate with Azure Security Center to include security findings in your inventory reports. This page explains how to use this feature and interpret the results.
 
 ## Overview
 
-When you run ARI with the `-SecurityCenter` parameter, it collects security recommendations, alerts, and compliance status from Azure Security Center (now part of Microsoft Defender for Cloud). This information is included in the Excel report, providing you with a comprehensive view of your security posture alongside your resource inventory.
+When you run AZTI with the `-SecurityCenter` parameter, it collects security recommendations, alerts, and compliance status from Azure Security Center (now part of Microsoft Defender for Cloud). This information is included in the Excel report, providing you with a comprehensive view of your security posture alongside your resource inventory.
 
 ## Enabling Security Center Integration
 
 To include Security Center data in your inventory report, use the `-SecurityCenter` parameter:
 
 ```powershell
-Invoke-ARI -SecurityCenter
+Invoke-AzureTenantInventory -SecurityCenter
 ```
 
 You can combine this with other parameters as needed:
 
 ```powershell
-Invoke-ARI -SubscriptionID "00000000-0000-0000-0000-000000000000" -SecurityCenter -ReportName "SecureInventory"
+Invoke-AzureTenantInventory -SubscriptionID "00000000-0000-0000-0000-000000000000" -SecurityCenter -ReportName "SecureInventory"
 ```
 
 ## Prerequisites
@@ -30,7 +30,7 @@ Invoke-ARI -SubscriptionID "00000000-0000-0000-0000-000000000000" -SecurityCente
 
 ### Security Recommendations
 
-ARI collects security recommendations for resources, including:
+AZTI collects security recommendations for resources, including:
 
 - Recommendation name and description
 - Resource affected
@@ -49,7 +49,7 @@ Active security alerts are collected, including:
 
 ### Regulatory Compliance
 
-If you have regulatory compliance features enabled in Security Center, ARI collects:
+If you have regulatory compliance features enabled in Security Center, AZTI collects:
 
 - Compliance standards applied (e.g., PCI DSS, ISO 27001, NIST SP 800-53)
 - Compliance status for each standard
@@ -88,7 +88,7 @@ The security data helps you prioritize remediation efforts based on:
 Generate a comprehensive security report for compliance auditing:
 
 ```powershell
-Invoke-ARI -TenantID "00000000-0000-0000-0000-000000000000" -SecurityCenter -ReportName "SecurityAudit"
+Invoke-AzureTenantInventory -TenantID "00000000-0000-0000-0000-000000000000" -SecurityCenter -ReportName "SecurityAudit"
 ```
 
 ### Regular Security Reviews
@@ -96,7 +96,7 @@ Invoke-ARI -TenantID "00000000-0000-0000-0000-000000000000" -SecurityCenter -Rep
 Schedule weekly security status reviews using automation:
 
 ```powershell
-Invoke-ARI -SecurityCenter -Automation -StorageAccount "mystorageaccount" -StorageContainer "securityreports"
+Invoke-AzureTenantInventory -SecurityCenter -Automation -StorageAccount "mystorageaccount" -StorageContainer "securityreports"
 ```
 
 ### Security Baseline for New Projects
@@ -104,7 +104,7 @@ Invoke-ARI -SecurityCenter -Automation -StorageAccount "mystorageaccount" -Stora
 Create a security baseline report before beginning a new project:
 
 ```powershell
-Invoke-ARI -SubscriptionID "00000000-0000-0000-0000-000000000000" -ResourceGroup "ProjectX" -SecurityCenter
+Invoke-AzureTenantInventory -SubscriptionID "00000000-0000-0000-0000-000000000000" -ResourceGroup "ProjectX" -SecurityCenter
 ```
 
 ## Limitations

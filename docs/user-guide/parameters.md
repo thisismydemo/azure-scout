@@ -1,6 +1,6 @@
 # Parameters Reference
 
-Azure Resource Inventory (ARI) offers a wide range of parameters to customize your inventory report generation. This page provides a comprehensive reference of all available parameters with detailed descriptions and examples.
+Azure Tenant Inventory (AZTI) offers a wide range of parameters to customize your inventory report generation. This page provides a comprehensive reference of all available parameters with detailed descriptions and examples.
 
 ## Core Parameters
 
@@ -58,7 +58,7 @@ Azure Resource Inventory (ARI) offers a wide range of parameters to customize yo
 | Parameter | Description | Example |
 |-----------|-------------|---------|
 | **Debug** | Run in debug mode | `-Debug` |
-| **NoAutoUpdate** | Skip the auto update of the ARI Module | `-NoAutoUpdate` |
+| **NoAutoUpdate** | Skip the auto update of the AZTI Module | `-NoAutoUpdate` |
 | **AzureEnvironment** | Specify Azure cloud environment | `-AzureEnvironment "AzureUSGovernment"` |
 | **Automation** | Run using Automation Account | `-Automation` |
 | **StorageAccount** | Storage account for automation output | `-StorageAccount "mystorageaccount"` |
@@ -69,41 +69,41 @@ Azure Resource Inventory (ARI) offers a wide range of parameters to customize yo
 ### Basic Inventory with Tags
 
 ```powershell
-Invoke-ARI -TenantID "00000000-0000-0000-0000-000000000000" -IncludeTags
+Invoke-AzureTenantInventory -TenantID "00000000-0000-0000-0000-000000000000" -IncludeTags
 ```
 
 ### Scoped Inventory with Security Data
 
 ```powershell
-Invoke-ARI -SubscriptionID "00000000-0000-0000-0000-000000000000" -SecurityCenter -ReportName "SecureInventory"
+Invoke-AzureTenantInventory -SubscriptionID "00000000-0000-0000-0000-000000000000" -SecurityCenter -ReportName "SecureInventory"
 ```
 
 ### Production Environment Inventory
 
 ```powershell
-Invoke-ARI -TagKey "Environment" -TagValue "Production" -ReportDir "C:\Reports\Production"
+Invoke-AzureTenantInventory -TagKey "Environment" -TagValue "Production" -ReportDir "C:\Reports\Production"
 ```
 
 ### Management Group Inventory with Service Principal
 
 ```powershell
-Invoke-ARI -ManagementGroup "MyMgmtGroup" -AppId "00000000-0000-0000-0000-000000000000" -Secret "your-client-secret"
+Invoke-AzureTenantInventory -ManagementGroup "MyMgmtGroup" -AppId "00000000-0000-0000-0000-000000000000" -Secret "your-client-secret"
 ```
 
 ### Lightweight Report without Diagrams
 
 ```powershell
-Invoke-ARI -Lite -SkipDiagram
+Invoke-AzureTenantInventory -Lite -SkipDiagram
 ```
 
 ### Full Network Documentation
 
 ```powershell
-Invoke-ARI -DiagramFullEnvironment
+Invoke-AzureTenantInventory -DiagramFullEnvironment
 ```
 
 ### Automation Account Execution
 
 ```powershell
-Invoke-ARI -Automation -StorageAccount "mystorageaccount" -StorageContainer "reports"
+Invoke-AzureTenantInventory -Automation -StorageAccount "mystorageaccount" -StorageContainer "reports"
 ``` 

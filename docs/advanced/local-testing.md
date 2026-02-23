@@ -22,10 +22,10 @@ go install github.com/nektos/act@latest
 
 ### Preparing a Test Workflow
 
-When testing ARI workflows locally, you might want to create a simplified version that doesn't require Azure credentials or actual API calls:
+When testing AZTI workflows locally, you might want to create a simplified version that doesn't require Azure credentials or actual API calls:
 
 ```yaml
-name: Test Azure Resource Inventory
+name: Test Azure Tenant Inventory
 
 on:
   workflow_dispatch:
@@ -54,28 +54,28 @@ jobs:
         run: |
           echo "Azure login simulated for local testing"
 
-      - name: Simulate ARI Installation and Run
+      - name: Simulate AZTI Installation and Run
         shell: bash
         run: |
-          echo "Installing ARI modules (simulation for testing)"
-          echo "Running Invoke-ARI with parameters:"
+          echo "Installing AZTI modules (simulation for testing)"
+          echo "Running Invoke-AzureTenantInventory with parameters:"
           echo "- ReportName: ${{ github.event.inputs.reportName }}"
           echo "- SubscriptionID: ${{ github.event.inputs.subscriptionId }}"
           echo "- ResourceGroup: ${{ github.event.inputs.resourceGroup }}"
           
           # Create dummy report files
-          mkdir -p ari-reports
-          echo "This is a test Excel report" > ari-reports/test_report.xlsx
-          echo "This is a test diagram file" > ari-reports/test_diagram.drawio
+          mkdir -p AZTI-Reports
+          echo "This is a test Excel report" > AZTI-Reports/test_report.xlsx
+          echo "This is a test diagram file" > AZTI-Reports/test_diagram.drawio
           
           # List the created files
           echo "Created files:"
-          ls -la ari-reports/
+          ls -la AZTI-Reports/
           
           echo "Workflow execution completed successfully"
 ```
 
-Save this file as `.github/workflows/test-ari.yml`.
+Save this file as `.github/workflows/test-AZTI.yml`.
 
 ### Running the Test Workflow
 
@@ -123,7 +123,7 @@ param(
 )
 
 Write-Host "========================================================" -ForegroundColor Cyan
-Write-Host "Simulating Azure DevOps Pipeline for Azure Resource Inventory" -ForegroundColor Cyan
+Write-Host "Simulating Azure DevOps Pipeline for Azure Tenant Inventory" -ForegroundColor Cyan
 Write-Host "========================================================" -ForegroundColor Cyan
 
 Write-Host "Input Parameters:" -ForegroundColor Yellow
@@ -139,14 +139,14 @@ Write-Host "========================================================" -Foregroun
 
 # Step 2: Simulate PowerShell module installation
 Write-Host "Step 2: Simulating PowerShell module installation..." -ForegroundColor Green
-Write-Host "Install-Module -Name AzureResourceInventory -Force -Scope CurrentUser"
+Write-Host "Install-Module -Name AzureTenantInventory -Force -Scope CurrentUser"
 Write-Host "Install-Module -Name Az.Accounts -Force -Scope CurrentUser"
 Write-Host "Install-Module -Name ImportExcel -Force -Scope CurrentUser"
 Write-Host "Module installation simulation completed"
 Write-Host "========================================================" -ForegroundColor Cyan
 
-# Step 3: Simulate ARI execution
-Write-Host "Step 3: Simulating ARI execution..." -ForegroundColor Green
+# Step 3: Simulate AZTI execution
+Write-Host "Step 3: Simulating AZTI execution..." -ForegroundColor Green
 
 # Prepare parameters in PowerShell style
 $params = @{}
@@ -170,13 +170,13 @@ $params | ForEach-Object {
     }
 }
 
-Write-Host "Invoke-ARI with parameters would be executed here"
-Write-Host "ARI execution simulation completed"
+Write-Host "Invoke-AzureTenantInventory with parameters would be executed here"
+Write-Host "AZTI execution simulation completed"
 Write-Host "========================================================" -ForegroundColor Cyan
 
 # Step 4: Create simulated artifact files
 Write-Host "Step 4: Creating simulated artifact files..." -ForegroundColor Green
-$artifactDir = "ari-reports"
+$artifactDir = "AZTI-Reports"
 if (-not (Test-Path $artifactDir)) {
     New-Item -Path $artifactDir -ItemType Directory -Force | Out-Null
 }
@@ -216,7 +216,7 @@ For environments without PowerShell, create a Bash simulation script:
 
 # Script to simulate Azure DevOps pipeline execution locally
 echo "========================================================"
-echo "Simulating Azure DevOps Pipeline for Azure Resource Inventory"
+echo "Simulating Azure DevOps Pipeline for Azure Tenant Inventory"
 echo "========================================================"
 
 # Parameters
@@ -237,26 +237,26 @@ echo "========================================================"
 
 # Step 2: Simulate PowerShell module installation
 echo "Step 2: Simulating PowerShell module installation..."
-echo "Install-Module -Name AzureResourceInventory -Force -Scope CurrentUser"
+echo "Install-Module -Name AzureTenantInventory -Force -Scope CurrentUser"
 echo "Install-Module -Name Az.Accounts -Force -Scope CurrentUser"
 echo "Install-Module -Name ImportExcel -Force -Scope CurrentUser"
 echo "Module installation simulation completed"
 echo "========================================================"
 
-# Step 3: Simulate ARI execution
-echo "Step 3: Simulating ARI execution..."
-echo "Invoke-ARI -SubscriptionID \"$SUBSCRIPTION_ID\" -ResourceGroup \"$RESOURCE_GROUP\" -ReportName \"$REPORT_NAME\""
-echo "ARI execution simulation completed"
+# Step 3: Simulate AZTI execution
+echo "Step 3: Simulating AZTI execution..."
+echo "Invoke-AzureTenantInventory -SubscriptionID \"$SUBSCRIPTION_ID\" -ResourceGroup \"$RESOURCE_GROUP\" -ReportName \"$REPORT_NAME\""
+echo "AZTI execution simulation completed"
 echo "========================================================"
 
 # Step 4: Create simulated artifact files
 echo "Step 4: Creating simulated artifact files..."
-mkdir -p ari-reports
-echo "This is a test Excel report for $REPORT_NAME" > "ari-reports/${REPORT_NAME}.xlsx"
-echo "This is a test diagram file for $REPORT_NAME" > "ari-reports/${REPORT_NAME}.drawio"
+mkdir -p AZTI-Reports
+echo "This is a test Excel report for $REPORT_NAME" > "AZTI-Reports/${REPORT_NAME}.xlsx"
+echo "This is a test diagram file for $REPORT_NAME" > "AZTI-Reports/${REPORT_NAME}.drawio"
 
 echo "Created artifact files:"
-ls -la ari-reports/
+ls -la AZTI-Reports/
 echo "========================================================"
 
 echo "Azure DevOps Pipeline simulation completed successfully!"
