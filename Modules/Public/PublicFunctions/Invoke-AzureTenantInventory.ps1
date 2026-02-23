@@ -335,11 +335,12 @@ Function Invoke-AzureTenantInventory {
 
     $ExtractionRuntime = [System.Diagnostics.Stopwatch]::StartNew()
 
-        $ExtractionData = Start-AZTIExtractionOrchestration -ManagementGroup $ManagementGroup -Subscriptions $Subscriptions -SubscriptionID $SubscriptionID -ResourceGroup $ResourceGroup -SecurityCenter $SecurityCenter -SkipAdvisory $SkipAdvisory -SkipPolicy $SkipPolicy -IncludeTags $IncludeTags -TagKey $TagKey -TagValue $TagValue -SkipAPIs $SkipAPIs -SkipVMDetails $SkipVMDetails -IncludeCosts $IncludeCosts -Automation $Automation -AzureEnvironment $AzureEnvironment
+        $ExtractionData = Start-AZTIExtractionOrchestration -ManagementGroup $ManagementGroup -Subscriptions $Subscriptions -SubscriptionID $SubscriptionID -ResourceGroup $ResourceGroup -SecurityCenter $SecurityCenter -SkipAdvisory $SkipAdvisory -SkipPolicy $SkipPolicy -IncludeTags $IncludeTags -TagKey $TagKey -TagValue $TagValue -SkipAPIs $SkipAPIs -SkipVMDetails $SkipVMDetails -IncludeCosts $IncludeCosts -Automation $Automation -AzureEnvironment $AzureEnvironment -Scope $Scope -TenantID $TenantID
 
     $ExtractionRuntime.Stop()
 
     $Resources = $ExtractionData.Resources
+    $EntraResources = $ExtractionData.EntraResources
     $Quotas = $ExtractionData.Quotas
     $CostData = $ExtractionData.Costs
     $ResourceContainers = $ExtractionData.ResourceContainers

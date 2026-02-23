@@ -102,14 +102,14 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ## Phase 4 — Entra ID Extraction Layer
 
-- [ ] **4.1** Create `Start-AZTIEntraExtraction` function
-- [ ] **4.2** Implement Graph queries for all 15 Entra resource types
-- [ ] **4.3** Normalize responses with synthetic `TYPE` property (`entra/*`)
-- [ ] **4.4** Update `Start-AZTIExtractionOrchestration` to call Entra extraction
-- [ ] **4.5** Merge Entra resources into main `$Resources` array
-- [ ] **4.6** Wire `-Scope` parameter through extraction pipeline
-- [ ] **4.7** Test: Entra extraction standalone
-- [ ] **4.8** Commit Phase 4
+- [x] **4.1** Create `Start-AZTIEntraExtraction` function
+- [x] **4.2** Implement Graph queries for all 15 Entra resource types
+- [x] **4.3** Normalize responses with synthetic `TYPE` property (`entra/*`)
+- [x] **4.4** Update `Start-AZTIExtractionOrchestration` to call Entra extraction
+- [x] **4.5** Merge Entra resources into main `$Resources` array
+- [x] **4.6** Wire `-Scope` parameter through extraction pipeline
+- [x] **4.7** Test: Entra extraction standalone
+- [x] **4.8** Commit Phase 4
 
 ---
 
