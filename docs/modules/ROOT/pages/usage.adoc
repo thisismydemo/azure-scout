@@ -1,0 +1,157 @@
+= Usage Guide
+:description: How to use Azure Tenant Inventory — scopes, output formats, and content toggles.
+:keywords: usage, scope, output, format, json, excel
+
+== Basic Usage
+
+[source,powershell]
+----
+Import-Module ./AzureTenantInventory.psd1
+Invoke-AzureTenantInventory
+----
+
+With no parameters, AZTI runs a full inventory (ARM + Entra) using your current Azure context and generates both Excel and JSON reports.
+
+== Scope
+
+The `-Scope` parameter controls which data domains are inventoried:
+
+[cols="1,3",options="header"]
+|===
+| Value | Behavior
+
+| `All` (default)
+| Inventories both ARM resources and Entra ID objects
+
+| `ArmOnly`
+| Skips all Entra ID extraction — ARM resources only
+
+| `EntraOnly`
+| Skips all ARM extraction — Entra ID objects only
+|===
+
+[source,powershell]
+----
+# ARM only — skip Entra ID
+Invoke-AzureTenantInventory -Scope ArmOnly
+
+# Entra ID only — skip ARM resources
+Invoke-AzureTenantInventory -Scope EntraOnly
+----
+
+== Output Format
+
+The `-OutputFormat` parameter controls report file types:
+
+[cols="1,3",options="header"]
+|===
+| Value | Produces
+
+| `All` (default)
+| Both Excel (.xlsx) and JSON (.json)
+
+| `Excel`
+| Excel only
+
+| `Json`
+| JSON only
+|===
+
+[source,powershell]
+----
+# JSON only output
+Invoke-AzureTenantInventory -OutputFormat Json
+
+# Excel only output
+Invoke-AzureTenantInventory -OutputFormat Excel
+----
+
+== Report Location
+
+Reports are saved to a timestamped folder:
+
+* *Windows*: `C:\AzureTenantInventory\<timestamp>\`
+* *Linux/macOS*: `$HOME/AzureTenantInventory/<timestamp>/`
+
+Override with `-ReportDir`:
+
+[source,powershell]
+----
+Invoke-AzureTenantInventory -ReportDir 'D:\Reports'
+----
+
+== Content Toggles
+
+Switch parameters to include/exclude specific content:
+
+[cols="1,3",options="header"]
+|===
+| Parameter | Effect
+
+| `-SecurityCenter`
+| Include Microsoft Defender for Cloud findings
+
+| `-IncludeTags`
+| Include resource tags in Excel worksheets
+
+| `-SkipAdvisory`
+| Skip Azure Advisor recommendations
+
+| `-SkipPolicy`
+| Skip Azure Policy compliance data
+
+| `-SkipPermissionCheck`
+| Skip the pre-flight permission validation
+|===
+
+== Subscription & Management Group Filters
+
+[source,powershell]
+----
+# Specific subscriptions only
+Invoke-AzureTenantInventory -SubscriptionID 'sub-001','sub-002'
+
+# Management group scoped
+Invoke-AzureTenantInventory -ManagementGroup 'mg-prod'
+----
+
+== Naming the Report
+
+[source,powershell]
+----
+Invoke-AzureTenantInventory -ReportName 'Q4-2025-Audit'
+----
+
+== JSON Output Structure
+
+The JSON report uses a normalized, flat resource schema:
+
+[source,json]
+----
+{
+  "metadata": {
+    "tenantId": "...",
+    "generatedAt": "2026-01-15T10:30:00Z",
+    "scope": "All",
+    "moduleVersion": "1.5.0"
+  },
+  "resources": [
+    {
+      "id": "/subscriptions/.../resourceGroups/.../providers/...",
+      "name": "my-vm",
+      "TYPE": "microsoft.compute/virtualmachines",
+      "resourceGroup": "rg-prod",
+      "subscriptionId": "...",
+      "location": "eastus",
+      "properties": { }
+    }
+  ]
+}
+----
+
+== Pre-flight Permission Checker
+
+Before extracting data, AZTI validates that your identity has the required permissions.
+Skip it with `-SkipPermissionCheck` if you're confident about your access.
+
+See xref:permissions.adoc[Permissions] for the full list of required roles and API permissions.

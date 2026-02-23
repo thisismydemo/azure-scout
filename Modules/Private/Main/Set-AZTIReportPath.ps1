@@ -1,20 +1,22 @@
 <#
 .Synopsis
-Set the report path for Azure Resource Inventory
+Set the report path for Azure Tenant Inventory
 
 .DESCRIPTION
-This module sets the default paths for report generation in Azure Resource Inventory.
+This module sets the default paths for report generation in Azure Tenant Inventory (AZTI).
+Windows default: C:\AzureTenantInventory
+Linux/Mac default: $HOME/AzureTenantInventory
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/0.MainFunctions/Set-AZTIReportPath.ps1
+https://github.com/thisismydemo/azure-inventory/Modules/Private/Main/Set-AZTIReportPath.ps1
 
 .COMPONENT
 This PowerShell Module is part of Azure Tenant Inventory (AZTI)
 
 .NOTES
-Version: 3.6.0
+Version: 1.5.0
 First Release Date: 15th Oct, 2024
-Authors: Claudio Merola
+Authors: Claudio Merola (original), thisismydemo (fork)
 
 #>
 function Set-AZTIReportPath {
@@ -44,6 +46,6 @@ function Set-AZTIReportPath {
         'DiagramCache' = $DiagramCache;
         'ReportCache' = $ReportCache
     }
-    
+
     return $ReportPath
 }

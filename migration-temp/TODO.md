@@ -139,10 +139,10 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ## Phase 6 — JSON Output Layer
 
-- [ ] **6.1** Create `Export-AZTIJsonReport` function
-- [ ] **6.2** Implement structured JSON schema with metadata envelope
-- [ ] **6.3** Add `-OutputFormat` parameter (`All`, `Excel`, `Json`) to `Invoke-AzureTenantInventory`
-- [ ] **6.4** Wire into `Start-AZTIReportOrchestration`
+- [x] **6.1** Create `Export-AZTIJsonReport` function
+- [x] **6.2** Implement structured JSON schema with metadata envelope
+- [x] **6.3** Add `-OutputFormat` parameter (`All`, `Excel`, `Json`) to `Invoke-AzureTenantInventory`
+- [x] **6.4** Wire into `Start-AZTIReportOrchestration`
 - [ ] **6.5** Test: JSON-only output
 - [ ] **6.6** Test: Dual output (Excel + JSON)
 - [ ] **6.7** Commit Phase 6
@@ -151,17 +151,17 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ## Phase 7 — Cleanup & Polish
 
-- [ ] **7.1** Update default report paths (Windows + Linux/Mac)
-- [ ] **7.2** Rewrite `README.md` with full documentation
-- [ ] **7.3** Create Pester tests: `Test-AZTIPermissions.Tests.ps1`
-- [ ] **7.4** Create Pester tests: `Invoke-AzureTenantInventory.Tests.ps1`
-- [ ] **7.5** Create Pester tests: `Connect-AZTILoginSession.Tests.ps1`
-- [ ] **7.6** Create Pester tests: `Invoke-AZTIGraphRequest.Tests.ps1`
-- [ ] **7.7** Create Pester tests: `Start-AZTIEntraExtraction.Tests.ps1`
-- [ ] **7.8** Update `CHANGELOG.md` with all changes
-- [ ] **7.9** Final module load + smoke test
-- [ ] **7.10** Commit Phase 7
-- [ ] **7.11** Set up Antora documentation site (write AsciiDoc content, create nav.adoc, GitHub Actions workflow)
+- [x] **7.1** Update default report paths (Windows + Linux/Mac)
+- [x] **7.2** Rewrite `README.md` with full documentation
+- [x] **7.3** Create Pester tests: `Test-AZTIPermissions.Tests.ps1`
+- [x] **7.4** Create Pester tests: `Invoke-AzureTenantInventory.Tests.ps1`
+- [x] **7.5** Create Pester tests: `Connect-AZTILoginSession.Tests.ps1`
+- [x] **7.6** Create Pester tests: `Invoke-AZTIGraphRequest.Tests.ps1`
+- [x] **7.7** Create Pester tests: `Start-AZTIEntraExtraction.Tests.ps1`
+- [x] **7.8** Update `CHANGELOG.md` with all changes
+- [x] **7.9** Final module load + smoke test
+- [x] **7.10** Commit Phase 7
+- [x] **7.11** Set up Antora documentation site (write AsciiDoc content, create nav.adoc, GitHub Actions workflow)
 
 ---
 
@@ -169,35 +169,35 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### 8.1 — Azure Local (Stack HCI) Modules
 
-- [ ] **8.1.1** Create `Modules/Public/InventoryModules/AzureLocal/` directory
-- [ ] **8.1.2** `Clusters.ps1` — Azure Local cluster inventory (`microsoft.azurestackhci/clusters`)
-- [ ] **8.1.3** `VirtualMachines.ps1` — Azure Local VM instances (`microsoft.azurestackhci/virtualmachineinstances`)
-- [ ] **8.1.4** `LogicalNetworks.ps1` — Azure Local logical networks (`microsoft.azurestackhci/logicalnetworks`)
-- [ ] **8.1.5** `StorageContainers.ps1` — Azure Local storage containers (`microsoft.azurestackhci/storagecontainers`)
-- [ ] **8.1.6** `GalleryImages.ps1` — Azure Local gallery images (`microsoft.azurestackhci/galleryimages`)
-- [ ] **8.1.7** `MarketplaceGalleryImages.ps1` — Azure Local marketplace images (`microsoft.azurestackhci/marketplacegalleryimages`)
+- [x] **8.1.1** Create `Modules/Public/InventoryModules/AzureLocal/` directory
+- [x] **8.1.2** `Clusters.ps1` — Azure Local cluster inventory (`microsoft.azurestackhci/clusters`)
+- [x] **8.1.3** `VirtualMachines.ps1` — Azure Local VM instances (`microsoft.azurestackhci/virtualmachineinstances`)
+- [x] **8.1.4** `LogicalNetworks.ps1` — Azure Local logical networks (`microsoft.azurestackhci/logicalnetworks`)
+- [x] **8.1.5** `StorageContainers.ps1` — Azure Local storage containers (`microsoft.azurestackhci/storagecontainers`)
+- [x] **8.1.6** `GalleryImages.ps1` — Azure Local gallery images (`microsoft.azurestackhci/galleryimages`)
+- [x] **8.1.7** `MarketplaceGalleryImages.ps1` — Azure Local marketplace images (`microsoft.azurestackhci/marketplacegalleryimages`)
 - [ ] **8.1.8** Test: Verify Azure Local modules produce populated Excel worksheets against a test environment
 
 ### 8.2 — Azure Arc Expanded Coverage
 
-- [ ] **8.2.1** `Hybrid/ArcGateways.ps1` — Arc Gateway inventory (`microsoft.hybridcompute/gateways`)
-- [ ] **8.2.2** `Hybrid/ArcKubernetes.ps1` — Arc-enabled Kubernetes clusters (`microsoft.kubernetes/connectedclusters`)
-- [ ] **8.2.3** `Hybrid/ArcResourceBridge.ps1` — Arc resource bridge/appliances (`microsoft.resourceconnector/appliances`)
-- [ ] **8.2.4** `Hybrid/ArcExtensions.ps1` — Arc machine extensions (`microsoft.hybridcompute/machines/extensions`)
+- [x] **8.2.1** `Hybrid/ArcGateways.ps1` — Arc Gateway inventory (`microsoft.hybridcompute/gateways`)
+- [x] **8.2.2** `Hybrid/ArcKubernetes.ps1` — Arc-enabled Kubernetes clusters (`microsoft.kubernetes/connectedclusters`)
+- [x] **8.2.3** `Hybrid/ArcResourceBridge.ps1` — Arc resource bridge/appliances (`microsoft.resourceconnector/appliances`)
+- [x] **8.2.4** `Hybrid/ArcExtensions.ps1` — Arc machine extensions (`microsoft.hybridcompute/machines/extensions`)
 - [ ] **8.2.5** Test: Verify Arc modules produce populated Excel worksheets against a test environment
 
 ### 8.3 — Enhanced VPN & Networking Detail
 
-- [ ] **8.3.1** Enhance `VirtualNetworkGateways.ps1` — Add P2S configuration fields (address pool, client protocols, auth type, root/revoked cert counts, RADIUS server, AAD tenant)
-- [ ] **8.3.2** Enhance `VirtualNetworkGateways.ps1` — Add custom DNS servers, NAT rules count, policy group count
-- [ ] **8.3.3** Enhance `Connections.ps1` — Add IPsec/IKE policy fields (encryption, integrity, DH group, PFS group, SA lifetime, SA data size)
-- [ ] **8.3.4** Enhance `Connections.ps1` — Add traffic selectors, DPD timeout, use policy-based traffic selectors
-- [ ] **8.3.5** Enhance `Connections.ps1` — Add ingress/egress bytes, shared key presence (boolean only — never log actual key)
+- [x] **8.3.1** Enhance `VirtualNetworkGateways.ps1` — Add P2S configuration fields (address pool, client protocols, auth type, root/revoked cert counts, RADIUS server, AAD tenant)
+- [x] **8.3.2** Enhance `VirtualNetworkGateways.ps1` — Add custom DNS servers, NAT rules count, policy group count
+- [x] **8.3.3** Enhance `Connections.ps1` — Add IPsec/IKE policy fields (encryption, integrity, DH group, PFS group, SA lifetime, SA data size)
+- [x] **8.3.4** Enhance `Connections.ps1` — Add traffic selectors, DPD timeout, use policy-based traffic selectors
+- [x] **8.3.5** Enhance `Connections.ps1` — Add ingress/egress bytes, shared key presence (boolean only — never log actual key)
 - [ ] **8.3.6** Test: Verify enhanced VPN fields populate correctly for S2S, P2S, and ExpressRoute connections
 
 ### 8.4 — Phase 8 Finalize
 
-- [ ] **8.4.1** Update `CHANGELOG.md` with Phase 8 additions
+- [x] **8.4.1** Update `CHANGELOG.md` with Phase 8 additions
 - [ ] **8.4.2** Commit & push Phase 8
 
 ---
@@ -214,7 +214,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 **Version Control**
 - Created: 2026-02-22 by Product Technology Team
 - Last Edited: 2026-02-23 by Product Technology Team
-- Version: 1.3.0
-- Tags: todo, tracking, implementation, azure-local, arc-gateway, vpn, folder-structure, antora, asciidoc
-- Keywords: azure-inventory, progress, checklist, hci, arc, vpn, reorganization, antora
+- Version: 1.6.0
+- Tags: todo, tracking, implementation, azure-local, arc-gateway, vpn, folder-structure, antora, asciidoc, json-output, pester, credits, cleanup
+- Keywords: azure-inventory, progress, checklist, hci, arc, vpn, reorganization, antora, json, pester, documentation
 - Author: Product Technology Team

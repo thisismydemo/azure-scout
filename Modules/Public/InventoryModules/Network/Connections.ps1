@@ -3,7 +3,7 @@
 Inventory for Azure Network Connections
 
 .DESCRIPTION
-This script consolidates information for all microsoft.network/connections and  resource provider in $Resources variable. 
+This script consolidates information for all microsoft.network/connections and  resource provider in $Resources variable.
 Excel Sheet Name: Connections
 
 .Link
@@ -15,7 +15,7 @@ This powershell Module is part of Azure Tenant Inventory (AZTI)
 .NOTES
 Version: 3.6.0
 First Release Date: 19th November, 2020
-Authors: Claudio Merola and Renato Gregio 
+Authors: Claudio Merola and Renato Gregio
 
 #>
 
@@ -38,14 +38,14 @@ If ($Task -eq 'Processing')
                 $sub1 = $SUB | Where-Object { $_.id -eq $1.subscriptionId }
                 $data = $1.PROPERTIES
                 $Retired = $Retirements | Where-Object { $_.id -eq $1.id }
-                if ($Retired) 
+                if ($Retired)
                     {
                         $RetiredFeature = foreach ($Retire in $Retired)
                             {
                                 $RetiredServiceID = $Unsupported | Where-Object {$_.Id -eq $Retired.ServiceID}
                                 $tmp0 = [pscustomobject]@{
                                         'RetiredFeature'            = $RetiredServiceID.RetiringFeature
-                                        'RetiredDate'               = $RetiredServiceID.RetirementDate 
+                                        'RetiredDate'               = $RetiredServiceID.RetirementDate
                                     }
                                 $tmp0
                             }
@@ -57,33 +57,69 @@ If ($Task -eq 'Processing')
                         $RetiringDate = [string]$RetiringDate
                         $RetiringDate = if ($RetiringDate -like '* ,*') { $RetiringDate -replace ".$" }else { $RetiringDate }
                     }
-                else 
+                else
                     {
                         $RetiringFeature = $null
                         $RetiringDate = $null
                     }
                 $Tags = if(![string]::IsNullOrEmpty($1.tags.psobject.properties)){$1.tags.psobject.properties}else{'0'}
-                    foreach ($Tag in $Tags) { 
+
+                # IPsec Policy (first policy if multiple)
+                $ipsecPolicy = if ($data.ipsecPolicies -and $data.ipsecPolicies.count -gt 0) { $data.ipsecPolicies[0] } else { $null }
+                $IPsecEncryption = if ($ipsecPolicy) { $ipsecPolicy.ipsecEncryption } else { $null }
+                $IPsecIntegrity = if ($ipsecPolicy) { $ipsecPolicy.ipsecIntegrity } else { $null }
+                $IKEEncryption = if ($ipsecPolicy) { $ipsecPolicy.ikeEncryption } else { $null }
+                $IKEIntegrity = if ($ipsecPolicy) { $ipsecPolicy.ikeIntegrity } else { $null }
+                $DHGroup = if ($ipsecPolicy) { $ipsecPolicy.dhGroup } else { $null }
+                $PFSGroup = if ($ipsecPolicy) { $ipsecPolicy.pfsGroup } else { $null }
+                $SALifetime = if ($ipsecPolicy) { $ipsecPolicy.saLifeTimeSeconds } else { $null }
+                $SADataSize = if ($ipsecPolicy) { $ipsecPolicy.saDataSizeKilobytes } else { $null }
+
+                # Traffic selectors
+                $TrafficSelectors = if ($data.trafficSelectorPolicies -and $data.trafficSelectorPolicies.count -gt 0) {
+                    ($data.trafficSelectorPolicies | ForEach-Object {
+                        'Local:' + ($_.localAddressRanges -join ',') + ' Remote:' + ($_.remoteAddressRanges -join ',')
+                    }) -join '; '
+                } else { $null }
+
+                # Shared Key - boolean only, NEVER log the actual key
+                $SharedKeySet = if ($data.sharedKey) { 'Yes' } else { 'No' }
+
+                    foreach ($Tag in $Tags) {
                         $obj = @{
-                            'ID'                   = $1.id;
-                            'Subscription'         = $sub1.name;
-                            'Resource Group'       = $1.RESOURCEGROUP;
-                            'Name'                 = $1.NAME;
-                            'Location'             = $1.LOCATION;
-                            'Retiring Feature'     = $RetiringFeature;
-                            'Retiring Date'        = $RetiringDate;
-                            'Type'                 = $data.connectionType;
-                            'Status'               = $data.connectionStatus;
-                            'Connection Protocol'  = $data.connectionProtocol;
-                            'Routing Weight'       = $data.routingWeight;
-                            'connectionMode'       = $data.connectionMode;
-                            'Resource U'           = $ResUCount;
-                            'Tag Name'             = [string]$Tag.Name;
-                            'Tag Value'            = [string]$Tag.Value
+                            'ID'                       = $1.id;
+                            'Subscription'             = $sub1.name;
+                            'Resource Group'           = $1.RESOURCEGROUP;
+                            'Name'                     = $1.NAME;
+                            'Location'                 = $1.LOCATION;
+                            'Retiring Feature'         = $RetiringFeature;
+                            'Retiring Date'            = $RetiringDate;
+                            'Type'                     = $data.connectionType;
+                            'Status'                   = $data.connectionStatus;
+                            'Connection Protocol'      = $data.connectionProtocol;
+                            'Routing Weight'           = $data.routingWeight;
+                            'connectionMode'           = $data.connectionMode;
+                            'IPsec Encryption'         = $IPsecEncryption;
+                            'IPsec Integrity'          = $IPsecIntegrity;
+                            'IKE Encryption'           = $IKEEncryption;
+                            'IKE Integrity'            = $IKEIntegrity;
+                            'DH Group'                 = $DHGroup;
+                            'PFS Group'                = $PFSGroup;
+                            'SA Lifetime (sec)'        = $SALifetime;
+                            'SA Data Size (KB)'        = $SADataSize;
+                            'Use Policy-Based TS'      = $data.usePolicyBasedTrafficSelectors;
+                            'Traffic Selectors'        = $TrafficSelectors;
+                            'DPD Timeout (sec)'        = $data.dpdTimeoutSeconds;
+                            'Ingress Bytes'            = $data.ingressBytesTransferred;
+                            'Egress Bytes'             = $data.egressBytesTransferred;
+                            'Shared Key Set'           = $SharedKeySet;
+                            'Resource U'               = $ResUCount;
+                            'Tag Name'                 = [string]$Tag.Name;
+                            'Tag Value'                = [string]$Tag.Value
                         }
                         $obj
-                        if ($ResUCount -eq 1) { $ResUCount = 0 } 
-                    }               
+                        if ($ResUCount -eq 1) { $ResUCount = 0 }
+                    }
             }
             $tmp
         }
@@ -116,15 +152,29 @@ Else
         $Exc.Add('Connection Protocol')
         $Exc.Add('Routing Weight')
         $Exc.Add('connectionMode')
+        $Exc.Add('IPsec Encryption')
+        $Exc.Add('IPsec Integrity')
+        $Exc.Add('IKE Encryption')
+        $Exc.Add('IKE Integrity')
+        $Exc.Add('DH Group')
+        $Exc.Add('PFS Group')
+        $Exc.Add('SA Lifetime (sec)')
+        $Exc.Add('SA Data Size (KB)')
+        $Exc.Add('Use Policy-Based TS')
+        $Exc.Add('Traffic Selectors')
+        $Exc.Add('DPD Timeout (sec)')
+        $Exc.Add('Ingress Bytes')
+        $Exc.Add('Egress Bytes')
+        $Exc.Add('Shared Key Set')
         if($InTag)
             {
                 $Exc.Add('Tag Name')
-                $Exc.Add('Tag Value') 
+                $Exc.Add('Tag Value')
             }
         $Exc.Add('Resource U')
 
-        [PSCustomObject]$SmaResources | 
-        ForEach-Object { $_ } | Select-Object $Exc | 
+        [PSCustomObject]$SmaResources |
+        ForEach-Object { $_ } | Select-Object $Exc |
         Export-Excel -Path $File -WorksheetName 'Connections' -AutoSize -MaxAutoSizeRows 100 -TableName $TableName -TableStyle $tableStyle -Style $Style -ConditionalText $condtxt
     }
 }

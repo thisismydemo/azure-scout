@@ -58,6 +58,12 @@
 .PARAMETER Scope
     Controls which data sources are queried. Valid values: All, ArmOnly, EntraOnly. Default is All.
 
+.PARAMETER OutputFormat
+    Controls which report formats are generated. Valid values:
+    - All (default): Generate both Excel (.xlsx) and JSON (.json) reports
+    - Excel: Generate only the Excel report (skip JSON)
+    - Json: Generate only the JSON report (skip Excel generation)
+
 .PARAMETER SkipPermissionCheck
     Skip the pre-flight permission validation. By default, AZTI checks ARM and Graph
     permissions before running and displays warnings for any missing access.
@@ -172,7 +178,9 @@ Function Invoke-AzureTenantInventory {
         [switch]$DiagramFullEnvironment,
         [ValidateSet('All', 'ArmOnly', 'EntraOnly')]
         [string]$Scope = 'All',
-        [switch]$SkipPermissionCheck
+        [switch]$SkipPermissionCheck,
+        [ValidateSet('All', 'Excel', 'Json')]
+        [string]$OutputFormat = 'All'
         )
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Debugging Mode: On. ErrorActionPreference was set to "Continue", every error will be presented.')
@@ -230,6 +238,7 @@ Function Invoke-AzureTenantInventory {
         Write-Host " -AzureEnvironment        :  Change the Azure Cloud Environment. "
         Write-Host " -ReportName              :  Change the Default Name of the report. "
         Write-Host " -ReportDir               :  Change the Default Path of the report. "
+        Write-Host " -OutputFormat            :  Choose report format: All (default), Excel, Json. "
         Write-Host ""
         Write-Host ""
         Write-Host ""
@@ -407,13 +416,28 @@ Function Invoke-AzureTenantInventory {
 
     $ReportingRunTime = [System.Diagnostics.Stopwatch]::StartNew()
 
+    # ── Excel Report ─────────────────────────────────────────────────────
+    if ($OutputFormat -in ('All', 'Excel'))
+    {
         Start-AZTIReporOrchestration -ReportCache $ReportCache -SecurityCenter $SecurityCenter -File $File -Quotas $Quotas -SkipPolicy $SkipPolicy -SkipAdvisory $SkipAdvisory -IncludeCosts $IncludeCosts -Automation $Automation -TableStyle $TableStyle
 
-    Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Generating Overview sheet (Charts).')
+        Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Generating Overview sheet (Charts).')
 
         $TotalRes = Start-AZTIExcelCustomization -File $File -TableStyle $TableStyle -PlatOS $PlatOS -Subscriptions $Subscriptions -ExtractionRunTime $ExtractionRuntime -ProcessingRunTime $ProcessingRunTime -ReportingRunTime $ReportingRunTime -IncludeCosts $IncludeCosts -RunLite $RunLite -Overview $Overview
 
         Write-Progress -activity 'Azure Inventory' -Status "95% Complete." -PercentComplete 95 -CurrentOperation "Excel Customization Completed.."
+    }
+    else
+    {
+        Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Skipping Excel report (OutputFormat = Json).')
+    }
+
+    # ── JSON Report ──────────────────────────────────────────────────────
+    if ($OutputFormat -in ('All', 'Json'))
+    {
+        Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting JSON report export.')
+        $JsonFile = Export-AZTIJsonReport -ReportCache $ReportCache -File $File -TenantID $TenantID -Subscriptions $Subscriptions -Scope $Scope -Quotas $Quotas -SecurityCenter:$SecurityCenter -SkipAdvisory:$SkipAdvisory -SkipPolicy:$SkipPolicy -IncludeCosts:$IncludeCosts
+    }
 
     $ReportingRunTime.Stop()
 
@@ -455,9 +479,18 @@ Function Invoke-AzureTenantInventory {
 
     if ($StorageAccount)
         {
-            Write-Output "Sending Excel file to Storage Account:"
-            Write-Output $File
-            Set-AzStorageBlobContent -File $File -Container $StorageContainer -Context $StorageContext | Out-Null
+            if ($OutputFormat -in ('All', 'Excel'))
+            {
+                Write-Output "Sending Excel file to Storage Account:"
+                Write-Output $File
+                Set-AzStorageBlobContent -File $File -Container $StorageContainer -Context $StorageContext | Out-Null
+            }
+            if ($OutputFormat -in ('All', 'Json') -and $JsonFile)
+            {
+                Write-Output "Sending JSON file to Storage Account:"
+                Write-Output $JsonFile
+                Set-AzStorageBlobContent -File $JsonFile -Container $StorageContainer -Context $StorageContext | Out-Null
+            }
             if(!$SkipDiagram.IsPresent)
                 {
                     Write-Output "Sending Diagram file to Storage Account:"

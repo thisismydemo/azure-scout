@@ -1,0 +1,131 @@
+= Contributing
+:description: How to contribute new inventory modules and improvements to Azure Tenant Inventory.
+:keywords: contributing, development, modules, pull-request
+
+== Overview
+
+Contributions are welcome! This guide covers adding new inventory modules, writing tests, and submitting pull requests.
+
+== Adding a New ARM Inventory Module
+
+. Create a new `.ps1` file in the appropriate category folder under `Modules/Public/InventoryModules/<Category>/`.
++
+If the category doesn't exist, create a new folder.
+
+. Use an existing module as a template. Each ARM module should:
++
+* Accept the standard pipeline parameters (subscription data, resource list)
+* Use `Get-AzResource` or Azure Resource Graph queries
+* Return objects with the normalized resource schema (`id`, `name`, `TYPE`, `resourceGroup`, `subscriptionId`, `location`, `properties`)
+
+. Example skeleton:
++
+[source,powershell]
+----
+function Get-AZTINewResource {
+    param(
+        [Parameter(Mandatory)]
+        [object]$Resources,
+
+        [Parameter(Mandatory)]
+        [string]$SubscriptionId
+    )
+
+    foreach ($res in $Resources) {
+        [PSCustomObject]@{
+            id             = $res.Id
+            name           = $res.Name
+            TYPE           = $res.Type.ToLower()
+            resourceGroup  = $res.ResourceGroupName
+            subscriptionId = $SubscriptionId
+            location       = $res.Location
+            properties     = $res.Properties
+        }
+    }
+}
+----
+
+. Register the module in the orchestrator so it gets called during extraction.
+
+== Adding a New Entra ID Module
+
+. Add a new `.ps1` file in `Modules/Public/InventoryModules/Identity/`.
+
+. Use `Invoke-AZTIGraphRequest` for the Graph API call:
++
+[source,powershell]
+----
+function Get-AZTINewEntraObject {
+    param(
+        [Parameter(Mandatory)]
+        [string]$TenantID
+    )
+
+    $results = Invoke-AZTIGraphRequest -Uri '/newEndpoint' -Method GET
+    foreach ($item in $results) {
+        [PSCustomObject]@{
+            id         = $item.id
+            name       = $item.displayName
+            TYPE       = 'microsoft.graph/newobject'
+            tenantId   = $TenantID
+            properties = $item
+        }
+    }
+}
+----
+
+. Register the Graph query in `Start-AZTIEntraExtraction`.
+
+== Writing Pester Tests
+
+All tests use Pester v5+ and live in the `tests/` directory.
+
+[source,powershell]
+----
+BeforeAll {
+    $ModuleRoot = Split-Path -Parent $PSScriptRoot
+    Import-Module "$ModuleRoot/AzureTenantInventory.psd1" -Force
+}
+
+Describe 'Get-AZTINewResource' {
+    It 'returns normalized objects' {
+        Mock Invoke-AZTIGraphRequest { return @(@{ id = '1'; displayName = 'Test' }) }
+        $result = Get-AZTINewEntraObject -TenantID '00000000-...'
+        $result | Should -Not -BeNullOrEmpty
+        $result[0].TYPE | Should -Be 'microsoft.graph/newobject'
+    }
+}
+----
+
+Run tests:
+
+[source,powershell]
+----
+Invoke-Pester ./tests/ -Output Detailed
+----
+
+== Pull Request Guidelines
+
+. *Branch*: Create a feature branch from `main` (`feature/add-xyz-module`)
+. *Scope*: One logical change per PR
+. *Tests*: Include or update Pester tests for any new functionality
+. *Documentation*: Update the module catalog in the README and/or Antora docs
+. *Commit messages*: Use conventional commits (`feat:`, `fix:`, `docs:`, `test:`)
+. *CI*: All Pester tests must pass before merge
+
+== Code Style
+
+* PowerShell scripts use **PascalCase** file names
+* Functions use the `Get-AZTI` / `Invoke-AZTI` / `Set-AZTI` / `Start-AZTI` / `Test-AZTI` prefix
+* Full comment-based help on all exported functions
+* `try`/`catch`/`finally` error handling
+* No hardcoded secrets — use environment variables or Key Vault
+
+== Reporting Issues
+
+Open a GitHub issue with:
+
+* Steps to reproduce
+* Expected vs. actual behavior
+* Module version (`(Get-Module AzureTenantInventory).Version`)
+* PowerShell version (`$PSVersionTable.PSVersion`)

@@ -1,2 +1,13 @@
 * xref:index.adoc[Home]
-* xref:folder-structure.adoc[Repository Structure]
+* Getting Started
+** xref:authentication.adoc[Authentication]
+** xref:usage.adoc[Usage Guide]
+** xref:permissions.adoc[Permissions]
+* Module Reference
+** xref:arm-modules.adoc[ARM Modules (95)]
+** xref:entra-modules.adoc[Entra ID Modules (15)]
+* Project
+** xref:folder-structure.adoc[Repository Structure]
+** xref:contributing.adoc[Contributing]
+** xref:credits.adoc[Credits & Attribution]
+** xref:changelog.adoc[Changelog]

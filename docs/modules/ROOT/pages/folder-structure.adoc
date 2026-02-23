@@ -24,7 +24,15 @@ azure-inventory/
 │       ├── images/                     #   All consolidated images (32 files)
 │       └── pages/                      #   AsciiDoc content pages
 │           ├── index.adoc
-│           └── folder-structure.adoc
+│           ├── authentication.adoc
+│           ├── usage.adoc
+│           ├── permissions.adoc
+│           ├── arm-modules.adoc
+│           ├── entra-modules.adoc
+│           ├── folder-structure.adoc
+│           ├── contributing.adoc
+│           ├── credits.adoc
+│           └── changelog.adoc
 ├── migration-temp/                     # Phase planning docs (removed in Phase 7)
 ├── Modules/
 │   ├── Private/                        # Internal (non-exported) functions
@@ -35,22 +43,24 @@ azure-inventory/
 │   │   └── Reporting/                  #   Report generation (was 3.ReportingFunctions)
 │   │       └── StyleFunctions/
 │   └── Public/                         # Exported functions & runtime modules
-│       ├── InventoryModules/           #   86 ARM resource modules in 15 categories
-│       │   ├── AI/
-│       │   ├── Analytics/
-│       │   ├── APIs/
-│       │   ├── Compute/
-│       │   ├── Container/
-│       │   ├── Database/
-│       │   ├── Hybrid/
-│       │   ├── Integration/
-│       │   ├── IoT/
-│       │   ├── Management/
-│       │   ├── Monitoring/
-│       │   ├── Network/               #   Merged from Network_1 + Network_2 (20 files)
-│       │   ├── Security/
-│       │   ├── Storage/
-│       │   └── Web/
+│       ├── InventoryModules/           #   110 modules in 17 categories (95 ARM + 15 Entra)
+│       │   ├── AI/                     #   14 modules
+│       │   ├── Analytics/              #   6 modules
+│       │   ├── APIs/                   #   5 modules
+│       │   ├── AzureLocal/             #   6 modules
+│       │   ├── Compute/                #   7 modules
+│       │   ├── Container/              #   6 modules
+│       │   ├── Database/               #   13 modules
+│       │   ├── Hybrid/                 #   5 modules
+│       │   ├── Identity/               #   15 Entra ID modules
+│       │   ├── Integration/            #   2 modules
+│       │   ├── IoT/                    #   1 module
+│       │   ├── Management/             #   3 modules
+│       │   ├── Monitoring/             #   2 modules
+│       │   ├── Network/               #   20 modules (merged Network_1 + Network_2)
+│       │   ├── Security/               #   1 module
+│       │   ├── Storage/                #   2 modules
+│       │   └── Web/                    #   2 modules
 │       └── PublicFunctions/            #   13 exported cmdlets
 │           ├── Diagram/
 │           └── Jobs/
@@ -61,6 +71,7 @@ azure-inventory/
 ├── CHANGELOG.md
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
+├── CREDITS.md
 ├── LICENSE
 ├── README.md
 ├── SECURITY.md

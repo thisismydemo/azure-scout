@@ -1,0 +1,41 @@
+= Credits & Attribution
+:description: Credits and attribution for the Azure Tenant Inventory project.
+:keywords: credits, attribution, ari, fork, license
+
+== Overview
+
+**AzureTenantInventory** (AZTI) is a fork of the https://github.com/microsoft/ARI[Azure Resource Inventory (ARI)] project, version 3.6.11.
+
+== Original Authors
+
+[cols="1,2",options="header"]
+|===
+| Contributor | Role
+
+| **Claudio Merola**
+| Original ARI author and primary developer
+
+| **RenatoGregio**
+| Original copyright holder
+|===
+
+== Source Project
+
+* *Repository*: https://github.com/microsoft/ARI[microsoft/ARI]
+* *License*: MIT
+* *Forked Version*: v3.6.11
+
+== Additional Acknowledgments
+
+* **Doug Finke** — Author of the https://github.com/dfinke/ImportExcel[ImportExcel] PowerShell module used for Excel report generation.
+* **Microsoft** — Azure PowerShell SDK (`Az.*` modules), Azure Resource Graph, and Microsoft Graph REST API.
+
+== License
+
+Both the original ARI project and this fork are licensed under the MIT License.
+See the link:../../../../LICENSE[LICENSE] file for full details.
+
+----
+Copyright (c) 2020 RenatoGregio (original AzureResourceInventory)
+Copyright (c) 2026 thisismydemo (AzureTenantInventory fork)
+----

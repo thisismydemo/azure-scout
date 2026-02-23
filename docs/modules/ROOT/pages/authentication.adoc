@@ -1,0 +1,97 @@
+= Authentication
+:description: Five authentication methods supported by Azure Tenant Inventory.
+:keywords: authentication, login, spn, certificate, device-code, managed-identity
+
+== Overview
+
+Azure Tenant Inventory supports five authentication methods.
+The module uses `Connect-AZTILoginSession` internally, which selects the auth path based on the parameters you provide.
+
+== Priority Order
+
+When multiple auth parameters are supplied, the module selects the _first_ matching path:
+
+. *SPN + Certificate* — `AppId` + `CertificatePath` (+ optional `CertificatePassword`)
+. *SPN + Client Secret* — `AppId` + `Secret`
+. *Device Code* — `-DeviceLogin` switch
+. *Managed Identity* — Automatic when running in Azure (no parameters needed)
+. *Current User / Interactive* — Default fallback, reuses existing `Get-AzContext`
+
+== Method Details
+
+=== 1. Current User (Interactive)
+
+The default. If you've already run `Connect-AzAccount`, AZTI reuses your session.
+
+[source,powershell]
+----
+Connect-AzAccount
+Invoke-AzureTenantInventory
+----
+
+If no existing context matches the target tenant, the module calls `Connect-AzAccount` interactively.
+
+=== 2. Device Code
+
+For headless or remote sessions (SSH, containers).
+
+[source,powershell]
+----
+Invoke-AzureTenantInventory -TenantID '00000000-...' -DeviceLogin
+----
+
+The module displays a URL and code. Open the link in any browser, enter the code, and authenticate.
+
+=== 3. Service Principal + Client Secret
+
+For CI/CD pipelines and unattended automation.
+
+[source,powershell]
+----
+Invoke-AzureTenantInventory `
+    -TenantID  '00000000-...' `
+    -AppId     '11111111-...' `
+    -Secret    $env:CLIENT_SECRET
+----
+
+IMPORTANT: Store the secret in a Key Vault or pipeline secret — never hardcode it.
+
+=== 4. Service Principal + Certificate
+
+The most secure SPN method — no secret string to rotate.
+
+[source,powershell]
+----
+Invoke-AzureTenantInventory `
+    -TenantID         '00000000-...' `
+    -AppId            '11111111-...' `
+    -CertificatePath  'C:\certs\azti-spn.pfx' `
+    -CertificatePassword $certPwd
+----
+
+=== 5. Managed Identity
+
+When running inside Azure (VMs, Azure Functions, Azure Automation).
+The module detects managed identity automatically — no parameters required.
+
+[source,powershell]
+----
+# Inside an Azure VM/Function/Automation Account
+Invoke-AzureTenantInventory -TenantID '00000000-...'
+----
+
+== Azure Environment
+
+All methods accept `-AzureEnvironment` to target sovereign clouds:
+
+[source,powershell]
+----
+Invoke-AzureTenantInventory -AzureEnvironment AzureUSGovernment
+----
+
+Valid values: `AzureCloud` (default), `AzureUSGovernment`, `AzureChinaCloud`, `AzureGermanCloud`.
+
+== LoginExperienceV2
+
+The module checks for the `LoginExperienceV2` Az config setting.
+If enabled, it temporarily disables it to ensure compatibility, then restores the original value after login.

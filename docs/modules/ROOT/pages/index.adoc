@@ -1,32 +1,65 @@
 = Azure Tenant Inventory
 :description: A PowerShell module for comprehensive Azure + Entra ID tenant inventory.
 :keywords: azure, inventory, entra, powershell
+:page-layout: home
 
 == Overview
 
 Azure Tenant Inventory (AZTI) is a PowerShell module that generates comprehensive inventory reports for a single Azure tenant — covering both ARM resources and Entra ID (Azure AD) objects.
 
-=== Key Features
+[cols="1,3",options="header"]
+|===
+| Feature | Description
 
-* *ARM Resource Inventory* — 86 resource modules across 15 categories
-* *Entra ID Inventory* — Users, groups, apps, conditional access, PIM, and more (Phase 5)
-* *Excel Reports* — Rich spreadsheets with multiple worksheets per resource type
-* *JSON Output* — Machine-readable output for automation pipelines (Phase 6)
-* *Network Diagrams* — Auto-generated draw.io topology diagrams
-* *Pre-flight Permission Checker* — Validates access before running (Phase 3)
+| *ARM Resource Inventory*
+| 95 resource modules across 17 categories (AI, Analytics, APIs, AzureLocal, Compute, Container, Database, Hybrid, Identity, Integration, IoT, Management, Monitoring, Network, Security, Storage, Web)
+
+| *Entra ID Inventory*
+| 15 identity modules — Users, Groups, Applications, Service Principals, Conditional Access, PIM, Administrative Units, Named Locations, Domains, Authentication Methods, and more
+
+| *Excel Reports*
+| Rich multi-worksheet spreadsheets with charts and conditional formatting
+
+| *JSON Output*
+| Machine-readable normalized output for automation pipelines
+
+| *Network Diagrams*
+| Auto-generated draw.io topology diagrams
+
+| *Pre-flight Permission Checker*
+| Validates ARM + Graph access before running
+|===
 
 === Quick Start
 
 [source,powershell]
 ----
-# Install from PSGallery (when published)
-Install-Module -Name AzureTenantInventory
-
-# Or import from local clone
+# Import from local clone
 Import-Module ./AzureTenantInventory.psd1
 
-# Run inventory (uses current Azure context)
+# Run full inventory (uses current Azure context)
 Invoke-AzureTenantInventory
+
+# ARM-only scan with JSON output
+Invoke-AzureTenantInventory -Scope ArmOnly -OutputFormat Json
+
+# Entra ID only
+Invoke-AzureTenantInventory -Scope EntraOnly
 ----
 
 TIP: If you're already logged in via `Connect-AzAccount`, AZTI uses your existing session — no additional flags needed.
+
+== Documentation
+
+[cols="1,2"]
+|===
+| xref:authentication.adoc[Authentication] | Five authentication methods (interactive, device-code, SPN+secret, SPN+cert, managed identity)
+| xref:usage.adoc[Usage Guide] | Scope, OutputFormat, content toggles, and examples
+| xref:permissions.adoc[Permissions] | Required ARM RBAC roles and Microsoft Graph API permissions
+| xref:arm-modules.adoc[ARM Modules] | 95 resource modules across 17 categories
+| xref:entra-modules.adoc[Entra Modules] | 15 Entra ID identity modules
+| xref:folder-structure.adoc[Repository Structure] | Directory layout and module loading
+| xref:contributing.adoc[Contributing] | How to add new inventory modules
+| xref:credits.adoc[Credits] | Attribution and acknowledgments
+| xref:changelog.adoc[Changelog] | Version history
+|===

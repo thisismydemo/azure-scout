@@ -1,0 +1,272 @@
+= ARM Inventory Modules
+:description: Complete catalog of 95 Azure Resource Manager inventory modules across 16 categories.
+:keywords: arm, modules, categories, resources, inventory
+
+== Overview
+
+Azure Tenant Inventory includes *95 ARM inventory modules* organized into *16 categories*.
+Each module extracts data for a specific Azure resource type using the Azure Resource Manager APIs.
+
+Run ARM-only extraction with:
+
+[source,powershell]
+----
+Invoke-AzureTenantInventory -Scope ArmOnly
+----
+
+== Module Catalog
+
+=== AI (14 modules)
+
+Cognitive Services, Machine Learning, and AI platform resources.
+
+[cols="1,2",options="header"]
+|===
+| Module | Resource Type
+
+| AzureAI | Azure AI Services (multi-service)
+| ComputerVision | Computer Vision accounts
+| ContentModerator | Content Moderator accounts
+| ContentSafety | Content Safety accounts
+| CustomVision | Custom Vision training & prediction
+| FaceAPI | Face API accounts
+| FormRecognizer | Form Recognizer / Document Intelligence
+| HealthInsights | Health Insights accounts
+| ImmersiveReader | Immersive Reader resources
+| MachineLearning | Machine Learning workspaces
+| SearchServices | Azure AI Search (Cognitive Search)
+| SpeechService | Speech Services accounts
+| TextAnalytics | Text Analytics / Language Service
+| Translator | Translator resources
+|===
+
+=== Analytics (6 modules)
+
+Big data, streaming, and data governance resources.
+
+[cols="1,2",options="header"]
+|===
+| Module | Resource Type
+
+| Databricks | Azure Databricks workspaces
+| DataExplorerCluster | Azure Data Explorer (Kusto) clusters
+| EvtHub | Event Hubs namespaces
+| Purview | Microsoft Purview accounts
+| Streamanalytics | Stream Analytics jobs
+| Synapse | Synapse Analytics workspaces
+|===
+
+=== APIs (5 modules)
+
+Azure platform advisory and management APIs.
+
+[cols="1,2",options="header"]
+|===
+| Module | Resource Type
+
+| AdvisorScore | Azure Advisor score summaries
+| ManagedIds | Managed Identity assignments
+| Outages | Service health / outage records
+| ReservationRecom | Reservation purchase recommendations
+| SupportTickets | Azure Support tickets
+|===
+
+=== Azure Local (6 modules)
+
+Azure Local (formerly Azure Stack HCI) resources.
+
+[cols="1,2",options="header"]
+|===
+| Module | Resource Type
+
+| Clusters | Azure Local clusters
+| GalleryImages | VM gallery images
+| LogicalNetworks | Logical networks
+| MarketplaceGalleryImages | Marketplace gallery images
+| StorageContainers | Storage containers
+| VirtualMachines | Arc-enabled virtual machines
+|===
+
+=== Compute (7 modules)
+
+Virtual machines, scale sets, and compute infrastructure.
+
+[cols="1,2",options="header"]
+|===
+| Module | Resource Type
+
+| AvailabilitySets | VM availability sets
+| AVD | Azure Virtual Desktop host pools
+| CloudServices | Cloud Services (classic & extended)
+| VirtualMachine | Virtual machines
+| VirtualMachineScaleSet | VM scale sets (VMSS)
+| VMDisk | Managed disks
+| VMWare | Azure VMware Solution
+|===
+
+=== Container (6 modules)
+
+Kubernetes, container apps, and container registries.
+
+[cols="1,2",options="header"]
+|===
+| Module | Resource Type
+
+| AKS | Azure Kubernetes Service clusters
+| ARO | Azure Red Hat OpenShift clusters
+| ContainerApp | Container Apps
+| ContainerAppEnv | Container App Environments
+| ContainerGroups | Container Instances (groups)
+| ContainerRegistries | Azure Container Registry
+|===
+
+=== Database (13 modules)
+
+Relational, NoSQL, and cache database services.
+
+[cols="1,2",options="header"]
+|===
+| Module | Resource Type
+
+| CosmosDB | Cosmos DB accounts
+| MariaDB | MariaDB servers
+| MySQL | MySQL single servers
+| MySQLflexible | MySQL flexible servers
+| POSTGRE | PostgreSQL single servers
+| POSTGREFlexible | PostgreSQL flexible servers
+| RedisCache | Azure Cache for Redis
+| SQLDB | SQL databases
+| SQLMI | SQL Managed Instances
+| SQLMIDB | SQL MI databases
+| SQLPOOL | Synapse SQL pools
+| SQLSERVER | SQL servers
+| SQLVM | SQL virtual machines
+|===
+
+=== Hybrid (5 modules)
+
+Azure Arc and hybrid resource management.
+
+[cols="1,2",options="header"]
+|===
+| Module | Resource Type
+
+| ArcExtensions | Arc machine extensions
+| ArcGateways | Arc gateways
+| ArcKubernetes | Arc-enabled Kubernetes clusters
+| ArcResourceBridge | Arc resource bridges
+| ARCServers | Arc-enabled servers
+|===
+
+=== Integration (2 modules)
+
+API management and messaging services.
+
+[cols="1,2",options="header"]
+|===
+| Module | Resource Type
+
+| APIM | API Management instances
+| ServiceBUS | Service Bus namespaces
+|===
+
+=== IoT (1 module)
+
+Internet of Things platform resources.
+
+[cols="1,2",options="header"]
+|===
+| Module | Resource Type
+
+| IOTHubs | IoT Hub instances
+|===
+
+=== Management (3 modules)
+
+Automation, backup, and recovery services.
+
+[cols="1,2",options="header"]
+|===
+| Module | Resource Type
+
+| AutomationAccounts | Automation accounts
+| Backup | Backup items and policies
+| RecoveryVault | Recovery Services vaults
+|===
+
+=== Monitoring (2 modules)
+
+Observability and logging resources.
+
+[cols="1,2",options="header"]
+|===
+| Module | Resource Type
+
+| AppInsights | Application Insights components
+| Workspaces | Log Analytics workspaces
+|===
+
+=== Network (20 modules)
+
+Virtual networking, firewalls, load balancers, and DNS.
+
+[cols="1,2",options="header"]
+|===
+| Module | Resource Type
+
+| ApplicationGateways | Application Gateways
+| AzureFirewall | Azure Firewalls
+| BastionHosts | Bastion hosts
+| Connections | VPN / VNet connections
+| ExpressRoute | ExpressRoute circuits
+| Frontdoor | Front Door profiles
+| LoadBalancer | Load balancers
+| NATGateway | NAT gateways
+| NetworkInterface | Network interfaces (NICs)
+| NetworkSecurityGroup | Network Security Groups (NSGs)
+| PrivateDNS | Private DNS zones
+| PrivateEndpoint | Private endpoints
+| PublicDNS | Public DNS zones
+| PublicIP | Public IP addresses
+| RouteTables | Route tables / UDRs
+| TrafficManager | Traffic Manager profiles
+| VirtualNetwork | Virtual networks
+| VirtualNetworkGateways | VPN / ExpressRoute gateways
+| VirtualWAN | Virtual WAN hubs
+| vNETPeering | VNet peering connections
+|===
+
+=== Security (1 module)
+
+Security and secrets management.
+
+[cols="1,2",options="header"]
+|===
+| Module | Resource Type
+
+| Vault | Key Vault instances
+|===
+
+=== Storage (2 modules)
+
+Block, file, and object storage services.
+
+[cols="1,2",options="header"]
+|===
+| Module | Resource Type
+
+| NetApp | Azure NetApp Files accounts
+| StorageAccounts | Storage accounts
+|===
+
+=== Web (2 modules)
+
+App Service hosting and web applications.
+
+[cols="1,2",options="header"]
+|===
+| Module | Resource Type
+
+| APPServicePlan | App Service plans
+| APPServices | App Services (web apps, APIs)
+|===
