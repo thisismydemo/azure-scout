@@ -77,14 +77,14 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ## Phase 2 — Auth Refactor
 
-- [ ] **2.1** Rewrite `Connect-AZTILoginSession` with 5 auth methods (current-user default)
-- [ ] **2.2** Create `Get-AZTIGraphToken` (token acquisition via `Get-AzAccessToken -ResourceTypeName MSGraph`)
-- [ ] **2.3** Create `Invoke-AZTIGraphRequest` (REST wrapper with pagination + throttle handling)
-- [ ] **2.4** Add `-TenantID`, `-AppId`, `-Secret`, `-CertificatePath`, `-CertificatePassword`, `-DeviceLogin` params to `Invoke-AzureTenantInventory`
-- [ ] **2.5** Add `-Scope` parameter (`All`, `ArmOnly`, `EntraOnly`) to `Invoke-AzureTenantInventory`
-- [ ] **2.6** Test: current-user auth (interactive)
-- [ ] **2.7** Test: SPN + secret auth
-- [ ] **2.8** Commit Phase 2
+- [x] **2.1** Rewrite `Connect-AZTILoginSession` with 5 auth methods (current-user default)
+- [x] **2.2** Create `Get-AZTIGraphToken` (token acquisition via `Get-AzAccessToken -ResourceTypeName MSGraph`)
+- [x] **2.3** Create `Invoke-AZTIGraphRequest` (REST wrapper with pagination + throttle handling)
+- [x] **2.4** Add `-TenantID`, `-AppId`, `-Secret`, `-CertificatePath`, `-CertificatePassword`, `-DeviceLogin` params to `Invoke-AzureTenantInventory`
+- [x] **2.5** Add `-Scope` parameter (`All`, `ArmOnly`, `EntraOnly`) to `Invoke-AzureTenantInventory`
+- [x] **2.6** Test: current-user auth (interactive)
+- [x] **2.7** Test: SPN + secret auth
+- [x] **2.8** Commit Phase 2
 
 ---
 

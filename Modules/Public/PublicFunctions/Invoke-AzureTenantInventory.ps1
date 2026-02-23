@@ -44,13 +44,19 @@
     Specifies the Excel overview sheet design. Each value will change the main charts in the Overview sheet. Valid values are 1, 2, or 3. Default is 1.
 
 .PARAMETER AppId
-    Specifies the Application ID used to connect to Azure as a service principal. Requires TenantID and Secret.
+    Specifies the Application (client) ID for service principal authentication. Requires TenantID and either Secret or CertificatePath.
 
 .PARAMETER Secret
-    Specifies the Secret used with the Application ID to connect to Azure as a service principal. Requires TenantID and AppId.
+    Specifies the client secret for SPN + Secret authentication. Requires TenantID and AppId.
 
 .PARAMETER CertificatePath
-    Specifies the Certificate path used with the Application ID to connect to Azure as a service principal. Requires TenantID, AppId, and Secret.
+    Specifies the path to a PKCS#12 certificate file for SPN + Certificate authentication. Requires TenantID and AppId.
+
+.PARAMETER CertificatePassword
+    Specifies the password protecting the certificate file. Optional — only needed if the certificate is password-protected.
+
+.PARAMETER Scope
+    Controls which data sources are queried. Valid values: All, ArmOnly, EntraOnly. Default is All.
 
 .PARAMETER ResourceGroup
     Specifies one or more unique Resource Groups to be inventoried. Requires SubscriptionID.
@@ -128,6 +134,7 @@ Function Invoke-AzureTenantInventory {
         [string]$AppId,
         [string]$Secret,
         [string]$CertificatePath,
+        [string]$CertificatePassword,
         [string]$ReportName = 'AzureTenantInventory',
         [string]$ReportDir,
         [string]$StorageAccount,
@@ -158,7 +165,9 @@ Function Invoke-AzureTenantInventory {
         [switch]$Lite,
         [switch]$Help,
         [switch]$DeviceLogin,
-        [switch]$DiagramFullEnvironment
+        [switch]$DiagramFullEnvironment,
+        [ValidateSet('All', 'ArmOnly', 'EntraOnly')]
+        [string]$Scope = 'All'
         )
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Debugging Mode: On. ErrorActionPreference was set to "Continue", every error will be presented.')
@@ -258,7 +267,7 @@ Function Invoke-AzureTenantInventory {
 
     if ($PlatOS -ne 'Azure CloudShell' -and !$Automation.IsPresent)
         {
-            $TenantID = Connect-AZTILoginSession -AzureEnvironment $AzureEnvironment -TenantID $TenantID -SubscriptionID $SubscriptionID -DeviceLogin $DeviceLogin -AppId $AppId -Secret $Secret -CertificatePath $CertificatePath
+            $TenantID = Connect-AZTILoginSession -AzureEnvironment $AzureEnvironment -TenantID $TenantID -DeviceLogin:$DeviceLogin -AppId $AppId -Secret $Secret -CertificatePath $CertificatePath -CertificatePassword $CertificatePassword
 
 
         }

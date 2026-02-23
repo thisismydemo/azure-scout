@@ -1,152 +1,175 @@
 <#
 .Synopsis
-Azure Login Session Module for Azure Resource Inventory
+    Azure Login Session Module for Azure Tenant Inventory
 
 .DESCRIPTION
-This module is used to invoke the authentication process that is handle by Azure PowerShell.
+    Authenticates to Azure using one of five methods (in priority order):
+      1. Managed Identity  — triggered by -Automation flag (handled in Invoke-AzureTenantInventory)
+      2. SPN + Certificate — -AppId, -CertificatePath, -CertificatePassword
+      3. SPN + Secret      — -AppId, -Secret
+      4. Device Code        — -DeviceLogin switch
+      5. Current User       — default; reuses existing Az context or prompts interactive login
 
-.Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/0.MainFunctions/Connect-LoginSession.ps1
+    Single-tenant per run. TenantID is required for SPN auth and strongly recommended
+    for all other methods.
+
+.PARAMETER AzureEnvironment
+    Azure cloud environment. Default: AzureCloud.
+
+.PARAMETER TenantID
+    Target Azure AD tenant ID. Required for SPN methods; optional for interactive.
+
+.PARAMETER DeviceLogin
+    Use device-code authentication flow.
+
+.PARAMETER AppId
+    Application (client) ID for service principal authentication.
+
+.PARAMETER Secret
+    Client secret for SPN + Secret auth. Requires -AppId and -TenantID.
+
+.PARAMETER CertificatePath
+    Path to PKCS#12 certificate file for SPN + Certificate auth.
+
+.PARAMETER CertificatePassword
+    Password protecting the certificate file. Passed as SecureString internally.
+
+.LINK
+    https://github.com/thisismydemo/azure-inventory
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZTI)
 
 .NOTES
-Version: 3.6.0
-First Release Date: 15th Oct, 2024
-Authors: Claudio Merola
-
+    Version: 2.0.0
+    Authors: Claudio Merola, thisismydemo
 #>
 function Connect-AZTILoginSession {
-    Param($AzureEnvironment, $TenantID, $SubscriptionID, $DeviceLogin, $AppId, $Secret, $CertificatePath, $Debug)
-    $DebugPreference = 'silentlycontinue'
-    $ErrorActionPreference = 'Continue'
+    [CmdletBinding()]
+    param(
+        [ValidateSet('AzureCloud', 'AzureUSGovernment', 'AzureChinaCloud', 'AzureGermanCloud')]
+        [string]$AzureEnvironment = 'AzureCloud',
 
-    Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting Connect-LoginSession function')
-    Write-Host $AzureEnvironment -BackgroundColor Green
-    $Context = Get-AzContext -ErrorAction SilentlyContinue
-    if (!$TenantID) {
-        Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Tenant ID not specified')
-        write-host "Tenant ID not specified. Use -TenantID parameter if you want to specify directly. "
-        write-host "Authenticating Azure"
-        write-host ""
+        [string]$TenantID,
 
-        if($DeviceLogin.IsPresent)
-            {
-                Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Logging with Device Login')
-                Connect-AzAccount -UseDeviceAuthentication -Environment $AzureEnvironment | Out-Null
-            }
-        else
-            {
-                try 
-                    {
-                        Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Editing Login Experience')
-                        $AZConfigNewLogin = Get-AzConfig -LoginExperienceV2 -WarningAction SilentlyContinue -InformationAction SilentlyContinue
-                        if ($AZConfigNewLogin.value -eq 'On' )
-                            {
-                                Update-AzConfig -LoginExperienceV2 Off | Out-Null
-                                Connect-AzAccount -Environment $AzureEnvironment | Out-Null
-                                Update-AzConfig -LoginExperienceV2 On | Out-Null
-                            }
-                        else
-                            {
-                                Connect-AzAccount -Environment $AzureEnvironment | Out-Null
-                            }
-                    }
-                catch
-                    {
-                        Connect-AzAccount -Environment $AzureEnvironment | Out-Null
-                    }
-            }
-        write-host ""
-        write-host ""
-        $Tenants = Get-AzTenant -WarningAction SilentlyContinue -InformationAction SilentlyContinue | Sort-Object -Unique
-        if ($Tenants.Count -eq 1) {
-            write-host "You have privileges only in One Tenant "
-            write-host ""
-            $TenantID = $Tenants.Id
+        [switch]$DeviceLogin,
+
+        [string]$AppId,
+
+        [string]$Secret,
+
+        [string]$CertificatePath,
+
+        [string]$CertificatePassword
+    )
+
+    $ErrorActionPreference = 'Stop'
+
+    Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + ' - Starting Connect-AZTILoginSession')
+
+    # -----------------------------------------------------------
+    # Priority 2: SPN + Certificate
+    # -----------------------------------------------------------
+    if ($AppId -and $CertificatePath) {
+        Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + ' - Auth method: SPN + Certificate')
+        if (-not $TenantID) {
+            throw 'TenantID is required for service principal authentication with certificate.'
+        }
+
+        $connectParams = @{
+            ServicePrincipal = $true
+            TenantId         = $TenantID
+            ApplicationId    = $AppId
+            CertificatePath  = $CertificatePath
+            Environment      = $AzureEnvironment
+        }
+        if ($CertificatePassword) {
+            $connectParams['CertificatePassword'] = ConvertTo-SecureString -String $CertificatePassword -AsPlainText -Force
+        }
+
+        Connect-AzAccount @connectParams | Out-Null
+        Write-Host 'Authenticated via SPN + Certificate' -ForegroundColor Green
+        return $TenantID
+    }
+
+    # -----------------------------------------------------------
+    # Priority 3: SPN + Secret
+    # -----------------------------------------------------------
+    if ($AppId -and $Secret) {
+        Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + ' - Auth method: SPN + Secret')
+        if (-not $TenantID) {
+            throw 'TenantID is required for service principal authentication with secret.'
+        }
+
+        $secureSecret = ConvertTo-SecureString -String $Secret -AsPlainText -Force
+        $credential   = [System.Management.Automation.PSCredential]::new($AppId, $secureSecret)
+
+        Connect-AzAccount -ServicePrincipal -TenantId $TenantID -Credential $credential -Environment $AzureEnvironment | Out-Null
+        Write-Host 'Authenticated via SPN + Secret' -ForegroundColor Green
+        return $TenantID
+    }
+
+    # -----------------------------------------------------------
+    # Priority 4: Device Code
+    # -----------------------------------------------------------
+    if ($DeviceLogin.IsPresent) {
+        Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + ' - Auth method: Device Code')
+
+        $deviceParams = @{
+            UseDeviceAuthentication = $true
+            Environment             = $AzureEnvironment
+        }
+        if ($TenantID) { $deviceParams['Tenant'] = $TenantID }
+
+        Connect-AzAccount @deviceParams | Out-Null
+        Write-Host 'Authenticated via Device Code' -ForegroundColor Green
+
+        if (-not $TenantID) {
+            $TenantID = (Get-AzContext).Tenant.Id
+        }
+        return $TenantID
+    }
+
+    # -----------------------------------------------------------
+    # Priority 5: Current User (default)
+    # -----------------------------------------------------------
+    Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + ' - Auth method: Current User (default)')
+
+    $context = Get-AzContext -ErrorAction SilentlyContinue
+
+    # If we have a valid context matching the target tenant, reuse it
+    if ($context -and $context.Account -and (-not $TenantID -or $context.Tenant.Id -eq $TenantID)) {
+        $TenantID = $context.Tenant.Id
+        Write-Host "Using existing Az context for tenant $TenantID" -ForegroundColor Green
+        return $TenantID
+    }
+
+    # Need to authenticate interactively
+    Write-Host 'No valid Az context found — launching interactive login...' -ForegroundColor Yellow
+
+    $interactiveParams = @{ Environment = $AzureEnvironment }
+    if ($TenantID) { $interactiveParams['Tenant'] = $TenantID }
+
+    # Temporarily disable LoginExperienceV2 if enabled (avoids subscription picker)
+    try {
+        $loginConfig = Get-AzConfig -LoginExperienceV2 -WarningAction SilentlyContinue -InformationAction SilentlyContinue
+        if ($loginConfig.Value -eq 'On') {
+            Update-AzConfig -LoginExperienceV2 Off | Out-Null
+            Connect-AzAccount @interactiveParams | Out-Null
+            Update-AzConfig -LoginExperienceV2 On | Out-Null
         }
         else {
-            write-host "Select the the Azure Tenant ID that you want to connect : "
-            write-host ""
-            $SequenceID = 1
-            foreach ($Tenant in $Tenants) {
-                $TenantName = $Tenant.name
-                write-host "$SequenceID)  $TenantName"
-                $SequenceID ++
-            }
-            write-host ""
-            [int]$SelectTenant = read-host "Select Tenant ( default 1 )"
-            $defaultTenant = --$SelectTenant
-            $TenantID = ($Tenants[$defaultTenant]).Id
-            if($DeviceLogin.IsPresent)
-                {
-                    Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Logging with Device Login')
-                    Connect-AzAccount -Tenant $TenantID -UseDeviceAuthentication -Environment $AzureEnvironment | Out-Null
-                }
-            else
-                {
-                    Connect-AzAccount -Tenant $TenantID -Environment $AzureEnvironment | Out-Null
-                }
+            Connect-AzAccount @interactiveParams | Out-Null
         }
     }
-    else {
-        Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Tenant ID was informed.')
-
-        if($Context.Tenant.Id -ne $TenantID)
-        {
-            Set-AzContext -Tenant $TenantID -ErrorAction SilentlyContinue | Out-Null
-            $Context = Get-AzContext -ErrorAction SilentlyContinue
-        }
-        $Subs = Get-AzSubscription -TenantId $TenantID -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
-
-        if($DeviceLogin.IsPresent)
-            {
-                Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Logging with Device Login')
-                Connect-AzAccount -Tenant $TenantID -UseDeviceAuthentication -Environment $AzureEnvironment | Out-Null
-            }
-        elseif($AppId -and $Secret -and $CertificatePath -and $TenantID)
-            {
-                Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Logging with AppID and CertificatePath')
-                $SecurePassword = ConvertTo-SecureString -String $Secret -AsPlainText -Force
-                Connect-AzAccount -ServicePrincipal -TenantId $TenantId -ApplicationId $AppId -CertificatePath $CertificatePath -CertificatePassword $SecurePassword | Out-Null
-            }            
-        elseif($AppId -and $Secret -and $TenantID)
-            {
-                Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Logging with AppID and Secret')
-                $SecurePassword = ConvertTo-SecureString -String $Secret -AsPlainText -Force
-                $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $AppId, $SecurePassword
-                Connect-AzAccount -ServicePrincipal -TenantId $TenantId -Credential $Credential | Out-Null
-            }
-        else
-            {
-                if([string]::IsNullOrEmpty($Subs))
-                    {
-                        try 
-                            {
-                                Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Editing Login Experience')
-                                $AZConfig = Get-AzConfig -LoginExperienceV2 -WarningAction SilentlyContinue -InformationAction SilentlyContinue
-                                if ($AZConfig.value -eq 'On')
-                                    {
-                                        Update-AzConfig -LoginExperienceV2 Off | Out-Null
-                                        Connect-AzAccount -Tenant $TenantID -Environment $AzureEnvironment | Out-Null
-                                        Update-AzConfig -LoginExperienceV2 On | Out-Null
-                                    }
-                                else
-                                    {
-                                        Connect-AzAccount -Tenant $TenantID -Environment $AzureEnvironment | Out-Null
-                                    }
-                            }
-                        catch
-                            {
-                                Connect-AzAccount -Tenant $TenantID -Environment $AzureEnvironment | Out-Null
-                            }
-                    }
-                else
-                    {
-                        Write-Host "Already authenticated in Tenant $TenantID"
-                    }
-            }
+    catch {
+        Connect-AzAccount @interactiveParams | Out-Null
     }
+
+    if (-not $TenantID) {
+        $TenantID = (Get-AzContext).Tenant.Id
+    }
+
+    Write-Host "Authenticated interactively for tenant $TenantID" -ForegroundColor Green
     return $TenantID
 }
