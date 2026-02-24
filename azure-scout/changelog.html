@@ -51,95 +51,22 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="azure-scout" data-version="">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
-    <h3 class="title"><a href="index.html">AzureScout</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="index.html">Home</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Getting Started</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="authentication.html">Authentication</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="usage.html">Usage Guide</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="permissions.html">Permissions</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="category-filtering.html">Category Filtering</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Module Reference</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="arm-modules.html">ARM Modules</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="entra-modules.html">Entra ID Modules</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="coverage-table.html">Coverage Table</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="category-structure.html">Category Structure</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Project</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="roadmap.html">Roadmap</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="folder-structure.html">Repository Structure</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="contributing.html">Contributing</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="credits.html">Credits &amp; Attribution</a>
-  </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="changelog.html">Changelog</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">AzureScout</span>
-    <span class="version"></span>
+<nav class="navbar">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="..">AzureScout Documentation</a>
+    <button class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="topbar-nav">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </div>
-  <ul class="components">
-    <li class="component is-current">
-      <div class="title"><a href="index.html">AzureScout</a></div>
-    </li>
-  </ul>
-</div>
+  <div id="topbar-nav" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="https://github.com/thisismydemo/azure-scout" target="_blank" rel="noopener">GitHub</a>
+      <a class="navbar-item" href="https://www.powershellgallery.com/packages/AzureScout" target="_blank" rel="noopener">PSGallery</a>
     </div>
-  </aside>
-</div>
+  </div>
+</nav>
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
@@ -159,123 +86,44 @@
 </aside>
 <article class="doc">
 <h1 class="page">Changelog</h1>
-<div class="sect1">
-<h2 id="overview"><a class="anchor" href="#overview"></a>Overview</h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This page summarizes release history for Azure Tenant Inventory.
-For the complete changelog with detailed entries, see the <a href="https://github.com/thisismydemo/azure-scout/blob/main/CHANGELOG.md">CHANGELOG.md</a> in the repository root.</p>
+<p>The full changelog is maintained in the repository root and rendered on GitHub.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/thisismydemo/azure-scout/blob/main/CHANGELOG.md" class="button primary">View CHANGELOG.md on GitHub</a></p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="version-history"><a class="anchor" href="#version-history"></a>Version History</h2>
+<h2 id="summary"><a class="anchor" href="#summary"></a>Summary</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="v1-5-0-phase-7-cleanup-polish"><a class="anchor" href="#v1-5-0-phase-7-cleanup-polish"></a>v1.5.0 — Phase 7: Cleanup &amp; Polish</h3>
 <div class="paragraph">
-<p><strong>Documentation &amp; Testing</strong></p>
+<p>AzureScout follows <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a> format and <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Rewrote README.md with comprehensive parameter reference, module catalog, and quick start guide</p>
-</li>
-<li>
-<p>Created 5 Pester test files covering core functions (permissions, orchestrator, login, Graph requests, Entra extraction)</p>
-</li>
-<li>
-<p>Built full Antora documentation site (authentication, usage, permissions, ARM/Entra module catalogs, contributing, credits)</p>
-</li>
-<li>
-<p>Replaced MkDocs GitHub Actions workflow with Antora-based documentation pipeline</p>
-</li>
-<li>
-<p>Created CREDITS.md with attribution to original ARI project</p>
-</li>
-<li>
-<p>Updated Set-AZSCReportPath help text</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="v1-4-0-phase-8-module-manifest-gallery-prep"><a class="anchor" href="#v1-4-0-phase-8-module-manifest-gallery-prep"></a>v1.4.0 — Phase 8: Module Manifest &amp; Gallery Prep</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Converted module manifest from ARI to AZSC branding</p>
-</li>
-<li>
-<p>Updated FunctionsToExport, module metadata, and tags</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="v1-3-0-phase-6-entra-id-integration"><a class="anchor" href="#v1-3-0-phase-6-entra-id-integration"></a>v1.3.0 — Phase 6: Entra ID Integration</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Added Start-AZSCEntraExtraction with 15 Graph API modules</p>
-</li>
-<li>
-<p>Implemented Invoke-AZSCGraphRequest with pagination, retry, and rate limiting</p>
-</li>
-<li>
-<p>Added Identity module category (Users, Groups, Applications, ServicePrincipals, etc.)</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="v1-2-0-phase-5-permission-checker"><a class="anchor" href="#v1-2-0-phase-5-permission-checker"></a>v1.2.0 — Phase 5: Permission Checker</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Added Test-AZSCPermissions pre-flight validation</p>
-</li>
-<li>
-<p>ARM and Graph permission checks with scope-based gating</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="v1-1-0-phases-2-4-core-rename-restructure"><a class="anchor" href="#v1-1-0-phases-2-4-core-rename-restructure"></a>v1.1.0 — Phases 2-4: Core Rename &amp; Restructure</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Renamed all public functions from ARI to AZSC prefix</p>
-</li>
-<li>
-<p>Restructured module folders</p>
-</li>
-<li>
-<p>Added -Scope and -OutputFormat parameters</p>
-</li>
-<li>
-<p>Implemented Connect-AZSCLoginSession with 5 auth methods</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="v1-0-0-phase-0-1-initial-fork"><a class="anchor" href="#v1-0-0-phase-0-1-initial-fork"></a>v1.0.0 — Phase 0-1: Initial Fork</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Forked from microsoft/ARI v3.6.11</p>
-</li>
-<li>
-<p>Updated file paths from AzureResourceInventory to AzureScout</p>
-</li>
-<li>
-<p>Initial module structure and manifest</p>
-</li>
-</ul>
-</div>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Version</th>
+<th class="tableblock halign-left valign-top">Highlights</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>v2.0.0</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full rename to AzureScout (AZSC prefix), 170+ ARM modules, 15 Entra ID modules, Excel + JSON + Markdown + AsciiDoc output, draw.io diagrams, permission pre-flight, category filtering, Antora docs site</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>v1.0.0</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial fork from <a href="https://github.com/microsoft/ARI">microsoft/ARI</a> v3.6.11</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <nav class="pagination">

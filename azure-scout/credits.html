@@ -52,95 +52,22 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="azure-scout" data-version="">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
-    <h3 class="title"><a href="index.html">AzureScout</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="index.html">Home</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Getting Started</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="authentication.html">Authentication</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="usage.html">Usage Guide</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="permissions.html">Permissions</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="category-filtering.html">Category Filtering</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Module Reference</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="arm-modules.html">ARM Modules</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="entra-modules.html">Entra ID Modules</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="coverage-table.html">Coverage Table</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="category-structure.html">Category Structure</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Project</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="roadmap.html">Roadmap</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="folder-structure.html">Repository Structure</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="contributing.html">Contributing</a>
-  </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="credits.html">Credits &amp; Attribution</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="changelog.html">Changelog</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">AzureScout</span>
-    <span class="version"></span>
+<nav class="navbar">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="..">AzureScout Documentation</a>
+    <button class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="topbar-nav">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </div>
-  <ul class="components">
-    <li class="component is-current">
-      <div class="title"><a href="index.html">AzureScout</a></div>
-    </li>
-  </ul>
-</div>
+  <div id="topbar-nav" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="https://github.com/thisismydemo/azure-scout" target="_blank" rel="noopener">GitHub</a>
+      <a class="navbar-item" href="https://www.powershellgallery.com/packages/AzureScout" target="_blank" rel="noopener">PSGallery</a>
     </div>
-  </aside>
-</div>
+  </div>
+</nav>
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
@@ -160,86 +87,27 @@
 </aside>
 <article class="doc">
 <h1 class="page">Credits &amp; Attribution</h1>
-<div class="sect1">
-<h2 id="overview"><a class="anchor" href="#overview"></a>Overview</h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>AzureScout</strong> (AZSC) is a fork of the <a href="https://github.com/microsoft/ARI">Azure Resource Inventory (ARI)</a> project, version 3.6.11.</p>
+<p>The full credits file is maintained in the repository root and rendered on GitHub.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/thisismydemo/azure-scout/blob/main/CREDITS.md" class="button primary">View CREDITS.md on GitHub</a></p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="original-authors"><a class="anchor" href="#original-authors"></a>Original Authors</h2>
-<div class="sectionbody">
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Contributor</th>
-<th class="tableblock halign-left valign-top">Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Claudio Merola</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Original ARI author and primary developer</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>RenatoGregio</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Original copyright holder</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect1">
-<h2 id="source-project"><a class="anchor" href="#source-project"></a>Source Project</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Repository</strong>: <a href="https://github.com/microsoft/ARI">microsoft/ARI</a></p>
-</li>
-<li>
-<p><strong>License</strong>: MIT</p>
-</li>
-<li>
-<p><strong>Forked Version</strong>: v3.6.11</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="additional-acknowledgments"><a class="anchor" href="#additional-acknowledgments"></a>Additional Acknowledgments</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Doug Finke</strong> — Author of the <a href="https://github.com/dfinke/ImportExcel">ImportExcel</a> PowerShell module used for Excel report generation.</p>
-</li>
-<li>
-<p><strong>Microsoft</strong> — Azure PowerShell SDK (<code>Az.*</code> modules), Azure Resource Graph, and Microsoft Graph REST API.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="license"><a class="anchor" href="#license"></a>License</h2>
+<h2 id="origin"><a class="anchor" href="#origin"></a>Origin</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Both the original ARI project and this fork are licensed under the MIT License.
-See the <a href="../../../../LICENSE">LICENSE</a> file for full details.</p>
+<p>AzureScout is forked from <a href="https://github.com/microsoft/ARI">microsoft/ARI</a> (Azure Resource Inventory) v3.6.11, originally created by Claudio Merola and RenatoGregio at Microsoft.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre>Copyright (c) 2020 RenatoGregio (original AzureResourceInventory)
-Copyright (c) 2026 thisismydemo (AzureScout fork)</pre>
+<div class="paragraph">
+<p>Excel generation uses <a href="https://github.com/dfinke/ImportExcel">ImportExcel</a> by Doug Finke, licensed MIT.</p>
 </div>
+<div class="paragraph">
+<p>AzureScout is an independent community project and is not affiliated with or endorsed by Microsoft.</p>
 </div>
 </div>
 </div>

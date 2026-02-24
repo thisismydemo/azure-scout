@@ -52,95 +52,22 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="azure-scout" data-version="">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
-    <h3 class="title"><a href="index.html">AzureScout</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="index.html">Home</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Getting Started</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="authentication.html">Authentication</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="usage.html">Usage Guide</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="permissions.html">Permissions</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="category-filtering.html">Category Filtering</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Module Reference</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="arm-modules.html">ARM Modules</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="entra-modules.html">Entra ID Modules</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="coverage-table.html">Coverage Table</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="category-structure.html">Category Structure</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Project</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="roadmap.html">Roadmap</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="folder-structure.html">Repository Structure</a>
-  </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="contributing.html">Contributing</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="credits.html">Credits &amp; Attribution</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="changelog.html">Changelog</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">AzureScout</span>
-    <span class="version"></span>
+<nav class="navbar">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="..">AzureScout Documentation</a>
+    <button class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="topbar-nav">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </div>
-  <ul class="components">
-    <li class="component is-current">
-      <div class="title"><a href="index.html">AzureScout</a></div>
-    </li>
-  </ul>
-</div>
+  <div id="topbar-nav" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="https://github.com/thisismydemo/azure-scout" target="_blank" rel="noopener">GitHub</a>
+      <a class="navbar-item" href="https://www.powershellgallery.com/packages/AzureScout" target="_blank" rel="noopener">PSGallery</a>
     </div>
-  </aside>
-</div>
+  </div>
+</nav>
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
@@ -160,220 +87,43 @@
 </aside>
 <article class="doc">
 <h1 class="page">Contributing</h1>
-<div class="sect1">
-<h2 id="overview"><a class="anchor" href="#overview"></a>Overview</h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Contributions are welcome! This guide covers adding new inventory modules, writing tests, and submitting pull requests.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="adding-a-new-arm-inventory-module"><a class="anchor" href="#adding-a-new-arm-inventory-module"></a>Adding a New ARM Inventory Module</h2>
-<div class="sectionbody">
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Create a new <code>.ps1</code> file in the appropriate category folder under <code>Modules/Public/InventoryModules/&lt;Category&gt;/</code>.</p>
-<div class="paragraph">
-<p>If the category doesn&#8217;t exist, create a new folder.</p>
-</div>
-</li>
-<li>
-<p>Use an existing module as a template. Each ARM module should:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Accept the standard pipeline parameters (subscription data, resource list)</p>
-</li>
-<li>
-<p>Use <code>Get-AzResource</code> or Azure Resource Graph queries</p>
-</li>
-<li>
-<p>Return objects with the normalized resource schema (<code>id</code>, <code>name</code>, <code>TYPE</code>, <code>resourceGroup</code>, <code>subscriptionId</code>, <code>location</code>, <code>properties</code>)</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Example skeleton:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">function Get-AZSCNewResource {
-    param(
-        [Parameter(Mandatory)]
-        [object]$Resources,
-
-        [Parameter(Mandatory)]
-        [string]$SubscriptionId
-    )
-
-    foreach ($res in $Resources) {
-        [PSCustomObject]@{
-            id             = $res.Id
-            name           = $res.Name
-            TYPE           = $res.Type.ToLower()
-            resourceGroup  = $res.ResourceGroupName
-            subscriptionId = $SubscriptionId
-            location       = $res.Location
-            properties     = $res.Properties
-        }
-    }
-}</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Register the module in the orchestrator so it gets called during extraction.</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="adding-a-new-entra-id-module"><a class="anchor" href="#adding-a-new-entra-id-module"></a>Adding a New Entra ID Module</h2>
-<div class="sectionbody">
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Add a new <code>.ps1</code> file in <code>Modules/Public/InventoryModules/Identity/</code>.</p>
-</li>
-<li>
-<p>Use <code>Invoke-AZSCGraphRequest</code> for the Graph API call:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">function Get-AZSCNewEntraObject {
-    param(
-        [Parameter(Mandatory)]
-        [string]$TenantID
-    )
-
-    $results = Invoke-AZSCGraphRequest -Uri '/newEndpoint' -Method GET
-    foreach ($item in $results) {
-        [PSCustomObject]@{
-            id         = $item.id
-            name       = $item.displayName
-            TYPE       = 'microsoft.graph/newobject'
-            tenantId   = $TenantID
-            properties = $item
-        }
-    }
-}</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Register the Graph query in <code>Start-AZSCEntraExtraction</code>.</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="writing-pester-tests"><a class="anchor" href="#writing-pester-tests"></a>Writing Pester Tests</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>All tests use Pester v5+ and live in the <code>tests/</code> directory.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">BeforeAll {
-    $ModuleRoot = Split-Path -Parent $PSScriptRoot
-    Import-Module "$ModuleRoot/AzureScout.psd1" -Force
-}
-
-Describe 'Get-AZSCNewResource' {
-    It 'returns normalized objects' {
-        Mock Invoke-AZSCGraphRequest { return @(@{ id = '1'; displayName = 'Test' }) }
-        $result = Get-AZSCNewEntraObject -TenantID '00000000-...'
-        $result | Should -Not -BeNullOrEmpty
-        $result[0].TYPE | Should -Be 'microsoft.graph/newobject'
-    }
-}</code></pre>
-</div>
+<p>The full contributing guide is maintained in the repository root and rendered on GitHub.</p>
 </div>
 <div class="paragraph">
-<p>Run tests:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-Pester ./tests/ -Output Detailed</code></pre>
-</div>
+<p><a href="https://github.com/thisismydemo/azure-scout/blob/main/CONTRIBUTING.md" class="button primary">View CONTRIBUTING.md on GitHub</a></p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="pull-request-guidelines"><a class="anchor" href="#pull-request-guidelines"></a>Pull Request Guidelines</h2>
-<div class="sectionbody">
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><strong>Branch</strong>: Create a feature branch from <code>main</code> (<code>feature/add-xyz-module</code>)</p>
-</li>
-<li>
-<p><strong>Scope</strong>: One logical change per PR</p>
-</li>
-<li>
-<p><strong>Tests</strong>: Include or update Pester tests for any new functionality</p>
-</li>
-<li>
-<p><strong>Documentation</strong>: Update the module catalog in the README and/or Antora docs</p>
-</li>
-<li>
-<p><strong>Commit messages</strong>: Use conventional commits (<code>feat:</code>, <code>fix:</code>, <code>docs:</code>, <code>test:</code>)</p>
-</li>
-<li>
-<p><strong>CI</strong>: All Pester tests must pass before merge</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="code-style"><a class="anchor" href="#code-style"></a>Code Style</h2>
+<h2 id="quick-reference"><a class="anchor" href="#quick-reference"></a>Quick Reference</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>PowerShell scripts use <strong>PascalCase</strong> file names</p>
+<p>Fork the repo and create a feature branch</p>
 </li>
 <li>
-<p>Functions use the <code>Get-AZSC</code> / <code>Invoke-AZSC</code> / <code>Set-AZSC</code> / <code>Start-AZSC</code> / <code>Test-AZSC</code> prefix</p>
+<p>New ARM modules go in <code>Modules/Public/InventoryModules/&lt;Category&gt;/</code></p>
 </li>
 <li>
-<p>Full comment-based help on all exported functions</p>
+<p>New Entra modules go in <code>Modules/Public/PublicFunctions/Identity/</code></p>
 </li>
 <li>
-<p><code>try</code>/<code>catch</code>/<code>finally</code> error handling</p>
+<p>Use the <code>Modules/Public/InventoryModules/Module-template.tpl</code> as your starting point</p>
 </li>
 <li>
-<p>No hardcoded secrets — use environment variables or Key Vault</p>
+<p>Add a Pester test in <code>tests/</code> for any new public function</p>
+</li>
+<li>
+<p>Open a PR against <code>main</code> — describe what resource type you added and why</p>
 </li>
 </ul>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="reporting-issues"><a class="anchor" href="#reporting-issues"></a>Reporting Issues</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>Open a GitHub issue with:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Steps to reproduce</p>
-</li>
-<li>
-<p>Expected vs. actual behavior</p>
-</li>
-<li>
-<p>Module version (<code>(Get-Module AzureScout).Version</code>)</p>
-</li>
-<li>
-<p>PowerShell version (<code>$PSVersionTable.PSVersion</code>)</p>
-</li>
-</ul>
+<p>See <a href="arm-modules.html" class="xref page">ARM Modules</a> and <a href="entra-modules.html" class="xref page">Entra Modules</a> for the current catalog.</p>
 </div>
 </div>
 </div>
