@@ -1332,7 +1332,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 - [x] **21.3.2** **Document header** with AsciiDoc front matter:
   ```asciidoc
   = Azure Tenant Inventory Report
-  Product Technology Team <prodtech@example.com>
+  AzureTenantInventory Contributors
   :doctype: book
   :toc: left
   :toclevels: 3
@@ -1422,14 +1422,14 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 - [ ] Push to GitHub (`thisismydemo/azure-inventory`)
 - [ ] Tag release `v2.0.0` (major version for breaking changes + category filtering)
 - [ ] Publish to PSGallery
-- [ ] Update prodtechlabmgmt references to point to new repo
+- [ ] Update thisismydemo references to point to new repo
 
 ---
 
 **Version Control**
-- Created: 2026-02-22 by Product Technology Team
-- Last Edited: 2026-02-24 by Product Technology Team
+- Created: 2026-02-22 by AzureTenantInventory Contributors
+- Last Edited: 2026-02-24 by AzureTenantInventory Contributors
 - Version: 3.0.0
 - Tags: todo, tracking, implementation, azure-local, arc, vpn, policy, defender, monitor, dcr, management-groups, subscriptions, scope, permissions, resource-providers, monitoring-coverage, ai-foundry, machine-learning, avd, category-filtering, vm-enhancement, ms-graph, final-testing, permission-audit, markdown-export, asciidoc-export
 - Keywords: azure-inventory, progress, checklist, feature-parity, excel-restructure, comprehensive-logging, authentication, documentation, comprehensive-coverage, microsoft-taxonomy, acceptance-testing, permission-report, markdown, adoc, asciidoctor
-- Author: Product Technology Team
+- Author: AzureTenantInventory Contributors

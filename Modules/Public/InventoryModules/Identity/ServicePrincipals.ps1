@@ -15,7 +15,7 @@ This PowerShell Module is part of Azure Tenant Inventory (AZTI)
 .NOTES
 Version: 1.0.0
 First Release Date: 2026-02-23
-Authors: Product Technology Team
+Authors: AzureTenantInventory Contributors
 #>
 
 <######## Default Parameters. Don't modify this ########>

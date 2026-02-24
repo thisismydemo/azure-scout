@@ -17,7 +17,7 @@ https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/
 .NOTES
 Version: 1.0.0
 First Release Date: 23rd February, 2026
-Authors: Product Technology Team
+Authors: AzureTenantInventory Contributors
 
 #>
 

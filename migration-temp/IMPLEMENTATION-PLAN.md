@@ -921,7 +921,7 @@ These 6 end-to-end scenarios must pass before the tool is considered production-
 
 ## Phase 9 — Missing ARM Resource Types (Feature Parity Enhancement)
 
-> Identified through comparison analysis against `Invoke-TenantDiscovery.ps1`. Adds 17 ARM resource types and 3 Entra ID verification items to achieve feature parity with TierPoint ProductTech CMP reference implementation.
+> Identified through comparison analysis against `Invoke-TenantDiscovery.ps1`. Adds 17 ARM resource types and 3 Entra ID verification items to achieve feature parity with Community ProductTech CMP reference implementation.
 
 ### 9.1 — Azure Policy & Governance
 
@@ -2826,9 +2826,9 @@ Phase 0 → Phase 1 → Phase 1B → Phase 2 → Phase 3 → Phase 4 → Phase 5
 ---
 
 **Version Control**
-- Created: 2026-02-22 by Product Technology Team
-- Last Edited: 2026-02-24 by Product Technology Team
+- Created: 2026-02-22 by AzureTenantInventory Contributors
+- Last Edited: 2026-02-24 by AzureTenantInventory Contributors
 - Version: 3.0.0
 - Tags: powershell, azure, inventory, entra-id, azure-local, arc-gateway, vpn, policy, defender, monitor, dcr, management-groups, subscriptions, scope, permissions, resource-providers, excel-restructure, update-manager, ai-ml, azure-openai, ai-foundry, machine-learning, cognitive-services, avd, azure-virtual-desktop, arc-sql, arc-data, vm-enhancement, category-filtering, comprehensive-monitoring
 - Keywords: azure-inventory, ari, resource-graph, entra, identity, hci, arc, vpn, policy, governance, security, monitoring, data-collection-rules, lighthouse, comprehensive-logging, authentication, documentation, openai, foundry, ml-workspaces, bot-services, cognitive-search, avd-session-hosts, arc-enabled-sql, vm-metrics, backup-status, disaster-recovery, cost-management, advisor, update-compliance, category-filtering
-- Author: Product Technology Team
+- Author: AzureTenantInventory Contributors

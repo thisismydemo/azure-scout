@@ -32,9 +32,9 @@ Copyright (c) 2026 thisismydemo (AzureTenantInventory fork)
 ---
 
 **Version Control**
-- Created: 2026-02-23 by Product Technology Team
-- Last Edited: 2026-02-23 by Product Technology Team
+- Created: 2026-02-23 by AzureTenantInventory Contributors
+- Last Edited: 2026-02-23 by AzureTenantInventory Contributors
 - Version: 1.0.0
 - Tags: credits, attribution, ari, azuretenantinventory
 - Keywords: azure-inventory, ari, fork, credits, mit-license
-- Author: Product Technology Team
+- Author: AzureTenantInventory Contributors

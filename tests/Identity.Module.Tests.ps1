@@ -19,7 +19,7 @@
     NO live Azure/Graph authentication is required.
 
 .NOTES
-    Author:  Product Technology Team
+    Author:  AzureTenantInventory Contributors
     Version: 1.1.0
     Created: 2026-02-23
     Phase:   5.18 — Full run with Entra modules producing Excel worksheets
