@@ -4,9 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Usage Guide :: AzureScout Documentation</title>
-    <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/azure-scout/usage.html">
-    <meta name="description" content="How to use Azure Tenant Inventory — scopes, output formats, and content toggles.">
-    <meta name="keywords" content="usage, scope, output, format, json, excel">
+    <link rel="canonical" href="https://thisismydemo.cloud/azure-scout/azure-scout/usage.html">
+    <link rel="prev" href="authentication.html">
+    <link rel="next" href="permissions.html">
+    <meta name="description" content="How to use AzureScout — scopes, output formats, category filtering, and examples.">
+    <meta name="keywords" content="usage, scope, output, format, json, excel, category, azurescout">
     <meta name="generator" content="Antora 3.1.14">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -14,7 +16,7 @@
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://thisismydemo.github.io/azure-scout">AzureScout Documentation</a>
+      <a class="navbar-item" href="https://thisismydemo.cloud/azure-scout">AzureScout Documentation</a>
       <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
         <span></span>
         <span></span>
@@ -86,10 +88,16 @@
     <span class="nav-text">Module Reference</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="arm-modules.html">ARM Modules (95)</a>
+    <a class="nav-link" href="arm-modules.html">ARM Modules</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="entra-modules.html">Entra ID Modules (15)</a>
+    <a class="nav-link" href="entra-modules.html">Entra ID Modules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="coverage-table.html">Coverage Table</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="category-structure.html">Category Structure</a>
   </li>
 </ul>
   </li>
@@ -97,6 +105,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Project</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="roadmap.html">Roadmap</a>
+  </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="folder-structure.html">Repository Structure</a>
   </li>
@@ -150,7 +161,7 @@
 <article class="doc">
 <h1 class="page">Usage Guide</h1>
 <div class="sect1">
-<h2 id="_basic_usage"><a class="anchor" href="#_basic_usage"></a>Basic Usage</h2>
+<h2 id="basic-usage"><a class="anchor" href="#basic-usage"></a>Basic Usage</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -164,7 +175,7 @@ Invoke-AzureScout</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_scope"><a class="anchor" href="#_scope"></a>Scope</h2>
+<h2 id="scope"><a class="anchor" href="#scope"></a>Scope</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The <code>-Scope</code> parameter controls which data domains are inventoried:</p>
@@ -207,7 +218,7 @@ Invoke-AzureScout -Scope EntraOnly</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_output_format"><a class="anchor" href="#_output_format"></a>Output Format</h2>
+<h2 id="output-format"><a class="anchor" href="#output-format"></a>Output Format</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The <code>-OutputFormat</code> parameter controls report file types:</p>
@@ -250,7 +261,7 @@ Invoke-AzureScout -OutputFormat Excel</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_report_location"><a class="anchor" href="#_report_location"></a>Report Location</h2>
+<h2 id="report-location"><a class="anchor" href="#report-location"></a>Report Location</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Reports are saved to a timestamped folder:</p>
@@ -276,7 +287,7 @@ Invoke-AzureScout -OutputFormat Excel</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_content_toggles"><a class="anchor" href="#_content_toggles"></a>Content Toggles</h2>
+<h2 id="content-toggles"><a class="anchor" href="#content-toggles"></a>Content Toggles</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Switch parameters to include/exclude specific content:</p>
@@ -318,7 +329,7 @@ Invoke-AzureScout -OutputFormat Excel</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_subscription_management_group_filters"><a class="anchor" href="#_subscription_management_group_filters"></a>Subscription &amp; Management Group Filters</h2>
+<h2 id="subscription-management-group-filters"><a class="anchor" href="#subscription-management-group-filters"></a>Subscription &amp; Management Group Filters</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -332,7 +343,7 @@ Invoke-AzureScout -ManagementGroup 'mg-prod'</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_naming_the_report"><a class="anchor" href="#_naming_the_report"></a>Naming the Report</h2>
+<h2 id="naming-the-report"><a class="anchor" href="#naming-the-report"></a>Naming the Report</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -342,7 +353,7 @@ Invoke-AzureScout -ManagementGroup 'mg-prod'</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_json_output_structure"><a class="anchor" href="#_json_output_structure"></a>JSON Output Structure</h2>
+<h2 id="json-output-structure"><a class="anchor" href="#json-output-structure"></a>JSON Output Structure</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The JSON report uses a normalized, flat resource schema:</p>
@@ -373,7 +384,7 @@ Invoke-AzureScout -ManagementGroup 'mg-prod'</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_pre_flight_permission_checker"><a class="anchor" href="#_pre_flight_permission_checker"></a>Pre-flight Permission Checker</h2>
+<h2 id="pre-flight-permission-checker"><a class="anchor" href="#pre-flight-permission-checker"></a>Pre-flight Permission Checker</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Before extracting data, AZSC validates that your identity has the required permissions.
@@ -384,6 +395,10 @@ Skip it with <code>-SkipPermissionCheck</code> if you&#8217;re confident about y
 </div>
 </div>
 </div>
+<nav class="pagination">
+  <span class="prev"><a href="authentication.html">Authentication</a></span>
+  <span class="next"><a href="permissions.html">Permissions</a></span>
+</nav>
 </article>
   </div>
 </main>

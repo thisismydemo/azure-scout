@@ -4,9 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Required Permissions :: AzureScout Documentation</title>
-    <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/azure-scout/permissions.html">
-    <meta name="description" content="ARM RBAC and Microsoft Graph permissions required by Azure Tenant Inventory.">
-    <meta name="keywords" content="permissions, rbac, graph, api, roles">
+    <link rel="canonical" href="https://thisismydemo.cloud/azure-scout/azure-scout/permissions.html">
+    <link rel="prev" href="usage.html">
+    <link rel="next" href="category-filtering.html">
+    <meta name="description" content="ARM RBAC and Microsoft Graph permissions required by AzureScout.">
+    <meta name="keywords" content="permissions, rbac, graph, api, roles, azurescout">
     <meta name="generator" content="Antora 3.1.14">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -14,7 +16,7 @@
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://thisismydemo.github.io/azure-scout">AzureScout Documentation</a>
+      <a class="navbar-item" href="https://thisismydemo.cloud/azure-scout">AzureScout Documentation</a>
       <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
         <span></span>
         <span></span>
@@ -86,10 +88,16 @@
     <span class="nav-text">Module Reference</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="arm-modules.html">ARM Modules (95)</a>
+    <a class="nav-link" href="arm-modules.html">ARM Modules</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="entra-modules.html">Entra ID Modules (15)</a>
+    <a class="nav-link" href="entra-modules.html">Entra ID Modules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="coverage-table.html">Coverage Table</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="category-structure.html">Category Structure</a>
   </li>
 </ul>
   </li>
@@ -97,6 +105,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Project</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="roadmap.html">Roadmap</a>
+  </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="folder-structure.html">Repository Structure</a>
   </li>
@@ -150,7 +161,7 @@
 <article class="doc">
 <h1 class="page">Required Permissions</h1>
 <div class="sect1">
-<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<h2 id="overview"><a class="anchor" href="#overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Azure Tenant Inventory requires two categories of permissions:</p>
@@ -168,7 +179,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_arm_permissions"><a class="anchor" href="#_arm_permissions"></a>ARM Permissions</h2>
+<h2 id="arm-permissions"><a class="anchor" href="#arm-permissions"></a>ARM Permissions</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -212,7 +223,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_microsoft_graph_permissions"><a class="anchor" href="#_microsoft_graph_permissions"></a>Microsoft Graph Permissions</h2>
+<h2 id="microsoft-graph-permissions"><a class="anchor" href="#microsoft-graph-permissions"></a>Microsoft Graph Permissions</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The following Microsoft Graph API permissions are required for Entra ID inventory:</p>
@@ -281,7 +292,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_pre_flight_validation"><a class="anchor" href="#_pre_flight_validation"></a>Pre-flight Validation</h2>
+<h2 id="pre-flight-validation"><a class="anchor" href="#pre-flight-validation"></a>Pre-flight Validation</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The <code>Test-AZSCPermissions</code> function runs automatically before extraction (unless <code>-SkipPermissionCheck</code> is set):</p>
@@ -330,7 +341,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_scope_based_gating"><a class="anchor" href="#_scope_based_gating"></a>Scope-Based Gating</h2>
+<h2 id="scope-based-gating"><a class="anchor" href="#scope-based-gating"></a>Scope-Based Gating</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Permission checks respect the <code>-Scope</code> parameter:</p>
@@ -351,7 +362,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_remediation"><a class="anchor" href="#_remediation"></a>Remediation</h2>
+<h2 id="remediation"><a class="anchor" href="#remediation"></a>Remediation</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>If the permission checker reports failures:</p>
@@ -378,6 +389,10 @@ Test-AZSCPermissions -TenantID '00000000-...' -Scope All</code></pre>
 </div>
 </div>
 </div>
+<nav class="pagination">
+  <span class="prev"><a href="usage.html">Usage Guide</a></span>
+  <span class="next"><a href="category-filtering.html">Category Filtering</a></span>
+</nav>
 </article>
   </div>
 </main>

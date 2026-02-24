@@ -3,10 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Azure Tenant Inventory :: AzureScout Documentation</title>
-    <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/azure-scout/index.html">
-    <meta name="description" content="A PowerShell module for comprehensive Azure + Entra ID tenant inventory.">
-    <meta name="keywords" content="azure, inventory, entra, powershell">
+    <title>AzureScout :: AzureScout Documentation</title>
+    <link rel="canonical" href="https://thisismydemo.cloud/azure-scout/azure-scout/index.html">
+    <link rel="next" href="authentication.html">
+    <meta name="description" content="See everything. Own your cloud. A PowerShell module for comprehensive Azure + Entra ID discovery and inventory.">
+    <meta name="keywords" content="azure, azurescout, discovery, inventory, entra, powershell">
     <meta name="generator" content="Antora 3.1.14">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -14,7 +15,7 @@
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://thisismydemo.github.io/azure-scout">AzureScout Documentation</a>
+      <a class="navbar-item" href="https://thisismydemo.cloud/azure-scout">AzureScout Documentation</a>
       <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
         <span></span>
         <span></span>
@@ -86,10 +87,16 @@
     <span class="nav-text">Module Reference</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="arm-modules.html">ARM Modules (95)</a>
+    <a class="nav-link" href="arm-modules.html">ARM Modules</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="entra-modules.html">Entra ID Modules (15)</a>
+    <a class="nav-link" href="entra-modules.html">Entra ID Modules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="coverage-table.html">Coverage Table</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="category-structure.html">Category Structure</a>
   </li>
 </ul>
   </li>
@@ -97,6 +104,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Project</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="roadmap.html">Roadmap</a>
+  </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="folder-structure.html">Repository Structure</a>
   </li>
@@ -147,12 +157,19 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Azure Tenant Inventory</h1>
+<h1 class="page">AzureScout</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph lead">
+<p><em>See everything. Own your cloud.</em></p>
+</div>
+</div>
+</div>
 <div class="sect1">
-<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<h2 id="overview"><a class="anchor" href="#overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Azure Tenant Inventory (AZSC) is a PowerShell module that generates comprehensive inventory reports for a single Azure tenant — covering both ARM resources and Entra ID (Azure AD) objects.</p>
+<p><strong>AzureScout</strong> (AZSC) is a PowerShell module that discovers and inventories everything in your Azure environment — ARM resources, Entra ID objects, costs, security posture, policies, and more. Reports are generated as Excel workbooks, JSON, Markdown, or AsciiDoc.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -167,8 +184,8 @@
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ARM Resource Inventory</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">95 resource modules across 17 categories (AI, Analytics, APIs, AzureLocal, Compute, Container, Database, Hybrid, Identity, Integration, IoT, Management, Monitoring, Network, Security, Storage, Web)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ARM Resource Discovery</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">170+ resource modules across 18 Microsoft Azure categories (AI + machine learning, Analytics, Compute, Containers, Databases, Hybrid + multicloud, Identity, Integration, IoT, Management and governance, Monitor, Networking, Security, Storage, Web, and more)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Entra ID Inventory</strong></p></td>
@@ -176,37 +193,54 @@
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Excel Reports</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Rich multi-worksheet spreadsheets with charts and conditional formatting</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rich multi-worksheet workbooks with charts, pivot tables, and conditional formatting</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>JSON Output</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Machine-readable normalized output for automation pipelines</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Markdown &amp; AsciiDoc</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Export reports as <code>.md</code> or <code>.adoc</code> for documentation pipelines and PDF generation</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Network Diagrams</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Auto-generated draw.io topology diagrams</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Pre-flight Permission Checker</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Validates ARM + Graph access before running</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Category Filtering</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Run only the categories you need: <code>-Category Compute,Security,Networking</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Permission Audit</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pre-flight ARM + Graph access checker with role remediation guidance</p></td>
 </tr>
 </tbody>
 </table>
 <div class="sect2">
-<h3 id="_quick_start"><a class="anchor" href="#_quick_start"></a>Quick Start</h3>
+<h3 id="quick-start"><a class="anchor" href="#quick-start"></a>Quick Start</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Import from local clone
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Install from PSGallery
+Install-Module -Name AzureScout
+
+# Import from local clone
 Import-Module ./AzureScout.psd1
 
-# Run full inventory (uses current Azure context)
+# Full discovery (ARM only, uses current Azure context)
 Invoke-AzureScout
+
+# ARM + Entra ID
+Invoke-AzureScout -Scope All
 
 # ARM-only scan with JSON output
 Invoke-AzureScout -Scope ArmOnly -OutputFormat Json
 
-# Entra ID only
-Invoke-AzureScout -Scope EntraOnly</code></pre>
+# Specific categories only
+Invoke-AzureScout -Category Compute,Security,Networking
+
+# Permission pre-flight check
+Invoke-AzureScout -PermissionAudit</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -216,7 +250,7 @@ Invoke-AzureScout -Scope EntraOnly</code></pre>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-If you&#8217;re already logged in via <code>Connect-AzAccount</code>, AZSC uses your existing session — no additional flags needed.
+If you&#8217;re already logged in via <code>Connect-AzAccount</code>, AzureScout uses your existing session — no additional flags needed.
 </td>
 </tr>
 </table>
@@ -225,7 +259,7 @@ If you&#8217;re already logged in via <code>Connect-AzAccount</code>, AZSC uses 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_documentation"><a class="anchor" href="#_documentation"></a>Documentation</h2>
+<h2 id="documentation"><a class="anchor" href="#documentation"></a>Documentation</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -239,15 +273,19 @@ If you&#8217;re already logged in via <code>Connect-AzAccount</code>, AZSC uses 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="usage.html" class="xref page">Usage Guide</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Scope, OutputFormat, content toggles, and examples</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scope, OutputFormat, Category filtering, and examples</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="permissions.html" class="xref page">Permissions</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Required ARM RBAC roles and Microsoft Graph API permissions</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="category-filtering.html" class="xref page">Category Filtering</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Run targeted scans using Microsoft&#8217;s 18 Azure categories</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="arm-modules.html" class="xref page">ARM Modules</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">95 resource modules across 17 categories</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">170+ resource modules across 18 categories</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="entra-modules.html" class="xref page">Entra Modules</a></p></td>
@@ -273,6 +311,9 @@ If you&#8217;re already logged in via <code>Connect-AzAccount</code>, AZSC uses 
 </table>
 </div>
 </div>
+<nav class="pagination">
+  <span class="next"><a href="authentication.html">Authentication</a></span>
+</nav>
 </article>
   </div>
 </main>

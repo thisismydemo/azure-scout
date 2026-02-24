@@ -4,9 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Repository Structure :: AzureScout Documentation</title>
-    <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/azure-scout/folder-structure.html">
-    <meta name="description" content="Post Phase 1B folder layout for Azure Tenant Inventory.">
-    <meta name="keywords" content="structure, layout, organization">
+    <link rel="canonical" href="https://thisismydemo.cloud/azure-scout/azure-scout/folder-structure.html">
+    <link rel="prev" href="roadmap.html">
+    <link rel="next" href="contributing.html">
+    <meta name="description" content="Folder layout and module organization for the AzureScout repository.">
+    <meta name="keywords" content="structure, layout, organization, folders, azurescout">
     <meta name="generator" content="Antora 3.1.14">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -14,7 +16,7 @@
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://thisismydemo.github.io/azure-scout">AzureScout Documentation</a>
+      <a class="navbar-item" href="https://thisismydemo.cloud/azure-scout">AzureScout Documentation</a>
       <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
         <span></span>
         <span></span>
@@ -86,10 +88,16 @@
     <span class="nav-text">Module Reference</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="arm-modules.html">ARM Modules (95)</a>
+    <a class="nav-link" href="arm-modules.html">ARM Modules</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="entra-modules.html">Entra ID Modules (15)</a>
+    <a class="nav-link" href="entra-modules.html">Entra ID Modules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="coverage-table.html">Coverage Table</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="category-structure.html">Category Structure</a>
   </li>
 </ul>
   </li>
@@ -97,6 +105,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Project</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="roadmap.html">Roadmap</a>
+  </li>
   <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="folder-structure.html">Repository Structure</a>
   </li>
@@ -150,7 +161,7 @@
 <article class="doc">
 <h1 class="page">Repository Structure</h1>
 <div class="sect1">
-<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<h2 id="overview"><a class="anchor" href="#overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This page documents the repository layout after the Phase 1B reorganization.
@@ -159,7 +170,7 @@ Numbered-prefix folders were renamed, duplicate directories merged, legacy code 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_directory_tree"><a class="anchor" href="#_directory_tree"></a>Directory Tree</h2>
+<h2 id="directory-tree"><a class="anchor" href="#directory-tree"></a>Directory Tree</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -233,7 +244,7 @@ Numbered-prefix folders were renamed, duplicate directories merged, legacy code 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_phase_1b_changes_summary"><a class="anchor" href="#_phase_1b_changes_summary"></a>Phase 1B Changes Summary</h2>
+<h2 id="phase-1b-changes-summary"><a class="anchor" href="#phase-1b-changes-summary"></a>Phase 1B Changes Summary</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -276,7 +287,7 @@ Numbered-prefix folders were renamed, duplicate directories merged, legacy code 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_module_loading"><a class="anchor" href="#_module_loading"></a>Module Loading</h2>
+<h2 id="module-loading"><a class="anchor" href="#module-loading"></a>Module Loading</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The PSM1 loader uses <code>Get-ChildItem -Recurse <strong>.ps1</code>.
@@ -285,6 +296,10 @@ Folder names are cosmetic — renaming or merging directories has *zero</strong>
 </div>
 </div>
 </div>
+<nav class="pagination">
+  <span class="prev"><a href="roadmap.html">Roadmap</a></span>
+  <span class="next"><a href="contributing.html">Contributing</a></span>
+</nav>
 </article>
   </div>
 </main>

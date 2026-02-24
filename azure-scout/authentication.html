@@ -4,8 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Authentication :: AzureScout Documentation</title>
-    <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/azure-scout/authentication.html">
-    <meta name="description" content="Five authentication methods supported by Azure Tenant Inventory.">
+    <link rel="canonical" href="https://thisismydemo.cloud/azure-scout/azure-scout/authentication.html">
+    <link rel="prev" href="index.html">
+    <link rel="next" href="usage.html">
+    <meta name="description" content="Five authentication methods supported by AzureScout.">
     <meta name="keywords" content="authentication, login, spn, certificate, device-code, managed-identity">
     <meta name="generator" content="Antora 3.1.14">
     <link rel="stylesheet" href="../_/css/site.css">
@@ -14,7 +16,7 @@
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://thisismydemo.github.io/azure-scout">AzureScout Documentation</a>
+      <a class="navbar-item" href="https://thisismydemo.cloud/azure-scout">AzureScout Documentation</a>
       <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
         <span></span>
         <span></span>
@@ -86,10 +88,16 @@
     <span class="nav-text">Module Reference</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="arm-modules.html">ARM Modules (95)</a>
+    <a class="nav-link" href="arm-modules.html">ARM Modules</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="entra-modules.html">Entra ID Modules (15)</a>
+    <a class="nav-link" href="entra-modules.html">Entra ID Modules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="coverage-table.html">Coverage Table</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="category-structure.html">Category Structure</a>
   </li>
 </ul>
   </li>
@@ -97,6 +105,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Project</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="roadmap.html">Roadmap</a>
+  </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="folder-structure.html">Repository Structure</a>
   </li>
@@ -150,7 +161,7 @@
 <article class="doc">
 <h1 class="page">Authentication</h1>
 <div class="sect1">
-<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<h2 id="overview"><a class="anchor" href="#overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Azure Tenant Inventory supports five authentication methods.
@@ -159,7 +170,7 @@ The module uses <code>Connect-AZSCLoginSession</code> internally, which selects 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_priority_order"><a class="anchor" href="#_priority_order"></a>Priority Order</h2>
+<h2 id="priority-order"><a class="anchor" href="#priority-order"></a>Priority Order</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>When multiple auth parameters are supplied, the module selects the <em>first</em> matching path:</p>
@@ -186,10 +197,10 @@ The module uses <code>Connect-AZSCLoginSession</code> internally, which selects 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_method_details"><a class="anchor" href="#_method_details"></a>Method Details</h2>
+<h2 id="method-details"><a class="anchor" href="#method-details"></a>Method Details</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_1_current_user_interactive"><a class="anchor" href="#_1_current_user_interactive"></a>1. Current User (Interactive)</h3>
+<h3 id="1-current-user-interactive"><a class="anchor" href="#1-current-user-interactive"></a>1. Current User (Interactive)</h3>
 <div class="paragraph">
 <p>The default. If you&#8217;ve already run <code>Connect-AzAccount</code>, AZSC reuses your session.</p>
 </div>
@@ -204,7 +215,7 @@ Invoke-AzureScout</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_2_device_code"><a class="anchor" href="#_2_device_code"></a>2. Device Code</h3>
+<h3 id="2-device-code"><a class="anchor" href="#2-device-code"></a>2. Device Code</h3>
 <div class="paragraph">
 <p>For headless or remote sessions (SSH, containers).</p>
 </div>
@@ -218,7 +229,7 @@ Invoke-AzureScout</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_3_service_principal_client_secret"><a class="anchor" href="#_3_service_principal_client_secret"></a>3. Service Principal + Client Secret</h3>
+<h3 id="3-service-principal-client-secret"><a class="anchor" href="#3-service-principal-client-secret"></a>3. Service Principal + Client Secret</h3>
 <div class="paragraph">
 <p>For CI/CD pipelines and unattended automation.</p>
 </div>
@@ -244,7 +255,7 @@ Store the secret in a Key Vault or pipeline secret — never hardcode it.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_4_service_principal_certificate"><a class="anchor" href="#_4_service_principal_certificate"></a>4. Service Principal + Certificate</h3>
+<h3 id="4-service-principal-certificate"><a class="anchor" href="#4-service-principal-certificate"></a>4. Service Principal + Certificate</h3>
 <div class="paragraph">
 <p>The most secure SPN method — no secret string to rotate.</p>
 </div>
@@ -259,7 +270,7 @@ Store the secret in a Key Vault or pipeline secret — never hardcode it.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_5_managed_identity"><a class="anchor" href="#_5_managed_identity"></a>5. Managed Identity</h3>
+<h3 id="5-managed-identity"><a class="anchor" href="#5-managed-identity"></a>5. Managed Identity</h3>
 <div class="paragraph">
 <p>When running inside Azure (VMs, Azure Functions, Azure Automation).
 The module detects managed identity automatically — no parameters required.</p>
@@ -274,7 +285,7 @@ Invoke-AzureScout -TenantID '00000000-...'</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_azure_environment"><a class="anchor" href="#_azure_environment"></a>Azure Environment</h2>
+<h2 id="azure-environment"><a class="anchor" href="#azure-environment"></a>Azure Environment</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>All methods accept <code>-AzureEnvironment</code> to target sovereign clouds:</p>
@@ -290,7 +301,7 @@ Invoke-AzureScout -TenantID '00000000-...'</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_loginexperiencev2"><a class="anchor" href="#_loginexperiencev2"></a>LoginExperienceV2</h2>
+<h2 id="loginexperiencev2"><a class="anchor" href="#loginexperiencev2"></a>LoginExperienceV2</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The module checks for the <code>LoginExperienceV2</code> Az config setting.
@@ -298,6 +309,10 @@ If enabled, it temporarily disables it to ensure compatibility, then restores th
 </div>
 </div>
 </div>
+<nav class="pagination">
+  <span class="prev"><a href="index.html">Home</a></span>
+  <span class="next"><a href="usage.html">Usage Guide</a></span>
+</nav>
 </article>
   </div>
 </main>

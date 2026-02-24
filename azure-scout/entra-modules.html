@@ -4,9 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Entra ID Inventory Modules :: AzureScout Documentation</title>
-    <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/azure-scout/entra-modules.html">
-    <meta name="description" content="Complete catalog of 15 Microsoft Entra ID inventory modules.">
-    <meta name="keywords" content="entra, identity, modules, graph, azure-ad">
+    <link rel="canonical" href="https://thisismydemo.cloud/azure-scout/azure-scout/entra-modules.html">
+    <link rel="prev" href="arm-modules.html">
+    <link rel="next" href="coverage-table.html">
+    <meta name="description" content="Complete catalog of AzureScout Microsoft Entra ID inventory modules.">
+    <meta name="keywords" content="entra, identity, modules, graph, azure-ad, azurescout">
     <meta name="generator" content="Antora 3.1.14">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -14,7 +16,7 @@
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://thisismydemo.github.io/azure-scout">AzureScout Documentation</a>
+      <a class="navbar-item" href="https://thisismydemo.cloud/azure-scout">AzureScout Documentation</a>
       <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
         <span></span>
         <span></span>
@@ -86,10 +88,16 @@
     <span class="nav-text">Module Reference</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="arm-modules.html">ARM Modules (95)</a>
+    <a class="nav-link" href="arm-modules.html">ARM Modules</a>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="entra-modules.html">Entra ID Modules (15)</a>
+    <a class="nav-link" href="entra-modules.html">Entra ID Modules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="coverage-table.html">Coverage Table</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="category-structure.html">Category Structure</a>
   </li>
 </ul>
   </li>
@@ -97,6 +105,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Project</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="roadmap.html">Roadmap</a>
+  </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="folder-structure.html">Repository Structure</a>
   </li>
@@ -138,7 +149,7 @@
   <ul>
     <li><a href="index.html">AzureScout</a></li>
     <li>Module Reference</li>
-    <li><a href="entra-modules.html">Entra ID Modules (15)</a></li>
+    <li><a href="entra-modules.html">Entra ID Modules</a></li>
   </ul>
 </nav>
 <div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-scout/edit/main/docs/modules/ROOT/pages/entra-modules.adoc">Edit this Page</a></div>
@@ -150,7 +161,7 @@
 <article class="doc">
 <h1 class="page">Entra ID Inventory Modules</h1>
 <div class="sect1">
-<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<h2 id="overview"><a class="anchor" href="#overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Azure Tenant Inventory includes <strong>15 Entra ID (Identity) inventory modules</strong> that extract tenant-wide identity and access management data via the Microsoft Graph API.</p>
@@ -166,7 +177,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_how_entra_extraction_works"><a class="anchor" href="#_how_entra_extraction_works"></a>How Entra Extraction Works</h2>
+<h2 id="how-entra-extraction-works"><a class="anchor" href="#how-entra-extraction-works"></a>How Entra Extraction Works</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The <code>Start-AZSCEntraExtraction</code> function calls <code>Invoke-AZSCGraphRequest</code> for each Entra module, which:</p>
@@ -201,7 +212,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_module_catalog"><a class="anchor" href="#_module_catalog"></a>Module Catalog</h2>
+<h2 id="module-catalog"><a class="anchor" href="#module-catalog"></a>Module Catalog</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -297,7 +308,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_data_normalization"><a class="anchor" href="#_data_normalization"></a>Data Normalization</h2>
+<h2 id="data-normalization"><a class="anchor" href="#data-normalization"></a>Data Normalization</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>All 15 Entra modules produce output in the same normalized shape:</p>
@@ -342,7 +353,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_graceful_degradation"><a class="anchor" href="#_graceful_degradation"></a>Graceful Degradation</h2>
+<h2 id="graceful-degradation"><a class="anchor" href="#graceful-degradation"></a>Graceful Degradation</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>If a single Entra query fails (e.g., insufficient permissions for Conditional Access policies), the module:</p>
@@ -365,6 +376,10 @@
 </div>
 </div>
 </div>
+<nav class="pagination">
+  <span class="prev"><a href="arm-modules.html">ARM Modules</a></span>
+  <span class="next"><a href="coverage-table.html">Coverage Table</a></span>
+</nav>
 </article>
   </div>
 </main>
