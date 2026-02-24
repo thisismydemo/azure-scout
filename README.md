@@ -7,9 +7,11 @@ Tags: PowerShell, Azure, Inventory, Entra ID, Excel Report, JSON
 
 <div align="center">
 
-# Azure Tenant Inventory (AZSC)
+![AzureScout](https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/modules/ROOT/images/azurescout-banner.svg)
 
-### A PowerShell module for generating comprehensive Azure ARM and Entra ID inventory reports
+# AzureScout
+
+### See everything. Own your cloud.
 
 [![GitHub](https://img.shields.io/github/license/thisismydemo/azure-scout)](https://github.com/thisismydemo/azure-scout/blob/main/LICENSE)
 [![GitHub repo size](https://img.shields.io/github/repo-size/thisismydemo/azure-scout)](https://github.com/thisismydemo/azure-scout)
@@ -289,7 +291,7 @@ Run `Test-AZSCPermissions` to check provider registration status before a full r
 | `AzureScout_Report_<timestamp>.json` | JSON | Machine-readable inventory with `_metadata` envelope |
 | `AzureScout_Report_<timestamp>.md` | Markdown | GitHub-Flavored Markdown with pipe tables per module |
 | `AzureScout_Report_<timestamp>.adoc` | AsciiDoc | AsciiDoc document for Antora/Confluence rendering |
-| `AzureScout_Diagram_<timestamp>.xml` | Draw.io XML | Network topology diagram |
+| `AzureScout_Diagram_<timestamp>.drawio` | Draw.io | Network topology diagram |
 
 ### JSON Structure
 

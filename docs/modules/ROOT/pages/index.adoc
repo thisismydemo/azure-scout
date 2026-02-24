@@ -3,6 +3,8 @@
 :keywords: azure, azurescout, discovery, inventory, entra, powershell
 :page-layout: home
 
+image::azurescout-banner.svg[AzureScout — See everything. Own your cloud.,align="center"]
+
 [.lead]
 _See everything. Own your cloud._
 

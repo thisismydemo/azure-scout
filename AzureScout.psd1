@@ -124,7 +124,7 @@ PrivateData = @{
         ProjectUri = 'https://github.com/thisismydemo/azure-scout'
 
         # A URL to an icon representing this module.
-        IconUri = 'https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/images/azurescout-icon.svg'
+        IconUri = 'https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/modules/ROOT/images/azurescout-icon.svg'
 
         # ReleaseNotes of this module
         # ReleaseNotes = ''
