@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Category Filtering :: Azure Tenant Inventory Documentation</title>
+    <link rel="canonical" href="https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/category-filtering.html">
+    <meta name="description" content="How to use the -Category parameter to limit Azure Tenant Inventory scans">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://thisismydemo.github.io/azure-inventory">Azure Tenant Inventory Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="azure-tenant-inventory" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Azure Tenant Inventory</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Home</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="authentication.html">Authentication</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="usage.html">Usage Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="permissions.html">Permissions</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="category-filtering.html">Category Filtering</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Module Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="arm-modules.html">ARM Modules (95)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="entra-modules.html">Entra ID Modules (15)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Project</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="folder-structure.html">Repository Structure</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributing.html">Contributing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="credits.html">Credits &amp; Attribution</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="changelog.html">Changelog</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Azure Tenant Inventory</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="index.html">Azure Tenant Inventory</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Azure Tenant Inventory</a></li>
+    <li>Getting Started</li>
+    <li><a href="category-filtering.html">Category Filtering</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-inventory/edit/main/docs/modules/ROOT/pages/category-filtering.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Category Filtering</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_overview">Overview</a></li>
+<li><a href="#_supported_categories">Supported Categories</a></li>
+<li><a href="#_alias_support">Alias Support</a></li>
+<li><a href="#_usage_examples">Usage Examples</a>
+<ul class="sectlevel2">
+<li><a href="#_single_category">Single Category</a></li>
+<li><a href="#_multiple_categories">Multiple Categories</a></li>
+<li><a href="#_combine_with_output_format">Combine with Output Format</a></li>
+<li><a href="#_full_inventory_default">Full Inventory (Default)</a></li>
+</ul>
+</li>
+<li><a href="#_how_category_filtering_works">How Category Filtering Works</a></li>
+<li><a href="#_adding_new_categories">Adding New Categories</a></li>
+<li><a href="#_see_also">See Also</a></li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>-Category</code> parameter allows you to limit an AZTI inventory run to specific Azure resource categories.
+This is especially useful when you need a targeted scan rather than a full-tenant inventory.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Category filtering can reduce run time by 70-90% for large tenants when you only need data from a specific service area.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_supported_categories"><a class="anchor" href="#_supported_categories"></a>Supported Categories</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>-Category</code> Value</th>
+<th class="tableblock halign-left valign-top">Azure Portal Label</th>
+<th class="tableblock halign-left valign-top">Key Resource Types</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AI</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AI + Machine Learning</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cognitive Services, OpenAI, ML Workspaces, Bot Services, AI Foundry</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Analytics</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Analytics</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Synapse, Databricks, Data Factory, Event Hub, Purview</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Compute</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Virtual Machines, VMSS, Managed Disks, AVD, Cloud Services</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Containers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Containers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AKS, ARO, Container Apps, Container Registry</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Databases</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Databases</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL Server, PostgreSQL, MySQL, Cosmos DB, Redis Cache</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Hybrid</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hybrid + multicloud</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arc Servers, Arc Kubernetes, Azure Local Clusters, Arc Gateways</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Identity</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Users, Groups, App Registrations, PIM, Conditional Access</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Integration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">API Management, Service Bus, Event Hubs, Logic Apps</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IoT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Internet of Things</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IoT Hub, IoT DPS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Management</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Management and governance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Subscriptions, Policy, Backup, Automation, Recovery Vault</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Monitor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Monitor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">App Insights, DCRs, Action Groups, Alert Rules, Log Analytics</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Networking</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Networking</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VNets, NSGs, Load Balancers, VPN Gateways, Azure Firewall, Front Door</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Security</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Security</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defender Assessments, Alerts, Secure Score, Key Vault</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Storage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage Accounts, Azure NetApp Files</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Web</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Web &amp; Mobile</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">App Service Plans, App Services, Function Apps</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_alias_support"><a class="anchor" href="#_alias_support"></a>Alias Support</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Long-form names displayed in the Azure portal are automatically normalized to their short equivalents:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># These are equivalent:
+Invoke-AzureTenantInventory -TenantID $tid -Category 'IoT'
+Invoke-AzureTenantInventory -TenantID $tid -Category 'Internet of Things'
+
+Invoke-AzureTenantInventory -TenantID $tid -Category 'Monitor'
+Invoke-AzureTenantInventory -TenantID $tid -Category 'Monitoring'
+
+Invoke-AzureTenantInventory -TenantID $tid -Category 'Management'
+Invoke-AzureTenantInventory -TenantID $tid -Category 'Management and governance'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_usage_examples"><a class="anchor" href="#_usage_examples"></a>Usage Examples</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_single_category"><a class="anchor" href="#_single_category"></a>Single Category</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Inventory only Virtual Machines and related Compute resources
+Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category Compute</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_multiple_categories"><a class="anchor" href="#_multiple_categories"></a>Multiple Categories</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Inventory Compute and Networking together (common combination for network topology reviews)
+Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category Compute,Networking
+
+# Security audit: inventory Security + Identity
+Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category Security,Identity
+
+# Data platform review
+Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category Databases,Analytics,AI</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_combine_with_output_format"><a class="anchor" href="#_combine_with_output_format"></a>Combine with Output Format</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Targeted scan with JSON output only (fastest)
+Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category Networking -OutputFormat Json
+
+# Generate Markdown report for Compute only
+Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category Compute -OutputFormat Markdown</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_full_inventory_default"><a class="anchor" href="#_full_inventory_default"></a>Full Inventory (Default)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># -Category defaults to 'All' — all categories included
+Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt;
+
+# Explicit equivalent
+Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category All</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_category_filtering_works"><a class="anchor" href="#_how_category_filtering_works"></a>How Category Filtering Works</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Category filtering is applied at the module discovery stage, before any Azure API calls are made.
+Only the selected category folders are loaded, which means Resource Graph queries are also restricted to the resource types defined in those modules.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="literalblock">
+<div class="title">Execution flow with <code>-Category Compute</code></div>
+<div class="content">
+<pre>graph TD
+    A[Invoke-AzureTenantInventory] --&gt; B{Category specified?}
+    B -- Yes --&gt; C[Normalize aliases]
+    C --&gt; D[Load only Compute/*.ps1 modules]
+    D --&gt; E[Execute Processing blocks]
+    E --&gt; F[Azure Resource Graph query - Compute types only]
+    F --&gt; G[Execute Reporting blocks]
+    G --&gt; H[Write Excel / JSON / Markdown]
+    B -- No / All --&gt; I[Load ALL category modules]
+    I --&gt; E</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_adding_new_categories"><a class="anchor" href="#_adding_new_categories"></a>Adding New Categories</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To add a new category to AZTI:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a folder under <code>Modules/Public/InventoryModules/&lt;CategoryName&gt;/</code></p>
+</li>
+<li>
+<p>Add the folder name to the <code>[ValidateSet]</code> for <code>-Category</code> in <code>Invoke-AzureTenantInventory.ps1</code></p>
+</li>
+<li>
+<p>Optionally add alias entries to <code>$_categoryAliasMap</code> for common name variants</p>
+</li>
+<li>
+<p>Update <a href="../azure-category-structure.md">azure-category-structure.md</a> with the new mapping</p>
+</li>
+<li>
+<p>Create one or more <code>.ps1</code> module files using the <a href="../../Modules/Public/InventoryModules/Module-template.tpl">Module-template.tpl</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_see_also"><a class="anchor" href="#_see_also"></a>See Also</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../azure-category-structure.md">Azure Category Structure reference</a></p>
+</li>
+<li>
+<p><a href="../azure-coverage-table.md">Full Coverage Table</a></p>
+</li>
+<li>
+<p><a href="index.html" class="xref page">AZTI Documentation Home</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../_/js/site.js" data-ui-root-path="../_"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
