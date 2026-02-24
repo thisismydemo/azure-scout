@@ -76,6 +76,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `ArcResourceBridge.ps1` — Resource bridge/appliances (`microsoft.resourceconnector/appliances`): status, distro, version, infrastructure type
 - `ArcExtensions.ps1` — Machine extensions (`microsoft.hybridcompute/machines/extensions`): machine name, publisher, type, version, auto upgrade, status
 
+#### Phase 9 — Governance, Security & Monitoring Expansion
+
+**Azure Policy & Governance — 6 new modules** (`Modules/Public/InventoryModules/Management/`):
+- `ManagementGroups.ps1` — Management group hierarchy (`microsoft.management/managementgroups`): parent chain, child count (recursive enumeration)
+- `CustomRoleDefinitions.ps1` — Custom RBAC roles (`microsoft.authorization/roledefinitions`): assigned scope, Actions, NotActions (parsed from JSON permissions)
+- `PolicyDefinitions.ps1` — Custom policy definitions (`microsoft.authorization/policydefinitions`): policy type, mode, metadata, rule JSON (parsed)
+- `PolicySetDefinitions.ps1` — Policy initiatives (`microsoft.authorization/policysetdefinitions`): definition references count, parameter count, policy definition groups
+- `PolicyComplianceStates.ps1` — Per-subscription compliance (`microsoft.policyinsights/policyStates`): compliance state (Compliant/NonCompliant), yellow conditional formatting for NonCompliant
+- `MaintenanceConfigurations.ps1` — Update Manager configurations (`microsoft.maintenance/maintenanceconfigurations`): scope, maintenance window (start/expiration/duration/time zone/recurrence), install patches configuration (Windows/Linux classifications, KB numbers, reboot setting), extension properties count
+
+**Microsoft Defender for Cloud — 4 new modules** (`Modules/Public/InventoryModules/Security/`):
+- `DefenderAssessments.ps1` — Security recommendations (`/microsoft.security/securescores/.../assessments`): status, severity, category, resource ID parsing, red highlighting for High/Non-Compliant
+- `DefenderSecureScore.ps1` — Secure Score tracking (`/microsoft.security/securescores`): current/max points, percentage calculation, weight, nested control retrieval, red highlighting <50%
+- `DefenderAlerts.ps1` — Security alerts (`microsoft.security/locations/.../alerts`): MITRE ATT&CK tactics/techniques, entity parsing (account/host/IP/mailbox/process), remediation steps, red/yellow conditional formatting
+- `DefenderPricing.ps1` — Defender plan enablement (`microsoft.security/pricings`): per-resource-type pricing tier, friendly name mapping (VirtualMachines, SqlServers, Storage, KeyVaults, etc.), green/red conditional formatting
+
+**Azure Monitor Resources — 6 new modules** (`Modules/Public/InventoryModules/Monitoring/`):
+- `ActionGroups.ps1` — Alert notification channels (`microsoft.insights/actiongroups`): email receivers (name:address pairs), SMS receivers (name:country-phone), webhook receivers, Azure App Push, automation runbooks, Azure Functions, Logic Apps, total receiver count, enabled status
+- `MetricAlertRules.ps1` — Metric-based alert rules (`microsoft.insights/metricalerts`): criteria type, condition parsing (metric name, operator, threshold, time aggregation), target resource enumeration, action group references, severity mapping (0-4 to Critical/Error/Warning/Informational/Verbose), evaluation frequency/window size, auto-mitigate status
+- `ScheduledQueryRules.ps1` — Log query-based alerts (`microsoft.insights/scheduledqueryrules`): KQL query extraction, data source identification (Log Analytics workspaces), condition parsing (metric measure column, operator, threshold), action group references, legacy alert detection (kind != 'LogAlert'), legacy API warning flag
+- `DataCollectionRules.ps1` — Azure Monitor Agent configurations (`microsoft.insights/datacollectionrules`): data source parsing (performance counters, Windows event logs, syslog, extensions), destination tracking (Log Analytics workspace names, Azure Monitor Metrics, Event Hub, Storage), data flow enumeration (streams to destinations mapping), KQL transformation detection, data collection endpoint association, immutable ID tracking
+- `DataCollectionEndpoints.ps1` — Log ingestion endpoints (`microsoft.insights/datacollectionendpoints`): network access configuration (public/private), configuration/logs/metrics ingestion endpoint URLs, private link scope connections, failover configuration parsing, immutable ID tracking
+- `SubscriptionDiagnosticSettings.ps1` — Activity Log configurations (per-subscription iteration via `Get-AzDiagnosticSetting`): enabled log category enumeration, retention policy parsing (days or unlimited), multi-destination support (Log Analytics workspace, Storage account, Event Hub namespace, Partner solutions), category enablement count (enabled/total), per-subscription iteration with error handling
+
+**Network & Managed Services — 2 new modules**:
+- `NetworkWatchers.ps1` — Network diagnostic instances (`microsoft.network/networkwatchers` in `Network/`): flow log enumeration (child resource aggregation), connection monitor tracking, packet capture counting, provisioning state, capability listing (IP Flow Verify, Next Hop, VPN Troubleshoot, NSG Diagnostics, Topology, Connection Troubleshoot)
+- `LighthouseDelegations.ps1` — Service provider delegations (`Microsoft.ManagedServices/registrationDefinitions` in `Management/`): managing tenant identification (ID and display name), authorization parsing (principal ID, principal display name, role definition ID), role GUID to friendly name mapping (Contributor, Owner, Reader, monitoring/log analytics roles), delegation type detection (Permanent vs Eligible/JIT based on delegatedRoleDefinitionIds), eligible authorization counting, provisioning state tracking
+
+**Entra ID Verification — 2 new modules** (`Modules/Public/InventoryModules/Identity/`):
+- `IdentityProviders.ps1` — Federated/social identity providers (`/v1.0/identity/identityProviders`): provider type (Built-In, Social, SAML/WS-Fed, OIDC, Apple), identity provider type, client ID, client secret configured flag, issuer URL, domains hint, response mode/type, scope, enabled status, yellow conditional formatting if client secret not configured
+- `SecurityDefaults.ps1` — Security Defaults enforcement policy (`/v1.0/policies/identitySecurityDefaultsEnforcementPolicy`): enabled status, description, last modified date, protections provided (MFA requirements, legacy auth blocking), recommendation status, green formatting if enabled, yellow if disabled
+
+**Extraction Layer Enhancement**:
+- `Start-AZTIEntraExtraction.ps1` — Added 2 new Graph API queries: `/v1.0/identity/identityProviders` (array), `/v1.0/policies/identitySecurityDefaultsEnforcementPolicy` (SingleObject)
+
 ### Changed
 
 #### Phase 8 — Enhanced VPN & Networking Detail

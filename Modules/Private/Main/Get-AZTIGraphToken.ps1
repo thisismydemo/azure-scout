@@ -1,13 +1,14 @@
 <#
 .Synopsis
-    Acquire a Microsoft Graph bearer token via the current Az context.
+    Acquire a Microsoft Graph bearer token via Azure CLI.
 
 .DESCRIPTION
-    Uses Get-AzAccessToken -ResourceTypeName MSGraph to obtain a bearer token
+    Uses Azure CLI (az account get-access-token) to obtain a bearer token
     for Microsoft Graph API calls. Caches the token in a script-scope variable
     and refreshes automatically when within 5 minutes of expiry.
 
-    NO Microsoft.Graph SDK dependency — only Az.Accounts is required.
+    Requires Azure CLI to be logged in ('az login'). Azure CLI automatically
+    requests proper Graph API scopes during authentication, unlike Az PowerShell.
 
 .OUTPUTS
     [hashtable] Authorization headers ready for Invoke-RestMethod:
@@ -20,8 +21,9 @@
     This PowerShell Module is part of Azure Tenant Inventory (AZTI)
 
 .NOTES
-    Version: 1.0.0
+    Version: 2.0.0
     Authors: thisismydemo
+    Modified: 2026-02-24 - Changed from Get-AzAccessToken to Azure CLI for proper Graph scopes
 #>
 function Get-AZTIGraphToken {
     [CmdletBinding()]
@@ -44,11 +46,17 @@ function Get-AZTIGraphToken {
     Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + ' - Acquiring new Microsoft Graph token')
 
     try {
-        # Az.Accounts >= 2.x supports -ResourceTypeName MSGraph
-        $tokenResponse = Get-AzAccessToken -ResourceTypeName MSGraph -ErrorAction Stop
+        # Use Azure CLI to get Graph token with proper scopes
+        # Azure CLI device code authentication includes Graph API scopes by default
+        $azTokenJson = az account get-access-token --resource https://graph.microsoft.com 2>&1 | Out-String
 
-        # Get-AzAccessToken returns Token (string) and ExpiresOn (DateTimeOffset)
-        $plainToken = $tokenResponse.Token
+        if ($LASTEXITCODE -ne 0) {
+            throw "Azure CLI failed to get Graph token. Ensure you are logged in with 'az login'. Error: $azTokenJson"
+        }
+
+        $tokenData = $azTokenJson | ConvertFrom-Json
+        $plainToken = $tokenData.accessToken
+        $expiresOn = [DateTimeOffset]::Parse($tokenData.expiresOn)
 
         $headers = @{
             'Authorization' = "Bearer $plainToken"
@@ -58,15 +66,15 @@ function Get-AZTIGraphToken {
         # Cache for reuse
         $Script:_AZTIGraphTokenCache = [PSCustomObject]@{
             Headers   = $headers
-            ExpiresOn = $tokenResponse.ExpiresOn
+            ExpiresOn = $expiresOn
         }
 
-        Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + ' - Graph token acquired, expires ' + $tokenResponse.ExpiresOn.ToString('HH:mm:ss') + ' UTC')
+        Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + ' - Graph token acquired via Azure CLI, expires ' + $expiresOn.ToString('HH:mm:ss') + ' UTC')
 
         return $headers
     }
     catch {
-        $errorMessage = "Failed to acquire Microsoft Graph token. Ensure the current identity has Graph API permissions. Error: $($_.Exception.Message)"
+        $errorMessage = "Failed to acquire Microsoft Graph token. Ensure Azure CLI is logged in with 'az login' and has Graph API permissions. Error: $($_.Exception.Message)"
         Write-Warning $errorMessage
         throw $errorMessage
     }

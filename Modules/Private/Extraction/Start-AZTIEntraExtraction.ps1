@@ -169,6 +169,19 @@ function Start-AZTIEntraExtraction {
             Uri          = '/v1.0/identityProtection/riskyUsers'
             Type         = 'entra/riskyusers'
             NameProperty = 'userPrincipalName'
+        },
+        @{
+            Name         = 'Identity Providers'
+            Uri          = '/v1.0/identity/identityProviders'
+            Type         = 'entra/identityproviders'
+            NameProperty = 'displayName'
+        },
+        @{
+            Name         = 'Security Defaults'
+            Uri          = '/v1.0/policies/identitySecurityDefaultsEnforcementPolicy'
+            Type         = 'entra/securitydefaults'
+            NameProperty = 'displayName'
+            SingleObject = $true
         }
     )
 
