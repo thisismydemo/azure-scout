@@ -2,7 +2,7 @@
 
 <#
 .SYNOPSIS
-    Pester tests for Connect-AZTILoginSession.
+    Pester tests for Connect-AZSCLoginSession.
 
 .DESCRIPTION
     Validates the authentication manager:
@@ -21,9 +21,9 @@
 #>
 
 $ModuleRoot = Split-Path -Parent $PSScriptRoot
-Import-Module (Join-Path $ModuleRoot 'AzureTenantInventory.psd1') -Force -ErrorAction Stop
+Import-Module (Join-Path $ModuleRoot 'AzureScout.psd1') -Force -ErrorAction Stop
 
-Describe 'Connect-AZTILoginSession' {
+Describe 'Connect-AZSCLoginSession' {
 
     # ── SPN + Certificate ─────────────────────────────────────────────
     Context 'SPN + Certificate Auth' {
@@ -31,28 +31,28 @@ Describe 'Connect-AZTILoginSession' {
         BeforeAll {
             Mock Connect-AzAccount {
                 return [PSCustomObject]@{ Context = [PSCustomObject]@{ Tenant = [PSCustomObject]@{ Id = 'tenant-123' } } }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
 
-            Mock Get-AzContext { return $null } -ModuleName AzureTenantInventory
+            Mock Get-AzContext { return $null } -ModuleName AzureScout
         }
 
         It 'Calls Connect-AzAccount with CertificatePath when AppId and CertificatePath are provided' {
-            InModuleScope 'AzureTenantInventory' {
-                Connect-AZTILoginSession -TenantID 'tenant-123' -AppId 'app-id' -CertificatePath 'C:\cert.pfx'
+            InModuleScope 'AzureScout' {
+                Connect-AZSCLoginSession -TenantID 'tenant-123' -AppId 'app-id' -CertificatePath 'C:\cert.pfx'
             }
-            Should -Invoke Connect-AzAccount -ModuleName AzureTenantInventory -Times 1
+            Should -Invoke Connect-AzAccount -ModuleName AzureScout -Times 1
         }
 
         It 'Returns the TenantID on success' {
-            $result = InModuleScope 'AzureTenantInventory' {
-                Connect-AZTILoginSession -TenantID 'tenant-123' -AppId 'app-id' -CertificatePath 'C:\cert.pfx'
+            $result = InModuleScope 'AzureScout' {
+                Connect-AZSCLoginSession -TenantID 'tenant-123' -AppId 'app-id' -CertificatePath 'C:\cert.pfx'
             }
             $result | Should -Be 'tenant-123'
         }
 
         It 'Throws when TenantID is not provided for SPN auth' {
-            { InModuleScope 'AzureTenantInventory' {
-                Connect-AZTILoginSession -AppId 'app-id' -CertificatePath 'C:\cert.pfx'
+            { InModuleScope 'AzureScout' {
+                Connect-AZSCLoginSession -AppId 'app-id' -CertificatePath 'C:\cert.pfx'
             } } | Should -Throw
         }
     }
@@ -63,28 +63,28 @@ Describe 'Connect-AZTILoginSession' {
         BeforeAll {
             Mock Connect-AzAccount {
                 return [PSCustomObject]@{ Context = [PSCustomObject]@{ Tenant = [PSCustomObject]@{ Id = 'tenant-456' } } }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
 
-            Mock Get-AzContext { return $null } -ModuleName AzureTenantInventory
+            Mock Get-AzContext { return $null } -ModuleName AzureScout
         }
 
         It 'Calls Connect-AzAccount with credential when AppId and Secret are provided' {
-            InModuleScope 'AzureTenantInventory' {
-                Connect-AZTILoginSession -TenantID 'tenant-456' -AppId 'app-id' -Secret 'my-secret'
+            InModuleScope 'AzureScout' {
+                Connect-AZSCLoginSession -TenantID 'tenant-456' -AppId 'app-id' -Secret 'my-secret'
             }
-            Should -Invoke Connect-AzAccount -ModuleName AzureTenantInventory -Times 1
+            Should -Invoke Connect-AzAccount -ModuleName AzureScout -Times 1
         }
 
         It 'Returns the TenantID on success' {
-            $result = InModuleScope 'AzureTenantInventory' {
-                Connect-AZTILoginSession -TenantID 'tenant-456' -AppId 'app-id' -Secret 'my-secret'
+            $result = InModuleScope 'AzureScout' {
+                Connect-AZSCLoginSession -TenantID 'tenant-456' -AppId 'app-id' -Secret 'my-secret'
             }
             $result | Should -Be 'tenant-456'
         }
 
         It 'Throws when TenantID is not provided for SPN secret auth' {
-            { InModuleScope 'AzureTenantInventory' {
-                Connect-AZTILoginSession -AppId 'app-id' -Secret 'my-secret'
+            { InModuleScope 'AzureScout' {
+                Connect-AZSCLoginSession -AppId 'app-id' -Secret 'my-secret'
             } } | Should -Throw
         }
     }
@@ -95,21 +95,21 @@ Describe 'Connect-AZTILoginSession' {
         BeforeAll {
             Mock Connect-AzAccount {
                 return [PSCustomObject]@{ Context = [PSCustomObject]@{ Tenant = [PSCustomObject]@{ Id = 'tenant-789' } } }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
 
-            Mock Get-AzContext { return $null } -ModuleName AzureTenantInventory
+            Mock Get-AzContext { return $null } -ModuleName AzureScout
         }
 
         It 'Calls Connect-AzAccount with UseDeviceAuthentication when DeviceLogin switch is set' {
-            InModuleScope 'AzureTenantInventory' {
-                Connect-AZTILoginSession -TenantID 'tenant-789' -DeviceLogin
+            InModuleScope 'AzureScout' {
+                Connect-AZSCLoginSession -TenantID 'tenant-789' -DeviceLogin
             }
-            Should -Invoke Connect-AzAccount -ModuleName AzureTenantInventory -Times 1
+            Should -Invoke Connect-AzAccount -ModuleName AzureScout -Times 1
         }
 
         It 'Returns the TenantID on success' {
-            $result = InModuleScope 'AzureTenantInventory' {
-                Connect-AZTILoginSession -TenantID 'tenant-789' -DeviceLogin
+            $result = InModuleScope 'AzureScout' {
+                Connect-AZSCLoginSession -TenantID 'tenant-789' -DeviceLogin
             }
             $result | Should -Be 'tenant-789'
         }
@@ -124,29 +124,29 @@ Describe 'Connect-AZTILoginSession' {
                     Tenant  = [PSCustomObject]@{ Id = 'tenant-existing' }
                     Account = [PSCustomObject]@{ Id = 'user@example.com' }
                 }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
 
-            Mock Connect-AzAccount { } -ModuleName AzureTenantInventory
+            Mock Connect-AzAccount { } -ModuleName AzureScout
 
-            $result = InModuleScope 'AzureTenantInventory' {
-                Connect-AZTILoginSession -TenantID 'tenant-existing'
+            $result = InModuleScope 'AzureScout' {
+                Connect-AZSCLoginSession -TenantID 'tenant-existing'
             }
-            Should -Not -Invoke Connect-AzAccount -ModuleName AzureTenantInventory
+            Should -Not -Invoke Connect-AzAccount -ModuleName AzureScout
             $result | Should -Be 'tenant-existing'
         }
 
         It 'Calls Connect-AzAccount when no existing context' {
-            Mock Get-AzContext { return $null } -ModuleName AzureTenantInventory
+            Mock Get-AzContext { return $null } -ModuleName AzureScout
             Mock Connect-AzAccount {
                 return [PSCustomObject]@{ Context = [PSCustomObject]@{ Tenant = [PSCustomObject]@{ Id = 'tenant-new' } } }
-            } -ModuleName AzureTenantInventory
-            Mock Get-AzConfig { return [PSCustomObject]@{ Value = 'On' } } -ModuleName AzureTenantInventory
-            Mock Update-AzConfig { } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
+            Mock Get-AzConfig { return [PSCustomObject]@{ Value = 'On' } } -ModuleName AzureScout
+            Mock Update-AzConfig { } -ModuleName AzureScout
 
-            $result = InModuleScope 'AzureTenantInventory' {
-                Connect-AZTILoginSession -TenantID 'tenant-new'
+            $result = InModuleScope 'AzureScout' {
+                Connect-AZSCLoginSession -TenantID 'tenant-new'
             }
-            Should -Invoke Connect-AzAccount -ModuleName AzureTenantInventory -Times 1
+            Should -Invoke Connect-AzAccount -ModuleName AzureScout -Times 1
         }
     }
 
@@ -154,21 +154,21 @@ Describe 'Connect-AZTILoginSession' {
     Context 'LoginExperienceV2 Handling' {
 
         BeforeAll {
-            Mock Get-AzContext { return $null } -ModuleName AzureTenantInventory
+            Mock Get-AzContext { return $null } -ModuleName AzureScout
             Mock Connect-AzAccount {
                 return [PSCustomObject]@{ Context = [PSCustomObject]@{ Tenant = [PSCustomObject]@{ Id = 'tenant-v2' } } }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
             Mock Get-AzConfig {
                 return [PSCustomObject]@{ Value = 'On' }
-            } -ModuleName AzureTenantInventory
-            Mock Update-AzConfig { } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
+            Mock Update-AzConfig { } -ModuleName AzureScout
         }
 
         It 'Checks LoginExperienceV2 config for interactive login' {
-            InModuleScope 'AzureTenantInventory' {
-                Connect-AZTILoginSession -TenantID 'tenant-v2'
+            InModuleScope 'AzureScout' {
+                Connect-AZSCLoginSession -TenantID 'tenant-v2'
             }
-            Should -Invoke Get-AzConfig -ModuleName AzureTenantInventory
+            Should -Invoke Get-AzConfig -ModuleName AzureScout
         }
     }
 
@@ -176,19 +176,19 @@ Describe 'Connect-AZTILoginSession' {
     Context 'AzureEnvironment Passthrough' {
 
         BeforeAll {
-            Mock Get-AzContext { return $null } -ModuleName AzureTenantInventory
+            Mock Get-AzContext { return $null } -ModuleName AzureScout
             Mock Connect-AzAccount {
                 return [PSCustomObject]@{ Context = [PSCustomObject]@{ Tenant = [PSCustomObject]@{ Id = 'tenant-gov' } } }
-            } -ModuleName AzureTenantInventory
-            Mock Get-AzConfig { return [PSCustomObject]@{ Value = 'Off' } } -ModuleName AzureTenantInventory
-            Mock Update-AzConfig { } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
+            Mock Get-AzConfig { return [PSCustomObject]@{ Value = 'Off' } } -ModuleName AzureScout
+            Mock Update-AzConfig { } -ModuleName AzureScout
         }
 
         It 'Passes AzureEnvironment through to Connect-AzAccount' {
-            InModuleScope 'AzureTenantInventory' {
-                Connect-AZTILoginSession -TenantID 'tenant-gov' -AzureEnvironment 'AzureUSGovernment'
+            InModuleScope 'AzureScout' {
+                Connect-AZSCLoginSession -TenantID 'tenant-gov' -AzureEnvironment 'AzureUSGovernment'
             }
-            Should -Invoke Connect-AzAccount -ModuleName AzureTenantInventory -ParameterFilter {
+            Should -Invoke Connect-AzAccount -ModuleName AzureScout -ParameterFilter {
                 $Environment -eq 'AzureUSGovernment'
             }
         }

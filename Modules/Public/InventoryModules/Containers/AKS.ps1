@@ -7,10 +7,10 @@ This script consolidates information for all microsoft.containerservice/managedc
 Excel Sheet Name: AKS
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Container/AKS.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Container/AKS.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -28,8 +28,8 @@ If ($Task -eq 'Processing')
     <######### Insert the resource extraction here ########>
 
         $AKS = $Resources | Where-Object {$_.TYPE -eq 'microsoft.containerservice/managedclusters'}
-        $VMExtraDetails = $Resources | Where-Object { $_.TYPE -eq 'AZTI/VM/SKU' }
-        $VMQuotas = $Resources | Where-Object { $_.TYPE -eq 'AZTI/VM/Quotas' }
+        $VMExtraDetails = $Resources | Where-Object { $_.TYPE -eq 'AZSC/VM/SKU' }
+        $VMQuotas = $Resources | Where-Object { $_.TYPE -eq 'AZSC/VM/Quotas' }
 
     <######### Insert the resource Process here ########>
 

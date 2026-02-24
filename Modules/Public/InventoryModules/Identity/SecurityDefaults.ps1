@@ -11,7 +11,7 @@
     Sheet: Security Defaults
 #>
 
-Register-AZTIInventoryModule -ModuleId 'entra/securitydefaults' -PhaseId 'Processing' -ScriptBlock {
+Register-AZSCInventoryModule -ModuleId 'entra/securitydefaults' -PhaseId 'Processing' -ScriptBlock {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -20,11 +20,11 @@ Register-AZTIInventoryModule -ModuleId 'entra/securitydefaults' -PhaseId 'Proces
 
     $Resources = $Context.EntraData.'entra/securitydefaults'
     if (-not $Resources) {
-        Write-AZTILog -Message "No security defaults data available" -Level Verbose
+        Write-AZSCLog -Message "No security defaults data available" -Level Verbose
         return
     }
 
-    Write-AZTILog -Message "Processing security defaults policy"
+    Write-AZSCLog -Message "Processing security defaults policy"
 
     foreach ($Policy in $Resources) {
         try {
@@ -81,29 +81,29 @@ Register-AZTIInventoryModule -ModuleId 'entra/securitydefaults' -PhaseId 'Proces
                 RecommendationStatus = $RecommendationStatus
             }
 
-            Add-AZTIProcessedData -Type 'entra/securitydefaults' -Data $Record
+            Add-AZSCProcessedData -Type 'entra/securitydefaults' -Data $Record
 
         }
         catch {
-            Write-AZTILog -Message "Failed to process security defaults policy: $_" -Level Error
+            Write-AZSCLog -Message "Failed to process security defaults policy: $_" -Level Error
         }
     }
 }
 
-Register-AZTIInventoryModule -ModuleId 'entra/securitydefaults' -PhaseId 'Reporting' -ScriptBlock {
+Register-AZSCInventoryModule -ModuleId 'entra/securitydefaults' -PhaseId 'Reporting' -ScriptBlock {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [hashtable]$Context
     )
 
-    $Data = Get-AZTIProcessedData -Type 'entra/securitydefaults'
+    $Data = Get-AZSCProcessedData -Type 'entra/securitydefaults'
     if (-not $Data) {
-        Write-AZTILog -Message "No security defaults data to export" -Level Verbose
+        Write-AZSCLog -Message "No security defaults data to export" -Level Verbose
         return
     }
 
-    Write-AZTILog -Message "Exporting security defaults policy to Excel"
+    Write-AZSCLog -Message "Exporting security defaults policy to Excel"
 
     try {
         $ExcelParams = @{
@@ -152,9 +152,9 @@ Register-AZTIInventoryModule -ModuleId 'entra/securitydefaults' -PhaseId 'Report
 
         Close-ExcelPackage -ExcelPackage $Excel
 
-        Write-AZTILog -Message "Security defaults export completed"
+        Write-AZSCLog -Message "Security defaults export completed"
     }
     catch {
-        Write-AZTILog -Message "Failed to export security defaults: $_" -Level Error
+        Write-AZSCLog -Message "Failed to export security defaults: $_" -Level Error
     }
 }

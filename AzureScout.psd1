@@ -1,5 +1,5 @@
 #
-# Module manifest for module 'AzureTenantInventory'
+# Module manifest for module 'AzureScout'
 #
 # Author: thisismydemo
 #
@@ -9,7 +9,7 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-RootModule = 'AzureTenantInventory.psm1'
+RootModule = 'AzureScout.psm1'
 
 # Version number of this module.
 ModuleVersion = '2.0.0'
@@ -30,7 +30,7 @@ CompanyName = 'thisismydemo'
 Copyright = '(c) 2026 thisismydemo. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'Azure Tenant Inventory — a single-tenant Azure ARM + Entra ID inventory tool. Generates Excel and JSON reports from Azure resources and identity objects using Azure Resource Graph and Microsoft Graph REST APIs.'
+Description = 'AzureScout — discover and inventory everything in your Azure environment. Generates Excel, JSON, Markdown, and AsciiDoc reports from Azure resources, Entra ID, and identity objects using Azure Resource Graph and Microsoft Graph REST APIs. See everything. Own your cloud.'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '7.0'
@@ -71,24 +71,24 @@ RequiredModules = @()
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
             #Public Jobs
-            'Start-AZTIAdvisoryJob',
-            'Start-AZTIPolicyJob',
-            'Start-AZTISecCenterJob',
-            'Start-AZTISubscriptionJob',
-            'Wait-AZTIJob',
+            'Start-AZSCAdvisoryJob',
+            'Start-AZSCPolicyJob',
+            'Start-AZSCSecCenterJob',
+            'Start-AZSCSubscriptionJob',
+            'Wait-AZSCJob',
 
             #Public Diagram Functions
-            'Build-AZTIDiagramSubnet',
-            'Set-AZTIDiagramFile',
-            'Start-AZTIDiagramJob',
-            'Start-AZTIDiagramNetwork',
-            'Start-AZTIDiagramOrganization',
-            'Start-AZTIDiagramSubscription',
-            'Start-AZTIDrawIODiagram',
+            'Build-AZSCDiagramSubnet',
+            'Set-AZSCDiagramFile',
+            'Start-AZSCDiagramJob',
+            'Start-AZSCDiagramNetwork',
+            'Start-AZSCDiagramOrganization',
+            'Start-AZSCDiagramSubscription',
+            'Start-AZSCDrawIODiagram',
 
             #Main Functions
-            'Invoke-AzureTenantInventory',
-            'Test-AZTIPermissions'
+            'Invoke-AzureScout',
+            'Test-AZSCPermissions'
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
@@ -115,16 +115,16 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @('Azure','Inventory','TenantInventory','AZTI','AzureTenantInventory','EntraID','Resources','ARM','Graph')
+        Tags = @('Azure','AzureScout','Discovery','Inventory','AZSC','EntraID','Resources','ARM','Graph','Reporting','Excel')
 
         # A URL to the license for this module.
-        LicenseUri = 'https://github.com/thisismydemo/azure-inventory/blob/main/LICENSE'
+        LicenseUri = 'https://github.com/thisismydemo/azure-scout/blob/main/LICENSE'
 
         # A URL to the main website for this project.
-        ProjectUri = 'https://github.com/thisismydemo/azure-inventory'
+        ProjectUri = 'https://github.com/thisismydemo/azure-scout'
 
         # A URL to an icon representing this module.
-        # IconUri = ''
+        IconUri = 'https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/images/azurescout-icon.svg'
 
         # ReleaseNotes of this module
         # ReleaseNotes = ''

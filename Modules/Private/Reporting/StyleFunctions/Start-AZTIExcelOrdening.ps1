@@ -6,10 +6,10 @@ Module for Excel Sheet Ordering
 This script organizes the order of sheets in the Excel report.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/3.ReportingFunctions/StyleFunctions/Start-AZTIExcelOrdening.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/StyleFunctions/Start-AZSCExcelOrdening.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Start-AZTIExcelOrdening {
+function Start-AZSCExcelOrdening {
     Param($File)
 
     $Excel = Open-ExcelPackage -Path $File

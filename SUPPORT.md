@@ -4,8 +4,8 @@
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/512px-Microsoft_logo.svg.png" alt="Microsoft Logo" width="200">
   <br><br>
   <p>
-    <a href="https://github.com/thisismydemo/azure-inventory/issues"><img src="https://img.shields.io/github/issues/thisismydemo/azure-inventory" alt="GitHub Issues"></a>
-    <a href="https://github.com/thisismydemo/azure-inventory/pulls"><img src="https://img.shields.io/github/issues-pr/thisismydemo/azure-inventory" alt="GitHub Pull Requests"></a>
+    <a href="https://github.com/thisismydemo/azure-scout/issues"><img src="https://img.shields.io/github/issues/thisismydemo/azure-scout" alt="GitHub Issues"></a>
+    <a href="https://github.com/thisismydemo/azure-scout/pulls"><img src="https://img.shields.io/github/issues-pr/thisismydemo/azure-scout" alt="GitHub Pull Requests"></a>
   </p>
 </div>
 
@@ -13,9 +13,9 @@
 
 This project uses GitHub Issues to track bugs, feature requests, and questions. Before creating a new issue, please follow these steps:
 
-1. **Search existing issues**: Check the [existing issues](https://github.com/thisismydemo/azure-inventory/issues) to see if your problem or request has already been reported.
+1. **Search existing issues**: Check the [existing issues](https://github.com/thisismydemo/azure-scout/issues) to see if your problem or request has already been reported.
 
-2. **Create a detailed issue**: If no existing issue addresses your needs, create a [new issue](https://github.com/thisismydemo/azure-inventory/issues/new) with:
+2. **Create a detailed issue**: If no existing issue addresses your needs, create a [new issue](https://github.com/thisismydemo/azure-scout/issues/new) with:
    - A clear, descriptive title
    - Detailed steps to reproduce bugs or clear descriptions of feature requests
    - Version information (PowerShell version, module version, OS)

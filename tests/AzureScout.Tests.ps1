@@ -2,10 +2,10 @@
 
 <#
 .SYNOPSIS
-    Pester tests for the AzureTenantInventory module.
+    Pester tests for the AzureScout module.
 
 .DESCRIPTION
-    Basic module validation tests for AzureTenantInventory (AZTI).
+    Basic module validation tests for AzureScout (AZSC).
     These tests verify the module can be imported, that expected functions
     are exported, and that the manifest is well-formed.
 
@@ -17,8 +17,8 @@
 
 BeforeAll {
     $ModuleRoot = Split-Path -Parent $PSScriptRoot
-    $ManifestPath = Join-Path $ModuleRoot 'AzureTenantInventory.psd1'
-    $ModulePath   = Join-Path $ModuleRoot 'AzureTenantInventory.psm1'
+    $ManifestPath = Join-Path $ModuleRoot 'AzureScout.psd1'
+    $ModulePath   = Join-Path $ModuleRoot 'AzureScout.psm1'
 }
 
 Describe 'Module Manifest Tests' {
@@ -30,7 +30,7 @@ Describe 'Module Manifest Tests' {
 
     It 'Has the correct module name' {
         $Manifest = Test-ModuleManifest -Path $ManifestPath -ErrorAction Stop
-        $Manifest.Name | Should -Be 'AzureTenantInventory'
+        $Manifest.Name | Should -Be 'AzureScout'
     }
 
     It 'Has a valid GUID' {
@@ -58,9 +58,9 @@ Describe 'Module Import Tests' {
         { Import-Module $ManifestPath -Force -ErrorAction Stop } | Should -Not -Throw
     }
 
-    It 'Exports Invoke-AzureTenantInventory' {
+    It 'Exports Invoke-AzureScout' {
         Import-Module $ManifestPath -Force -ErrorAction Stop
-        $Commands = Get-Command -Module AzureTenantInventory
-        $Commands.Name | Should -Contain 'Invoke-AzureTenantInventory'
+        $Commands = Get-Command -Module AzureScout
+        $Commands.Name | Should -Contain 'Invoke-AzureScout'
     }
 }

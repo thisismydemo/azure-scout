@@ -6,10 +6,10 @@ Start Policy Job Module
 This script processes and creates the Policy sheet based on advisor resources.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/PublicFunctions/Jobs/Start-AZTIPolicyJob.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/PublicFunctions/Jobs/Start-AZSCPolicyJob.ps1
 
 .COMPONENT
-    This powershell Module is part of Azure Tenant Inventory (AZTI)
+    This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 
 #>
-function Start-AZTIPolicyJob {
+function Start-AZSCPolicyJob {
     param($Subscriptions, $PolicySetDef, $PolicyAssign, $PolicyDef)
 
     $poltmp = $PolicyDef | Select-Object -Property id,properties -Unique

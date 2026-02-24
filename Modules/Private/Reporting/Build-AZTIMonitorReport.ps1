@@ -8,15 +8,15 @@ action groups, alert rules, data collection rules, Log Analytics workspaces,
 Application Insights, and autoscale settings — sourced from the Monitor category cache.
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 1.0.0
 First Release Date: February 24, 2026
-Authors: AzureTenantInventory Contributors
+Authors: AzureScout Contributors
 #>
 
-function Build-AZTIMonitorReport {
+function Build-AZSCMonitorReport {
     Param($File, $ReportCache, $TableStyle)
 
     Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + ' - Building Azure Monitor worksheet.')

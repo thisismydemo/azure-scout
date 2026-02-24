@@ -6,10 +6,10 @@ Module responsible for starting automated processing jobs for Azure Resources.
 This module creates and manages automated thread jobs to process Azure Resources using PowerShell script blocks for efficient execution.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/2.ProcessingFunctions/Start-AZTIAutProcessJob.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/2.ProcessingFunctions/Start-AZSCAutProcessJob.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .NOTES
 Version: 3.6.9
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Start-AZTIAutProcessJob {
+function Start-AZSCAutProcessJob {
     Param($Resources, $Retirements, $Subscriptions, $Heavy, $InTag, $Unsupported, $Category)
 
     $ParentPath = (get-item $PSScriptRoot).parent.parent
@@ -32,7 +32,7 @@ function Start-AZTIAutProcessJob {
 
     $NewResources = ($Resources | ConvertTo-Json -Depth 40 -Compress)
     $JobLoop = 1
-    Write-Output ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+"Starting AZTI Automation Processing Jobs...")
+    Write-Output ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+"Starting AZSC Automation Processing Jobs...")
 
     if ($Heavy.IsPresent -or $InTag.IsPresent)
         {
@@ -90,7 +90,7 @@ function Start-AZTIAutProcessJob {
 
                     Start-Sleep -Seconds 5
 
-                    Build-AZTICacheFiles -DefaultPath $DefaultPath -JobNames $JobNames
+                    Build-AZSCCacheFiles -DefaultPath $DefaultPath -JobNames $JobNames
 
                     $JobLoop = 0
                 }

@@ -8,17 +8,17 @@ This script consolidates information for all Azure Monitor Private Link Scopes
 Excel Sheet Name: Monitor Private Link Scopes
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Monitoring/MonitorPrivateLinkScopes.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Monitoring/MonitorPrivateLinkScopes.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .CATEGORY Monitor
 
 .NOTES
 Version: 1.0.0
 First Release Date: February 24, 2026
-Authors: AzureTenantInventory Contributors
+Authors: AzureScout Contributors
 
 #>
 

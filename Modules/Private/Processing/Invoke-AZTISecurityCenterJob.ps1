@@ -6,10 +6,10 @@ Module responsible for invoking Security Center processing jobs.
 This module starts jobs to process Azure Security Center data for subscriptions and resources, either in automation or manual mode.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/2.ProcessingFunctions/Invoke-AZTISecurityCenterJob.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/2.ProcessingFunctions/Invoke-AZSCSecurityCenterJob.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .NOTES
 Version: 3.6.5
@@ -17,8 +17,8 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Invoke-AZTISecurityCenterJob {
-    Param($Subscriptions, $Automation, $Resources, $AZTIModule)
+function Invoke-AZSCSecurityCenterJob {
+    Param($Subscriptions, $Automation, $Resources, $AZSCModule)
 
     if ($Automation.IsPresent)
         {
@@ -27,11 +27,11 @@ function Invoke-AZTISecurityCenterJob {
 
                 import-module $($args[2])
 
-                $SecResult = Start-AZTISecCenterJob -Subscriptions $($args[0]) -Security $($args[1])
+                $SecResult = Start-AZSCSecCenterJob -Subscriptions $($args[0]) -Security $($args[1])
 
                 $SecResult
 
-            } -ArgumentList $Subscriptions , $SecurityCenter, $AZTIModule | Out-Null
+            } -ArgumentList $Subscriptions , $SecurityCenter, $AZSCModule | Out-Null
         }
     else
         {
@@ -40,10 +40,10 @@ function Invoke-AZTISecurityCenterJob {
 
                 import-module $($args[2])
 
-                $SecResult = Start-AZTISecCenterJob -Subscriptions $($args[0]) -Security $($args[1])
+                $SecResult = Start-AZSCSecCenterJob -Subscriptions $($args[0]) -Security $($args[1])
 
                 $SecResult
 
-            } -ArgumentList $Subscriptions , $SecurityCenter, $AZTIModule | Out-Null
+            } -ArgumentList $Subscriptions , $SecurityCenter, $AZSCModule | Out-Null
         }
 }

@@ -6,10 +6,10 @@ Module for Policy Report
 This script processes and creates the Policy sheet in the Excel report.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/3.ReportingFunctions/Build-AZTIPolicyReport.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/Build-AZSCPolicyReport.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Build-AZTIPolicyReport {
+function Build-AZSCPolicyReport {
     param($File ,$Pol, $TableStyle)
     if ($Pol)
         {

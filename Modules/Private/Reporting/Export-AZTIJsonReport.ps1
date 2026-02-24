@@ -6,13 +6,13 @@ Export inventory data as a structured JSON report
 Reads all cache files produced by the processing phase and assembles them into
 a single structured JSON document with a metadata envelope. The JSON file is
 written alongside (or instead of) the Excel report depending on the
--OutputFormat parameter on Invoke-AzureTenantInventory.
+-OutputFormat parameter on Invoke-AzureScout.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/Reporting/Export-AZTIJsonReport.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/Reporting/Export-AZSCJsonReport.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 1.5.0
@@ -20,7 +20,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Export-AZTIJsonReport {
+function Export-AZSCJsonReport {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -75,7 +75,7 @@ function Export-AZTIJsonReport {
     }
 
     $Metadata = [ordered]@{
-        tool          = 'AzureTenantInventory'
+        tool          = 'AzureScout'
         version       = '1.5.0'
         tenantId      = $TenantID
         subscriptions = $SubscriptionList

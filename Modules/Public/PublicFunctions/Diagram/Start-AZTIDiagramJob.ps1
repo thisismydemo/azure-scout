@@ -6,10 +6,10 @@ Job Module for Draw.io Diagram
 This module is used for managing jobs in the Draw.io Diagram.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/PublicFunctions/Diagram/Start-AZTIDiagramJob.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/PublicFunctions/Diagram/Start-AZSCDiagramJob.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.5
@@ -18,7 +18,7 @@ Authors: Claudio Merola
 
 #>
 
-Function Start-AZTIDiagramJob {
+Function Start-AZSCDiagramJob {
     Param($Resources,$Automation)
 
     if ($Automation.IsPresent) {

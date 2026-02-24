@@ -7,10 +7,10 @@ This script consolidates information for all microsoft.apimanagement/service res
 Excel Sheet Name: APIM
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Integration/APIM.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Integration/APIM.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0

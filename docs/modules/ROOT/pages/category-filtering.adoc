@@ -6,7 +6,7 @@
 
 == Overview
 
-The `-Category` parameter allows you to limit an AZTI inventory run to specific Azure resource categories.
+The `-Category` parameter allows you to limit an AZSC inventory run to specific Azure resource categories.
 This is especially useful when you need a targeted scan rather than a full-tenant inventory.
 
 [TIP]
@@ -88,14 +88,14 @@ Long-form names displayed in the Azure portal are automatically normalized to th
 [source,powershell]
 ----
 # These are equivalent:
-Invoke-AzureTenantInventory -TenantID $tid -Category 'IoT'
-Invoke-AzureTenantInventory -TenantID $tid -Category 'Internet of Things'
+Invoke-AzureScout -TenantID $tid -Category 'IoT'
+Invoke-AzureScout -TenantID $tid -Category 'Internet of Things'
 
-Invoke-AzureTenantInventory -TenantID $tid -Category 'Monitor'
-Invoke-AzureTenantInventory -TenantID $tid -Category 'Monitoring'
+Invoke-AzureScout -TenantID $tid -Category 'Monitor'
+Invoke-AzureScout -TenantID $tid -Category 'Monitoring'
 
-Invoke-AzureTenantInventory -TenantID $tid -Category 'Management'
-Invoke-AzureTenantInventory -TenantID $tid -Category 'Management and governance'
+Invoke-AzureScout -TenantID $tid -Category 'Management'
+Invoke-AzureScout -TenantID $tid -Category 'Management and governance'
 ----
 
 == Usage Examples
@@ -105,7 +105,7 @@ Invoke-AzureTenantInventory -TenantID $tid -Category 'Management and governance'
 [source,powershell]
 ----
 # Inventory only Virtual Machines and related Compute resources
-Invoke-AzureTenantInventory -TenantID <tenant-id> -Category Compute
+Invoke-AzureScout -TenantID <tenant-id> -Category Compute
 ----
 
 === Multiple Categories
@@ -113,13 +113,13 @@ Invoke-AzureTenantInventory -TenantID <tenant-id> -Category Compute
 [source,powershell]
 ----
 # Inventory Compute and Networking together (common combination for network topology reviews)
-Invoke-AzureTenantInventory -TenantID <tenant-id> -Category Compute,Networking
+Invoke-AzureScout -TenantID <tenant-id> -Category Compute,Networking
 
 # Security audit: inventory Security + Identity
-Invoke-AzureTenantInventory -TenantID <tenant-id> -Category Security,Identity
+Invoke-AzureScout -TenantID <tenant-id> -Category Security,Identity
 
 # Data platform review
-Invoke-AzureTenantInventory -TenantID <tenant-id> -Category Databases,Analytics,AI
+Invoke-AzureScout -TenantID <tenant-id> -Category Databases,Analytics,AI
 ----
 
 === Combine with Output Format
@@ -127,10 +127,10 @@ Invoke-AzureTenantInventory -TenantID <tenant-id> -Category Databases,Analytics,
 [source,powershell]
 ----
 # Targeted scan with JSON output only (fastest)
-Invoke-AzureTenantInventory -TenantID <tenant-id> -Category Networking -OutputFormat Json
+Invoke-AzureScout -TenantID <tenant-id> -Category Networking -OutputFormat Json
 
 # Generate Markdown report for Compute only
-Invoke-AzureTenantInventory -TenantID <tenant-id> -Category Compute -OutputFormat Markdown
+Invoke-AzureScout -TenantID <tenant-id> -Category Compute -OutputFormat Markdown
 ----
 
 === Full Inventory (Default)
@@ -138,10 +138,10 @@ Invoke-AzureTenantInventory -TenantID <tenant-id> -Category Compute -OutputForma
 [source,powershell]
 ----
 # -Category defaults to 'All' — all categories included
-Invoke-AzureTenantInventory -TenantID <tenant-id>
+Invoke-AzureScout -TenantID <tenant-id>
 
 # Explicit equivalent
-Invoke-AzureTenantInventory -TenantID <tenant-id> -Category All
+Invoke-AzureScout -TenantID <tenant-id> -Category All
 ----
 
 == How Category Filtering Works
@@ -156,7 +156,7 @@ Only the selected category folders are loaded, which means Resource Graph querie
 [mermaid]
 ....
 graph TD
-    A[Invoke-AzureTenantInventory] --> B{Category specified?}
+    A[Invoke-AzureScout] --> B{Category specified?}
     B -- Yes --> C[Normalize aliases]
     C --> D[Load only Compute/*.ps1 modules]
     D --> E[Execute Processing blocks]
@@ -169,10 +169,10 @@ graph TD
 
 == Adding New Categories
 
-To add a new category to AZTI:
+To add a new category to AZSC:
 
 . Create a folder under `Modules/Public/InventoryModules/<CategoryName>/`
-. Add the folder name to the `[ValidateSet]` for `-Category` in `Invoke-AzureTenantInventory.ps1`
+. Add the folder name to the `[ValidateSet]` for `-Category` in `Invoke-AzureScout.ps1`
 . Optionally add alias entries to `$_categoryAliasMap` for common name variants
 . Update link:../azure-category-structure.md[azure-category-structure.md] with the new mapping
 . Create one or more `.ps1` module files using the link:../../Modules/Public/InventoryModules/Module-template.tpl[Module-template.tpl]
@@ -181,4 +181,4 @@ To add a new category to AZTI:
 
 * link:../azure-category-structure.md[Azure Category Structure reference]
 * link:../azure-coverage-table.md[Full Coverage Table]
-* xref:ROOT:index.adoc[AZTI Documentation Home]
+* xref:ROOT:index.adoc[AZSC Documentation Home]

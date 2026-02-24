@@ -16,7 +16,7 @@
 ## Pre-Implementation
 
 - [x] Clone ARI v3.6.11 as base
-- [x] Import to `thisismydemo/azure-inventory` repo
+- [x] Import to `thisismydemo/azure-scout` repo
 - [x] Create implementation plan (`docs/IMPLEMENTATION-PLAN.md`)
 - [x] Create TODO tracker (`TODO.md`)
 
@@ -24,8 +24,8 @@
 
 ## Phase 0 — Repository Scaffold & Rename
 
-- [x] **0.1** Rename `AzureResourceInventory.psd1` → `AzureTenantInventory.psd1`
-- [x] **0.2** Rename `AzureResourceInventory.psm1` → `AzureTenantInventory.psm1`
+- [x] **0.1** Rename `AzureResourceInventory.psd1` → `AzureScout.psd1`
+- [x] **0.2** Rename `AzureResourceInventory.psm1` → `AzureScout.psm1`
 - [x] **0.3** Update manifest: version `1.0.0`, new GUID, new author, new exports
 - [x] **0.4** Update PSM1 loader (reference new filename)
 - [x] **0.5** Create `LICENSE` (MIT)
@@ -39,15 +39,15 @@
 
 ---
 
-## Phase 1 — Global Rename (ARI → AZTI)
+## Phase 1 — Global Rename (ARI → AZSC)
 
-- [x] **1.1** Rename all `*-ARI*` functions to `*-AZTI*` (~40 functions) — commit `e91eaea`
-- [x] **1.2** Rename entry point: `Invoke-ARI.ps1` → `Invoke-AzureTenantInventory.ps1` — commit `e91eaea`
-- [x] **1.3** Update all string/log references from `ARI` to `AZTI`/`AzureTenantInventory` — commits `e91eaea`, `88592ec`
-- [x] **1.4** Update default paths: `AzureResourceInventory` → `AzureTenantInventory` — commit `e91eaea`
+- [x] **1.1** Rename all `*-ARI*` functions to `*-AZSC*` (~40 functions) — commit `e91eaea`
+- [x] **1.2** Rename entry point: `Invoke-ARI.ps1` → `Invoke-AzureScout.ps1` — commit `e91eaea`
+- [x] **1.3** Update all string/log references from `ARI` to `AZSC`/`AzureScout` — commits `e91eaea`, `88592ec`
+- [x] **1.4** Update default paths: `AzureResourceInventory` → `AzureScout` — commit `e91eaea`
 - [x] **1.5** Update all internal function call sites — commit `e91eaea`
 - [x] **1.6** Update manifest `FunctionsToExport` with new names — commit `e91eaea`
-- [x] **1.7** Verify module loads: `Import-Module ./AzureTenantInventory.psd1` — 13 public functions confirmed
+- [x] **1.7** Verify module loads: `Import-Module ./AzureScout.psd1` — 13 public functions confirmed
 - [x] **1.8** Rename .ps2 files (legacy functions) — commit `cfac9a9`
 - [x] **1.9** Update all non-PowerShell files (docs, YAML, shell scripts, templates) — commit `88592ec`
 - [x] **1.10** Rename ARI-named files (images, pipelines YAML) — commit `88592ec`
@@ -77,11 +77,11 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ## Phase 2 — Auth Refactor
 
-- [x] **2.1** Rewrite `Connect-AZTILoginSession` with 5 auth methods (current-user default)
-- [x] **2.2** Create `Get-AZTIGraphToken` (token acquisition via `Get-AzAccessToken -ResourceTypeName MSGraph`)
-- [x] **2.3** Create `Invoke-AZTIGraphRequest` (REST wrapper with pagination + throttle handling)
-- [x] **2.4** Add `-TenantID`, `-AppId`, `-Secret`, `-CertificatePath`, `-CertificatePassword`, `-DeviceLogin` params to `Invoke-AzureTenantInventory`
-- [x] **2.5** Add `-Scope` parameter (`All`, `ArmOnly`, `EntraOnly`) to `Invoke-AzureTenantInventory`
+- [x] **2.1** Rewrite `Connect-AZSCLoginSession` with 5 auth methods (current-user default)
+- [x] **2.2** Create `Get-AZSCGraphToken` (token acquisition via `Get-AzAccessToken -ResourceTypeName MSGraph`)
+- [x] **2.3** Create `Invoke-AZSCGraphRequest` (REST wrapper with pagination + throttle handling)
+- [x] **2.4** Add `-TenantID`, `-AppId`, `-Secret`, `-CertificatePath`, `-CertificatePassword`, `-DeviceLogin` params to `Invoke-AzureScout`
+- [x] **2.5** Add `-Scope` parameter (`All`, `ArmOnly`, `EntraOnly`) to `Invoke-AzureScout`
 - [x] **2.6** Test: current-user auth (interactive)
 - [x] **2.7** Test: SPN + secret auth
 - [x] **2.8** Commit Phase 2
@@ -90,11 +90,11 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ## Phase 3 — Pre-Flight Permission Checker
 
-- [x] **3.1** Create `Test-AZTIPermissions` public function
+- [x] **3.1** Create `Test-AZSCPermissions` public function
 - [x] **3.2** Implement ARM permission checks (subscription enumeration, role assignment)
 - [x] **3.3** Implement Graph permission checks (organization, users, CA policies)
 - [x] **3.4** Create structured result object with remediation guidance
-- [x] **3.5** Integrate into `Invoke-AzureTenantInventory` (auto-run, warn-only)
+- [x] **3.5** Integrate into `Invoke-AzureScout` (auto-run, warn-only)
 - [x] **3.6** Add `-SkipPermissionCheck` switch
 - [x] **3.7** Commit Phase 3
 
@@ -102,10 +102,10 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ## Phase 4 — Entra ID Extraction Layer
 
-- [x] **4.1** Create `Start-AZTIEntraExtraction` function
+- [x] **4.1** Create `Start-AZSCEntraExtraction` function
 - [x] **4.2** Implement Graph queries for all 15 Entra resource types
 - [x] **4.3** Normalize responses with synthetic `TYPE` property (`entra/*`)
-- [x] **4.4** Update `Start-AZTIExtractionOrchestration` to call Entra extraction
+- [x] **4.4** Update `Start-AZSCExtractionOrchestration` to call Entra extraction
 - [x] **4.5** Merge Entra resources into main `$Resources` array
 - [x] **4.6** Wire `-Scope` parameter through extraction pipeline
 - [x] **4.7** Test: Entra extraction standalone
@@ -139,10 +139,10 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ## Phase 6 — JSON Output Layer
 
-- [x] **6.1** Create `Export-AZTIJsonReport` function
+- [x] **6.1** Create `Export-AZSCJsonReport` function
 - [x] **6.2** Implement structured JSON schema with metadata envelope
-- [x] **6.3** Add `-OutputFormat` parameter (`All`, `Excel`, `Json`) to `Invoke-AzureTenantInventory`
-- [x] **6.4** Wire into `Start-AZTIReportOrchestration`
+- [x] **6.3** Add `-OutputFormat` parameter (`All`, `Excel`, `Json`) to `Invoke-AzureScout`
+- [x] **6.4** Wire into `Start-AZSCReportOrchestration`
 - [ ] **6.5** Test: JSON-only output
 - [ ] **6.6** Test: Dual output (Excel + JSON)
 - [x] **6.7** Commit Phase 6 — included in commit `2650e32`
@@ -153,11 +153,11 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 - [x] **7.1** Update default report paths (Windows + Linux/Mac)
 - [x] **7.2** Rewrite `README.md` with full documentation
-- [x] **7.3** Create Pester tests: `Test-AZTIPermissions.Tests.ps1`
-- [x] **7.4** Create Pester tests: `Invoke-AzureTenantInventory.Tests.ps1`
-- [x] **7.5** Create Pester tests: `Connect-AZTILoginSession.Tests.ps1`
-- [x] **7.6** Create Pester tests: `Invoke-AZTIGraphRequest.Tests.ps1`
-- [x] **7.7** Create Pester tests: `Start-AZTIEntraExtraction.Tests.ps1`
+- [x] **7.3** Create Pester tests: `Test-AZSCPermissions.Tests.ps1`
+- [x] **7.4** Create Pester tests: `Invoke-AzureScout.Tests.ps1`
+- [x] **7.5** Create Pester tests: `Connect-AZSCLoginSession.Tests.ps1`
+- [x] **7.6** Create Pester tests: `Invoke-AZSCGraphRequest.Tests.ps1`
+- [x] **7.7** Create Pester tests: `Start-AZSCEntraExtraction.Tests.ps1`
 - [x] **7.8** Update `CHANGELOG.md` with all changes
 - [x] **7.9** Final module load + smoke test
 - [x] **7.10** Commit Phase 7
@@ -372,7 +372,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### 12.1 — Default Scope Change
 
-- [x] **12.1.1** Update `Invoke-AzureTenantInventory` default `-Scope` parameter from `All` to `ArmOnly`
+- [x] **12.1.1** Update `Invoke-AzureScout` default `-Scope` parameter from `All` to `ArmOnly`
 - [x] **12.1.2** Update help documentation to reflect new default
 - [x] **12.1.3** Update `README.md` to clarify ARM-only default behavior
 - [x] **12.1.4** Update examples to show explicit `-Scope All` for Entra ID inclusion
@@ -427,27 +427,27 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### What Was Fixed (Phase 2 — Auth Refactor)
 
-- [x] **Created `Get-AZTIGraphToken` function** (`Modules/Private/Main/Get-AZTIGraphToken.ps1`):
+- [x] **Created `Get-AZSCGraphToken` function** (`Modules/Private/Main/Get-AZSCGraphToken.ps1`):
   - Modern approach: `Get-AzAccessToken -ResourceTypeName MSGraph -AsSecureString`
   - Replaced legacy token acquisition method
   - Token caching with auto-refresh (5 min before expiry)
   - Works with all auth methods: current user, SPN, managed identity, device code
   - Throws clear error if Graph access unavailable
 
-- [x] **Created `Invoke-AZTIGraphRequest` function** (`Modules/Private/Main/Invoke-AZTIGraphRequest.ps1`):
+- [x] **Created `Invoke-AZSCGraphRequest` function** (`Modules/Private/Main/Invoke-AZSCGraphRequest.ps1`):
   - Centralized Graph API wrapper
   - Automatic pagination (`@odata.nextLink` following)
   - Throttling handling (429 responses with `Retry-After` header)
   - Consistent error handling across all Graph calls
 
 - [x] **Updated all Entra ID modules** (15 modules in `Identity/`):
-  - Replaced direct `Invoke-RestMethod` with `Invoke-AZTIGraphRequest`
+  - Replaced direct `Invoke-RestMethod` with `Invoke-AZSCGraphRequest`
   - Simplified authentication flow
   - Consistent behavior across all Identity modules
 
 ### Testing Evidence
 
-- [x] User successfully executed: `Invoke-AzureTenantInventory -Scope All -OutputFormat Excel`
+- [x] User successfully executed: `Invoke-AzureScout -Scope All -OutputFormat Excel`
 - [x] All Entra ID worksheets populated with data:
   - Entra Users, Entra Groups, App Registrations, Service Principals
   - Managed Identities, Directory Roles, PIM Assignments, Conditional Access
@@ -458,10 +458,10 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### Files Modified (Phase 2)
 
-- **New**: `Modules/Private/Main/Get-AZTIGraphToken.ps1`
-- **New**: `Modules/Private/Main/Invoke-AZTIGraphRequest.ps1`
-- **Modified**: `Modules/Private/Main/Connect-AZTILoginSession.ps1` (5 auth methods)
-- **Modified**: `Modules/Private/Extraction/Start-AZTIEntraExtraction.ps1` (Graph integration)
+- **New**: `Modules/Private/Main/Get-AZSCGraphToken.ps1`
+- **New**: `Modules/Private/Main/Invoke-AZSCGraphRequest.ps1`
+- **Modified**: `Modules/Private/Main/Connect-AZSCLoginSession.ps1` (5 auth methods)
+- **Modified**: `Modules/Private/Extraction/Start-AZSCEntraExtraction.ps1` (Graph integration)
 - **Modified**: All 15 Identity modules (replaced direct REST with wrapper)
 
 ### Impact
@@ -917,7 +917,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### 18.2 — Add `-Category` Parameter to Main Function
 
-- [x] **18.2.1** Add parameter to `Invoke-AzureTenantInventory`:
+- [x] **18.2.1** Add parameter to `Invoke-AzureScout`:
   ```powershell
   [ValidateSet('All', 'AI + machine learning', 'Analytics', 'Compute', 'Containers', 'Databases', 'DevOps', 'General', 'Hybrid + multicloud', 'Identity', 'Integration', 'Internet of Things', 'Management and governance', 'Migration', 'Monitor', 'Networking', 'Security', 'Storage', 'Web & Mobile')]
   [string[]]$Category = 'All'
@@ -965,7 +965,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
   - Table of categories with descriptions and module counts
   - Examples: `-Category Security`, `-Category Monitoring,Security`, `-Category AI,Analytics`
   - Use cases: Security audits, Monitoring-only inventory, AI/ML governance
-- [x] **18.5.2** Update help documentation in `Invoke-AzureTenantInventory`:
+- [x] **18.5.2** Update help documentation in `Invoke-AzureScout`:
   - `.PARAMETER Category` section with ValidateSet values
   - `.EXAMPLE` for each category usage pattern
 - [x] **18.5.3** Update `CHANGELOG.md` with category filtering feature
@@ -1131,7 +1131,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### 19.7 — Documentation & Usability
 
-- [x] **19.7.1** `Get-Help Invoke-AzureTenantInventory -Full` shows complete help (synopsis, description, parameters, 10+ examples, inputs, outputs, notes, links)
+- [x] **19.7.1** `Get-Help Invoke-AzureScout -Full` shows complete help (synopsis, description, parameters, 10+ examples, inputs, outputs, notes, links)
 - [x] **19.7.2** `README.md` accuracy: Quick Start reflects new defaults, Permissions section complete, Resource Providers listed, Examples cover all features
 - [x] **19.7.3** `CHANGELOG.md` completeness: Documents all Phases 9-18 features with version numbers, breaking changes
 - [x] **19.7.4** Error messages clarity: Permission denied errors clearly state missing permission + remediation steps
@@ -1149,7 +1149,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ## Phase 20 — Dedicated Permission Audit Mode (`-PermissionAudit`)
 
-> **NEW REQUIREMENT:** "when a user runs `Invoke-AzureTenantInventory -PermissionAudit` it runs **only** a permissions check — no inventory, no Excel, no JSON — and outputs a formatted permissions report."
+> **NEW REQUIREMENT:** "when a user runs `Invoke-AzureScout -PermissionAudit` it runs **only** a permissions check — no inventory, no Excel, no JSON — and outputs a formatted permissions report."
 >
 > Default scope: ARM/RBAC only. Add `-IncludeEntraPermissions` to also audit Microsoft Graph / Entra ID access.
 > Works with the currently logged-on user (interactive) **or** SPN credentials (`-TenantID`, `-AppId`, `-Secret`/`-CertificatePath`) — no new auth parameters needed, the existing auth params already cover this.
@@ -1161,7 +1161,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 | `-PermissionAudit` | `[switch]` | **New mode switch.** When present, the cmdlet skips all inventory collection and runs ONLY a permissions audit, then exits. Cannot be combined with `-Category`, `-Scope All`/`ArmOnly`/`EntraOnly` inventory logic. |
 | `-IncludeEntraPermissions` | `[switch]` | Used with `-PermissionAudit`. Also checks Microsoft Graph / Entra ID permissions (Directory.Read.All, User.Read.All, Group.Read.All, Application.Read.All, RoleManagement.Read.Directory, Policy.Read.All, IdentityRiskyUser.Read.All). Requires Graph token acquisition. |
 
-### 20.1 — Add `-PermissionAudit` Switch to `Invoke-AzureTenantInventory`
+### 20.1 — Add `-PermissionAudit` Switch to `Invoke-AzureScout`
 
 - [x] **20.1.1** Add `[switch]$PermissionAudit` parameter with `.PARAMETER PermissionAudit` help block:
   - "Runs a dedicated permissions audit only. No inventory is collected. Outputs a structured permissions report showing which ARM roles, RBAC assignments, and (optionally) Graph API permissions the current caller has. Use with `-IncludeEntraPermissions` to also audit Entra ID / MS Graph access."
@@ -1170,24 +1170,24 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 - [x] **20.1.3** Add early-exit branch in main function body:
   ```powershell
   if ($PermissionAudit.IsPresent) {
-      Invoke-AZTIPermissionAudit -IncludeEntraPermissions:$IncludeEntraPermissions
+      Invoke-AZSCPermissionAudit -IncludeEntraPermissions:$IncludeEntraPermissions
       return
   }
   ```
 - [x] **20.1.4** Add `.EXAMPLE` blocks:
-  - `Invoke-AzureTenantInventory -PermissionAudit` — ARM/RBAC audit for current user
-  - `Invoke-AzureTenantInventory -PermissionAudit -IncludeEntraPermissions` — ARM + Graph audit
-  - `Invoke-AzureTenantInventory -TenantID <id> -AppId <id> -Secret <secret> -PermissionAudit -IncludeEntraPermissions` — SPN full audit
-  - `Invoke-AzureTenantInventory -TenantID <id> -PermissionAudit` — check permissions before a full run
+  - `Invoke-AzureScout -PermissionAudit` — ARM/RBAC audit for current user
+  - `Invoke-AzureScout -PermissionAudit -IncludeEntraPermissions` — ARM + Graph audit
+  - `Invoke-AzureScout -TenantID <id> -AppId <id> -Secret <secret> -PermissionAudit -IncludeEntraPermissions` — SPN full audit
+  - `Invoke-AzureScout -TenantID <id> -PermissionAudit` — check permissions before a full run
 
-### 20.2 — Create `Invoke-AZTIPermissionAudit` (Private Function)
+### 20.2 — Create `Invoke-AZSCPermissionAudit` (Private Function)
 
-> File: `Modules/Private/Main/Invoke-AZTIPermissionAudit.ps1`
-> Builds on existing `Test-AZTIPermissions` function but runs as a standalone audit with richer output and no dependency on a prior subscription/resource collection pass.
+> File: `Modules/Private/Main/Invoke-AZSCPermissionAudit.ps1`
+> Builds on existing `Test-AZSCPermissions` function but runs as a standalone audit with richer output and no dependency on a prior subscription/resource collection pass.
 
-- [x] **20.2.1** Create `Invoke-AZTIPermissionAudit` private function with signature:
+- [x] **20.2.1** Create `Invoke-AZSCPermissionAudit` private function with signature:
   ```powershell
-  function Invoke-AZTIPermissionAudit {
+  function Invoke-AZSCPermissionAudit {
       Param([switch]$IncludeEntraPermissions)
   }
   ```
@@ -1202,7 +1202,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
   - Output: Table of subscriptions with role assignments and missing critical permissions
   - Flag subscriptions where only partial access exists (e.g., Reader but not Security Reader)
 - [x] **20.2.3** **Graph / Entra ID audit section** (`-IncludeEntraPermissions` only):
-  - Attempt Graph token acquisition via `Get-AZTIGraphToken`
+  - Attempt Graph token acquisition via `Get-AZSCGraphToken`
   - Check token claims / scopes for: `Directory.Read.All`, `User.Read.All`, `Group.Read.All`, `Application.Read.All`, `RoleManagement.Read.Directory`, `Policy.Read.All`, `IdentityRiskyUser.Read.All`, `AuditLog.Read.All`
   - For **service principals**: Parse `scp` (delegated) or `roles` (application) token claims
   - For **users**: Parse `scp` (delegated) token claims AND call `/v1.0/me/transitiveMemberOf` to check directory roles (Global Reader, Directory Readers, etc.)
@@ -1232,11 +1232,11 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 - [x] **20.3.4** Support `-OutputFormat` from main cmdlet context: if caller passes `-PermissionAudit -OutputFormat Json`, save permission report as `PermissionAudit_<timestamp>.json` alongside where the Excel report normally lands
 - [x] **20.3.5** Support `-OutputFormat Markdown` (Phase 21): save as `PermissionAudit_<timestamp>.md` if Markdown export is implemented
 
-### 20.4 — Integration with Existing `Test-AZTIPermissions`
+### 20.4 — Integration with Existing `Test-AZSCPermissions`
 
-- [x] **20.4.1** Refactor `Test-AZTIPermissions` to call `Invoke-AZTIPermissionAudit` internally (avoid duplicate logic)
-- [x] **20.4.2** Keep `Test-AZTIPermissions` as a public function (for users who want to call it directly in their own scripts)
-- [x] **20.4.3** Pre-flight check in `Invoke-AzureTenantInventory` continues to use `Test-AZTIPermissions` (no change to normal inventory flow)
+- [x] **20.4.1** Refactor `Test-AZSCPermissions` to call `Invoke-AZSCPermissionAudit` internally (avoid duplicate logic)
+- [x] **20.4.2** Keep `Test-AZSCPermissions` as a public function (for users who want to call it directly in their own scripts)
+- [x] **20.4.3** Pre-flight check in `Invoke-AzureScout` continues to use `Test-AZSCPermissions` (no change to normal inventory flow)
 
 ### 20.5 — Phase 20 Testing
 
@@ -1261,7 +1261,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### 21.1 — Extend `-OutputFormat` Parameter
 
-- [x] **21.1.1** Update `[ValidateSet]` for `-OutputFormat` in `Invoke-AzureTenantInventory`:
+- [x] **21.1.1** Update `[ValidateSet]` for `-OutputFormat` in `Invoke-AzureScout`:
   - Current: `'All', 'Excel', 'Json'`
   - New: `'All', 'Excel', 'Json', 'Markdown', 'AsciiDoc'`
   - `All` still means Excel + JSON (existing behavior); `Markdown` and `AsciiDoc` are additive or standalone
@@ -1270,26 +1270,26 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
   - `Markdown` — Generates a `<ReportName>_<timestamp>.md` file. Each resource category becomes a top-level `##` section. Each module's data becomes a table. Suitable for GitHub/GitLab wikis, Obsidian, Confluence.
   - `AsciiDoc` — Generates a `<ReportName>_<timestamp>.adoc` file. Same structure but in AsciiDoc markup. Can be converted to PDF/Word using Asciidoctor: `asciidoctor-pdf report.adoc`. Compatible with Antora for documentation site integration.
 - [x] **21.1.4** Add `.EXAMPLE` blocks:
-  - `Invoke-AzureTenantInventory -OutputFormat Markdown` — Markdown report only
-  - `Invoke-AzureTenantInventory -OutputFormat AsciiDoc` — AsciiDoc report only
-  - `Invoke-AzureTenantInventory -OutputFormat Excel,Markdown` — Excel + Markdown
-  - `Invoke-AzureTenantInventory -OutputFormat Excel,AsciiDoc` — Excel + AsciiDoc (full suite)
-  - `Invoke-AzureTenantInventory -OutputFormat Json,Markdown,AsciiDoc` — All text formats, no Excel
+  - `Invoke-AzureScout -OutputFormat Markdown` — Markdown report only
+  - `Invoke-AzureScout -OutputFormat AsciiDoc` — AsciiDoc report only
+  - `Invoke-AzureScout -OutputFormat Excel,Markdown` — Excel + Markdown
+  - `Invoke-AzureScout -OutputFormat Excel,AsciiDoc` — Excel + AsciiDoc (full suite)
+  - `Invoke-AzureScout -OutputFormat Json,Markdown,AsciiDoc` — All text formats, no Excel
 
-### 21.2 — Create `Export-AZTIMarkdownReport` (Private Function)
+### 21.2 — Create `Export-AZSCMarkdownReport` (Private Function)
 
-> File: `Modules/Private/Reporting/Export-AZTIMarkdownReport.ps1`
+> File: `Modules/Private/Reporting/Export-AZSCMarkdownReport.ps1`
 
 - [x] **21.2.1** Create function with signature:
   ```powershell
-  function Export-AZTIMarkdownReport {
+  function Export-AZSCMarkdownReport {
       Param($SmaResources, $File, $Subscriptions, $TenantId, $ReportStartTime)
   }
   ```
 - [x] **21.2.2** **Report header section**:
   ```markdown
   # Azure Tenant Inventory Report
-  Generated: <timestamp>  Tenant: <tenantId>  Tool: AzureTenantInventory v<version>
+  Generated: <timestamp>  Tenant: <tenantId>  Tool: AzureScout v<version>
   Subscriptions: <count>  Total Resources: <count>
   ```
 - [x] **21.2.3** **Table of Contents** — auto-generated from categories and modules that have data:
@@ -1319,20 +1319,20 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 - [x] **21.2.6** Write final `.md` file using `Out-File -Encoding UTF8` to `$File` path (replacing `.xlsx` extension with `.md`)
 - [x] **21.2.7** Support large datasets: use streaming/append (`Add-Content`) rather than building full string in memory for tenants with 10,000+ resources
 
-### 21.3 — Create `Export-AZTIAsciiDocReport` (Private Function)
+### 21.3 — Create `Export-AZSCAsciiDocReport` (Private Function)
 
-> File: `Modules/Private/Reporting/Export-AZTIAsciiDocReport.ps1`
+> File: `Modules/Private/Reporting/Export-AZSCAsciiDocReport.ps1`
 
 - [x] **21.3.1** Create function with signature (same as Markdown):
   ```powershell
-  function Export-AZTIAsciiDocReport {
+  function Export-AZSCAsciiDocReport {
       Param($SmaResources, $File, $Subscriptions, $TenantId, $ReportStartTime)
   }
   ```
 - [x] **21.3.2** **Document header** with AsciiDoc front matter:
   ```asciidoc
   = Azure Tenant Inventory Report
-  AzureTenantInventory Contributors
+  AzureScout Contributors
   :doctype: book
   :toc: left
   :toclevels: 3
@@ -1372,32 +1372,32 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
   ```asciidoc
   [NOTE]
   ====
-  To convert this report to PDF: `asciidoctor-pdf AzureTenantInventory_2026-02-24.adoc`
-  To convert to Word (via Pandoc): `pandoc -f asciidoc -t docx AzureTenantInventory_2026-02-24.adoc -o report.docx`
+  To convert this report to PDF: `asciidoctor-pdf AzureScout_2026-02-24.adoc`
+  To convert to Word (via Pandoc): `pandoc -f asciidoc -t docx AzureScout_2026-02-24.adoc -o report.docx`
   ====
   ```
 
 ### 21.4 — Wire Into Reporting Orchestration
 
-> File: `Modules/Private/Main/Start-AZTIReporOrchestration.ps1` (note: existing file has typo "Repor")
+> File: `Modules/Private/Main/Start-AZSCReporOrchestration.ps1` (note: existing file has typo "Repor")
 
-- [x] **21.4.1** Pass `$OutputFormat` through to `Start-AZTIReporOrchestration`
+- [x] **21.4.1** Pass `$OutputFormat` through to `Start-AZSCReporOrchestration`
 - [x] **21.4.2** Add conditional blocks after Excel/JSON generation:
   ```powershell
   if ($OutputFormat -contains 'Markdown' -or $OutputFormat -contains 'All') {
-      Export-AZTIMarkdownReport -SmaResources $SmaResources -File $File ...
+      Export-AZSCMarkdownReport -SmaResources $SmaResources -File $File ...
   }
   if ($OutputFormat -contains 'AsciiDoc' -or $OutputFormat -contains 'All') {
-      Export-AZTIAsciiDocReport -SmaResources $SmaResources -File $File ...
+      Export-AZSCAsciiDocReport -SmaResources $SmaResources -File $File ...
   }
   ```
   > Note: `All` behavior — decide whether `All` should always include Markdown/AsciiDoc or only Excel+JSON. **Recommendation:** Keep `All` = Excel+JSON (existing behavior). Markdown and AsciiDoc are opt-in additions. Update `All` alias to mean "all currently selected formats."
-- [x] **21.4.3** Add both new functions to `AzureTenantInventory.psm1` auto-loader
-- [x] **21.4.4** Add both functions to `FunctionsToExport` in `AzureTenantInventory.psd1` (or keep as private — decide)
+- [x] **21.4.3** Add both new functions to `AzureScout.psm1` auto-loader
+- [x] **21.4.4** Add both functions to `FunctionsToExport` in `AzureScout.psd1` (or keep as private — decide)
 
 ### 21.5 — Permission Audit Markdown/AsciiDoc Output (Cross-phase)
 
-- [x] **21.5.1** When `-PermissionAudit -OutputFormat Markdown` — call `Export-AZTIMarkdownReport` with permission audit data (special permission audit mode generates a Markdown permissions report)
+- [x] **21.5.1** When `-PermissionAudit -OutputFormat Markdown` — call `Export-AZSCMarkdownReport` with permission audit data (special permission audit mode generates a Markdown permissions report)
 - [x] **21.5.2** When `-PermissionAudit -OutputFormat AsciiDoc` — generate `.adoc` permissions report suitable for inclusion in team documentation or Antora site
 
 ### 21.6 — Phase 21 Testing
@@ -1419,7 +1419,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ## Post-Implementation
 
-- [ ] Push to GitHub (`thisismydemo/azure-inventory`)
+- [ ] Push to GitHub (`thisismydemo/azure-scout`)
 - [ ] Tag release `v2.0.0` (major version for breaking changes + category filtering)
 - [ ] Publish to PSGallery
 - [ ] Update thisismydemo references to point to new repo
@@ -1427,9 +1427,9 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 ---
 
 **Version Control**
-- Created: 2026-02-22 by AzureTenantInventory Contributors
-- Last Edited: 2026-02-24 by AzureTenantInventory Contributors
+- Created: 2026-02-22 by AzureScout Contributors
+- Last Edited: 2026-02-24 by AzureScout Contributors
 - Version: 3.0.0
 - Tags: todo, tracking, implementation, azure-local, arc, vpn, policy, defender, monitor, dcr, management-groups, subscriptions, scope, permissions, resource-providers, monitoring-coverage, ai-foundry, machine-learning, avd, category-filtering, vm-enhancement, ms-graph, final-testing, permission-audit, markdown-export, asciidoc-export
-- Keywords: azure-inventory, progress, checklist, feature-parity, excel-restructure, comprehensive-logging, authentication, documentation, comprehensive-coverage, microsoft-taxonomy, acceptance-testing, permission-report, markdown, adoc, asciidoctor
-- Author: AzureTenantInventory Contributors
+- Keywords: azure-scout, progress, checklist, feature-parity, excel-restructure, comprehensive-logging, authentication, documentation, comprehensive-coverage, microsoft-taxonomy, acceptance-testing, permission-report, markdown, adoc, asciidoctor
+- Author: AzureScout Contributors

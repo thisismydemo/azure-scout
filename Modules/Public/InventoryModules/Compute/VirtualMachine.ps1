@@ -7,10 +7,10 @@ This script consolidates information for all microsoft.compute/virtualmachines r
 Excel Sheet Name: Virtual Machines
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Compute/VirtualMachine.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Compute/VirtualMachine.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .CATEGORY Compute
 
@@ -33,8 +33,8 @@ If ($Task -eq 'Processing')
         $vmexp = $Resources | Where-Object {$_.TYPE -eq 'microsoft.compute/virtualmachines/extensions'}
         $disk = $Resources | Where-Object {$_.TYPE -eq 'microsoft.compute/disks'}
         $VirtualNetwork = $Resources | Where-Object { $_.TYPE -eq 'microsoft.network/virtualnetworks' }
-        $VMExtraDetails = $Resources | Where-Object { $_.TYPE -eq 'AZTI/VM/SKU' }
-        $VMQuotas = $Resources | Where-Object { $_.TYPE -eq 'AZTI/VM/Quotas' }
+        $VMExtraDetails = $Resources | Where-Object { $_.TYPE -eq 'AZSC/VM/SKU' }
+        $VMQuotas = $Resources | Where-Object { $_.TYPE -eq 'AZSC/VM/Quotas' }
 
     if($vm)
         {    

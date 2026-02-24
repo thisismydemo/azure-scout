@@ -6,10 +6,10 @@ Inventory for Azure Support Tickets
 Excel Sheet Name: SupportTickets
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/APIs/SupportTickets.ps1
+https://github.com/thisismydemo/azure-scout/Modules/APIs/SupportTickets.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .CATEGORY Management
 

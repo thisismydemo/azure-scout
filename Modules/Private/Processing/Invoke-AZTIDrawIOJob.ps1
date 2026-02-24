@@ -6,10 +6,10 @@ Module responsible for invoking Draw.IO diagram generation jobs.
 This module starts jobs to generate Draw.IO diagrams for Azure Resources, including resource relationships and advisory data.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/2.ProcessingFunctions/Invoke-AZTIDrawIOJob.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/2.ProcessingFunctions/Invoke-AZSCDrawIOJob.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .NOTES
 Version: 3.6.0
@@ -17,15 +17,15 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Invoke-AZTIDrawIOJob {
-    Param($Subscriptions, $Resources, $Advisories, $DDFile, $DiagramCache, $FullEnv, $ResourceContainers, $Automation, $AZTIModule)
+function Invoke-AZSCDrawIOJob {
+    Param($Subscriptions, $Resources, $Advisories, $DDFile, $DiagramCache, $FullEnv, $ResourceContainers, $Automation, $AZSCModule)
 
     if ($Automation.IsPresent)
         {
             Write-Output "Invoking Draw.Io main function."
             try
                 {
-                    Start-AZTIDrawIODiagram -Subscriptions $Subscriptions -Resources $Resources -Advisories $Advisories -DDFile $DDFile -DiagramCache $DiagramCache -FullEnvironment $FullEnv -ResourceContainers $ResourceContainers -Automation $Automation -AZTIModule $AZTIModule
+                    Start-AZSCDrawIODiagram -Subscriptions $Subscriptions -Resources $Resources -Advisories $Advisories -DDFile $DDFile -DiagramCache $DiagramCache -FullEnvironment $FullEnv -ResourceContainers $ResourceContainers -Automation $Automation -AZSCModule $AZSCModule
                 }
             catch
                 {
@@ -46,7 +46,7 @@ function Invoke-AZTIDrawIOJob {
                 ('DrawIOCoreJob - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - Starting Draw.IO Job') | Out-File -FilePath $LogFile -Append
                 try
                     {
-                        Start-AZTIDrawIODiagram -Subscriptions $($args[0]) -Resources $($args[1]) -Advisories $($args[2]) -DDFile $($args[3]) -DiagramCache $($args[4]) -FullEnvironment $($args[5]) -ResourceContainers $($args[6]) -Automation $($args[7]) -AZTIModule $($args[8])
+                        Start-AZSCDrawIODiagram -Subscriptions $($args[0]) -Resources $($args[1]) -Advisories $($args[2]) -DDFile $($args[3]) -DiagramCache $($args[4]) -FullEnvironment $($args[5]) -ResourceContainers $($args[6]) -Automation $($args[7]) -AZSCModule $($args[8])
                     }
                 catch
                     {
@@ -54,6 +54,6 @@ function Invoke-AZTIDrawIOJob {
                     }
                 ('DrawIOCoreJob - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - Draw.IO Ended.') | Out-File -FilePath $LogFile -Append
 
-            } -ArgumentList $Subscriptions, $Resources, $Advisories, $DDFile, $DiagramCache, $FullEnv, $ResourceContainers, $Automation, $AZTIModule | Out-Null
+            } -ArgumentList $Subscriptions, $Resources, $Advisories, $DDFile, $DiagramCache, $FullEnv, $ResourceContainers, $Automation, $AZSCModule | Out-Null
         }
 }

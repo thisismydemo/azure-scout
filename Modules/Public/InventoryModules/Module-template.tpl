@@ -11,7 +11,7 @@ Excel Sheet Name: Sheet Generated in Excel
 https://github.com/thisismydemo/azure-inventory/<full_URI>.ps1
 
 .COMPONENT
-   This powershell Module is part of Azure Tenant Inventory (AZTI)
+   This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0

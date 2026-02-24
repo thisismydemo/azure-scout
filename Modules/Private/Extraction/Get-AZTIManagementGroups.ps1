@@ -6,17 +6,17 @@ Module responsible for retrieving Azure Management Groups.
 This module retrieves Azure Management Groups and their associated subscriptions.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/1.ExtractionFunctions/Get-AZTIManagementGroups.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/1.ExtractionFunctions/Get-AZSCManagementGroups.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .NOTES
 Version: 3.6.11
 First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
-function Get-AZTIManagementGroups {
+function Get-AZSCManagementGroups {
     Param ($ManagementGroup,$Subscriptions)
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Management group name: ' + $ManagementGroup)

@@ -6,17 +6,17 @@ Module for Excel Chart Creation
 This script creates charts in the Overview sheet of the Excel report.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/3.ReportingFunctions/StyleFunctions/Build-AZTIExcelChart.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/StyleFunctions/Build-AZSCExcelChart.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
 First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
-function Build-AZTIExcelChart {
+function Build-AZSCExcelChart {
     Param($Excel, $Overview, $IncludeCosts)
 
     $WS = $Excel.Workbook.Worksheets | Where-Object { $_.Name -eq 'Overview' }

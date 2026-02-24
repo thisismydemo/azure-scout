@@ -4,7 +4,7 @@
 
 == Overview
 
-**AzureTenantInventory** (AZTI) is a fork of the https://github.com/microsoft/ARI[Azure Resource Inventory (ARI)] project, version 3.6.11.
+**AzureScout** (AZSC) is a fork of the https://github.com/microsoft/ARI[Azure Resource Inventory (ARI)] project, version 3.6.11.
 
 == Original Authors
 
@@ -37,5 +37,5 @@ See the link:../../../../LICENSE[LICENSE] file for full details.
 
 ----
 Copyright (c) 2020 RenatoGregio (original AzureResourceInventory)
-Copyright (c) 2026 thisismydemo (AzureTenantInventory fork)
+Copyright (c) 2026 thisismydemo (AzureScout fork)
 ----

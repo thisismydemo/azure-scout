@@ -6,10 +6,10 @@ Module for Excel Job Processing
 This script processes inventory modules and builds the Excel report.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/3.ReportingFunctions/Start-AZTIExcelJob.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/Start-AZSCExcelJob.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Start-AZTIExcelJob {
+function Start-AZSCExcelJob {
     Param($ReportCache, $File, $TableStyle)
 
     $ParentPath = (get-item $PSScriptRoot).parent.parent
@@ -84,7 +84,7 @@ function Start-AZTIExcelJob {
                 }
                 Remove-Variable -Name CacheData
                 Remove-Variable -Name SmaResources
-                Clear-AZTIMemory
+                Clear-AZSCMemory
         }
         Write-Progress -Id 1 -activity "Building Report" -Status "100% Complete." -Completed
     }

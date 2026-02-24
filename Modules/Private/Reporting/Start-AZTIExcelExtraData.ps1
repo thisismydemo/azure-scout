@@ -6,17 +6,17 @@ Module for Extra Excel Details
 This script open the Excel file after it has all the Resource sheets and adds extra details.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/3.ReportingFunctions/Start-AZTIExcelExtraData.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/Start-AZSCExcelExtraData.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.9
 First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
-function Start-AZTIExcelExtraData {
+function Start-AZSCExcelExtraData {
     Param($File)
 
     $excel = Open-ExcelPackage -Path $File

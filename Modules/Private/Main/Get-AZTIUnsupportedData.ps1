@@ -6,10 +6,10 @@ Retrieve unsupported data for Azure Resource Inventory
 This module retrieves unsupported data from a predefined JSON file for Azure Resource Inventory.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/0.MainFunctions/Get-AZTIUnsupportedData.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/0.MainFunctions/Get-AZSCUnsupportedData.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 
 #>
-function Get-AZTIUnsupportedData {
+function Get-AZSCUnsupportedData {
 
     $SupportedDataPath = (get-item $PSScriptRoot).parent
     $SupportFile = Join-Path $SupportedDataPath 'Reporting' 'StyleFunctions' 'Support.json'

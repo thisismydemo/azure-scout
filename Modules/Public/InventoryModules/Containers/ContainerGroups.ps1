@@ -7,10 +7,10 @@ This script consolidates information for all microsoft.containerinstance/contain
 Excel Sheet Name: CONTAINER
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Container/ContainerGroups.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Container/ContainerGroups.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0

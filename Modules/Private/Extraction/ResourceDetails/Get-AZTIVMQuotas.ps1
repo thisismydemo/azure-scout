@@ -6,17 +6,17 @@ Module responsible for retrieving Azure VM quotas.
 This module retrieves Azure VM quotas for specific subscriptions and locations.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/1.ExtractionFunctions/ResourceDetails/Get-AZTIVMQuotas.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/1.ExtractionFunctions/ResourceDetails/Get-AZSCVMQuotas.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .NOTES
 Version: 3.6.0
 First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
-function Get-AZTIVMQuotas {
+function Get-AZSCVMQuotas {
     Param ($Subscriptions, $Resources)
     $Quotas = Foreach($Sub in $Subscriptions)
         {
@@ -59,7 +59,7 @@ function Get-AZTIVMQuotas {
         }
 
     $VMQuotas = [PSCustomObject]@{
-        'type'          = 'AZTI/VM/Quotas'
+        'type'          = 'AZSC/VM/Quotas'
         'properties'    = $Quotas
     }
 

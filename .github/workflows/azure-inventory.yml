@@ -28,24 +28,24 @@ jobs:
         run: |
           echo "Azure login simulated for local testing"
 
-      # For local testing with act, we'll simulate the module installation and AZTI execution
-      - name: Simulate AZTI Installation and Run
+      # For local testing with act, we'll simulate the module installation and AZSC execution
+      - name: Simulate AZSC Installation and Run
         shell: bash
         run: |
-          echo "Installing AZTI modules (simulation for testing)"
-          echo "Running Invoke-AzureTenantInventory with parameters:"
+          echo "Installing AZSC modules (simulation for testing)"
+          echo "Running Invoke-AzureScout with parameters:"
           echo "- ReportName: ${{ github.event.inputs.reportName }}"
           echo "- SubscriptionID: ${{ github.event.inputs.subscriptionId }}"
           echo "- ResourceGroup: ${{ github.event.inputs.resourceGroup }}"
           
           # Create dummy report files
-          mkdir -p AZTI-Reports
-          echo "This is a test Excel report" > AZTI-Reports/test_report.xlsx
-          echo "This is a test diagram file" > AZTI-Reports/test_diagram.drawio
+          mkdir -p AZSC-Reports
+          echo "This is a test Excel report" > AZSC-Reports/test_report.xlsx
+          echo "This is a test diagram file" > AZSC-Reports/test_diagram.drawio
           
           # List the created files
           echo "Created files:"
-          ls -la AZTI-Reports/
+          ls -la AZSC-Reports/
           
           echo "Workflow execution completed successfully"
 
@@ -54,13 +54,13 @@ jobs:
       #   shell: pwsh
       #   run: |
       #     $storageAccount = "yourstorageaccount"
-      #     $container = "AZTI-Reports"
+      #     $container = "AZSC-Reports"
       #     
       #     # Create the storage context
       #     $ctx = New-AzStorageContext -StorageAccountName $storageAccount -UseConnectedAccount
       #     
       #     # Upload files to Azure Storage
-      #     Get-ChildItem -Path "$env:GITHUB_WORKSPACE/AZTI-Reports" -File | ForEach-Object {
+      #     Get-ChildItem -Path "$env:GITHUB_WORKSPACE/AZSC-Reports" -File | ForEach-Object {
       #       Set-AzStorageBlobContent -File $_.FullName -Container $container -Blob $_.Name -Context $ctx -Force
       #     }
 

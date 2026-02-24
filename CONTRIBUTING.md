@@ -1,10 +1,10 @@
 # Contributing to Azure Tenant Inventory
 
 <div align="center">
-  <img src="images/AZTI_Logo.png" width="250">
+  <img src="images/AZSC_Logo.png" width="250">
   <h3>Guidelines for Community Contributions</h3>
   
-  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/thisismydemo/azure-inventory/pulls)
+  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/thisismydemo/azure-scout/pulls)
   [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 </div>
 
@@ -32,15 +32,15 @@
 
 ## Getting Started
 
-Thank you for considering contributing to Azure Tenant Inventory (AZTI)! We welcome contributions from the community and are excited to see what you can bring to the project.
+Thank you for considering contributing to Azure Tenant Inventory (AZSC)! We welcome contributions from the community and are excited to see what you can bring to the project.
 
-Before you begin, please familiarize yourself with the [README.md](README.md) file to understand the purpose and functionality of AZTI.
+Before you begin, please familiarize yourself with the [README.md](README.md) file to understand the purpose and functionality of AZSC.
 
-If you wish to contribute by adding a new Resource Type to AZTI, you may jump to the [Resource Types](#Resource-Types) section of this document.
+If you wish to contribute by adding a new Resource Type to AZSC, you may jump to the [Resource Types](#Resource-Types) section of this document.
 
 ## Contribution Workflow
 
-Follow these steps to contribute to AZTI:
+Follow these steps to contribute to AZSC:
 
 <table>
 <tr>
@@ -53,8 +53,8 @@ Follow these steps to contribute to AZTI:
 2. **Clone Your Fork**
    
    ```bash
-   git clone https://github.com/your-username/AZTI.git
-   cd AZTI
+   git clone https://github.com/your-username/AZSC.git
+   cd AZSC
    ```
 
 3. **Create a Branch**
@@ -92,7 +92,7 @@ Follow these steps to contribute to AZTI:
 
 8. **Submit a Pull Request**
    
-   Go to the original AZTI repository and click "New Pull Request". Select your fork and branch, then provide a detailed description of your changes.
+   Go to the original AZSC repository and click "New Pull Request". Select your fork and branch, then provide a detailed description of your changes.
 
 9. **Address Review Feedback**
    
@@ -104,14 +104,14 @@ To maintain code quality and consistency:
 
 - **Follow PowerShell Best Practices**: Follow [Microsoft's PowerShell Best Practices](https://docs.microsoft.com/en-us/powershell/scripting/developer/cmdlet/cmdlet-development-guidelines)
 - **Document Your Code**: Add comments to explain complex logic and update documentation if needed
-- **Keep It Modular**: Make sure your code follows the modular approach of AZTI
+- **Keep It Modular**: Make sure your code follows the modular approach of AZSC
 - **Error Handling**: Include appropriate error handling and logging
 - **Backward Compatibility**: Ensure your changes don't break existing functionality
 - **Test Thoroughly**: Test in various environments (Windows, Linux, Cloud Shell)
 
 ## Project Structure
 
-The main module **AzureTenantInventory.psm1** is only responsible for dot sourcing all the .ps1 modules.
+The main module **AzureScout.psm1** is only responsible for dot sourcing all the .ps1 modules.
 
 ### Public Modules
 
@@ -122,31 +122,31 @@ This modules will be loaded and the functions will be exposed to the user sessio
 
 | Script File         | Description                                                                 |
 |---------------------|-----------------------------------------------------------------------------|
-| `Invoke-AzureTenantInventory.ps1`    | Entry point script to invoke Azure Tenant Inventory operations.          |
+| `Invoke-AzureScout.ps1`    | Entry point script to invoke Azure Tenant Inventory operations.          |
 
 
 #### Diagram
 
 | Script File                        | Description                                                                 |
 |------------------------------------|-----------------------------------------------------------------------------|
-| `Build-AZTIDiagramSubnet.ps1`       | Builds diagrams for Azure subnets.                                         |
-| `Set-AZTIDiagramFile.ps1`           | Configures the file settings for diagram generation.                       |
-| `Start-AZTIDiagramJob.ps1`          | Initiates the job for creating diagrams.                                   |
-| `Start-AZTIDiagramNetwork.ps1`      | Starts the process for generating network diagrams.                        |
-| `Start-AZTIDiagramOrganization.ps1` | Generates diagrams for organizational structures.                          |
-| `Start-AZTIDiagramSubscription.ps1` | Creates diagrams for Azure subscriptions.                                  |
-| `Start-AZTIDrawIODiagram.ps1`       | Generates diagrams compatible with Draw.io.                                |
+| `Build-AZSCDiagramSubnet.ps1`       | Builds diagrams for Azure subnets.                                         |
+| `Set-AZSCDiagramFile.ps1`           | Configures the file settings for diagram generation.                       |
+| `Start-AZSCDiagramJob.ps1`          | Initiates the job for creating diagrams.                                   |
+| `Start-AZSCDiagramNetwork.ps1`      | Starts the process for generating network diagrams.                        |
+| `Start-AZSCDiagramOrganization.ps1` | Generates diagrams for organizational structures.                          |
+| `Start-AZSCDiagramSubscription.ps1` | Creates diagrams for Azure subscriptions.                                  |
+| `Start-AZSCDrawIODiagram.ps1`       | Generates diagrams compatible with Draw.io.                                |
 
 
 #### Jobs
 
 | Script File                     | Description                                                                 |
 |---------------------------------|-----------------------------------------------------------------------------|
-| `Start-AZTIAdvisoryJob.ps1`      | Initiates the advisory-related job for AZTI operations.                      |
-| `Start-AZTIPolicyJob.ps1`        | Starts the job for processing Azure Policy-related tasks.                   |
-| `Start-AZTISecCenterJob.ps1`     | Initiates the job for handling Azure Security Center insights.              |
-| `Start-AZTISubscriptionJob.ps1`  | Starts the job for processing subscription-specific tasks.                  |
-| `Wait-AZTIJob.ps1`               | Waits for the completion of AZTI jobs and monitors their status.             |
+| `Start-AZSCAdvisoryJob.ps1`      | Initiates the advisory-related job for AZSC operations.                      |
+| `Start-AZSCPolicyJob.ps1`        | Starts the job for processing Azure Policy-related tasks.                   |
+| `Start-AZSCSecCenterJob.ps1`     | Initiates the job for handling Azure Security Center insights.              |
+| `Start-AZSCSubscriptionJob.ps1`  | Starts the job for processing subscription-specific tasks.                  |
+| `Wait-AZSCJob.ps1`               | Waits for the completion of AZSC jobs and monitors their status.             |
 
 
 ### Private Modules
@@ -157,82 +157,82 @@ This modules will be loaded and the functions will be available for the script a
 
 | Script File                          | Description                                                                 |
 |--------------------------------------|-----------------------------------------------------------------------------|
-| `Clear-AZTICacheFolder.ps1`           | Clears the AZTI cache folder to ensure a clean state for operations.         |
-| `Clear-AZTIMemory.ps1`                | Frees up memory used by AZTI during operations.                              |
-| `Connect-AZTILoginSession.ps1`        | Establishes a login session with Azure for AZTI operations.                  |
-| `Get-AZTIUnsupportedData.ps1`         | Retrieves data that is not currently supported by AZTI.                      |
-| `Set-AZTIFolder.ps1`                  | Configures the folder structure for AZTI operations.                         |
-| `Set-AZTIReportPath.ps1`              | Sets the path for storing AZTI-generated reports.                            |
-| `Start-AZTIExtractionOrchestration.ps1` | Initiates the orchestration process for resource extraction.                |
-| `Start-AZTIProcessOrchestration.ps1`  | Starts the orchestration of AZTI's processing tasks.                         |
-| `Start-AZTIReporOrchestration.ps1`    | Begins the orchestration for generating AZTI reports.                        |
-| `Test-AZTIPS.ps1`                     | Tests the PowerShell environment and prerequisites for AZTI operations.      |
+| `Clear-AZSCCacheFolder.ps1`           | Clears the AZSC cache folder to ensure a clean state for operations.         |
+| `Clear-AZSCMemory.ps1`                | Frees up memory used by AZSC during operations.                              |
+| `Connect-AZSCLoginSession.ps1`        | Establishes a login session with Azure for AZSC operations.                  |
+| `Get-AZSCUnsupportedData.ps1`         | Retrieves data that is not currently supported by AZSC.                      |
+| `Set-AZSCFolder.ps1`                  | Configures the folder structure for AZSC operations.                         |
+| `Set-AZSCReportPath.ps1`              | Sets the path for storing AZSC-generated reports.                            |
+| `Start-AZSCExtractionOrchestration.ps1` | Initiates the orchestration process for resource extraction.                |
+| `Start-AZSCProcessOrchestration.ps1`  | Starts the orchestration of AZSC's processing tasks.                         |
+| `Start-AZSCReporOrchestration.ps1`    | Begins the orchestration for generating AZSC reports.                        |
+| `Test-AZSCPS.ps1`                     | Tests the PowerShell environment and prerequisites for AZSC operations.      |
 
 
 #### 1.ExtractionFunctions
 
 | Script File                          | Description                                                                 |
 |--------------------------------------|-----------------------------------------------------------------------------|
-| `Get-AZTIAPIResources.ps1`            | Extracts resources using Azure APIs.                                        |
-| `Get-AZTIManagementGroups.ps1`        | Retrieves Azure Management Group data.                                      |
-| `Get-AZTISubscriptions.ps1`           | Retrieves subscription details from Azure.                                  |
-| `Invoke-AZTIInventoryLoop.ps1`        | Executes the inventory loop for resource extraction.                        |
-| `Start-AZTIGraphExtraction.ps1`       | Initiates the extraction of Azure Resource Graph data.                      |
+| `Get-AZSCAPIResources.ps1`            | Extracts resources using Azure APIs.                                        |
+| `Get-AZSCManagementGroups.ps1`        | Retrieves Azure Management Group data.                                      |
+| `Get-AZSCSubscriptions.ps1`           | Retrieves subscription details from Azure.                                  |
+| `Invoke-AZSCInventoryLoop.ps1`        | Executes the inventory loop for resource extraction.                        |
+| `Start-AZSCGraphExtraction.ps1`       | Initiates the extraction of Azure Resource Graph data.                      |
 
 
 #### 1.ExtractionFunctions/ResourceDetails
 
 | Script File                          | Description                                                                 |
 |--------------------------------------|-----------------------------------------------------------------------------|
-| `Get-AZTIVMQuotas.ps1`                | Retrieves quota details for Azure Virtual Machines.                         |
-| `Get-AZTIVMSkuDetails.ps1`            | Retrieves SKU details for Azure Virtual Machines.                           |
+| `Get-AZSCVMQuotas.ps1`                | Retrieves quota details for Azure Virtual Machines.                         |
+| `Get-AZSCVMSkuDetails.ps1`            | Retrieves SKU details for Azure Virtual Machines.                           |
 
 
 #### 2.ProcessingFunctions
 
 | Script File                          | Description                                                                 |
 |--------------------------------------|-----------------------------------------------------------------------------|
-| `Build-AZTICacheFiles.ps1`            | Builds cache files for AZTI operations.                                      |
-| `Invoke-AZTIAdvisoryJob.ps1`          | Executes advisory-related processing jobs.                                  |
-| `Invoke-AZTIDrawIOJob.ps1`            | Executes jobs for generating Draw.io diagrams.                              |
-| `Invoke-AZTIPolicyJob.ps1`            | Executes policy-related processing jobs.                                    |
-| `Invoke-AZTISecurityCenterJob.ps1`    | Executes jobs related to Azure Security Center insights.                    |
-| `Invoke-AZTISubJob.ps1`               | Executes subscription-specific processing jobs.                             |
-| `Start-AZTIAutProcessJob.ps1`         | Initiates automated processing jobs for AZTI.                                |
-| `Start-AZTIExtraJobs.ps1`             | Starts additional processing jobs for extended functionality.               |
-| `Start-AZTIProcessJob.ps1`            | Initiates the main processing jobs for AZTI operations.                      |
+| `Build-AZSCCacheFiles.ps1`            | Builds cache files for AZSC operations.                                      |
+| `Invoke-AZSCAdvisoryJob.ps1`          | Executes advisory-related processing jobs.                                  |
+| `Invoke-AZSCDrawIOJob.ps1`            | Executes jobs for generating Draw.io diagrams.                              |
+| `Invoke-AZSCPolicyJob.ps1`            | Executes policy-related processing jobs.                                    |
+| `Invoke-AZSCSecurityCenterJob.ps1`    | Executes jobs related to Azure Security Center insights.                    |
+| `Invoke-AZSCSubJob.ps1`               | Executes subscription-specific processing jobs.                             |
+| `Start-AZSCAutProcessJob.ps1`         | Initiates automated processing jobs for AZSC.                                |
+| `Start-AZSCExtraJobs.ps1`             | Starts additional processing jobs for extended functionality.               |
+| `Start-AZSCProcessJob.ps1`            | Initiates the main processing jobs for AZSC operations.                      |
 
 
 #### 3.ReportingFunctions
 
 | Script File                          | Description                                                                 |
 |--------------------------------------|-----------------------------------------------------------------------------|
-| `Build-AZTIAdvisoryReport.ps1`        | Generates advisory reports based on processed data.                         |
-| `Build-AZTIPolicyReport.ps1`          | Generates policy compliance reports.                                        |
-| `Build-AZTIQuotaReport.ps1`           | Generates quota usage reports.                                              |
-| `Build-AZTISecCenterReport.ps1`       | Generates reports for Azure Security Center insights.                       |
-| `Build-AZTISubsReport.ps1`            | Generates subscription-specific reports.                                    |
-| `Start-AZTIExcelJob.ps1`              | Initiates Excel-related reporting jobs.                                     |
-| `Start-AZTIExtraReports.ps1`          | Starts additional reporting jobs for extended functionality.                |
+| `Build-AZSCAdvisoryReport.ps1`        | Generates advisory reports based on processed data.                         |
+| `Build-AZSCPolicyReport.ps1`          | Generates policy compliance reports.                                        |
+| `Build-AZSCQuotaReport.ps1`           | Generates quota usage reports.                                              |
+| `Build-AZSCSecCenterReport.ps1`       | Generates reports for Azure Security Center insights.                       |
+| `Build-AZSCSubsReport.ps1`            | Generates subscription-specific reports.                                    |
+| `Start-AZSCExcelJob.ps1`              | Initiates Excel-related reporting jobs.                                     |
+| `Start-AZSCExtraReports.ps1`          | Starts additional reporting jobs for extended functionality.                |
 
 #### 3.ReportingFunctions/StyleFunctions
 
 | Script File                          | Description                                                                 |
 |--------------------------------------|-----------------------------------------------------------------------------|
-| `Build-AZTIExcelChart.ps1`            | Creates Excel charts for visualizing report data.                           |
-| `Build-AZTIExcelComObject.ps1`        | Manages Excel COM objects for report generation.                            |
-| `Build-AZTIExcelinitialBlock.ps1`     | Sets up the initial block for Excel report customization.                   |
-| `Out-AZTIReportResults.ps1`           | Outputs the final report results to Excel or other formats.                 |
+| `Build-AZSCExcelChart.ps1`            | Creates Excel charts for visualizing report data.                           |
+| `Build-AZSCExcelComObject.ps1`        | Manages Excel COM objects for report generation.                            |
+| `Build-AZSCExcelinitialBlock.ps1`     | Sets up the initial block for Excel report customization.                   |
+| `Out-AZSCReportResults.ps1`           | Outputs the final report results to Excel or other formats.                 |
 | `Retirement.kql`                     | Contains KQL queries for data retirement analysis.                          |
-| `Start-AZTIExcelCustomization.ps1`    | Customizes Excel reports with specific formatting and styles.               |
-| `Start-AZTIExcelOrdening.ps1`         | Orders and organizes data in Excel reports.                                 |
+| `Start-AZSCExcelCustomization.ps1`    | Customizes Excel reports with specific formatting and styles.               |
+| `Start-AZSCExcelOrdening.ps1`         | Orders and organizes data in Excel reports.                                 |
 | `Support.json`                       | Provides configuration or metadata support for reporting functions.         |
 
 
 
 
 
-Each module is designed to handle specific tasks, ensuring a clean and modular approach to AZTI's functionality.
+Each module is designed to handle specific tasks, ensuring a clean and modular approach to AZSC's functionality.
 
 
 
@@ -244,7 +244,7 @@ The supported resource types by Azure Tenant Inventory are defined by the "Resou
 
 So anyone could contribute by creating new modules for new resource types.
 
-There is a Resource Type Module file for every single resource type supported by AZTI, the structure of resource type module itself is explained in the "Module-template.tpl", located in Modules/Public/InventoryModules.
+There is a Resource Type Module file for every single resource type supported by AZSC, the structure of resource type module itself is explained in the "Module-template.tpl", located in Modules/Public/InventoryModules.
 
 Once you create the module file, it must be placed in the correct folder structure under Modules/Public/InventoryModules. The subfolder structure follows the official Azure documentation for Resource Providers: [azure-services-resource-providers](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/azure-services-resource-providers)
 
@@ -277,7 +277,7 @@ Once you create the module file, it must be placed in the correct folder structu
 
 If you have questions or need help with your contribution:
 
-- **Open an Issue**: Create a new issue in the [GitHub repository](https://github.com/thisismydemo/azure-inventory/issues)
+- **Open an Issue**: Create a new issue in the [GitHub repository](https://github.com/thisismydemo/azure-scout/issues)
 - **Documentation**: Refer to the [README.md](README.md) and other documentation
 - **Community Discussions**: Check existing discussions in the Issues tab
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Transform [microsoft/ARI](https://github.com/microsoft/ARI) v3.6.11 into **AzureTenantInventory** — a generic, single-tenant Azure + Entra ID inventory tool. Publishes as a PowerShell module to PSGallery and as a standalone GitHub repo (`thisismydemo/azure-inventory`).
+Transform [microsoft/ARI](https://github.com/microsoft/ARI) v3.6.11 into **AzureScout** — a generic, single-tenant Azure + Entra ID inventory tool. Publishes as a PowerShell module to PSGallery and as a standalone GitHub repo (`thisismydemo/azure-scout`).
 
 **Key differentiators vs ARI:**
 
@@ -23,7 +23,7 @@ Transform [microsoft/ARI](https://github.com/microsoft/ARI) v3.6.11 into **Azure
 | **SPN support** | Optional — `-AppId`/`-Secret`/`-CertificatePath` | For CI/CD pipelines and automation. Not the default. |
 | **Pre-flight check** | Warn-only, auto-runs | Users may intentionally run with partial permissions for partial results. |
 | **Output format** | Excel + JSON (both by default) | Excel for humans, JSON for automation/downstream tools. |
-| **Module prefix** | `AZTI` (AzureTenantInventory) | Distinct from ARI to avoid confusion. |
+| **Module prefix** | `AZSC` (AzureScout) | Distinct from ARI to avoid confusion. |
 | **Entra modules** | Same two-phase pattern as ARM modules | Entra data flows through the existing extraction→processing→reporting pipeline unchanged. |
 | **Diagrams** | Keep ARI's draw.io diagram feature | Valuable and self-contained. |
 | **RAMP** | Remove | Microsoft-internal, not useful for generic tool. |
@@ -68,22 +68,22 @@ For current-user auth, these are **tenant-level consent** permissions. For SPN a
 
 | From | To |
 |---|---|
-| `AzureResourceInventory.psd1` | `AzureTenantInventory.psd1` |
-| `AzureResourceInventory.psm1` | `AzureTenantInventory.psm1` |
+| `AzureResourceInventory.psd1` | `AzureScout.psd1` |
+| `AzureResourceInventory.psm1` | `AzureScout.psm1` |
 
-### 0.2 — Update Module Manifest (`AzureTenantInventory.psd1`)
+### 0.2 — Update Module Manifest (`AzureScout.psd1`)
 
 - New `ModuleVersion` = `1.0.0`
 - New `GUID` (generate fresh)
-- `RootModule` = `AzureTenantInventory.psm1`
+- `RootModule` = `AzureScout.psm1`
 - `Author` / `CompanyName` = `thisismydemo`
 - `Description` = updated
 - `RequiredModules` = `ImportExcel`, `Az.Accounts`, `Az.ResourceGraph`, `Az.Storage`, `Az.Compute`
 - Remove `Microsoft.Graph.*` from any dependency lists
-- Rename all exported function names: `*-ARI*` → `*-AZTI*`
-- Add new exports: `Invoke-AzureTenantInventory`, `Test-AZTIPermissions`
+- Rename all exported function names: `*-ARI*` → `*-AZSC*`
+- Add new exports: `Invoke-AzureScout`, `Test-AZSCPermissions`
 
-### 0.3 — Update PSM1 Loader (`AzureTenantInventory.psm1`)
+### 0.3 — Update PSM1 Loader (`AzureScout.psm1`)
 
 - Verify dot-source paths still work (relative — should be fine)
 - No functional changes needed beyond filename
@@ -107,65 +107,65 @@ Create:
 
 ---
 
-## Phase 1 — Global Rename (ARI → AZTI)
+## Phase 1 — Global Rename (ARI → AZSC)
 
 ### 1.1 — Function Name Renames
 
-Every function with `ARI` in the name gets renamed to `AZTI`. Key renames:
+Every function with `ARI` in the name gets renamed to `AZSC`. Key renames:
 
 | Original | New |
 |---|---|
-| `Invoke-ARI` | `Invoke-AzureTenantInventory` |
-| `Connect-ARILoginSession` | `Connect-AZTILoginSession` |
-| `Start-ARIExtractionOrchestration` | `Start-AZTIExtractionOrchestration` |
-| `Start-ARIGraphExtraction` | `Start-AZTIGraphExtraction` |
-| `Invoke-ARIInventoryLoop` | `Invoke-AZTIInventoryLoop` |
-| `Get-ARIAPIResources` | `Get-AZTIAPIResources` |
-| `Get-ARICostInventory` | `Get-AZTICostInventory` |
-| `Get-ARIManagementGroups` | `Get-AZTIManagementGroups` |
-| `Get-ARISubscriptions` | `Get-AZTISubscriptions` |
-| `Start-ARIProcessOrchestration` | `Start-AZTIProcessOrchestration` |
-| `Start-ARIProcessJob` | `Start-AZTIProcessJob` |
-| `Start-ARIAutProcessJob` | `Start-AZTIAutProcessJob` |
-| `Build-ARICacheFiles` | `Build-AZTICacheFiles` |
-| `Start-ARIExtraJobs` | `Start-AZTIExtraJobs` |
-| `Invoke-ARISubJob` | `Invoke-AZTISubJob` |
-| `Start-ARIReporOrchestration` | `Start-AZTIReportOrchestration` |
-| `Start-ARIExcelJob` | `Start-AZTIExcelJob` |
-| `Start-ARIExcelExtraData` | `Start-AZTIExcelExtraData` |
-| `Start-ARIExtraReports` | `Start-AZTIExtraReports` |
-| `Start-ARIExcelCustomization` | `Start-AZTIExcelCustomization` |
-| `Build-ARIAdvisoryReport` | `Build-AZTIAdvisoryReport` |
-| `Build-ARIPolicyReport` | `Build-AZTIPolicyReport` |
-| `Build-ARIQuotaReport` | `Build-AZTIQuotaReport` |
-| `Build-ARISecCenterReport` | `Build-AZTISecCenterReport` |
-| `Build-ARISubsReport` | `Build-AZTISubsReport` |
-| `Set-ARIFolder` | `Set-AZTIFolder` |
-| `Set-ARIReportPath` | `Set-AZTIReportPath` |
-| `Test-ARIPS` | `Test-AZTIPS` |
-| `Clear-ARIMemory` | `Clear-AZTIMemory` |
-| `Clear-ARICacheFolder` | `Clear-AZTICacheFolder` |
-| `Get-ARIUnsupportedData` | `Get-AZTIUnsupportedData` |
-| `Out-ARIReportResults` | `Out-AZTIReportResults` |
-| `Wait-ARIJob` | `Wait-AZTIJob` |
-| All diagram functions | `*-ARI*` → `*-AZTI*` |
-| All advisory/policy/security job functions | `*-ARI*` → `*-AZTI*` |
+| `Invoke-ARI` | `Invoke-AzureScout` |
+| `Connect-ARILoginSession` | `Connect-AZSCLoginSession` |
+| `Start-ARIExtractionOrchestration` | `Start-AZSCExtractionOrchestration` |
+| `Start-ARIGraphExtraction` | `Start-AZSCGraphExtraction` |
+| `Invoke-ARIInventoryLoop` | `Invoke-AZSCInventoryLoop` |
+| `Get-ARIAPIResources` | `Get-AZSCAPIResources` |
+| `Get-ARICostInventory` | `Get-AZSCCostInventory` |
+| `Get-ARIManagementGroups` | `Get-AZSCManagementGroups` |
+| `Get-ARISubscriptions` | `Get-AZSCSubscriptions` |
+| `Start-ARIProcessOrchestration` | `Start-AZSCProcessOrchestration` |
+| `Start-ARIProcessJob` | `Start-AZSCProcessJob` |
+| `Start-ARIAutProcessJob` | `Start-AZSCAutProcessJob` |
+| `Build-ARICacheFiles` | `Build-AZSCCacheFiles` |
+| `Start-ARIExtraJobs` | `Start-AZSCExtraJobs` |
+| `Invoke-ARISubJob` | `Invoke-AZSCSubJob` |
+| `Start-ARIReporOrchestration` | `Start-AZSCReportOrchestration` |
+| `Start-ARIExcelJob` | `Start-AZSCExcelJob` |
+| `Start-ARIExcelExtraData` | `Start-AZSCExcelExtraData` |
+| `Start-ARIExtraReports` | `Start-AZSCExtraReports` |
+| `Start-ARIExcelCustomization` | `Start-AZSCExcelCustomization` |
+| `Build-ARIAdvisoryReport` | `Build-AZSCAdvisoryReport` |
+| `Build-ARIPolicyReport` | `Build-AZSCPolicyReport` |
+| `Build-ARIQuotaReport` | `Build-AZSCQuotaReport` |
+| `Build-ARISecCenterReport` | `Build-AZSCSecCenterReport` |
+| `Build-ARISubsReport` | `Build-AZSCSubsReport` |
+| `Set-ARIFolder` | `Set-AZSCFolder` |
+| `Set-ARIReportPath` | `Set-AZSCReportPath` |
+| `Test-ARIPS` | `Test-AZSCPS` |
+| `Clear-ARIMemory` | `Clear-AZSCMemory` |
+| `Clear-ARICacheFolder` | `Clear-AZSCCacheFolder` |
+| `Get-ARIUnsupportedData` | `Get-AZSCUnsupportedData` |
+| `Out-ARIReportResults` | `Out-AZSCReportResults` |
+| `Wait-ARIJob` | `Wait-AZSCJob` |
+| All diagram functions | `*-ARI*` → `*-AZSC*` |
+| All advisory/policy/security job functions | `*-ARI*` → `*-AZSC*` |
 
 ### 1.2 — String/Variable/Path Renames
 
 | Pattern | Replacement |
 |---|---|
-| `AzureResourceInventory` (in strings, paths, logs) | `AzureTenantInventory` |
-| `C:\AzureResourceInventory` (default path) | `C:\AzureTenantInventory` |
-| `$HOME/AzureResourceInventory` | `$HOME/AzureTenantInventory` |
-| `ARI` in log/Write-Host messages | `AZTI` or `AzureTenantInventory` |
+| `AzureResourceInventory` (in strings, paths, logs) | `AzureScout` |
+| `C:\AzureResourceInventory` (default path) | `C:\AzureScout` |
+| `$HOME/AzureResourceInventory` | `$HOME/AzureScout` |
+| `ARI` in log/Write-Host messages | `AZSC` or `AzureScout` |
 | Job names like `'ResourceJob_'` | Keep as-is (internal, not user-facing) |
 
 ### 1.3 — File Renames
 
 | Original | New |
 |---|---|
-| `Modules/Public/PublicFunctions/Invoke-ARI.ps1` | `Modules/Public/PublicFunctions/Invoke-AzureTenantInventory.ps1` |
+| `Modules/Public/PublicFunctions/Invoke-ARI.ps1` | `Modules/Public/PublicFunctions/Invoke-AzureScout.ps1` |
 
 All other `.ps1` filenames stay as-is (they don't include `ARI` in the filename, only in the function name inside).
 
@@ -173,7 +173,7 @@ All other `.ps1` filenames stay as-is (they don't include `ARI` in the filename,
 
 ## Phase 1B — Repository Structure Review & Reorganization
 
-Before adding new features (auth, Entra, JSON output), evaluate whether the inherited ARI folder layout is the optimal structure for AzureTenantInventory going forward. Reorganizing **before** Phase 2 avoids moving newly written code later.
+Before adding new features (auth, Entra, JSON output), evaluate whether the inherited ARI folder layout is the optimal structure for AzureScout going forward. Reorganizing **before** Phase 2 avoids moving newly written code later.
 
 ### 1B.1 — Audit Current Structure
 
@@ -181,8 +181,8 @@ The repo currently uses ARI's original layout:
 
 ```
 /
-├── AzureTenantInventory.psd1          # Module manifest (root)
-├── AzureTenantInventory.psm1          # Module loader (root)
+├── AzureScout.psd1          # Module manifest (root)
+├── AzureScout.psm1          # Module loader (root)
 ├── Modules/
 │   ├── Private/
 │   │   ├── 0.MainFunctions/           # Numbered — orchestration, auth, config
@@ -192,7 +192,7 @@ The repo currently uses ARI's original layout:
 │   │   ├── 4.RAMPFunctions/           # REMOVED (Phase 0)
 │   │   └── LegacyFunctions/           # Deprecated functions
 │   └── Public/
-│       ├── PublicFunctions/            # Entry points (Invoke-AzureTenantInventory, etc.)
+│       ├── PublicFunctions/            # Entry points (Invoke-AzureScout, etc.)
 │       └── InventoryModules/           # 86 ARM resource modules in 16 category folders
 │           ├── AI/ (14)               ├── Analytics/ (6)
 │           ├── APIs/ (5)              ├── Compute/ (7)
@@ -273,7 +273,7 @@ No structural change. `Hybrid/ARCServers.ps1` stays where it is. Phase 8.2 new m
 
 #### Step 5: Keep Module Manifest in Root
 
-No change. `AzureTenantInventory.psd1` and `.psm1` stay in repo root per PSGallery convention.
+No change. `AzureScout.psd1` and `.psm1` stay in repo root per PSGallery convention.
 
 #### Step 6: Delete `azure-pipelines/`
 
@@ -320,7 +320,7 @@ Create `antora-playbook.yml` in repo root:
 ```yaml
 site:
   title: Azure Tenant Inventory Documentation
-  url: https://thisismydemo.github.io/azure-inventory
+  url: https://thisismydemo.github.io/azure-scout
   start_page: azure-tenant-inventory::index.adoc
 content:
   sources:
@@ -360,11 +360,11 @@ git rm -r Modules/Private/LegacyFunctions/
 
 Files being removed (all `.ps2`, unused):
 
-- `Build-AZTILargeReportResources.ps2`
-- `Start-AZTIAutResourceJob.ps2`
-- `Start-AZTILargeEnvOrderFiles.ps2`
-- `Start-AZTIResourceJobs.ps2`
-- `Start-AZTIResourceReporting.ps2`
+- `Build-AZSCLargeReportResources.ps2`
+- `Start-AZSCAutResourceJob.ps2`
+- `Start-AZSCLargeEnvOrderFiles.ps2`
+- `Start-AZSCResourceJobs.ps2`
+- `Start-AZSCResourceReporting.ps2`
 - `VisioDiagram.ps2`
 
 #### Step 11: Keep Tests Flat
@@ -391,7 +391,7 @@ Convert relevant `.md` documentation files to `.adoc` format and place in `docs/
 
 **Files to convert:**
 
-- Any new documentation written for AZTI (getting started, auth guide, module catalog, etc.)
+- Any new documentation written for AZSC (getting started, auth guide, module catalog, etc.)
 - `CREDITS.md` → `docs/modules/ROOT/pages/credits.adoc` (when created in Phase 7)
 
 **Files that stay as Markdown (.md):**
@@ -407,9 +407,9 @@ Convert relevant `.md` documentation files to `.adoc` format and place in `docs/
 
 #### Step 14: Validate
 
-1. Module loads: `Import-Module ./AzureTenantInventory.psd1 -Force` — expect 13 public functions
+1. Module loads: `Import-Module ./AzureScout.psd1 -Force` — expect 13 public functions
 2. Run Pester smoke tests: `Invoke-Pester tests/`
-3. Verify `Get-Command -Module AzureTenantInventory` lists all expected functions
+3. Verify `Get-Command -Module AzureScout` lists all expected functions
 4. Spot-check InventoryModules discovery: confirm `Network/` files are found at runtime
 
 #### Step 15: Document & Commit
@@ -421,8 +421,8 @@ Convert relevant `.md` documentation files to `.adoc` format and place in `docs/
 
 ```
 /
-├── AzureTenantInventory.psd1          # Module manifest (root — PSGallery standard)
-├── AzureTenantInventory.psm1          # Module loader (root)
+├── AzureScout.psd1          # Module manifest (root — PSGallery standard)
+├── AzureScout.psm1          # Module loader (root)
 ├── antora-playbook.yml                # Antora site playbook
 ├── Modules/
 │   ├── Private/
@@ -431,7 +431,7 @@ Convert relevant `.md` documentation files to `.adoc` format and place in `docs/
 │   │   ├── Processing/                # Data transform/cache
 │   │   └── Reporting/                 # Excel generation
 │   └── Public/
-│       ├── PublicFunctions/            # Entry points (Invoke-AzureTenantInventory, etc.)
+│       ├── PublicFunctions/            # Entry points (Invoke-AzureScout, etc.)
 │       └── InventoryModules/           # ARM resource modules in category folders
 │           ├── AI/ (14)               ├── Analytics/ (6)
 │           ├── APIs/ (5)              ├── Compute/ (7)
@@ -457,14 +457,14 @@ Convert relevant `.md` documentation files to `.adoc` format and place in `docs/
 
 ## Phase 2 — Auth Refactor
 
-### 2.1 — Rewrite `Connect-AZTILoginSession`
+### 2.1 — Rewrite `Connect-AZSCLoginSession`
 
 **File:** `Modules/Private/0.MainFunctions/Connect-ARILoginSession.ps1` (rename to keep filename or rename)
 
 **New auth priority (5 methods):**
 
 ```
-Priority 1: Managed Identity (-Automation flag, handled in Invoke-AzureTenantInventory)
+Priority 1: Managed Identity (-Automation flag, handled in Invoke-AzureScout)
    → Connect-AzAccount -Identity
 
 Priority 2: SPN + Certificate (-AppId + -Secret + -CertificatePath)
@@ -484,12 +484,12 @@ Priority 5: Current User (DEFAULT — no flags)
 
 **Key change:** Priority 5 is the happy path. No flags needed if already authenticated.
 
-### 2.2 — New: `Get-AZTIGraphToken`
+### 2.2 — New: `Get-AZSCGraphToken`
 
-**File:** `Modules/Private/0.MainFunctions/Get-AZTIGraphToken.ps1` (NEW)
+**File:** `Modules/Private/0.MainFunctions/Get-AZSCGraphToken.ps1` (NEW)
 
 ```powershell
-function Get-AZTIGraphToken {
+function Get-AZSCGraphToken {
     # Uses Get-AzAccessToken -ResourceTypeName MSGraph -AsSecureString
     # Returns @{ 'Authorization' = "Bearer $plainToken"; 'Content-Type' = 'application/json' }
     # Caches in script-scope variable, refreshes when within 5 min of expiry
@@ -497,19 +497,19 @@ function Get-AZTIGraphToken {
 }
 ```
 
-### 2.3 — New: `Invoke-AZTIGraphRequest`
+### 2.3 — New: `Invoke-AZSCGraphRequest`
 
-**File:** `Modules/Private/0.MainFunctions/Invoke-AZTIGraphRequest.ps1` (NEW)
+**File:** `Modules/Private/0.MainFunctions/Invoke-AZSCGraphRequest.ps1` (NEW)
 
 ```powershell
-function Invoke-AZTIGraphRequest {
+function Invoke-AZSCGraphRequest {
     param(
         [string]$Uri,              # Relative path: /v1.0/users
         [string]$Method = 'GET',
         [object]$Body,
         [switch]$SinglePage        # Don't follow @odata.nextLink
     )
-    # 1. Get token via Get-AZTIGraphToken
+    # 1. Get token via Get-AZSCGraphToken
     # 2. Build full URL: https://graph.microsoft.com{$Uri}
     # 3. Invoke-RestMethod with token header
     # 4. Follow @odata.nextLink for pagination (unless -SinglePage)
@@ -522,12 +522,12 @@ function Invoke-AZTIGraphRequest {
 
 ## Phase 3 — Pre-Flight Permission Checker
 
-### 3.1 — New: `Test-AZTIPermissions`
+### 3.1 — New: `Test-AZSCPermissions`
 
-**File:** `Modules/Public/PublicFunctions/Test-AZTIPermissions.ps1` (NEW)
+**File:** `Modules/Public/PublicFunctions/Test-AZSCPermissions.ps1` (NEW)
 
 ```powershell
-function Test-AZTIPermissions {
+function Test-AZSCPermissions {
     param(
         [string]$TenantID,
         [string]$SubscriptionID,
@@ -555,24 +555,24 @@ function Test-AZTIPermissions {
 - `GET /v1.0/users?$top=1` — user read permission
 - `GET /v1.0/identity/conditionalAccess/policies` — CA policy read (optional, warns if missing)
 
-### 3.2 — Integration with `Invoke-AzureTenantInventory`
+### 3.2 — Integration with `Invoke-AzureScout`
 
 - Add `-SkipPermissionCheck` switch parameter
-- Call `Test-AZTIPermissions` after auth, before extraction
+- Call `Test-AZSCPermissions` after auth, before extraction
 - Display results as warnings, never block execution
 
 ---
 
 ## Phase 4 — Entra ID Extraction Layer
 
-### 4.1 — New: `Start-AZTIEntraExtraction`
+### 4.1 — New: `Start-AZSCEntraExtraction`
 
-**File:** `Modules/Private/1.ExtractionFunctions/Start-AZTIEntraExtraction.ps1` (NEW)
+**File:** `Modules/Private/1.ExtractionFunctions/Start-AZSCEntraExtraction.ps1` (NEW)
 
 ```powershell
-function Start-AZTIEntraExtraction {
+function Start-AZSCEntraExtraction {
     param($TenantID, $Scope)
-    # 1. Call Invoke-AZTIGraphRequest for each Entra resource type
+    # 1. Call Invoke-AZSCGraphRequest for each Entra resource type
     # 2. Normalize each item with synthetic TYPE property (e.g., 'entra/users')
     # 3. Add properties: id, name, type, tenantId, properties (nested original data)
     # 4. Return [PSCustomObject]@{ EntraResources = $allEntraResources }
@@ -601,15 +601,15 @@ function Start-AZTIEntraExtraction {
 
 ### 4.2 — Update Extraction Orchestration
 
-**File:** `Modules/Private/0.MainFunctions/Start-AZTIExtractionOrchestration.ps1`
+**File:** `Modules/Private/0.MainFunctions/Start-AZSCExtractionOrchestration.ps1`
 
 Add:
 - `$Scope` parameter
-- Conditional call to `Start-AZTIEntraExtraction` when `$Scope -in ('All','EntraOnly')`
+- Conditional call to `Start-AZSCEntraExtraction` when `$Scope -in ('All','EntraOnly')`
 - Merge Entra resources into `$Resources` array (appended with synthetic types)
 - Add `EntraResources` to return object
 
-### 4.3 — New Parameter on `Invoke-AzureTenantInventory`
+### 4.3 — New Parameter on `Invoke-AzureScout`
 
 ```powershell
 [ValidateSet('All', 'ArmOnly', 'EntraOnly')]
@@ -675,12 +675,12 @@ Else {
 
 ## Phase 6 — JSON Output Layer
 
-### 6.1 — New: `Export-AZTIJsonReport`
+### 6.1 — New: `Export-AZSCJsonReport`
 
-**File:** `Modules/Private/3.ReportingFunctions/Export-AZTIJsonReport.ps1` (NEW)
+**File:** `Modules/Private/3.ReportingFunctions/Export-AZSCJsonReport.ps1` (NEW)
 
 ```powershell
-function Export-AZTIJsonReport {
+function Export-AZSCJsonReport {
     param($ReportCache, $File, $TenantID, $Subscriptions, $Scope)
     # 1. Read all {FolderName}.json cache files
     # 2. Organize into structured object:
@@ -696,7 +696,7 @@ function Export-AZTIJsonReport {
 }
 ```
 
-### 6.2 — New Parameter on `Invoke-AzureTenantInventory`
+### 6.2 — New Parameter on `Invoke-AzureScout`
 
 ```powershell
 [ValidateSet('All', 'Excel', 'Json')]
@@ -705,13 +705,13 @@ function Export-AZTIJsonReport {
 
 - `All` (default): Generate both `.xlsx` and `.json`
 - `Excel`: Skip JSON export
-- `Json`: Skip Excel generation (`Start-AZTIExcelJob` etc.)
+- `Json`: Skip Excel generation (`Start-AZSCExcelJob` etc.)
 
 ### 6.3 — Integration in Report Orchestration
 
-Update `Start-AZTIReportOrchestration` to:
+Update `Start-AZSCReportOrchestration` to:
 - Call Excel pipeline only when `$OutputFormat -in ('All','Excel')`
-- Call `Export-AZTIJsonReport` only when `$OutputFormat -in ('All','Json')`
+- Call `Export-AZSCJsonReport` only when `$OutputFormat -in ('All','Json')`
 
 ---
 
@@ -719,12 +719,12 @@ Update `Start-AZTIReportOrchestration` to:
 
 ### 7.1 — Update Default Paths
 
-**File:** `Set-AZTIReportPath.ps1`
+**File:** `Set-AZSCReportPath.ps1`
 
 | OS | Old Default | New Default |
 |---|---|---|
-| Windows | `C:\AzureResourceInventory` | `C:\AzureTenantInventory` |
-| Linux/Mac | `$HOME/AzureResourceInventory` | `$HOME/AzureTenantInventory` |
+| Windows | `C:\AzureResourceInventory` | `C:\AzureScout` |
+| Linux/Mac | `$HOME/AzureResourceInventory` | `$HOME/AzureScout` |
 
 Report cache: `{DefaultPath}/ReportCache/`
 Diagram cache: `{DefaultPath}/DiagramCache/`
@@ -737,7 +737,7 @@ Full rewrite with:
 - Quick start examples for all 5 auth modes
 - `-Scope` usage (`All`, `ArmOnly`, `EntraOnly`)
 - `-OutputFormat` usage (`All`, `Excel`, `Json`)
-- `Test-AZTIPermissions` usage
+- `Test-AZSCPermissions` usage
 - Required permissions table
 - Module catalog (ARM + Entra)
 - Contributing / module authoring guide
@@ -745,15 +745,15 @@ Full rewrite with:
 ### 7.3 — Pester Tests
 
 Create in `tests/`:
-- `Test-AZTIPermissions.Tests.ps1` — mock Graph/ARM calls, verify detection logic
-- `Invoke-AzureTenantInventory.Tests.ps1` — parameter validation, scope routing
-- `Connect-AZTILoginSession.Tests.ps1` — auth method selection
-- `Invoke-AZTIGraphRequest.Tests.ps1` — pagination, throttling, error handling
-- `Start-AZTIEntraExtraction.Tests.ps1` — synthetic type normalization
+- `Test-AZSCPermissions.Tests.ps1` — mock Graph/ARM calls, verify detection logic
+- `Invoke-AzureScout.Tests.ps1` — parameter validation, scope routing
+- `Connect-AZSCLoginSession.Tests.ps1` — auth method selection
+- `Invoke-AZSCGraphRequest.Tests.ps1` — pagination, throttling, error handling
+- `Start-AZSCEntraExtraction.Tests.ps1` — synthetic type normalization
 
 ### 7.4 — GitHub Pages Documentation Site (Antora)
 
-Replace the existing `gh-pages` branch (inherited from microsoft/ARI, pointing at `microsoft.github.io/ARI/`) with a new Antora-based documentation site for AzureTenantInventory:
+Replace the existing `gh-pages` branch (inherited from microsoft/ARI, pointing at `microsoft.github.io/ARI/`) with a new Antora-based documentation site for AzureScout:
 
 - Delete old `gh-pages` branch: `git push origin --delete gh-pages`
 - Antora structure set up in Phase 1B (Step 7): `docs/antora.yml`, `docs/modules/ROOT/`, `antora-playbook.yml`
@@ -769,7 +769,7 @@ Replace the existing `gh-pages` branch (inherited from microsoft/ARI, pointing a
   - `changelog.adoc` — Changelog
 - Create `docs/modules/ROOT/nav.adoc` with navigation tree
 - GitHub Actions workflow (`.github/workflows/docs.yml`) to build with Antora and deploy to `gh-pages` on push to `main`
-- Site URL: `https://thisismydemo.github.io/azure-inventory/`
+- Site URL: `https://thisismydemo.github.io/azure-scout/`
 
 ### 7.5 — CREDITS.md
 
@@ -874,7 +874,7 @@ Scaffold    Rename      Structure    Auth        Perms       Entra        Identi
 ```
 
 Each phase is independently committable and testable. The tool remains functional after each phase:
-- After Phase 1: AZTI-renamed ARI (same functionality, new names)
+- After Phase 1: AZSC-renamed ARI (same functionality, new names)
 - After Phase 1B: Optimized folder layout, documented structure decisions
 - After Phase 2: New auth with current-user default
 - After Phase 3: Permission checking works
@@ -892,19 +892,19 @@ These 6 end-to-end scenarios must pass before the tool is considered production-
 
 | # | Scenario | Command | Expected Outcome |
 |---|---|---|---|
-| 1 | **Current user, no flags** | `Invoke-AzureTenantInventory -TenantID <id>` | Uses existing `Get-AzContext`, produces Excel + JSON with ARM and Entra data. No login prompt if already authenticated. |
-| 2 | **SPN + Secret** | `Invoke-AzureTenantInventory -TenantID <id> -AppId <id> -Secret <secret>` | Authenticates as service principal, full inventory, no interactive prompts. |
-| 3 | **SPN + Certificate** | `Invoke-AzureTenantInventory -TenantID <id> -AppId <id> -CertificatePath <path> -Secret <certpass>` | Authenticates with certificate, full inventory. |
-| 4 | **Entra-only scope** | `Invoke-AzureTenantInventory -TenantID <id> -Scope EntraOnly` | Skips all ARM/Resource Graph extraction. Excel contains only Identity worksheets (15 Entra tabs). JSON contains only `entra` section. Completes significantly faster than full run. |
-| 5 | **ARM-only scope** | `Invoke-AzureTenantInventory -TenantID <id> -Scope ArmOnly` | Skips all Graph/Entra extraction. No Identity worksheets in Excel. No `entra` section in JSON. Behaves like original ARI. |
-| 6 | **Permission check with partial access** | `Test-AZTIPermissions -TenantID <id> -Scope All` | Returns structured object with `ArmAccess = $true/$false`, `GraphAccess = $true/$false`, and `Details` array. Warns on missing permissions but does not throw. When run via `Invoke-AzureTenantInventory` (without `-SkipPermissionCheck`), warnings display but execution continues with available data. |
+| 1 | **Current user, no flags** | `Invoke-AzureScout -TenantID <id>` | Uses existing `Get-AzContext`, produces Excel + JSON with ARM and Entra data. No login prompt if already authenticated. |
+| 2 | **SPN + Secret** | `Invoke-AzureScout -TenantID <id> -AppId <id> -Secret <secret>` | Authenticates as service principal, full inventory, no interactive prompts. |
+| 3 | **SPN + Certificate** | `Invoke-AzureScout -TenantID <id> -AppId <id> -CertificatePath <path> -Secret <certpass>` | Authenticates with certificate, full inventory. |
+| 4 | **Entra-only scope** | `Invoke-AzureScout -TenantID <id> -Scope EntraOnly` | Skips all ARM/Resource Graph extraction. Excel contains only Identity worksheets (15 Entra tabs). JSON contains only `entra` section. Completes significantly faster than full run. |
+| 5 | **ARM-only scope** | `Invoke-AzureScout -TenantID <id> -Scope ArmOnly` | Skips all Graph/Entra extraction. No Identity worksheets in Excel. No `entra` section in JSON. Behaves like original ARI. |
+| 6 | **Permission check with partial access** | `Test-AZSCPermissions -TenantID <id> -Scope All` | Returns structured object with `ArmAccess = $true/$false`, `GraphAccess = $true/$false`, and `Details` array. Warns on missing permissions but does not throw. When run via `Invoke-AzureScout` (without `-SkipPermissionCheck`), warnings display but execution continues with available data. |
 
 ### Additional Acceptance Checks
 
 - **JSON output structure**: `_metadata` block contains `tool`, `version`, `tenantId`, `subscriptions[]`, `generatedAt`, `scope`. ARM data nested under `arm/{category}`. Entra data nested under `entra/{type}`.
 - **Excel output**: All 15 Entra worksheets present when `-Scope All` or `-Scope EntraOnly`. Sheet names match specification (e.g., `Entra Users`, `Conditional Access`).
 - **Pagination**: Entra modules with >999 objects follow `@odata.nextLink` and return complete data sets.
-- **Throttling**: `Invoke-AZTIGraphRequest` respects `Retry-After` header on HTTP 429 and retries automatically.
+- **Throttling**: `Invoke-AZSCGraphRequest` respects `Retry-After` header on HTTP 429 and retries automatically.
 - **No MgGraph dependency**: `Get-Module Microsoft.Graph* -ListAvailable` is NOT required. Tool functions with only `Az.Accounts`, `Az.ResourceGraph`, `Az.Compute`, `Az.Storage`, and `ImportExcel`.
 
 ### Phase 8 Acceptance Checks
@@ -941,7 +941,7 @@ These modules inventory policy, RBAC, and governance constructs. All use ARM API
 #### MaintenanceConfigurations.ps1 — Rewrite Specification
 
 **Current Architecture Problem:**
-- File uses **function** pattern: `function Invoke-AZTIMaintenanceConfigurationsInventory($InventoryData, $SubscriptionId, $TenantId)`
+- File uses **function** pattern: `function Invoke-AZSCMaintenanceConfigurationsInventory($InventoryData, $SubscriptionId, $TenantId)`
 - Inventory pipeline expects **parameter block + dual-Task conditional pattern** (Processing/Reporting)
 - Result: Module discovered via auto-scan but never executes
 
@@ -1022,7 +1022,7 @@ Defender modules require `Microsoft.Security` resource provider registration. Ad
 
 ### 9.3 — Azure Monitor Resources
 
-Monitor modules require `Microsoft.Insights` resource provider registration. Includes new **Data Collection Rules** and **Data Collection Endpoints** — discovered missing from both AzureTenantInventory AND Invoke-TenantDiscovery.ps1 reference implementation.
+Monitor modules require `Microsoft.Insights` resource provider registration. Includes new **Data Collection Rules** and **Data Collection Endpoints** — discovered missing from both AzureScout AND Invoke-TenantDiscovery.ps1 reference implementation.
 
 **Directory:** `Modules/Public/InventoryModules/Monitoring/`
 
@@ -1387,7 +1387,7 @@ Update Overview tab **Resource Summary** section:
 
 **Implementation:**
 
-1. **Update Parameter Default in `AzureTenantInventory.psm1`:**
+1. **Update Parameter Default in `AzureScout.psm1`:**
    ```powershell
    [Parameter(Mandatory=$false)]
    [ValidateSet('All', 'ArmOnly', 'EntraOnly')]
@@ -1403,15 +1403,15 @@ Update Overview tab **Resource Summary** section:
    - All: Scans both ARM and Entra ID. Requires both subscription Reader and Graph permissions.
 
    .EXAMPLE
-   Invoke-AzureTenantInventory -TenantID $tenantId
+   Invoke-AzureScout -TenantID $tenantId
    # Scans ARM resources only (default behavior).
 
    .EXAMPLE
-   Invoke-AzureTenantInventory -TenantID $tenantId -Scope All
+   Invoke-AzureScout -TenantID $tenantId -Scope All
    # Scans both ARM and Entra ID. Requires Graph permissions.
 
    .EXAMPLE
-   Invoke-AzureTenantInventory -TenantID $tenantId -Scope EntraOnly
+   Invoke-AzureScout -TenantID $tenantId -Scope EntraOnly
    # Scans Entra ID only. Skips all ARM resources.
    ```
 
@@ -1429,7 +1429,7 @@ Create comprehensive permission documentation in `README.md` (new section: **Per
 ```markdown
 ## Permissions
 
-AzureTenantInventory requires different permissions depending on scan scope.
+AzureScout requires different permissions depending on scan scope.
 
 ### ARM Scan (`-Scope ArmOnly` or `-Scope All`)
 
@@ -1444,7 +1444,7 @@ AzureTenantInventory requires different permissions depending on scan scope.
 **Service Principal Setup:**
 ```powershell
 # Create service principal
-$sp = New-AzADServicePrincipal -DisplayName "AzureTenantInventory-SPN"
+$sp = New-AzADServicePrincipal -DisplayName "AzureScout-SPN"
 
 # Assign Reader at Root Management Group
 $rootMG = Get-AzManagementGroup -GroupName (Get-AzContext).Tenant.Id
@@ -1461,7 +1461,7 @@ Get-AzSubscription | ForEach-Object {
 
 #### Microsoft Graph API Permissions
 
-AzureTenantInventory uses **Microsoft Graph REST API** (not SDK) via `Get-AzAccessToken -ResourceTypeName MSGraph` + `Invoke-RestMethod`. Permissions are evaluated at runtime based on the authenticated identity's Graph access.
+AzureScout uses **Microsoft Graph REST API** (not SDK) via `Get-AzAccessToken -ResourceTypeName MSGraph` + `Invoke-RestMethod`. Permissions are evaluated at runtime based on the authenticated identity's Graph access.
 
 | Permission | Type | Purpose | Required For |
 |---|---|---|---|
@@ -1490,7 +1490,7 @@ If running as **current user** (default):
 **Test permissions:**
 ```powershell
 Connect-AzAccount -TenantId $tenantId
-Test-AZTIPermissions -TenantID $tenantId -Scope All
+Test-AZSCPermissions -TenantID $tenantId -Scope All
 ```
 
 #### Service Principal (Non-Interactive) Authentication
@@ -1504,7 +1504,7 @@ If running as **service principal** (AppId + Secret/Certificate):
 
 **SPN Authentication Example:**
 ```powershell
-Invoke-AzureTenantInventory `
+Invoke-AzureScout `
     -TenantID $tenantId `
     -AppId "12345678-1234-1234-1234-123456789abc" `
     -Secret $spnSecret `
@@ -1513,10 +1513,10 @@ Invoke-AzureTenantInventory `
 
 ### Permission Pre-Flight Check
 
-The `Test-AZTIPermissions` cmdlet validates permissions before inventory execution:
+The `Test-AZSCPermissions` cmdlet validates permissions before inventory execution:
 
 ```powershell
-PS> Test-AZTIPermissions -TenantID "contoso.onmicrosoft.com" -Scope All
+PS> Test-AZSCPermissions -TenantID "contoso.onmicrosoft.com" -Scope All
 
 TenantId         : abcd1234-5678-90ab-cdef-1234567890ab
 Scope            : All
@@ -1560,7 +1560,7 @@ Warnings         : Graph permissions incomplete. Entra ID modules will be skippe
 ```markdown
 ## Resource Providers Registration
 
-AzureTenantInventory inventories resources from several Azure resource providers. If a provider is **not registered** in a subscription, resources of that type will not be discovered.
+AzureScout inventories resources from several Azure resource providers. If a provider is **not registered** in a subscription, resources of that type will not be discovered.
 
 ### Required Resource Providers
 
@@ -1619,10 +1619,10 @@ Get-AzResourceProvider -ProviderNamespace Microsoft.Security |
 
 ### Pre-Flight Resource Provider Check
 
-AzureTenantInventory can optionally check resource provider registration before execution:
+AzureScout can optionally check resource provider registration before execution:
 
 ```powershell
-Invoke-AzureTenantInventory -TenantID $tenantId -CheckResourceProviders
+Invoke-AzureScout -TenantID $tenantId -CheckResourceProviders
 ```
 
 **Output Example:**
@@ -1640,13 +1640,13 @@ Invoke-AzureTenantInventory -TenantID $tenantId -CheckResourceProviders
 
 ### 12.4 — Implementation Checklist
 
-- [ ] **12.4.1** Update `-Scope` parameter default from `'All'` to `'ArmOnly'` in `AzureTenantInventory.psm1`
+- [ ] **12.4.1** Update `-Scope` parameter default from `'All'` to `'ArmOnly'` in `AzureScout.psm1`
 - [ ] **12.4.2** Update comment-based help (`.PARAMETER Scope`) to reflect new default
 - [ ] **12.4.3** Update `README.md` Quick Start section with ARM-only default clarification
 - [ ] **12.4.4** Add **Permissions** section to `README.md` (ARM permissions table + Entra ID permissions table + user vs SPN guidance)
 - [ ] **12.4.5** Add **Resource Providers Registration** section to `README.md` (table of providers + check/register commands)
 - [ ] **12.4.6** Implement `-CheckResourceProviders` parameter (optional) for pre-flight resource provider validation
-- [ ] **12.4.7** Update `Test-AZTIPermissions` function output to include resource provider registration warnings
+- [ ] **12.4.7** Update `Test-AZSCPermissions` function output to include resource provider registration warnings
 - [ ] **12.4.8** Update all examples in `README.md` and `.EXAMPLE` blocks to clarify when `-Scope All` is needed for Entra ID
 - [ ] **12.4.9** Add troubleshooting section to `README.md` for common permission errors
 - [ ] **12.4.10** Update `CHANGELOG.md` with breaking change notice: "Default scope changed from `All` to `ArmOnly`. Entra ID now requires explicit `-Scope All` or `-Scope EntraOnly`."
@@ -1691,11 +1691,11 @@ All acceptance checks from Phase 8 + new acceptance checks for Phases 9-12.
 
 | # | Test | Expected Outcome |
 |---|---|---|
-| 16 | Default run (no `-Scope` param) | `Invoke-AzureTenantInventory -TenantID $tid` performs ARM-only scan. Excel report contains NO Entra ID worksheets. JSON output contains `arm` section only (no `entra` section). |
-| 17 | Explicit Entra inclusion | `Invoke-AzureTenantInventory -TenantID $tid -Scope All` scans both ARM and Entra ID. Excel report contains Entra ID worksheets. JSON output contains both `arm` and `entra` sections. |
-| 18 | Permission pre-flight check | `Test-AZTIPermissions -TenantID $tid -Scope All` returns structured object with `ArmAccess`, `GraphAccess`, `Details`, `Warnings`. Warns if Graph permissions missing. Does NOT throw/block execution. |
-| 19 | Resource provider check | `Invoke-AzureTenantInventory -TenantID $tid -CheckResourceProviders` warns if `Microsoft.Security`, `Microsoft.Insights`, `Microsoft.Maintenance` not registered. Execution continues; dependent modules skipped for that subscription. |
-| 20 | SPN auth with Entra | `Invoke-AzureTenantInventory -TenantID $tid -AppId $appId -Secret $secret -Scope All` successfully authenticates as SPN and scans both ARM + Entra (if SPN has Graph application permissions + admin consent). |
+| 16 | Default run (no `-Scope` param) | `Invoke-AzureScout -TenantID $tid` performs ARM-only scan. Excel report contains NO Entra ID worksheets. JSON output contains `arm` section only (no `entra` section). |
+| 17 | Explicit Entra inclusion | `Invoke-AzureScout -TenantID $tid -Scope All` scans both ARM and Entra ID. Excel report contains Entra ID worksheets. JSON output contains both `arm` and `entra` sections. |
+| 18 | Permission pre-flight check | `Test-AZSCPermissions -TenantID $tid -Scope All` returns structured object with `ArmAccess`, `GraphAccess`, `Details`, `Warnings`. Warns if Graph permissions missing. Does NOT throw/block execution. |
+| 19 | Resource provider check | `Invoke-AzureScout -TenantID $tid -CheckResourceProviders` warns if `Microsoft.Security`, `Microsoft.Insights`, `Microsoft.Maintenance` not registered. Execution continues; dependent modules skipped for that subscription. |
+| 20 | SPN auth with Entra | `Invoke-AzureScout -TenantID $tid -AppId $appId -Secret $secret -Scope All` successfully authenticates as SPN and scans both ARM + Entra (if SPN has Graph application permissions + admin consent). |
 
 ---
 
@@ -1709,41 +1709,41 @@ All acceptance checks from Phase 8 + new acceptance checks for Phases 9-12.
 
 | File | Resource Type | API Call | Excel Worksheet | Key Fields Captured |
 |---|---|---|---|---|
-| `Get-AZTIOpenAIAccounts.ps1` | `Microsoft.CognitiveServices/accounts` | `Get-AzCognitiveServicesAccount` (filter Kind='OpenAI') | OpenAI Accounts | Name, RG, Location, SKU name, Provisioning State, Endpoint, Custom Subdomain, Public Network Access, Private Endpoints count, Tags |
-| `Get-AZTIOpenAIDeployments.ps1` | `Microsoft.CognitiveServices/accounts/deployments` | `Get-AzCognitiveServicesAccountDeployment` | OpenAI Deployments | Account Name, Deployment Name, Model Name, Model Version, Model Format, Scale Type, Capacity, Provisioning State |
+| `Get-AZSCOpenAIAccounts.ps1` | `Microsoft.CognitiveServices/accounts` | `Get-AzCognitiveServicesAccount` (filter Kind='OpenAI') | OpenAI Accounts | Name, RG, Location, SKU name, Provisioning State, Endpoint, Custom Subdomain, Public Network Access, Private Endpoints count, Tags |
+| `Get-AZSCOpenAIDeployments.ps1` | `Microsoft.CognitiveServices/accounts/deployments` | `Get-AzCognitiveServicesAccountDeployment` | OpenAI Deployments | Account Name, Deployment Name, Model Name, Model Version, Model Format, Scale Type, Capacity, Provisioning State |
 
 ### 14.2 — Azure AI Foundry Modules
 
 | File | Resource Type | API Call | Excel Worksheet | Key Fields Captured |
 |---|---|---|---|---|
-| `Get-AZTIAIFoundryProjects.ps1` | `Microsoft.MachineLearningServices/workspaces` (Kind='Project') | `Get-AzMLWorkspace` (filter) OR Resource Graph | AI Foundry Projects | Name, RG, Location, Friendly Name, Hub Resource ID, Description, Public Network Access, Storage Account, Key Vault, Application Insights, Container Registry, Tags |
-| `Get-AZTIAIFoundryHubs.ps1` | `Microsoft.MachineLearningServices/workspaces` (Kind='Hub') | `Get-AzMLWorkspace` (filter) OR Resource Graph | AI Foundry Hubs | Name, RG, Location, Friendly Name, Projects Count, SKU, Managed Network, Associated Resource IDs, Tags |
+| `Get-AZSCAIFoundryProjects.ps1` | `Microsoft.MachineLearningServices/workspaces` (Kind='Project') | `Get-AzMLWorkspace` (filter) OR Resource Graph | AI Foundry Projects | Name, RG, Location, Friendly Name, Hub Resource ID, Description, Public Network Access, Storage Account, Key Vault, Application Insights, Container Registry, Tags |
+| `Get-AZSCAIFoundryHubs.ps1` | `Microsoft.MachineLearningServices/workspaces` (Kind='Hub') | `Get-AzMLWorkspace` (filter) OR Resource Graph | AI Foundry Hubs | Name, RG, Location, Friendly Name, Projects Count, SKU, Managed Network, Associated Resource IDs, Tags |
 
 ### 14.3 — Cognitive Services Modules
 
 | File | Resource Type | API Call | Excel Worksheet | Key Fields Captured |
 |---|---|---|---|---|
-| `Get-AZTICognitiveServices.ps1` | `Microsoft.CognitiveServices/accounts` | `Get-AzCognitiveServicesAccount` | Cognitive Services | Name, RG, Location, Kind (TextAnalytics, ComputerVision, Face, etc.), SKU name, Endpoint, Custom Subdomain, Public Network Access, API Properties, Tags |
-| `Get-AZTIAppliedAIServices.ps1` | `Microsoft.CognitiveServices/accounts` | `Get-AzCognitiveServicesAccount` (filter Kind='FormRecognizer','DocumentIntelligence', etc.) | Applied AI Services | Name, RG, Location, Kind (Form Recognizer, Metrics Advisor, Anomaly Detector, Personalizer), SKU, Endpoint, Custom Domain, Tags |
+| `Get-AZSCCognitiveServices.ps1` | `Microsoft.CognitiveServices/accounts` | `Get-AzCognitiveServicesAccount` | Cognitive Services | Name, RG, Location, Kind (TextAnalytics, ComputerVision, Face, etc.), SKU name, Endpoint, Custom Subdomain, Public Network Access, API Properties, Tags |
+| `Get-AZSCAppliedAIServices.ps1` | `Microsoft.CognitiveServices/accounts` | `Get-AzCognitiveServicesAccount` (filter Kind='FormRecognizer','DocumentIntelligence', etc.) | Applied AI Services | Name, RG, Location, Kind (Form Recognizer, Metrics Advisor, Anomaly Detector, Personalizer), SKU, Endpoint, Custom Domain, Tags |
 
 ### 14.4 — Machine Learning Modules
 
 | File | Resource Type | API Call | Excel Worksheet | Key Fields Captured |
 |---|---|---|---|---|
-| `Get-AZTIMachineLearningWorkspaces.ps1` | `Microsoft.MachineLearningServices/workspaces` | `Get-AzMLWorkspace` | ML Workspaces | Name, RG, Location, Friendly Name, Description, ML Studio Web URL, Storage, Key Vault, App Insights, Container Registry, SKU, Managed Network, Public Network Access, Tags |
-| `Get-AZTIMachineLearningComputes.ps1` | `Microsoft.MachineLearningServices/workspaces/computes` | `Get-AzMLWorkspaceCompute` | ML Compute | Workspace Name, Compute Name, Compute Type (AmlCompute, ComputeInstance, AKS, etc.), VM Size, VM Priority, Min/Max Nodes, State, Subnet ID, Tags |
-| `Get-AZTIMachineLearningDatastores.ps1` | `Microsoft.MachineLearningServices/workspaces/datastores` | Azure SDK/REST API | ML Datastores | Workspace Name, Datastore Name, Datastore Type (AzureBlob, AzureFile, AzureDataLakeGen2, etc.), Target Storage Account, Is Default, Credentials Type |
-| `Get-AZTIMachineLearningDatasets.ps1` | `Microsoft.MachineLearningServices/workspaces/datasets` | Azure SDK/REST API | ML Datasets | Workspace Name, Dataset Name, Dataset Type (Tabular, File), Data Path, Description, Version, Created Date, Tags |
-| `Get-AZTIMachineLearningModels.ps1` | `Microsoft.MachineLearningServices/workspaces/models` | Azure SDK/REST API | ML Models | Workspace Name, Model Name, Version, Framework (TensorFlow, PyTorch, ONNX, Scikit-learn, etc.), Description, Tags, Created Date |
-| `Get-AZTIMachineLearningEndpoints.ps1` | `Microsoft.MachineLearningServices/workspaces/onlineEndpoints` | Azure SDK/REST API | ML Endpoints | Workspace Name, Endpoint Name, Endpoint Type (Online, Batch), Auth Mode, Compute Type, Deployments Count, Traffic Allocation, Tags |
+| `Get-AZSCMachineLearningWorkspaces.ps1` | `Microsoft.MachineLearningServices/workspaces` | `Get-AzMLWorkspace` | ML Workspaces | Name, RG, Location, Friendly Name, Description, ML Studio Web URL, Storage, Key Vault, App Insights, Container Registry, SKU, Managed Network, Public Network Access, Tags |
+| `Get-AZSCMachineLearningComputes.ps1` | `Microsoft.MachineLearningServices/workspaces/computes` | `Get-AzMLWorkspaceCompute` | ML Compute | Workspace Name, Compute Name, Compute Type (AmlCompute, ComputeInstance, AKS, etc.), VM Size, VM Priority, Min/Max Nodes, State, Subnet ID, Tags |
+| `Get-AZSCMachineLearningDatastores.ps1` | `Microsoft.MachineLearningServices/workspaces/datastores` | Azure SDK/REST API | ML Datastores | Workspace Name, Datastore Name, Datastore Type (AzureBlob, AzureFile, AzureDataLakeGen2, etc.), Target Storage Account, Is Default, Credentials Type |
+| `Get-AZSCMachineLearningDatasets.ps1` | `Microsoft.MachineLearningServices/workspaces/datasets` | Azure SDK/REST API | ML Datasets | Workspace Name, Dataset Name, Dataset Type (Tabular, File), Data Path, Description, Version, Created Date, Tags |
+| `Get-AZSCMachineLearningModels.ps1` | `Microsoft.MachineLearningServices/workspaces/models` | Azure SDK/REST API | ML Models | Workspace Name, Model Name, Version, Framework (TensorFlow, PyTorch, ONNX, Scikit-learn, etc.), Description, Tags, Created Date |
+| `Get-AZSCMachineLearningEndpoints.ps1` | `Microsoft.MachineLearningServices/workspaces/onlineEndpoints` | Azure SDK/REST API | ML Endpoints | Workspace Name, Endpoint Name, Endpoint Type (Online, Batch), Auth Mode, Compute Type, Deployments Count, Traffic Allocation, Tags |
 
 ### 14.5 — Other AI/ML Modules
 
 | File | Resource Type | API Call | Excel Worksheet | Key Fields Captured |
 |---|---|---|---|---|
-| `Get-AZTIBotServices.ps1` | `Microsoft.BotService/botServices` | `Get-AzBotService` | Bot Services | Name, RG, Location, SKU, Messaging Endpoint, App ID, MsaAppType, Developer App Insight Key, IsCmekEnabled, Tags |
-| `Get-AZTICognitiveSearch.ps1` | `Microsoft.Search/searchServices` | `Get-AzSearchService` | Cognitive Search | Name, RG, Location, SKU name, Replica Count, Partition Count, Hosting Mode, Status, Public Network Access, Private Endpoint Connections, Tags |
-| `Get-AZTISearchIndexes.ps1` | `Microsoft.Search/searchServices/indexes` | REST API | Search Indexes | Service Name, Index Name, Document Count, Storage Size MB, Fields Count, Analyzers Count, Scoring Profiles, CORS Options |
+| `Get-AZSCBotServices.ps1` | `Microsoft.BotService/botServices` | `Get-AzBotService` | Bot Services | Name, RG, Location, SKU, Messaging Endpoint, App ID, MsaAppType, Developer App Insight Key, IsCmekEnabled, Tags |
+| `Get-AZSCCognitiveSearch.ps1` | `Microsoft.Search/searchServices` | `Get-AzSearchService` | Cognitive Search | Name, RG, Location, SKU name, Replica Count, Partition Count, Hosting Mode, Status, Public Network Access, Private Endpoint Connections, Tags |
+| `Get-AZSCSearchIndexes.ps1` | `Microsoft.Search/searchServices/indexes` | REST API | Search Indexes | Service Name, Index Name, Document Count, Storage Size MB, Fields Count, Analyzers Count, Scoring Profiles, CORS Options |
 
 ### 14.6 — Resource Provider Requirements
 
@@ -1807,13 +1807,13 @@ $endpoints = (Invoke-AzRestMethod -Uri $uri -Method GET).Content | ConvertFrom-J
 
 ### 14.9 — Implementation Checklist
 
-- [ ] **14.9.1** Create `Get-AZTIOpenAIAccounts.ps1` and `Get-AZTIOpenAIDeployments.ps1`
-- [ ] **14.9.2** Create `Get-AZTIAIFoundryProjects.ps1` and `Get-AZTIAIFoundryHubs.ps1`
-- [ ] **14.9.3** Create `Get-AZTICognitiveServices.ps1` and `Get-AZTIAppliedAIServices.ps1`
-- [ ] **14.9.4** Create `Get-AZTIMachineLearningWorkspaces.ps1` and `Get-AZTIMachineLearningComputes.ps1`
+- [ ] **14.9.1** Create `Get-AZSCOpenAIAccounts.ps1` and `Get-AZSCOpenAIDeployments.ps1`
+- [ ] **14.9.2** Create `Get-AZSCAIFoundryProjects.ps1` and `Get-AZSCAIFoundryHubs.ps1`
+- [ ] **14.9.3** Create `Get-AZSCCognitiveServices.ps1` and `Get-AZSCAppliedAIServices.ps1`
+- [ ] **14.9.4** Create `Get-AZSCMachineLearningWorkspaces.ps1` and `Get-AZSCMachineLearningComputes.ps1`
 - [ ] **14.9.5** Create ML data modules (Datastores, Datasets, Models, Endpoints) using REST API
-- [ ] **14.9.6** Create `Get-AZTIBotServices.ps1` and `Get-AZTICognitiveSearch.ps1`
-- [ ] **14.9.7** Create `Get-AZTISearchIndexes.ps1` using REST API
+- [ ] **14.9.6** Create `Get-AZSCBotServices.ps1` and `Get-AZSCCognitiveSearch.ps1`
+- [ ] **14.9.7** Create `Get-AZSCSearchIndexes.ps1` using REST API
 - [ ] **14.9.8** Add all 15 AI/ML modules to Excel generation logic
 - [ ] **14.9.9** Test with tenant containing OpenAI, AI Foundry, ML workspaces, Cognitive Search
 - [ ] **14.9.10** Verify resource provider registration warnings for AI/ML providers
@@ -1830,12 +1830,12 @@ $endpoints = (Invoke-AzRestMethod -Uri $uri -Method GET).Content | ConvertFrom-J
 
 | File | Resource Type | API Call | Excel Worksheet | Key Fields Captured |
 |---|---|---|---|---|
-| `Get-AZTIAVDHostPools.ps1` | `Microsoft.DesktopVirtualization/hostPools` | `Get-AzWvdHostPool` | AVD Host Pools | Name, RG, Location, Host Pool Type (Pooled/Personal), Load Balancer Type, Max Session Limit, Preferred App Group Type, Start VM On Connect, Registration Token Expiration, Validation Environment, VM Template, Arc Enabled (Azure Local/Arc), Tags |
-| `Get-AZTIAVDApplicationGroups.ps1` | `Microsoft.DesktopVirtualization/applicationGroups` | `Get-AzWvdApplicationGroup` | AVD Application Groups | Name, RG, Location, Host Pool ID, Application Group Type (RemoteApp/Desktop), Friendly Name, Description, Applications Count, Workspace Associations, Tags |
-| `Get-AZTIAVDWorkspaces.ps1` | `Microsoft.DesktopVirtualization/workspaces` | `Get-AzWvdWorkspace` | AVD Workspaces | Name, RG, Location, Friendly Name, Description, Application Group References, Public Network Access, Private Endpoint Connections, Tags |
-| `Get-AZTIAVDSessionHosts.ps1` | `Microsoft.DesktopVirtualization/hostPools/sessionHosts` | `Get-AzWvdSessionHost` | AVD Session Hosts | Host Pool Name, Session Host Name, Agent Version, Status, Last Heartbeat, OS Version, Sessions Count, Assigned User (Personal Pool), Allow New Session, Update State, Arc Machine ID (if Arc-enabled), Azure Local Cluster ID (if Azure Local), Tags |
-| `Get-AZTIAVDScalingPlans.ps1` | `Microsoft.DesktopVirtualization/scalingPlans` | `Get-AzWvdScalingPlan` | AVD Scaling Plans | Name, RG, Location, Time Zone, Exclusion Tag, Schedules Count, Host Pool References, Host Pool Type, Schedules (Days of Week, Ramp Up/Down times, Peak hours, Capacity %), Tags |
-| `Get-AZTIAVDApplications.ps1` | `Microsoft.DesktopVirtualization/applicationGroups/applications` | `Get-AzWvdApplication` | AVD Applications | Application Group Name, App Name, App Alias, App Path, Command Line Arguments, Icon Path, Icon Index, Show In Portal, Description |
+| `Get-AZSCAVDHostPools.ps1` | `Microsoft.DesktopVirtualization/hostPools` | `Get-AzWvdHostPool` | AVD Host Pools | Name, RG, Location, Host Pool Type (Pooled/Personal), Load Balancer Type, Max Session Limit, Preferred App Group Type, Start VM On Connect, Registration Token Expiration, Validation Environment, VM Template, Arc Enabled (Azure Local/Arc), Tags |
+| `Get-AZSCAVDApplicationGroups.ps1` | `Microsoft.DesktopVirtualization/applicationGroups` | `Get-AzWvdApplicationGroup` | AVD Application Groups | Name, RG, Location, Host Pool ID, Application Group Type (RemoteApp/Desktop), Friendly Name, Description, Applications Count, Workspace Associations, Tags |
+| `Get-AZSCAVDWorkspaces.ps1` | `Microsoft.DesktopVirtualization/workspaces` | `Get-AzWvdWorkspace` | AVD Workspaces | Name, RG, Location, Friendly Name, Description, Application Group References, Public Network Access, Private Endpoint Connections, Tags |
+| `Get-AZSCAVDSessionHosts.ps1` | `Microsoft.DesktopVirtualization/hostPools/sessionHosts` | `Get-AzWvdSessionHost` | AVD Session Hosts | Host Pool Name, Session Host Name, Agent Version, Status, Last Heartbeat, OS Version, Sessions Count, Assigned User (Personal Pool), Allow New Session, Update State, Arc Machine ID (if Arc-enabled), Azure Local Cluster ID (if Azure Local), Tags |
+| `Get-AZSCAVDScalingPlans.ps1` | `Microsoft.DesktopVirtualization/scalingPlans` | `Get-AzWvdScalingPlan` | AVD Scaling Plans | Name, RG, Location, Time Zone, Exclusion Tag, Schedules Count, Host Pool References, Host Pool Type, Schedules (Days of Week, Ramp Up/Down times, Peak hours, Capacity %), Tags |
+| `Get-AZSCAVDApplications.ps1` | `Microsoft.DesktopVirtualization/applicationGroups/applications` | `Get-AzWvdApplication` | AVD Applications | Application Group Name, App Name, App Alias, App Path, Command Line Arguments, Icon Path, Icon Index, Show In Portal, Description |
 
 ### 15.2 — Resource Provider Requirements
 
@@ -1903,12 +1903,12 @@ if ($sessionHost.ResourceId -like "*Microsoft.HybridCompute/machines*") {
 
 ### 15.6 — Implementation Checklist
 
-- [ ] **15.6.1** Create `Get-AZTIAVDHostPools.ps1`
-- [ ] **15.6.2** Create `Get-AZTIAVDApplicationGroups.ps1`
-- [ ] **15.6.3** Create `Get-AZTIAVDWorkspaces.ps1`
-- [ ] **15.6.4** Create `Get-AZTIAVDSessionHosts.ps1` with Arc/Azure Local detection
-- [ ] **15.6.5** Create `Get-AZTIAVDScalingPlans.ps1` with nested schedules
-- [ ] **15.6.6** Create `Get-AZTIAVDApplications.ps1`
+- [ ] **15.6.1** Create `Get-AZSCAVDHostPools.ps1`
+- [ ] **15.6.2** Create `Get-AZSCAVDApplicationGroups.ps1`
+- [ ] **15.6.3** Create `Get-AZSCAVDWorkspaces.ps1`
+- [ ] **15.6.4** Create `Get-AZSCAVDSessionHosts.ps1` with Arc/Azure Local detection
+- [ ] **15.6.5** Create `Get-AZSCAVDScalingPlans.ps1` with nested schedules
+- [ ] **15.6.6** Create `Get-AZSCAVDApplications.ps1`
 - [ ] **15.6.7** Add all 6 AVD modules to Excel generation logic
 - [ ] **15.6.8** Test with tenant containing AVD deployment (Azure VMs + Arc/Azure Local session hosts)
 - [ ] **15.6.9** Verify scaling plan schedules are fully captured (all time periods, thresholds, algorithms)
@@ -1926,7 +1926,7 @@ if ($sessionHost.ResourceId -like "*Microsoft.HybridCompute/machines*") {
 
 | File | Resource Type | API Call | Excel Worksheet | Key Fields Captured |
 |---|---|---|---|---|
-| `Get-AZTIArcSites.ps1` | `Microsoft.AzureStackHCI/sites` OR `Microsoft.EdgeConfig/sites` | `Get-AzResource` (filter) | Arc Sites | Name, RG, Location, Site Type, Associated Cluster, Management State, Network Configuration, On-Premises Location, Tags |
+| `Get-AZSCArcSites.ps1` | `Microsoft.AzureStackHCI/sites` OR `Microsoft.EdgeConfig/sites` | `Get-AzResource` (filter) | Arc Sites | Name, RG, Location, Site Type, Associated Cluster, Management State, Network Configuration, On-Premises Location, Tags |
 
 **Arc Sites:**
 - Arc Sites represent physical locations/sites for Arc-enabled infrastructure
@@ -1935,7 +1935,7 @@ if ($sessionHost.ResourceId -like "*Microsoft.HybridCompute/machines*") {
 
 ### 16.2 — Enhanced Arc Extensions
 
-**Enhancement to `Get-AZTIArcMachineExtensions.ps1` (existing module):**
+**Enhancement to `Get-AZSCArcMachineExtensions.ps1` (existing module):**
 
 **Add Deep Config Data:**
 - Extension settings (JSON)
@@ -1971,7 +1971,7 @@ $deepConfig = [PSCustomObject]@{
 
 | File | Resource Type | API Call | Excel Worksheet | Key Fields Captured |
 |---|---|---|---|---|
-| `Get-AZTIArcSQLServers.ps1` | `Microsoft.AzureArcData/sqlServerInstances` | `Get-AzResource` (filter) | Arc SQL Servers | Name, RG, Location, Host Machine Name, SQL Version, Edition, Licensing Type (PAYG/LicenseOnly), vCores, Patch Level, Collation, Status, Azure Defender Enabled, Tags |
+| `Get-AZSCArcSQLServers.ps1` | `Microsoft.AzureArcData/sqlServerInstances` | `Get-AzResource` (filter) | Arc SQL Servers | Name, RG, Location, Host Machine Name, SQL Version, Edition, Licensing Type (PAYG/LicenseOnly), vCores, Patch Level, Collation, Status, Azure Defender Enabled, Tags |
 
 **Arc-Enabled SQL Server:**
 - On-premises SQL Servers registered with Azure Arc
@@ -1982,8 +1982,8 @@ $deepConfig = [PSCustomObject]@{
 
 | File | Resource Type | API Call | Excel Worksheet | Key Fields Captured |
 |---|---|---|---|---|
-| `Get-AZTIArcDataControllers.ps1` | `Microsoft.AzureArcData/dataControllers` | `Get-AzResource` (filter) | Arc Data Controllers | Name, RG, Location, Kubernetes Cluster ID, Connectivity Mode (Direct/Indirect), Log Analytics Workspace, Metrics Upload State, Logs Upload State, Tags |
-| `Get-AZTIArcSQLManagedInstances.ps1` | `Microsoft.AzureArcData/sqlManagedInstances` | `Get-AzResource` (filter) | Arc SQL Managed Instances | Name, RG, Location, Data Controller ID, Admin Username, SQL Version, vCores, Storage Size GB, Service Tier, License Type, High Availability Mode, Tags |
+| `Get-AZSCArcDataControllers.ps1` | `Microsoft.AzureArcData/dataControllers` | `Get-AzResource` (filter) | Arc Data Controllers | Name, RG, Location, Kubernetes Cluster ID, Connectivity Mode (Direct/Indirect), Log Analytics Workspace, Metrics Upload State, Logs Upload State, Tags |
+| `Get-AZSCArcSQLManagedInstances.ps1` | `Microsoft.AzureArcData/sqlManagedInstances` | `Get-AzResource` (filter) | Arc SQL Managed Instances | Name, RG, Location, Data Controller ID, Admin Username, SQL Version, vCores, Storage Size GB, Service Tier, License Type, High Availability Mode, Tags |
 
 **Arc Data Services:**
 - **Data Controller**: Management plane for Arc-enabled data services
@@ -2005,10 +2005,10 @@ $deepConfig = [PSCustomObject]@{
 
 ### 16.6 — Implementation Checklist
 
-- [ ] **16.6.1** Create `Get-AZTIArcSites.ps1` for Arc site configurations
-- [ ] **16.6.2** Enhance `Get-AZTIArcMachineExtensions.ps1` with deep config data (settings, instance view, auto-upgrade)
-- [ ] **16.6.3** Create `Get-AZTIArcSQLServers.ps1` for Arc-enabled SQL Server instances
-- [ ] **16.6.4** Create `Get-AZTIArcDataControllers.ps1` and `Get-AZTIArcSQLManagedInstances.ps1`
+- [ ] **16.6.1** Create `Get-AZSCArcSites.ps1` for Arc site configurations
+- [ ] **16.6.2** Enhance `Get-AZSCArcMachineExtensions.ps1` with deep config data (settings, instance view, auto-upgrade)
+- [ ] **16.6.3** Create `Get-AZSCArcSQLServers.ps1` for Arc-enabled SQL Server instances
+- [ ] **16.6.4** Create `Get-AZSCArcDataControllers.ps1` and `Get-AZSCArcSQLManagedInstances.ps1`
 - [ ] **16.6.5** Enhance Arc Resource Bridge module with config data
 - [ ] **16.6.6** Add new modules to Excel generation logic
 - [ ] **16.6.7** Test with tenant containing Arc SQL Server, Arc Data Controller, Arc sites
@@ -2025,7 +2025,7 @@ $deepConfig = [PSCustomObject]@{
 
 ### 17.1 — Azure VM Enhancements
 
-**Enhance `Get-AZTIVirtualMachines.ps1` (existing module) with 10 new data points:**
+**Enhance `Get-AZSCVirtualMachines.ps1` (existing module) with 10 new data points:**
 
 | # | New Data Point | Source API | Description |
 |---|---|---|---|
@@ -2042,7 +2042,7 @@ $deepConfig = [PSCustomObject]@{
 
 ### 17.2 — Arc VM Enhancements
 
-**Enhance `Get-AZTIArcMachines.ps1` (existing module) with 10 new data points:**
+**Enhance `Get-AZSCArcMachines.ps1` (existing module) with 10 new data points:**
 
 | # | New Data Point | Source API | Description |
 |---|---|---|---|
@@ -2210,8 +2210,8 @@ $vmData = $vms | ForEach-Object -Parallel {
 
 ### 17.6 — Implementation Checklist
 
-- [ ] **17.6.1** Enhance `Get-AZTIVirtualMachines.ps1` with 10 new data points
-- [ ] **17.6.2** Enhance `Get-AZTIArcMachines.ps1` with 10 new data points
+- [ ] **17.6.1** Enhance `Get-AZSCVirtualMachines.ps1` with 10 new data points
+- [ ] **17.6.2** Enhance `Get-AZSCArcMachines.ps1` with 10 new data points
 - [ ] **17.6.3** Implement Azure Monitor Metrics API integration (CPU, Memory, Disk, Network)
 - [ ] **17.6.4** Implement Azure Backup API integration (backup status, last backup time)
 - [ ] **17.6.5** Implement Site Recovery API integration (DR status, replication health)
@@ -2276,7 +2276,7 @@ Total: 17 folders       111      15 categories populated      4 renames + 7 move
 
 ```powershell
 # Execute folder renames (PowerShell commands)
-# Current working directory: c:\git\thisismydemo-azure-inventory\
+# Current working directory: c:\git\thisismydemo-azure-scout\
 
 # 1. Container → Containers (plural to match Microsoft category name)
 Rename-Item -Path "Modules\Public\InventoryModules\Container" -NewName "Containers"
@@ -2379,7 +2379,7 @@ Get-ChildItem -Path "Modules\" -Recurse -Filter "*.ps1" | Select-String -Pattern
 **Testing Strategy:**
 
 ```powershell
-# Validation Script: Test-AZTIModuleStructure.ps1
+# Validation Script: Test-AZSCModuleStructure.ps1
 # Run after restructure to verify all 145 modules still load
 
 $errors = @()
@@ -2412,8 +2412,8 @@ if ($moduleCount -ne 111) {
 }
 
 # 4. Test module auto-discovery (verify all modules load)
-Import-Module .\AzureTenantInventory.psd1 -Force
-$loadedCommands = Get-Command -Module AzureTenantInventory | Measure-Object | Select-Object -ExpandProperty Count
+Import-Module .\AzureScout.psd1 -Force
+$loadedCommands = Get-Command -Module AzureScout | Measure-Object | Select-Object -ExpandProperty Count
 if ($loadedCommands -lt 145) {
     $errors += "Module auto-discovery failed: Only $loadedCommands commands loaded (expected 145+)"
 }
@@ -2453,11 +2453,11 @@ if ($errors.Count -eq 0) {
 - [ ] **18.1.5** Delete empty APIs/ folder
 - [ ] **18.1.6** Search codebase for hardcoded folder path references
 - [ ] **18.1.7** Update any hardcoded paths found
-- [ ] **18.1.8** Run `Test-AZTIModuleStructure.ps1` validation script
+- [ ] **18.1.8** Run `Test-AZSCModuleStructure.ps1` validation script
 - [ ] **18.1.9** Verify module count: 111 inventory modules across 15 folders
-- [ ] **18.1.10** Test module auto-discovery: `Import-Module .\AzureTenantInventory.psd1`
+- [ ] **18.1.10** Test module auto-discovery: `Import-Module .\AzureScout.psd1`
 - [ ] **18.1.11** Verify all 145 commands load (Public + Private + Inventory)
-- [ ] **18.1.12** Run `Invoke-AzureTenantInventory` smoke test (verify no errors from restructure)
+- [ ] **18.1.12** Run `Invoke-AzureScout` smoke test (verify no errors from restructure)
 - [ ] **18.1.13** Verify Excel report generates (folder restructure doesn't break reporting)
 - [ ] **18.1.14** Create `docs/folder-structure-migration.md` (document changes for future reference)
 - [ ] **18.1.15** Update `CHANGELOG.md` with folder restructure details
@@ -2470,7 +2470,7 @@ if ($errors.Count -eq 0) {
 
 **New `-Category` Parameter:**
 ```powershell
-Invoke-AzureTenantInventory -TenantID $tid -Category Compute,Networking
+Invoke-AzureScout -TenantID $tid -Category Compute,Networking
 ```
 
 **Supported Categories (Microsoft's Official 18 + "All"):**
@@ -2500,16 +2500,16 @@ These categories **EXACTLY MATCH** Microsoft Azure Portal categorization (https:
 **Multiple Categories:**
 ```powershell
 # Comma-separated
-Invoke-AzureTenantInventory -TenantID $tid -Category Compute,Networking,Storage
+Invoke-AzureScout -TenantID $tid -Category Compute,Networking,Storage
 
 # Spaces in category names require quotes
-Invoke-AzureTenantInventory -TenantID $tid -Category "AI + machine learning","Hybrid + multicloud"
+Invoke-AzureScout -TenantID $tid -Category "AI + machine learning","Hybrid + multicloud"
 
 # Array syntax
-Invoke-AzureTenantInventory -TenantID $tid -Category @('Compute', 'Networking')
+Invoke-AzureScout -TenantID $tid -Category @('Compute', 'Networking')
 
 # Aliases supported (optional shortcuts)
-Invoke-AzureTenantInventory -TenantID $tid -Category AI,Hybrid,IoT,Monitor,Management,Web
+Invoke-AzureScout -TenantID $tid -Category AI,Hybrid,IoT,Monitor,Management,Web
 # (Aliases map: AI→"AI + machine learning", Hybrid→"Hybrid + multicloud", etc.)
 ```
 
@@ -2533,7 +2533,7 @@ Invoke-AzureTenantInventory -TenantID $tid -Category AI,Hybrid,IoT,Monitor,Manag
 **Module Metadata Parsing:**
 ```powershell
 # Function to get module category
-function Get-AZTIModuleCategory {
+function Get-AZSCModuleCategory {
     param([string]$ModulePath)
 
     $content = Get-Content $ModulePath -Raw
@@ -2582,15 +2582,15 @@ function Get-AZTIModuleCategory {
 
 **Module Enumeration with Category Filter:**
 ```powershell
-function Get-AZTIModulesToRun {
+function Get-AZSCModulesToRun {
     param(
         [string[]]$Categories = @('All'),
         [string]$Scope = 'ArmOnly'
     )
 
     # Get all module files
-    $armModules = Get-ChildItem "$PSScriptRoot\Modules\ARM" -Filter "Get-AZTI*.ps1"
-    $entraModules = Get-ChildItem "$PSScriptRoot\Modules\Identity" -Filter "Get-AZTI*.ps1"
+    $armModules = Get-ChildItem "$PSScriptRoot\Modules\ARM" -Filter "Get-AZSC*.ps1"
+    $entraModules = Get-ChildItem "$PSScriptRoot\Modules\Identity" -Filter "Get-AZSC*.ps1"
 
     # Filter by scope
     $modules = @()
@@ -2604,7 +2604,7 @@ function Get-AZTIModulesToRun {
     # Filter by category
     if ($Categories -notcontains 'All') {
         $modules = $modules | Where-Object {
-            $category = Get-AZTIModuleCategory -ModulePath $_.FullName
+            $category = Get-AZSCModuleCategory -ModulePath $_.FullName
             $category -in $Categories
         }
     }
@@ -2615,7 +2615,7 @@ function Get-AZTIModulesToRun {
 
 **Usage in Main Function:**
 ```powershell
-function Invoke-AzureTenantInventory {
+function Invoke-AzureScout {
     param(
         [string]$TenantID,
         [ValidateSet('All','ArmOnly','EntraOnly')]
@@ -2633,7 +2633,7 @@ function Invoke-AzureTenantInventory {
     )
 
     # Get modules to run based on scope and category
-    $modulesToRun = Get-AZTIModulesToRun -Categories $Category -Scope $Scope
+    $modulesToRun = Get-AZSCModulesToRun -Categories $Category -Scope $Scope
 
     Write-Host "Running $($modulesToRun.Count) modules for categories: $($Category -join ', ')" -ForegroundColor Cyan
 
@@ -2675,8 +2675,8 @@ Resources Collected: 1,234
 
 | Microsoft Service | Category | Covered | Module Name | Planned | Notes |
 |---|---|---|---|---|---|
-| Azure Virtual Machines | Compute | ✅ Yes | Get-AZTIVirtualMachines.ps1 | Phase 0 | Fully implemented with enhanced data (Phase 17) |
-| Azure Functions | Compute | ✅ Yes | Get-AZTIFunctionApps.ps1 | Phase 4 | Basic inventory |
+| Azure Virtual Machines | Compute | ✅ Yes | Get-AZSCVirtualMachines.ps1 | Phase 0 | Fully implemented with enhanced data (Phase 17) |
+| Azure Functions | Compute | ✅ Yes | Get-AZSCFunctionApps.ps1 | Phase 4 | Basic inventory |
 | Azure DevTest Labs | DevOps | ❌ No | - | Future | Not planned for current phases |
 | Azure Spring Apps | Compute | ❌ No | - | Future | Low priority |
 | Azure Communication Services | Web & Mobile | ❌ No | - | Future | Messaging/calling services |
@@ -2686,11 +2686,11 @@ Resources Collected: 1,234
 - [ ] **18.8.1** Add `.CATEGORY` comment header to ALL existing modules (~145 modules)
 - [ ] **18.7.2** Create `docs/azure-category-structure.md` documentation
 - [ ] **18.7.3** Create `docs/azure-coverage-table.md` documentation
-- [ ] **18.7.4** Implement `Get-AZTIModuleCategory` function
-- [ ] **18.7.5** Implement `Get-AZTIModulesToRun` function with category filtering
-- [ ] **18.7.6** Add `-Category` parameter to `Invoke-AzureTenantInventory` with ValidateSet (18 categories + All)
+- [ ] **18.7.4** Implement `Get-AZSCModuleCategory` function
+- [ ] **18.7.5** Implement `Get-AZSCModulesToRun` function with category filtering
+- [ ] **18.7.6** Add `-Category` parameter to `Invoke-AzureScout` with ValidateSet (18 categories + All)
 - [ ] **18.7.7** Implement category alias support (AI→"AI + machine learning", etc.)
-- [ ] **18.7.8** Update main execution loop to use `Get-AZTIModulesToRun`
+- [ ] **18.7.8** Update main execution loop to use `Get-AZSCModulesToRun`
 - [ ] **18.7.9** Update Excel generation to create worksheets only for executed modules
 - [ ] **18.7.10** Update Overview tab to show categories selected + modules executed count
 - [ ] **18.7.11** Update `README.md` with category filtering examples (using Microsoft's official names)
@@ -2755,42 +2755,42 @@ All acceptance checks from Phase 13 + new acceptance checks for Phases 14-18.
 
 | # | Test | Expected Outcome |
 |---|---|---|
-| 28 | Default run (no `-Category` param) | `Invoke-AzureTenantInventory -TenantID $tid` runs ALL modules (same as `-Category All`) |
-| 29 | Single category (full name) | `Invoke-AzureTenantInventory -TenantID $tid -Category Compute` runs ONLY Compute modules (includes AVD). Excel report contains ONLY Compute-related worksheets (VMs, VMSSs, Disks, AVD Host Pools, etc.) — ~19 modules |
-| 30 | Multiple categories | `Invoke-AzureTenantInventory -TenantID $tid -Category Compute,Networking,Storage` runs only Compute, Networking, Storage modules. Excel report contains only those worksheets. |
-| 31 | Combined with scope | `Invoke-AzureTenantInventory -TenantID $tid -Scope All -Category Security,Identity` runs Defender modules + Entra ID modules ONLY. Excel report contains Security & Identity worksheets only. |
+| 28 | Default run (no `-Category` param) | `Invoke-AzureScout -TenantID $tid` runs ALL modules (same as `-Category All`) |
+| 29 | Single category (full name) | `Invoke-AzureScout -TenantID $tid -Category Compute` runs ONLY Compute modules (includes AVD). Excel report contains ONLY Compute-related worksheets (VMs, VMSSs, Disks, AVD Host Pools, etc.) — ~19 modules |
+| 30 | Multiple categories | `Invoke-AzureScout -TenantID $tid -Category Compute,Networking,Storage` runs only Compute, Networking, Storage modules. Excel report contains only those worksheets. |
+| 31 | Combined with scope | `Invoke-AzureScout -TenantID $tid -Scope All -Category Security,Identity` runs Defender modules + Entra ID modules ONLY. Excel report contains Security & Identity worksheets only. |
 | 32 | Overview tab | Shows "Categories Selected: Compute, Networking" and "Modules Executed: 54" (19 Compute + 35 Networking) |
-| 33 | Hybrid + multicloud category | `Invoke-AzureTenantInventory -TenantID $tid -Category "Hybrid + multicloud"` runs Arc + Azure Local modules (18 modules total: Arc Machines, Arc Kubernetes, Arc SQL, Arc Data, Arc Sites, Azure Local clusters/VMs/networks/storage, Arc Resource Bridge, Arc Settings, Edge Devices) |
-| 34 | AI + machine learning category | `Invoke-AzureTenantInventory -TenantID $tid -Category "AI + machine learning"` runs ONLY AI/ML modules (OpenAI, AI Foundry, Cognitive Services, ML Workspaces, Bot Services, Search) — 15 modules |
-| 35 | Category alias | `Invoke-AzureTenantInventory -TenantID $tid -Category AI` resolves to "AI + machine learning" and runs 15 AI modules |
-| 36 | Monitor category | `Invoke-AzureTenantInventory -TenantID $tid -Category Monitor` runs ONLY monitoring modules (Log Analytics, App Insights, DCRs, Alert Rules, Action Groups, etc.) — 22 modules. (Note: NOT "Monitoring" — uses Microsoft's official "Monitor" name) |
-| 37 | Internet of Things category | `Invoke-AzureTenantInventory -TenantID $tid -Category "Internet of Things"` runs IoT Hubs, Device Provisioning Services, Digital Twins — 4 modules |
-| 38 | Management and governance category | `Invoke-AzureTenantInventory -TenantID $tid -Category "Management and governance"` runs Management Groups, Policies, Subscriptions, Blueprints, Lighthouse, Tags, Locks, Cost Management — 14 modules |
-| 39 | Web & Mobile category | `Invoke-AzureTenantInventory -TenantID $tid -Category "Web & Mobile"` runs App Services, Function Apps, Static Web Apps — 4 modules |
-| 40 | Networking includes VPN | `Invoke-AzureTenantInventory -TenantID $tid -Category Networking` runs VPN Gateways, VPN Connections, Local Network Gateways, ExpressRoute (merged into Networking — no separate VPN category) — 35 modules total |
+| 33 | Hybrid + multicloud category | `Invoke-AzureScout -TenantID $tid -Category "Hybrid + multicloud"` runs Arc + Azure Local modules (18 modules total: Arc Machines, Arc Kubernetes, Arc SQL, Arc Data, Arc Sites, Azure Local clusters/VMs/networks/storage, Arc Resource Bridge, Arc Settings, Edge Devices) |
+| 34 | AI + machine learning category | `Invoke-AzureScout -TenantID $tid -Category "AI + machine learning"` runs ONLY AI/ML modules (OpenAI, AI Foundry, Cognitive Services, ML Workspaces, Bot Services, Search) — 15 modules |
+| 35 | Category alias | `Invoke-AzureScout -TenantID $tid -Category AI` resolves to "AI + machine learning" and runs 15 AI modules |
+| 36 | Monitor category | `Invoke-AzureScout -TenantID $tid -Category Monitor` runs ONLY monitoring modules (Log Analytics, App Insights, DCRs, Alert Rules, Action Groups, etc.) — 22 modules. (Note: NOT "Monitoring" — uses Microsoft's official "Monitor" name) |
+| 37 | Internet of Things category | `Invoke-AzureScout -TenantID $tid -Category "Internet of Things"` runs IoT Hubs, Device Provisioning Services, Digital Twins — 4 modules |
+| 38 | Management and governance category | `Invoke-AzureScout -TenantID $tid -Category "Management and governance"` runs Management Groups, Policies, Subscriptions, Blueprints, Lighthouse, Tags, Locks, Cost Management — 14 modules |
+| 39 | Web & Mobile category | `Invoke-AzureScout -TenantID $tid -Category "Web & Mobile"` runs App Services, Function Apps, Static Web Apps — 4 modules |
+| 40 | Networking includes VPN | `Invoke-AzureScout -TenantID $tid -Category Networking` runs VPN Gateways, VPN Connections, Local Network Gateways, ExpressRoute (merged into Networking — no separate VPN category) — 35 modules total |
 
 ### 19.6 — Comprehensive Integration Tests
 
 | # | Test | Expected Outcome |
 |---|---|---|
-| 37 | Full tenant scan | `Invoke-AzureTenantInventory -TenantID $tid -Scope All -Category All` completes successfully. Excel report contains ~170 worksheets (all ARM + all Entra ID). JSON output contains both `arm` and `entra` sections with all 170+ resource types. |
-| 38 | Empty tenant | `Invoke-AzureTenantInventory -TenantID $emptyTid` completes successfully. Excel report shows 0 resources for all worksheets. No errors thrown. |
-| 39 | Large tenant (1000+ resources) | `Invoke-AzureTenantInventory -TenantID $largeTid` completes in reasonable time (<2 hours). All API throttling handled gracefully. No duplicate resources in Excel. |
-| 40 | SPN auth with Entra + ARM | `Invoke-AzureTenantInventory -TenantID $tid -AppId $appId -Secret $secret -Scope All` authenticates as SPN and scans both ARM + Entra ID successfully (if SPN has permissions). |
-| 41 | Resource provider warnings | `Invoke-AzureTenantInventory -TenantID $tid -CheckResourceProviders` warns for unregistered providers (`Microsoft.Security`, `Microsoft.Insights`, `Microsoft.CognitiveServices`, `Microsoft.DesktopVirtualization`, etc.). Execution continues; dependent modules skipped. |
-| 42 | Multi-subscription tenant | `Invoke-AzureTenantInventory -TenantID $tid` scans ALL subscriptions in tenant (including empty subscriptions). Excel "All Subscriptions" worksheet lists all subscriptions (including ones with 0 resources). |
-| 43 | Management Groups hierarchy | `Invoke-AzureTenantInventory -TenantID $tid` captures full MG hierarchy with indentation. Excel "Management Groups" worksheet shows parent-child relationships visually. |
-| 44 | Policy compliance at scale | `Invoke-AzureTenantInventory -TenantID $tid` captures ~500 most recent policy compliance states (not millions). Excel "Policy Compliance States" worksheet shows resource ID, assignment, definition, state, timestamp (max 500 rows per subscription). |
-| 45 | Defender assessments | `Invoke-AzureTenantInventory -TenantID $tid` captures Defender assessments, secure score, alerts, pricing. Excel "Security Overview" tab includes Defender summary, top 10 unhealthy assessments, score gauge chart, compliance bar chart. |
-| 46 | Azure Update Manager overview | `Invoke-AzureTenantInventory -TenantID $tid` creates "Azure Update Manager Overview" tab listing ALL Azure VMs + ALL Arc machines with maintenance schedule assignment, patch compliance status, pending patches count. Includes summary graphs. |
-| 47 | Azure Monitor coverage | `Invoke-AzureTenantInventory -TenantID $tid` creates "Azure Monitor" tab with action groups, alert rules, DCRs, workspaces, diagnostic settings coverage. Includes diagnostic coverage by resource type stacked bar chart. |
-| 48 | Cost Management overview | `Invoke-AzureTenantInventory -TenantID $tid` creates "Cost Management" tab with VM reservations, reservation recommendations, Advisor cost recommendations. |
+| 37 | Full tenant scan | `Invoke-AzureScout -TenantID $tid -Scope All -Category All` completes successfully. Excel report contains ~170 worksheets (all ARM + all Entra ID). JSON output contains both `arm` and `entra` sections with all 170+ resource types. |
+| 38 | Empty tenant | `Invoke-AzureScout -TenantID $emptyTid` completes successfully. Excel report shows 0 resources for all worksheets. No errors thrown. |
+| 39 | Large tenant (1000+ resources) | `Invoke-AzureScout -TenantID $largeTid` completes in reasonable time (<2 hours). All API throttling handled gracefully. No duplicate resources in Excel. |
+| 40 | SPN auth with Entra + ARM | `Invoke-AzureScout -TenantID $tid -AppId $appId -Secret $secret -Scope All` authenticates as SPN and scans both ARM + Entra ID successfully (if SPN has permissions). |
+| 41 | Resource provider warnings | `Invoke-AzureScout -TenantID $tid -CheckResourceProviders` warns for unregistered providers (`Microsoft.Security`, `Microsoft.Insights`, `Microsoft.CognitiveServices`, `Microsoft.DesktopVirtualization`, etc.). Execution continues; dependent modules skipped. |
+| 42 | Multi-subscription tenant | `Invoke-AzureScout -TenantID $tid` scans ALL subscriptions in tenant (including empty subscriptions). Excel "All Subscriptions" worksheet lists all subscriptions (including ones with 0 resources). |
+| 43 | Management Groups hierarchy | `Invoke-AzureScout -TenantID $tid` captures full MG hierarchy with indentation. Excel "Management Groups" worksheet shows parent-child relationships visually. |
+| 44 | Policy compliance at scale | `Invoke-AzureScout -TenantID $tid` captures ~500 most recent policy compliance states (not millions). Excel "Policy Compliance States" worksheet shows resource ID, assignment, definition, state, timestamp (max 500 rows per subscription). |
+| 45 | Defender assessments | `Invoke-AzureScout -TenantID $tid` captures Defender assessments, secure score, alerts, pricing. Excel "Security Overview" tab includes Defender summary, top 10 unhealthy assessments, score gauge chart, compliance bar chart. |
+| 46 | Azure Update Manager overview | `Invoke-AzureScout -TenantID $tid` creates "Azure Update Manager Overview" tab listing ALL Azure VMs + ALL Arc machines with maintenance schedule assignment, patch compliance status, pending patches count. Includes summary graphs. |
+| 47 | Azure Monitor coverage | `Invoke-AzureScout -TenantID $tid` creates "Azure Monitor" tab with action groups, alert rules, DCRs, workspaces, diagnostic settings coverage. Includes diagnostic coverage by resource type stacked bar chart. |
+| 48 | Cost Management overview | `Invoke-AzureScout -TenantID $tid` creates "Cost Management" tab with VM reservations, reservation recommendations, Advisor cost recommendations. |
 
 ### 19.7 — Documentation & Usability Checks
 
 | # | Test | Expected Outcome |
 |---|---|---|
-| 49 | `Get-Help Invoke-AzureTenantInventory -Full` | Shows complete help with: Synopsis, Description, Parameters (all params documented), Examples (10+ examples covering all features), Inputs, Outputs, Notes, Related Links |
+| 49 | `Get-Help Invoke-AzureScout -Full` | Shows complete help with: Synopsis, Description, Parameters (all params documented), Examples (10+ examples covering all features), Inputs, Outputs, Notes, Related Links |
 | 50 | `README.md` accuracy | README.md Quick Start section reflects new default (`-Scope ArmOnly`). Permissions section documents ARM + Entra ID permissions. Resource Providers section lists all required providers. Examples cover category filtering, scope selection, SPN auth. |
 | 51 | `CHANGELOG.md` completeness | CHANGELOG.md documents all new features from Phases 9-18 with version numbers, breaking changes, new modules, enhancements. |
 | 52 | Error messages clarity | When permission denied, error message clearly states which permission is missing and remediation steps (e.g., "Graph API permission 'User.Read.All' required. Remediation: Grant admin consent for SPN or use user account with Global Reader role.") |
@@ -2816,7 +2816,7 @@ Phase 0 → Phase 1 → Phase 1B → Phase 2 → Phase 3 → Phase 4 → Phase 5
 - **Phase 17:** ✅ COMPLETE (VM + Arc enrichments with Monitor/Backup/DR/Cost/Advisor columns)
 - **Phase 18:** ✅ COMPLETE (category metadata system + filtering logic + `.CATEGORY` per-file parsing)
 - **Phase 19:** ⏳ TESTING PHASE (integration/acceptance tests pending)
-- **Phase 20:** ✅ COMPLETE (`.EXAMPLE` blocks + Test-AZTIPermissions refactored to delegate to Invoke-AZTIPermissionAudit)
+- **Phase 20:** ✅ COMPLETE (`.EXAMPLE` blocks + Test-AZSCPermissions refactored to delegate to Invoke-AZSCPermissionAudit)
 - **Phase 21:** ✅ COMPLETE (Markdown + AsciiDoc report export + PermissionAudit AsciiDoc output)
 
 **Version:** 2.0.0 (bumped from 1.0.0 — major version for breaking changes + category filtering)
@@ -2826,9 +2826,9 @@ Phase 0 → Phase 1 → Phase 1B → Phase 2 → Phase 3 → Phase 4 → Phase 5
 ---
 
 **Version Control**
-- Created: 2026-02-22 by AzureTenantInventory Contributors
-- Last Edited: 2026-02-24 by AzureTenantInventory Contributors
+- Created: 2026-02-22 by AzureScout Contributors
+- Last Edited: 2026-02-24 by AzureScout Contributors
 - Version: 3.0.0
 - Tags: powershell, azure, inventory, entra-id, azure-local, arc-gateway, vpn, policy, defender, monitor, dcr, management-groups, subscriptions, scope, permissions, resource-providers, excel-restructure, update-manager, ai-ml, azure-openai, ai-foundry, machine-learning, cognitive-services, avd, azure-virtual-desktop, arc-sql, arc-data, vm-enhancement, category-filtering, comprehensive-monitoring
-- Keywords: azure-inventory, ari, resource-graph, entra, identity, hci, arc, vpn, policy, governance, security, monitoring, data-collection-rules, lighthouse, comprehensive-logging, authentication, documentation, openai, foundry, ml-workspaces, bot-services, cognitive-search, avd-session-hosts, arc-enabled-sql, vm-metrics, backup-status, disaster-recovery, cost-management, advisor, update-compliance, category-filtering
-- Author: AzureTenantInventory Contributors
+- Keywords: azure-scout, ari, resource-graph, entra, identity, hci, arc, vpn, policy, governance, security, monitoring, data-collection-rules, lighthouse, comprehensive-logging, authentication, documentation, openai, foundry, ml-workspaces, bot-services, cognitive-search, avd-session-hosts, arc-enabled-sql, vm-metrics, backup-status, disaster-recovery, cost-management, advisor, update-compliance, category-filtering
+- Author: AzureScout Contributors

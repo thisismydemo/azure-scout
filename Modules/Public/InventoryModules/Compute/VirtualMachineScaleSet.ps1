@@ -7,10 +7,10 @@ This script consolidates information for all microsoft.compute/virtualmachinesca
 Excel Sheet Name: VMSS
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Compute/VirtualMachineScaleSet.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Compute/VirtualMachineScaleSet.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .CATEGORY Compute
 
@@ -33,8 +33,8 @@ If ($Task -eq 'Processing')
         $AutoScale = $Resources | Where-Object {$_.TYPE -eq "microsoft.insights/autoscalesettings" -and $_.Properties.enabled -eq 'true'} 
         $AKS = $Resources | Where-Object {$_.TYPE -eq 'microsoft.containerservice/managedclusters'}
         $SFC = $Resources | Where-Object {$_.TYPE -eq 'microsoft.servicefabric/clusters'}
-        $VMExtraDetails = $Resources | Where-Object { $_.TYPE -eq 'AZTI/VM/SKU' }
-        $VMQuotas = $Resources | Where-Object { $_.TYPE -eq 'AZTI/VM/Quotas' }
+        $VMExtraDetails = $Resources | Where-Object { $_.TYPE -eq 'AZSC/VM/SKU' }
+        $VMQuotas = $Resources | Where-Object { $_.TYPE -eq 'AZSC/VM/Quotas' }
 
     <######### Insert the resource Process here ########>
 

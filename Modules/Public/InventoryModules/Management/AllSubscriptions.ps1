@@ -10,17 +10,17 @@ count, and management group path.
 Excel Sheet Name: All Subscriptions
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Management/AllSubscriptions.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Management/AllSubscriptions.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .CATEGORY Management
 
 .NOTES
 Version: 1.0.0
 First Release Date: February 24, 2026
-Authors: AzureTenantInventory Contributors
+Authors: AzureScout Contributors
 
 #>
 
@@ -32,7 +32,7 @@ If ($Task -eq 'Processing')
 {
     <######### Insert the resource extraction here ########>
 
-    # $Sub already contains ALL subscriptions retrieved at startup by Get-AZTISubscriptions.
+    # $Sub already contains ALL subscriptions retrieved at startup by Get-AZSCSubscriptions.
     # We enrich each subscription with resource/RG counts and MG path.
 
     # Build resource count and resource group count maps

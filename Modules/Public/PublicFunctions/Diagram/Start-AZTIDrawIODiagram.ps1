@@ -6,10 +6,10 @@ Diagram Module for Draw.io
 This script processes and creates a Draw.io Diagram based on resources present in the extraction variable $Resources.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/PublicFunctions/Diagram/Start-AZTIDrawIODiagram.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/PublicFunctions/Diagram/Start-AZSCDrawIODiagram.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.5
@@ -17,22 +17,22 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 
 #>
-function Start-AZTIDrawIODiagram {
-    param($Subscriptions, $Resources, $Advisories, $DDFile, $DiagramCache, $FullEnvironment, $ResourceContainers, $Automation, $AZTIModule)
+function Start-AZSCDrawIODiagram {
+    param($Subscriptions, $Resources, $Advisories, $DDFile, $DiagramCache, $FullEnvironment, $ResourceContainers, $Automation, $AZSCModule)
 
     $TempPath = (get-item $DiagramCache).parent
 
     $Logfile = Join-Path $TempPath 'DiagramLogFile.log'
 
-    $AZTIModuleVersion = (get-module -Name AzureTenantInventory).Version.ToString()
+    $AZSCModuleVersion = (get-module -Name AzureScout).Version.ToString()
 
-    ('DrawIOCoreFile - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - ################################################ Starting AzureTenantInventory Diagram ##################################') | Out-File -FilePath $LogFile -Append
+    ('DrawIOCoreFile - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - ################################################ Starting AzureScout Diagram ##################################') | Out-File -FilePath $LogFile -Append
 
-    ('DrawIOCoreFile - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - AzureTenantInventory Module Version: ' + $AZTIModuleVersion) | Out-File -FilePath $LogFile -Append
+    ('DrawIOCoreFile - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - AzureScout Module Version: ' + $AZSCModuleVersion) | Out-File -FilePath $LogFile -Append
 
-    ('DrawIOCoreFile - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - Calling Start-AZTIDiagramJob Function') | Out-File -FilePath $LogFile -Append
+    ('DrawIOCoreFile - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - Calling Start-AZSCDiagramJob Function') | Out-File -FilePath $LogFile -Append
 
-    Start-AZTIDiagramJob -Resources $Resources -Automation $Automation
+    Start-AZSCDiagramJob -Resources $Resources -Automation $Automation
 
     ('DrawIOCoreFile - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - Setting Draw.IO Diagram File') | Out-File -FilePath $LogFile -Append 
 
@@ -57,7 +57,7 @@ function Start-AZTIDrawIODiagram {
         Start-ThreadJob -Name 'Diagram_Subscriptions' -ScriptBlock {
             try
             {
-                Start-AZTIDiagramSubscription -Subscriptions $($args[0]) -Resources $($args[1]) -DiagramCache $($args[2]) -LogFile $($args[3])
+                Start-AZSCDiagramSubscription -Subscriptions $($args[0]) -Resources $($args[1]) -DiagramCache $($args[2]) -LogFile $($args[3])
             }
             catch
             {
@@ -72,13 +72,13 @@ function Start-AZTIDrawIODiagram {
             try
                 {
                     Import-Module $($args[4])
-                    Start-AZTIDiagramSubscription -Subscriptions $($args[0]) -Resources $($args[1]) -DiagramCache $($args[2]) -LogFile $($args[3])
+                    Start-AZSCDiagramSubscription -Subscriptions $($args[0]) -Resources $($args[1]) -DiagramCache $($args[2]) -LogFile $($args[3])
                 }
             catch
                 {
                     ('DrawIOCoreFile - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - Error: ' + $_.Exception.Message) | Out-File -FilePath $($args[3]) -Append
                 }
-        } -ArgumentList $Subscriptions, $Resources, $DiagramCache, $Logfile, $AZTIModule
+        } -ArgumentList $Subscriptions, $Resources, $DiagramCache, $Logfile, $AZSCModule
     }
 
     ('DrawIOCoreFile - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - Starting Organization Jobs') | Out-File -FilePath $LogFile -Append 
@@ -88,7 +88,7 @@ function Start-AZTIDrawIODiagram {
         Start-ThreadJob -Name 'Diagram_Organization' -ScriptBlock {
             try
             {
-                Start-AZTIDiagramOrganization -ResourceContainers $($args[0]) -DiagramCache $($args[1]) -LogFile $($args[2])
+                Start-AZSCDiagramOrganization -ResourceContainers $($args[0]) -DiagramCache $($args[1]) -LogFile $($args[2])
             }
             catch
             {
@@ -103,13 +103,13 @@ function Start-AZTIDrawIODiagram {
             try
             {
                 Import-Module $($args[3])
-                Start-AZTIDiagramOrganization -ResourceContainers $($args[0]) -DiagramCache $($args[1]) -LogFile $($args[2])
+                Start-AZSCDiagramOrganization -ResourceContainers $($args[0]) -DiagramCache $($args[1]) -LogFile $($args[2])
             }
             catch
             {
                 ('DrawIOCoreFile - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - Error: ' + $_.Exception.Message) | Out-File -FilePath $($args[2]) -Append
             }
-        } -ArgumentList $ResourceContainers, $DiagramCache, $Logfile, $AZTIModule
+        } -ArgumentList $ResourceContainers, $DiagramCache, $Logfile, $AZSCModule
     }
 
     ('DrawIOCoreFile - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - Waiting Variables Job to Continue') | Out-File -FilePath $LogFile -Append 
@@ -127,7 +127,7 @@ function Start-AZTIDrawIODiagram {
         Start-ThreadJob -Name 'Diagram_NetworkTopology' -ScriptBlock {
             try
             {
-                Start-AZTIDiagramNetwork -Subscriptions $($args[0]) -Job $($args[1]) -Advisories $($args[2]) -DiagramCache $($args[3]) -FullEnvironment $($args[4]) -DDFile $($args[5]) -XMLFiles $($args[6]) -LogFile $($args[7]) -Automation $($args[8])
+                Start-AZSCDiagramNetwork -Subscriptions $($args[0]) -Job $($args[1]) -Advisories $($args[2]) -DiagramCache $($args[3]) -FullEnvironment $($args[4]) -DDFile $($args[5]) -XMLFiles $($args[6]) -LogFile $($args[7]) -Automation $($args[8])
             }
             catch
             {
@@ -142,13 +142,13 @@ function Start-AZTIDrawIODiagram {
             try
             {
                 Import-Module $($args[9])
-                Start-AZTIDiagramNetwork -Subscriptions $($args[0]) -Job $($args[1]) -Advisories $($args[2]) -DiagramCache $($args[3]) -FullEnvironment $($args[4]) -DDFile $($args[5]) -XMLFiles $($args[6]) -LogFile $($args[7]) -Automation $($args[8]) -AZTIModule $($args[9])
+                Start-AZSCDiagramNetwork -Subscriptions $($args[0]) -Job $($args[1]) -Advisories $($args[2]) -DiagramCache $($args[3]) -FullEnvironment $($args[4]) -DDFile $($args[5]) -XMLFiles $($args[6]) -LogFile $($args[7]) -Automation $($args[8]) -AZSCModule $($args[9])
             }
             catch
             {
                 ('DrawIOCoreFile - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - Error: ' + $_.Exception.Message) | Out-File -FilePath $($args[7]) -Append
             }
-        } -ArgumentList $Subscriptions, $Job, $Advisories, $DiagramCache, $FullEnvironment, $DDFile, $XMLFiles, $Logfile, $Automation, $AZTIModule
+        } -ArgumentList $Subscriptions, $Job, $Advisories, $DiagramCache, $FullEnvironment, $DDFile, $XMLFiles, $Logfile, $Automation, $AZSCModule
     }
 
     ('DrawIOCoreFile - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - Waiting for Jobs') | Out-File -FilePath $LogFile -Append 
@@ -156,7 +156,7 @@ function Start-AZTIDrawIODiagram {
     (Get-Job | Where-Object {$_.name -like 'Diagram_*'}) | Wait-Job
 
     ('DrawIOCoreFile - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - Merging XML Files') | Out-File -FilePath $LogFile -Append 
-    Set-AZTIDiagramFile -XMLFiles $XMLFiles -DDFile $DDFile -LogFile $LogFile
+    Set-AZSCDiagramFile -XMLFiles $XMLFiles -DDFile $DDFile -LogFile $LogFile
 
     ('DrawIOCoreFile - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - Getting Log Details from Jobs') | Out-File -FilePath $LogFile -Append
 

@@ -11,7 +11,7 @@ Numbered-prefix folders were renamed, duplicate directories merged, legacy code 
 
 [source,text]
 ----
-azure-inventory/
+azure-scout/
 ├── .github/                            # GitHub config (issue templates, workflows, policies)
 │   ├── ISSUE_TEMPLATE/
 │   ├── policies/
@@ -66,8 +66,8 @@ azure-inventory/
 │           └── Jobs/
 ├── tests/                              # Pester test suites
 ├── antora-playbook.yml                 # Antora site playbook
-├── AzureTenantInventory.psd1           # Module manifest
-├── AzureTenantInventory.psm1           # Module loader (recursive *.ps1 import)
+├── AzureScout.psd1           # Module manifest
+├── AzureScout.psm1           # Module loader (recursive *.ps1 import)
 ├── CHANGELOG.md
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md

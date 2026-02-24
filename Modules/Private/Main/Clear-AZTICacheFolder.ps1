@@ -6,10 +6,10 @@ Clear cache folder for Azure Resource Inventory
 This module clears the cache folder for Azure Resource Inventory.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/0.MainFunctions/Clear-AZTICacheFolder.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/0.MainFunctions/Clear-AZSCCacheFolder.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -18,7 +18,7 @@ Authors: Claudio Merola
 
 #>
 
-function Clear-AZTICacheFolder {
+function Clear-AZSCCacheFolder {
     Param($ReportCache)
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Clearing Cache Folder.')

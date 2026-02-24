@@ -6,10 +6,10 @@ Start Subscription Job Module
 This script processes and creates the Subscriptions sheet based on resources and their subscriptions.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/PublicFunctions/Jobs/Start-AZTISubscriptionJob.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/PublicFunctions/Jobs/Start-AZSCSubscriptionJob.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,14 +17,14 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 
 #>
-function Start-AZTISubscriptionJob {
+function Start-AZSCSubscriptionJob {
     param($Subscriptions, $Resources, $CostData)
 
     if ([string]::IsNullOrEmpty($CostData))
         {
             $ResTable = $Resources | Where-Object { $_.type -notin ('microsoft.advisor/recommendations',
-                                                            'AZTI/VM/Quotas',
-                                                            'AZTI/VM/SKU',
+                                                            'AZSC/VM/Quotas',
+                                                            'AZSC/VM/SKU',
                                                             'Microsoft.Advisor/advisorScore',
                                                             'Microsoft.ResourceHealth/events',
                                                             'microsoft.support/supporttickets' )}

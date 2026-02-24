@@ -11,7 +11,7 @@
     Sheet: Identity Providers
 #>
 
-Register-AZTIInventoryModule -ModuleId 'entra/identityproviders' -PhaseId 'Processing' -ScriptBlock {
+Register-AZSCInventoryModule -ModuleId 'entra/identityproviders' -PhaseId 'Processing' -ScriptBlock {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -20,11 +20,11 @@ Register-AZTIInventoryModule -ModuleId 'entra/identityproviders' -PhaseId 'Proce
 
     $Resources = $Context.EntraData.'entra/identityproviders'
     if (-not $Resources) {
-        Write-AZTILog -Message "No identity providers data available" -Level Verbose
+        Write-AZSCLog -Message "No identity providers data available" -Level Verbose
         return
     }
 
-    Write-AZTILog -Message "Processing $($Resources.Count) identity provider(s)"
+    Write-AZSCLog -Message "Processing $($Resources.Count) identity provider(s)"
 
     foreach ($Provider in $Resources) {
         try {
@@ -93,29 +93,29 @@ Register-AZTIInventoryModule -ModuleId 'entra/identityproviders' -PhaseId 'Proce
                 Enabled                 = $Enabled
             }
 
-            Add-AZTIProcessedData -Type 'entra/identityproviders' -Data $Record
+            Add-AZSCProcessedData -Type 'entra/identityproviders' -Data $Record
 
         }
         catch {
-            Write-AZTILog -Message "Failed to process provider $($Provider.id): $_" -Level Error
+            Write-AZSCLog -Message "Failed to process provider $($Provider.id): $_" -Level Error
         }
     }
 }
 
-Register-AZTIInventoryModule -ModuleId 'entra/identityproviders' -PhaseId 'Reporting' -ScriptBlock {
+Register-AZSCInventoryModule -ModuleId 'entra/identityproviders' -PhaseId 'Reporting' -ScriptBlock {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [hashtable]$Context
     )
 
-    $Data = Get-AZTIProcessedData -Type 'entra/identityproviders'
+    $Data = Get-AZSCProcessedData -Type 'entra/identityproviders'
     if (-not $Data) {
-        Write-AZTILog -Message "No identity providers data to export" -Level Verbose
+        Write-AZSCLog -Message "No identity providers data to export" -Level Verbose
         return
     }
 
-    Write-AZTILog -Message "Exporting $($Data.Count) identity provider(s) to Excel"
+    Write-AZSCLog -Message "Exporting $($Data.Count) identity provider(s) to Excel"
 
     try {
         $ExcelParams = @{
@@ -158,9 +158,9 @@ Register-AZTIInventoryModule -ModuleId 'entra/identityproviders' -PhaseId 'Repor
 
         Close-ExcelPackage -ExcelPackage $Excel
 
-        Write-AZTILog -Message "Identity providers export completed"
+        Write-AZSCLog -Message "Identity providers export completed"
     }
     catch {
-        Write-AZTILog -Message "Failed to export identity providers: $_" -Level Error
+        Write-AZSCLog -Message "Failed to export identity providers: $_" -Level Error
     }
 }

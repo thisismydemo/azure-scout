@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the AzureTenantInventory module will be documented in this file.
+All notable changes to the AzureScout module will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Initial fork from [microsoft/ARI](https://github.com/microsoft/ARI) v3.6.11
-- Renamed module to `AzureTenantInventory` (prefix `AZTI`)
+- Renamed module to `AzureScout` (prefix `AZSC`)
 - New module manifest with fresh GUID, v1.0.0
 - Repository scaffolding (CHANGELOG, README, tests/)
 
@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 **Documentation**
 - Rewrote `README.md` — comprehensive parameter reference table, 17-category module catalog (95 ARM + 15 Entra = 110 total), 5 authentication methods, `-Scope`/`-OutputFormat` quick start, JSON output structure
 - Created `CREDITS.md` — attribution to original ARI project (Claudio Merola, RenatoGregio, Doug Finke/ImportExcel), MIT license notes
-- Updated `Set-AZTIReportPath.ps1` comment-based help (Synopsis, Description, Link, Version, Authors)
+- Updated `Set-AZSCReportPath.ps1` comment-based help (Synopsis, Description, Link, Version, Authors)
 
 **Antora Documentation Site** (8 new pages)
 - `authentication.adoc` — 5 auth methods with code examples, priority order, LoginExperienceV2 handling
@@ -38,26 +38,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced MkDocs workflow (Python/pip/mkdocs) with Antora workflow (Node.js 20, `npx antora`, `build/site` output)
 
 **Pester Tests** (5 new test files)
-- `Test-AZTIPermissions.Tests.ps1` — return structure, ARM/Graph pass/fail/warn, scope gating, never-throws guarantee
-- `Invoke-AzureTenantInventory.Tests.ps1` — ValidateSet enforcement, parameter aliases, switch params
-- `Connect-AZTILoginSession.Tests.ps1` — 4 auth paths (SPN+cert, SPN+secret, device-code, current-user), TenantID enforcement, LoginExperienceV2
-- `Invoke-AZTIGraphRequest.Tests.ps1` — URI normalization, pagination, SinglePage switch, retry 429/5xx, max retries
-- `Start-AZTIEntraExtraction.Tests.ps1` — return structure, normalized shape, all 15 queries, graceful degradation
+- `Test-AZSCPermissions.Tests.ps1` — return structure, ARM/Graph pass/fail/warn, scope gating, never-throws guarantee
+- `Invoke-AzureScout.Tests.ps1` — ValidateSet enforcement, parameter aliases, switch params
+- `Connect-AZSCLoginSession.Tests.ps1` — 4 auth paths (SPN+cert, SPN+secret, device-code, current-user), TenantID enforcement, LoginExperienceV2
+- `Invoke-AZSCGraphRequest.Tests.ps1` — URI normalization, pagination, SinglePage switch, retry 429/5xx, max retries
+- `Start-AZSCEntraExtraction.Tests.ps1` — return structure, normalized shape, all 15 queries, graceful degradation
 
 #### Phase 6 — JSON Output Layer
 
-- **`Export-AZTIJsonReport.ps1`** — New function at `Modules/Private/Reporting/Export-AZTIJsonReport.ps1`
+- **`Export-AZSCJsonReport.ps1`** — New function at `Modules/Private/Reporting/Export-AZSCJsonReport.ps1`
   - Reads all `{FolderName}.json` cache files produced by the processing phase
   - Assembles a structured JSON document with `_metadata` envelope (tool, version, tenantId, subscriptions, generatedAt, scope)
   - ARM inventory data organized under `arm` key by module folder (compute, network, storage, etc.)
   - Entra/Identity data organized under `entra` key (users, groups, appRegistrations, etc.)
   - Extra reports (advisory, policy, security, quotas) included as top-level keys when available
   - Outputs to `{ReportDir}/{ReportName}_Report_{timestamp}.json` alongside the Excel file
-- **`-OutputFormat` parameter** added to `Invoke-AzureTenantInventory`
+- **`-OutputFormat` parameter** added to `Invoke-AzureScout`
   - `All` (default): Generate both Excel (.xlsx) and JSON (.json) reports
   - `Excel`: Generate Excel report only, skip JSON export
   - `Json`: Generate JSON report only, skip Excel generation
-- Conditional logic wraps Excel reporting (`Start-AZTIReporOrchestration`, `Start-AZTIExcelCustomization`) to skip when `OutputFormat = 'Json'`
+- Conditional logic wraps Excel reporting (`Start-AZSCReporOrchestration`, `Start-AZSCExcelCustomization`) to skip when `OutputFormat = 'Json'`
 - JSON file automatically uploaded to Storage Account in automation mode when `OutputFormat` includes Json
 
 #### Phase 8 — Inventory Module Expansion (ARM)
@@ -109,7 +109,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `SecurityDefaults.ps1` — Security Defaults enforcement policy (`/v1.0/policies/identitySecurityDefaultsEnforcementPolicy`): enabled status, description, last modified date, protections provided (MFA requirements, legacy auth blocking), recommendation status, green formatting if enabled, yellow if disabled
 
 **Extraction Layer Enhancement**:
-- `Start-AZTIEntraExtraction.ps1` — Added 2 new Graph API queries: `/v1.0/identity/identityProviders` (array), `/v1.0/policies/identitySecurityDefaultsEnforcementPolicy` (SingleObject)
+- `Start-AZSCEntraExtraction.ps1` — Added 2 new Graph API queries: `/v1.0/identity/identityProviders` (array), `/v1.0/policies/identitySecurityDefaultsEnforcementPolicy` (SingleObject)
 
 ### Changed
 
@@ -127,7 +127,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- All exported function names: `*-ARI*` → `*-AZTI*`
+- All exported function names: `*-ARI*` → `*-AZSC*`
 - Module metadata (author, description, project URI, tags)
 - LICENSE updated with dual copyright (original + fork)
 
@@ -180,18 +180,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Phase 10 — Excel Specialized Tabs
 
 **New Excel worksheets — all read from `{ReportCache}/{Category}.json` cache files:**
-- **`Build-AZTICostManagementReport.ps1`** — "Cost Management" worksheet: VM cost estimates from `Compute.json`, Arc Server ESU/cost estimates from `Hybrid.json`, reservation recommendations from `Management.json`
-- **`Build-AZTISecurityOverviewReport.ps1`** — "Security Overview" worksheet: Defender for Cloud secure score, high/critical assessments, active alerts, and Defender plan pricing (reads `Security.json`)
-- **`Build-AZTIUpdateManagerReport.ps1`** — "Azure Update Manager" worksheet: VMs and Arc servers with patch compliance, NonCompliant rows highlighted yellow
-- **`Build-AZTIMonitorReport.ps1`** — "Azure Monitor" worksheet: Action groups, DCRs, DCEs, App Insights, alert rules, autoscale settings — rendered as sequential table sections from `Monitor.json`
-- **`Start-AZTIExtraReports.ps1`** — Updated: added `$ReportCache` parameter; calls all four Phase 10 builders after existing quota/policy/advisory reports
-- **`Start-AZTIReporOrchestration.ps1`** — Updated: passes `-ReportCache $ReportCache` to `Start-AZTIExtraReports`
-- **`Start-AZTIExcelCustomization.ps1`** — Updated: Phase 10 tab names (`Cost Management`, `Security Overview`, `Azure Update Manager`, `Azure Monitor`) excluded from Overview tab row count and resource size sort
-- **`Build-AZTIExcelChart.ps1`** — Updated (10.1.2): P00 Overview chart no longer shows "Reservation Advisor" pivot when a "Cost Management" tab exists; reservation data is now exclusively in the dedicated tab. Falls through to the resources area chart instead
+- **`Build-AZSCCostManagementReport.ps1`** — "Cost Management" worksheet: VM cost estimates from `Compute.json`, Arc Server ESU/cost estimates from `Hybrid.json`, reservation recommendations from `Management.json`
+- **`Build-AZSCSecurityOverviewReport.ps1`** — "Security Overview" worksheet: Defender for Cloud secure score, high/critical assessments, active alerts, and Defender plan pricing (reads `Security.json`)
+- **`Build-AZSCUpdateManagerReport.ps1`** — "Azure Update Manager" worksheet: VMs and Arc servers with patch compliance, NonCompliant rows highlighted yellow
+- **`Build-AZSCMonitorReport.ps1`** — "Azure Monitor" worksheet: Action groups, DCRs, DCEs, App Insights, alert rules, autoscale settings — rendered as sequential table sections from `Monitor.json`
+- **`Start-AZSCExtraReports.ps1`** — Updated: added `$ReportCache` parameter; calls all four Phase 10 builders after existing quota/policy/advisory reports
+- **`Start-AZSCReporOrchestration.ps1`** — Updated: passes `-ReportCache $ReportCache` to `Start-AZSCExtraReports`
+- **`Start-AZSCExcelCustomization.ps1`** — Updated: Phase 10 tab names (`Cost Management`, `Security Overview`, `Azure Update Manager`, `Azure Monitor`) excluded from Overview tab row count and resource size sort
+- **`Build-AZSCExcelChart.ps1`** — Updated (10.1.2): P00 Overview chart no longer shows "Reservation Advisor" pivot when a "Cost Management" tab exists; reservation data is now exclusively in the dedicated tab. Falls through to the resources area chart instead
 
 #### Phase 18 — Category Metadata Auto-Discovery (18.4.1)
 
-- **`Start-AZTIProcessJob.ps1`** — Enhanced module auto-discovery to parse `.CATEGORY` comment headers from individual `.ps1` files:
+- **`Start-AZSCProcessJob.ps1`** — Enhanced module auto-discovery to parse `.CATEGORY` comment headers from individual `.ps1` files:
   - Builds per-file `ModuleInfoList` objects with `Name`, `FolderCategory`, `FileCategory`, and `Categories` properties
   - When category filtering is active, applies a second per-file filter pass using the `.CATEGORY` header to support cross-category modules that live in one folder but logically belong to another
   - Files with no `.CATEGORY` header fall back to their folder name (backward compatible)
@@ -199,7 +199,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Phase 19 — Version Bump
 
-- **`AzureTenantInventory.psd1`** — `ModuleVersion` updated from `1.0.0` to **`2.0.0`** (major version for breaking changes: scope default change, category filtering, rearchitected module structure)
+- **`AzureScout.psd1`** — `ModuleVersion` updated from `1.0.0` to **`2.0.0`** (major version for breaking changes: scope default change, category filtering, rearchitected module structure)
 - Updated `README.md` with ARM-only default documentation, expanded permission tables (ARM + Graph), resource provider requirements, and troubleshooting guide
 - Added Markdown and AsciiDoc to output file table in README
 
@@ -228,7 +228,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Phase 18 — Category Structure Alignment
 
-- Category alias normalization added to `Invoke-AzureTenantInventory.ps1`: long-form Azure portal names (e.g., `AI + machine learning`, `Internet of Things`, `Management and governance`) automatically mapped to short folder names
+- Category alias normalization added to `Invoke-AzureScout.ps1`: long-form Azure portal names (e.g., `AI + machine learning`, `Internet of Things`, `Management and governance`) automatically mapped to short folder names
 - Updated `.vscode/settings.json` with PowerShell extension settings, formatting rules, file associations, and Pester test path configuration
 - Created `docs/azure-category-structure.md` — category-to-folder mapping reference with alias table and instructions for adding new categories
 - Created `docs/azure-coverage-table.md` — comprehensive inventory coverage table (171 modules across 15 categories)
@@ -237,29 +237,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Phase 20 — Help & Examples
 
-- Added 4 `.EXAMPLE` blocks to `Invoke-AzureTenantInventory`:
+- Added 4 `.EXAMPLE` blocks to `Invoke-AzureScout`:
   - `-PermissionAudit` basic usage
   - `-PermissionAudit -OutputFormat Markdown`
   - `-PermissionAudit -Scope All` (ARM + Graph)
   - Full inventory with `-PermissionAudit -Scope All -OutputFormat All`
-- **`Test-AZTIPermissions.ps1`** refactored (20.4.1): Now delegates to `Invoke-AZTIPermissionAudit` instead of containing duplicate permission-check logic. Maps the richer audit result back to the simplified `{ArmAccess, GraphAccess, Details}` shape that existing callers expect. Backward compatible — same parameter surface, same return properties
+- **`Test-AZSCPermissions.ps1`** refactored (20.4.1): Now delegates to `Invoke-AZSCPermissionAudit` instead of containing duplicate permission-check logic. Maps the richer audit result back to the simplified `{ArmAccess, GraphAccess, Details}` shape that existing callers expect. Backward compatible — same parameter surface, same return properties
 
 #### Phase 21 — Markdown & AsciiDoc Report Output
 
-- **`Export-AZTIMarkdownReport.ps1`** (`Modules/Private/Reporting/`) — New function generating GitHub-Flavored Markdown reports from cache files. Reads `{CategoryFolder}.json` cache files, renders per-module pipe tables, generates anchored ToC, writes `{ReportName}.md`. Parameters: `ReportCache`, `File`, `TenantID`, `Subscriptions`, `Scope`
-- **`Export-AZTIAsciiDocReport.ps1`** (`Modules/Private/Reporting/`) — New function generating AsciiDoc reports from cache files. Same cache-reading pattern as Markdown export, outputs AsciiDoc tables with `:toc: left`, `[TIP]` admonitions per module, writes `{ReportName}.adoc`. Compatible with Antora and Confluence
-- **`-OutputFormat Markdown` / `-OutputFormat AsciiDoc`** wired into `Invoke-AzureTenantInventory.ps1` — parallel to JSON export block in the reporting phase
+- **`Export-AZSCMarkdownReport.ps1`** (`Modules/Private/Reporting/`) — New function generating GitHub-Flavored Markdown reports from cache files. Reads `{CategoryFolder}.json` cache files, renders per-module pipe tables, generates anchored ToC, writes `{ReportName}.md`. Parameters: `ReportCache`, `File`, `TenantID`, `Subscriptions`, `Scope`
+- **`Export-AZSCAsciiDocReport.ps1`** (`Modules/Private/Reporting/`) — New function generating AsciiDoc reports from cache files. Same cache-reading pattern as Markdown export, outputs AsciiDoc tables with `:toc: left`, `[TIP]` admonitions per module, writes `{ReportName}.adoc`. Compatible with Antora and Confluence
+- **`-OutputFormat Markdown` / `-OutputFormat AsciiDoc`** wired into `Invoke-AzureScout.ps1` — parallel to JSON export block in the reporting phase
 - Added `MD` and `Adoc` as `[ValidateSet]` aliases for `Markdown` and `AsciiDoc` respectively
 - Updated `-OutputFormat` description in `README.md` to include Markdown and AsciiDoc values with aliases
 - Updated output files table in `README.md` to include `.md` and `.adoc` entries
 - **21.5.1/21.5.2 — PermissionAudit format support**: `-PermissionAudit -OutputFormat Markdown` now saves a permission audit `.md` report; `-PermissionAudit -OutputFormat AsciiDoc` saves a permission audit `.adoc` report with AsciiDoc role icons and `[source,powershell]` recommendation blocks
-- **`Invoke-AZTIPermissionAudit.ps1`** — Added `AsciiDoc` to `[ValidateSet]` for `-OutputFormat`; new AsciiDoc output block with `:toc: left`, `icon:check-circle[]`/`icon:times-circle[]` status icons, and `[source,powershell]` blocks for each recommendation
-- **`Invoke-AzureTenantInventory.ps1`** — Updated `auditOutputFormat` switch: `MD` → `Markdown`, `AsciiDoc` → `AsciiDoc`, `Adoc` → `AsciiDoc`, `All` → `All` (previously `All` mapped to `Console`)
+- **`Invoke-AZSCPermissionAudit.ps1`** — Added `AsciiDoc` to `[ValidateSet]` for `-OutputFormat`; new AsciiDoc output block with `:toc: left`, `icon:check-circle[]`/`icon:times-circle[]` status icons, and `[source,powershell]` blocks for each recommendation
+- **`Invoke-AzureScout.ps1`** — Updated `auditOutputFormat` switch: `MD` → `Markdown`, `AsciiDoc` → `AsciiDoc`, `Adoc` → `AsciiDoc`, `All` → `All` (previously `All` mapped to `Console`)
 
 #### Dependency Bootstrap
 
-- Removed `RequiredModules` hard requirement from `AzureTenantInventory.psd1` (changed to `@()`)
-- Added auto-install bootstrap to `AzureTenantInventory.psm1`: automatically installs and imports `ImportExcel`, `Az.Accounts`, `Az.ResourceGraph`, `Az.Storage`, `Az.Compute`, `Az.Authorization`, `Az.Resources` if not already available
+- Removed `RequiredModules` hard requirement from `AzureScout.psd1` (changed to `@()`)
+- Added auto-install bootstrap to `AzureScout.psm1`: automatically installs and imports `ImportExcel`, `Az.Accounts`, `Az.ResourceGraph`, `Az.Storage`, `Az.Compute`, `Az.Authorization`, `Az.Resources` if not already available
 
 ---
 
@@ -267,4 +267,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Created: 2026-02-22 by thisismydemo
 - Last Edited: 2026-02-24 by thisismydemo
 - Version: 1.6.0
-- Tags: changelog, azuretenantinventory, json-output, phase-7, antora, pester
+- Tags: changelog, AzureScout, json-output, phase-7, antora, pester

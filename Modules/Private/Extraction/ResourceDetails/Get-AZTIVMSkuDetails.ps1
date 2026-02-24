@@ -6,17 +6,17 @@ Module responsible for retrieving Azure VM SKU details.
 This module retrieves details about Azure VM SKUs available in specific locations.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/1.ExtractionFunctions/ResourceDetails/Get-AZTIVMSkuDetails.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/1.ExtractionFunctions/ResourceDetails/Get-AZSCVMSkuDetails.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .NOTES
 Version: 3.6.0
 First Release Date: 15th Oct, 2024
 Authors: Claudio Merola, Olli Uronen (Seppohto)
 #>
-function Get-AZTIVMSkuDetails {
+function Get-AZSCVMSkuDetails {
     Param ($Resources)
 
     $vm = $Resources | Where-Object {$_.TYPE -in 'microsoft.compute/virtualmachines','microsoft.compute/virtualmachinescalesets'}
@@ -32,7 +32,7 @@ function Get-AZTIVMSkuDetails {
         }
 
     $VMSkuDetails = [PSCustomObject]@{
-        'type'          = 'AZTI/VM/SKU'
+        'type'          = 'AZSC/VM/SKU'
         'properties'    = $VMskuData
     }
 

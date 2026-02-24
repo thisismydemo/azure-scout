@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     Authenticates to Azure using one of five methods (in priority order):
-      1. Managed Identity  — triggered by -Automation flag (handled in Invoke-AzureTenantInventory)
+      1. Managed Identity  — triggered by -Automation flag (handled in Invoke-AzureScout)
       2. SPN + Certificate — -AppId, -CertificatePath, -CertificatePassword
       3. SPN + Secret      — -AppId, -Secret
       4. Device Code        — -DeviceLogin switch
@@ -35,16 +35,16 @@
     Password protecting the certificate file. Passed as SecureString internally.
 
 .LINK
-    https://github.com/thisismydemo/azure-inventory
+    https://github.com/thisismydemo/azure-scout
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
     Version: 2.0.0
     Authors: Claudio Merola, thisismydemo
 #>
-function Connect-AZTILoginSession {
+function Connect-AZSCLoginSession {
     [CmdletBinding()]
     param(
         [ValidateSet('AzureCloud', 'AzureUSGovernment', 'AzureChinaCloud', 'AzureGermanCloud')]
@@ -65,7 +65,7 @@ function Connect-AZTILoginSession {
 
     $ErrorActionPreference = 'Stop'
 
-    Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + ' - Starting Connect-AZTILoginSession')
+    Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + ' - Starting Connect-AZSCLoginSession')
 
     # -----------------------------------------------------------
     # Priority 2: SPN + Certificate

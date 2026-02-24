@@ -6,10 +6,10 @@ Module for Quota Report
 This script processes and creates the Quota Usage sheet in the Excel report.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/3.ReportingFunctions/Build-AZTIQuotaReport.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/Build-AZSCQuotaReport.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Build-AZTIQuotaReport {
+function Build-AZSCQuotaReport {
     param($File, $AzQuota, $TableStyle)
 
     $Total = ($AzQuota.properties.Data).count

@@ -6,10 +6,10 @@ Module for Main Dashboard
 This script process and creates the Overview sheet.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/3.ReportingFunctions/StyleFunctions/Start-AZTIExcelCustomization.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/StyleFunctions/Start-AZSCExcelCustomization.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 
 #>
-function Start-AZTIExcelCustomization {
+function Start-AZSCExcelCustomization {
     param($File, $TableStyle, $PlatOS, $Subscriptions, $ExtractionRunTime, $ProcessingRunTime, $ReportingRunTime, $IncludeCosts, $RunLite, $Overview, $Category)
 
     Write-Progress -activity 'Azure Inventory' -Status "85% Complete." -PercentComplete 85 -CurrentOperation "Starting Excel Customization.."
@@ -33,15 +33,15 @@ function Start-AZTIExcelCustomization {
     else
         {
             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Running in Full Mode.')
-            $AZTIMod = Get-InstalledModule -Name AzureTenantInventory
+            $AZSCMod = Get-InstalledModule -Name AzureScout
 
-            $ScriptVersion = [string]$AZTIMod.Version
+            $ScriptVersion = [string]$AZSCMod.Version
         }
 
 
     "" | Export-Excel -Path $File -WorksheetName 'Overview' -MoveToStart
 
-    Start-AZTIExcelOrdening -File $File
+    Start-AZSCExcelOrdening -File $File
 
     $Excel = Open-ExcelPackage -Path $File
     $Worksheets = $Excel.Workbook.Worksheets
@@ -79,17 +79,17 @@ function Start-AZTIExcelCustomization {
 
     $Excel = Open-ExcelPackage -Path $File
 
-    Build-AZTIInitialBlock -Excel $Excel -ExtractionRunTime $ExtractionRunTime -ProcessingRunTime $ProcessingRunTime -ReportingRunTime $ReportingRunTime -PlatOS $PlatOS -TotalRes $TotalRes -ScriptVersion $ScriptVersion -Category $Category
+    Build-AZSCInitialBlock -Excel $Excel -ExtractionRunTime $ExtractionRunTime -ProcessingRunTime $ProcessingRunTime -ReportingRunTime $ReportingRunTime -PlatOS $PlatOS -TotalRes $TotalRes -ScriptVersion $ScriptVersion -Category $Category
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Creating Charts.')
 
-    Build-AZTIExcelChart -Excel $Excel -Overview $Overview -IncludeCosts $IncludeCosts
+    Build-AZSCExcelChart -Excel $Excel -Overview $Overview -IncludeCosts $IncludeCosts
 
     Close-ExcelPackage $Excel
 
     if(!$RunLite)
         {
-            Build-AZTIExcelComObject -File $File
+            Build-AZSCExcelComObject -File $File
         }
 
     return $TotalRes

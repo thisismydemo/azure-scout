@@ -2,7 +2,7 @@
 
 <#
 .SYNOPSIS
-    Pester tests for Invoke-AZTIGraphRequest.
+    Pester tests for Invoke-AZSCGraphRequest.
 
 .DESCRIPTION
     Validates the Graph API request handler:
@@ -21,36 +21,36 @@
 #>
 
 $ModuleRoot = Split-Path -Parent $PSScriptRoot
-Import-Module (Join-Path $ModuleRoot 'AzureTenantInventory.psd1') -Force -ErrorAction Stop
+Import-Module (Join-Path $ModuleRoot 'AzureScout.psd1') -Force -ErrorAction Stop
 
-Describe 'Invoke-AZTIGraphRequest' {
+Describe 'Invoke-AZSCGraphRequest' {
 
     # ── URI Normalization ─────────────────────────────────────────────
     Context 'URI Normalization' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken {
+            Mock Get-AZSCGraphToken {
                 return @{ 'Authorization' = 'Bearer mock-token'; 'Content-Type' = 'application/json' }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
             Mock Invoke-RestMethod {
                 return [PSCustomObject]@{ value = @([PSCustomObject]@{ id = '1'; displayName = 'Test' }) }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
         }
 
         It 'Prepends https://graph.microsoft.com for relative URIs' {
-            InModuleScope 'AzureTenantInventory' {
-                Invoke-AZTIGraphRequest -Uri '/v1.0/organization'
+            InModuleScope 'AzureScout' {
+                Invoke-AZSCGraphRequest -Uri '/v1.0/organization'
             }
-            Should -Invoke Invoke-RestMethod -ModuleName AzureTenantInventory -ParameterFilter {
+            Should -Invoke Invoke-RestMethod -ModuleName AzureScout -ParameterFilter {
                 $Uri -like 'https://graph.microsoft.com/v1.0/organization*'
             }
         }
 
         It 'Passes absolute URIs through unchanged' {
-            InModuleScope 'AzureTenantInventory' {
-                Invoke-AZTIGraphRequest -Uri 'https://graph.microsoft.com/v1.0/users'
+            InModuleScope 'AzureScout' {
+                Invoke-AZSCGraphRequest -Uri 'https://graph.microsoft.com/v1.0/users'
             }
-            Should -Invoke Invoke-RestMethod -ModuleName AzureTenantInventory -ParameterFilter {
+            Should -Invoke Invoke-RestMethod -ModuleName AzureScout -ParameterFilter {
                 $Uri -eq 'https://graph.microsoft.com/v1.0/users'
             }
         }
@@ -60,9 +60,9 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'Single Successful Request' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken {
+            Mock Get-AZSCGraphToken {
                 return @{ 'Authorization' = 'Bearer mock-token'; 'Content-Type' = 'application/json' }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
             Mock Invoke-RestMethod {
                 return [PSCustomObject]@{
                     value = @(
@@ -70,12 +70,12 @@ Describe 'Invoke-AZTIGraphRequest' {
                         [PSCustomObject]@{ id = '2'; displayName = 'User B' }
                     )
                 }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
         }
 
         It 'Returns objects from the .value collection' {
-            $result = InModuleScope 'AzureTenantInventory' {
-                Invoke-AZTIGraphRequest -Uri '/v1.0/users'
+            $result = InModuleScope 'AzureScout' {
+                Invoke-AZSCGraphRequest -Uri '/v1.0/users'
             }
             $result.Count | Should -Be 2
             $result[0].displayName | Should -Be 'User A'
@@ -86,17 +86,17 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'Single-Object Endpoint (no .value)' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken {
+            Mock Get-AZSCGraphToken {
                 return @{ 'Authorization' = 'Bearer mock-token'; 'Content-Type' = 'application/json' }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
             Mock Invoke-RestMethod {
                 return [PSCustomObject]@{ id = 'org-1'; displayName = 'Contoso' }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
         }
 
         It 'Returns the raw response when no .value property exists' {
-            $result = InModuleScope 'AzureTenantInventory' {
-                Invoke-AZTIGraphRequest -Uri '/v1.0/organization'
+            $result = InModuleScope 'AzureScout' {
+                Invoke-AZSCGraphRequest -Uri '/v1.0/organization'
             }
             $result.displayName | Should -Be 'Contoso'
         }
@@ -106,9 +106,9 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'Pagination via @odata.nextLink' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken {
+            Mock Get-AZSCGraphToken {
                 return @{ 'Authorization' = 'Bearer mock-token'; 'Content-Type' = 'application/json' }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
 
             $script:callCount = 0
             Mock Invoke-RestMethod {
@@ -124,7 +124,7 @@ Describe 'Invoke-AZTIGraphRequest' {
                         value = @([PSCustomObject]@{ id = '2' })
                     }
                 }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
         }
 
         AfterAll {
@@ -132,14 +132,14 @@ Describe 'Invoke-AZTIGraphRequest' {
         }
 
         It 'Follows @odata.nextLink and aggregates results' {
-            $result = InModuleScope 'AzureTenantInventory' {
-                Invoke-AZTIGraphRequest -Uri '/v1.0/users'
+            $result = InModuleScope 'AzureScout' {
+                Invoke-AZSCGraphRequest -Uri '/v1.0/users'
             }
             $result.Count | Should -Be 2
         }
 
         It 'Makes multiple Invoke-RestMethod calls for pagination' {
-            Should -Invoke Invoke-RestMethod -ModuleName AzureTenantInventory -Times 2 -Scope Context
+            Should -Invoke Invoke-RestMethod -ModuleName AzureScout -Times 2 -Scope Context
         }
     }
 
@@ -147,22 +147,22 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'SinglePage Switch' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken {
+            Mock Get-AZSCGraphToken {
                 return @{ 'Authorization' = 'Bearer mock-token'; 'Content-Type' = 'application/json' }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
             Mock Invoke-RestMethod {
                 return [PSCustomObject]@{
                     value             = @([PSCustomObject]@{ id = '1' })
                     '@odata.nextLink' = 'https://graph.microsoft.com/v1.0/users?$skip=1'
                 }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
         }
 
         It 'Does not follow nextLink when SinglePage is set' {
-            InModuleScope 'AzureTenantInventory' {
-                Invoke-AZTIGraphRequest -Uri '/v1.0/users' -SinglePage
+            InModuleScope 'AzureScout' {
+                Invoke-AZSCGraphRequest -Uri '/v1.0/users' -SinglePage
             }
-            Should -Invoke Invoke-RestMethod -ModuleName AzureTenantInventory -Times 1 -Scope It
+            Should -Invoke Invoke-RestMethod -ModuleName AzureScout -Times 1 -Scope It
         }
     }
 
@@ -170,10 +170,10 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'Retry on 429 Throttle' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken {
+            Mock Get-AZSCGraphToken {
                 return @{ 'Authorization' = 'Bearer mock-token'; 'Content-Type' = 'application/json' }
-            } -ModuleName AzureTenantInventory
-            Mock Start-Sleep { } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
+            Mock Start-Sleep { } -ModuleName AzureScout
 
             $script:retryCallCount = 0
             Mock Invoke-RestMethod {
@@ -183,7 +183,7 @@ Describe 'Invoke-AZTIGraphRequest' {
                     throw [Microsoft.PowerShell.Commands.HttpResponseException]::new('Too Many Requests', $mockResponse)
                 }
                 return [PSCustomObject]@{ value = @([PSCustomObject]@{ id = '1' }) }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
         }
 
         AfterAll {
@@ -191,14 +191,14 @@ Describe 'Invoke-AZTIGraphRequest' {
         }
 
         It 'Retries after a 429 error' {
-            InModuleScope 'AzureTenantInventory' {
-                Invoke-AZTIGraphRequest -Uri '/v1.0/users' -MaxRetries 3
+            InModuleScope 'AzureScout' {
+                Invoke-AZSCGraphRequest -Uri '/v1.0/users' -MaxRetries 3
             }
-            Should -Invoke Invoke-RestMethod -ModuleName AzureTenantInventory -Times 2 -Scope It
+            Should -Invoke Invoke-RestMethod -ModuleName AzureScout -Times 2 -Scope It
         }
 
         It 'Calls Start-Sleep during retry backoff' {
-            Should -Invoke Start-Sleep -ModuleName AzureTenantInventory -Scope Context
+            Should -Invoke Start-Sleep -ModuleName AzureScout -Scope Context
         }
     }
 
@@ -206,10 +206,10 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'Retry on 5xx Server Error' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken {
+            Mock Get-AZSCGraphToken {
                 return @{ 'Authorization' = 'Bearer mock-token'; 'Content-Type' = 'application/json' }
-            } -ModuleName AzureTenantInventory
-            Mock Start-Sleep { } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
+            Mock Start-Sleep { } -ModuleName AzureScout
 
             $script:serverErrorCount = 0
             Mock Invoke-RestMethod {
@@ -219,7 +219,7 @@ Describe 'Invoke-AZTIGraphRequest' {
                     throw [Microsoft.PowerShell.Commands.HttpResponseException]::new('Internal Server Error', $mockResponse)
                 }
                 return [PSCustomObject]@{ value = @([PSCustomObject]@{ id = '1' }) }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
         }
 
         AfterAll {
@@ -227,8 +227,8 @@ Describe 'Invoke-AZTIGraphRequest' {
         }
 
         It 'Retries multiple times on server errors' {
-            $result = InModuleScope 'AzureTenantInventory' {
-                Invoke-AZTIGraphRequest -Uri '/v1.0/users' -MaxRetries 5
+            $result = InModuleScope 'AzureScout' {
+                Invoke-AZSCGraphRequest -Uri '/v1.0/users' -MaxRetries 5
             }
             $result | Should -Not -BeNullOrEmpty
         }
@@ -238,19 +238,19 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'Max Retries Exceeded' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken {
+            Mock Get-AZSCGraphToken {
                 return @{ 'Authorization' = 'Bearer mock-token'; 'Content-Type' = 'application/json' }
-            } -ModuleName AzureTenantInventory
-            Mock Start-Sleep { } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
+            Mock Start-Sleep { } -ModuleName AzureScout
             Mock Invoke-RestMethod {
                 $mockResponse = [System.Net.Http.HttpResponseMessage]::new([System.Net.HttpStatusCode]::ServiceUnavailable)
                 throw [Microsoft.PowerShell.Commands.HttpResponseException]::new('Service Unavailable', $mockResponse)
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
         }
 
         It 'Throws after exhausting all retries' {
-            { InModuleScope 'AzureTenantInventory' {
-                Invoke-AZTIGraphRequest -Uri '/v1.0/users' -MaxRetries 2
+            { InModuleScope 'AzureScout' {
+                Invoke-AZSCGraphRequest -Uri '/v1.0/users' -MaxRetries 2
             } } | Should -Throw
         }
     }
@@ -259,19 +259,19 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'Token Handling' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken {
+            Mock Get-AZSCGraphToken {
                 return @{ 'Authorization' = 'Bearer mock-token-refreshed'; 'Content-Type' = 'application/json' }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
             Mock Invoke-RestMethod {
                 return [PSCustomObject]@{ value = @([PSCustomObject]@{ id = '1' }) }
-            } -ModuleName AzureTenantInventory
+            } -ModuleName AzureScout
         }
 
-        It 'Fetches a token via Get-AZTIGraphToken' {
-            InModuleScope 'AzureTenantInventory' {
-                Invoke-AZTIGraphRequest -Uri '/v1.0/users'
+        It 'Fetches a token via Get-AZSCGraphToken' {
+            InModuleScope 'AzureScout' {
+                Invoke-AZSCGraphRequest -Uri '/v1.0/users'
             }
-            Should -Invoke Get-AZTIGraphToken -ModuleName AzureTenantInventory
+            Should -Invoke Get-AZSCGraphToken -ModuleName AzureScout
         }
     }
 }

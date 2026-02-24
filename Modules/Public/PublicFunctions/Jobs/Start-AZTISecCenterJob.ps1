@@ -6,10 +6,10 @@ Start Security Center Job Module
 This script processes and creates the Security Center sheet based on security resources.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/PublicFunctions/Jobs/Start-AZTISecCenterJob.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/PublicFunctions/Jobs/Start-AZSCSecCenterJob.ps1
 
 .COMPONENT
-    This powershell Module is part of Azure Tenant Inventory (AZTI)
+    This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 
 #>
-function Start-AZTISecCenterJob {
+function Start-AZSCSecCenterJob {
     param($Subscriptions,$Security)
         $obj = ''
         $tmp = @()

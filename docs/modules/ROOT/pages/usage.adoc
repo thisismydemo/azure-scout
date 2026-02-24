@@ -6,11 +6,11 @@
 
 [source,powershell]
 ----
-Import-Module ./AzureTenantInventory.psd1
-Invoke-AzureTenantInventory
+Import-Module ./AzureScout.psd1
+Invoke-AzureScout
 ----
 
-With no parameters, AZTI runs a full inventory (ARM + Entra) using your current Azure context and generates both Excel and JSON reports.
+With no parameters, AZSC runs a full inventory (ARM + Entra) using your current Azure context and generates both Excel and JSON reports.
 
 == Scope
 
@@ -33,10 +33,10 @@ The `-Scope` parameter controls which data domains are inventoried:
 [source,powershell]
 ----
 # ARM only — skip Entra ID
-Invoke-AzureTenantInventory -Scope ArmOnly
+Invoke-AzureScout -Scope ArmOnly
 
 # Entra ID only — skip ARM resources
-Invoke-AzureTenantInventory -Scope EntraOnly
+Invoke-AzureScout -Scope EntraOnly
 ----
 
 == Output Format
@@ -60,24 +60,24 @@ The `-OutputFormat` parameter controls report file types:
 [source,powershell]
 ----
 # JSON only output
-Invoke-AzureTenantInventory -OutputFormat Json
+Invoke-AzureScout -OutputFormat Json
 
 # Excel only output
-Invoke-AzureTenantInventory -OutputFormat Excel
+Invoke-AzureScout -OutputFormat Excel
 ----
 
 == Report Location
 
 Reports are saved to a timestamped folder:
 
-* *Windows*: `C:\AzureTenantInventory\<timestamp>\`
-* *Linux/macOS*: `$HOME/AzureTenantInventory/<timestamp>/`
+* *Windows*: `C:\AzureScout\<timestamp>\`
+* *Linux/macOS*: `$HOME/AzureScout/<timestamp>/`
 
 Override with `-ReportDir`:
 
 [source,powershell]
 ----
-Invoke-AzureTenantInventory -ReportDir 'D:\Reports'
+Invoke-AzureScout -ReportDir 'D:\Reports'
 ----
 
 == Content Toggles
@@ -109,17 +109,17 @@ Switch parameters to include/exclude specific content:
 [source,powershell]
 ----
 # Specific subscriptions only
-Invoke-AzureTenantInventory -SubscriptionID 'sub-001','sub-002'
+Invoke-AzureScout -SubscriptionID 'sub-001','sub-002'
 
 # Management group scoped
-Invoke-AzureTenantInventory -ManagementGroup 'mg-prod'
+Invoke-AzureScout -ManagementGroup 'mg-prod'
 ----
 
 == Naming the Report
 
 [source,powershell]
 ----
-Invoke-AzureTenantInventory -ReportName 'Q4-2025-Audit'
+Invoke-AzureScout -ReportName 'Q4-2025-Audit'
 ----
 
 == JSON Output Structure
@@ -151,7 +151,7 @@ The JSON report uses a normalized, flat resource schema:
 
 == Pre-flight Permission Checker
 
-Before extracting data, AZTI validates that your identity has the required permissions.
+Before extracting data, AZSC validates that your identity has the required permissions.
 Skip it with `-SkipPermissionCheck` if you're confident about your access.
 
 See xref:permissions.adoc[Permissions] for the full list of required roles and API permissions.

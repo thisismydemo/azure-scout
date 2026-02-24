@@ -8,17 +8,17 @@ capacity/retention settings that govern metrics and log ingestion.
 Excel Sheet Name: Monitor Metrics Ingestion
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Monitoring/MonitorMetricsIngestion.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Monitoring/MonitorMetricsIngestion.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .CATEGORY Monitor
 
 .NOTES
 Version: 1.0.0
 First Release Date: February 24, 2026
-Authors: AzureTenantInventory Contributors
+Authors: AzureScout Contributors
 
 #>
 

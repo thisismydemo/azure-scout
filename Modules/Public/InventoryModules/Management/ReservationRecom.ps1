@@ -6,10 +6,10 @@ Inventory for Azure Reservation Recommendations
 Excel Sheet Name: Reservation Advisor
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/APIs/ReservationRecom.ps1
+https://github.com/thisismydemo/azure-scout/Modules/APIs/ReservationRecom.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .CATEGORY Management
 

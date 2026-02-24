@@ -6,10 +6,10 @@ Module for Security Center Report
 This script processes and creates the Security Center sheet in the Excel report.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/3.ReportingFunctions/Build-AZTISecCenterReport.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/Build-AZSCSecCenterReport.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Build-AZTISecCenterReport {
+function Build-AZSCSecCenterReport {
     param($File, $Sec, $TableStyle)
     $condtxtsec = $(New-ConditionalText High -Range G:G
     New-ConditionalText High -Range L:L)

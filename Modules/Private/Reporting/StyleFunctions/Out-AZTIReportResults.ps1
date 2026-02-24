@@ -6,10 +6,10 @@ Module for Reporting Results Output
 This script outputs the results of the Azure Resource Inventory report generation.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/3.ReportingFunctions/StyleFunctions/Out-AZTIReportResults.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/StyleFunctions/Out-AZSCReportResults.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Out-AZTIReportResults {
+function Out-AZSCReportResults {
     param (
         [string]$Measure,
         [string]$ResourcesCount,

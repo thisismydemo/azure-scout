@@ -1,6 +1,6 @@
 # Azure Tenant Inventory — Coverage Table
 
-This document lists every inventory module in AZTI, the Azure resource type(s) it covers, and the Excel worksheet it writes to.
+This document lists every inventory module in AZSC, the Azure resource type(s) it covers, and the Excel worksheet it writes to.
 
 ## Coverage Summary
 
@@ -92,4 +92,4 @@ This document lists every inventory module in AZTI, the Azure resource type(s) i
 
 ---
 
-*Generated from AZTI module inventory. Last updated: February 2026.*
+*Generated from AZSC module inventory. Last updated: February 2026.*

@@ -6,10 +6,10 @@ Extraction orchestration for Azure Resource Inventory
 This module orchestrates the extraction of resources for Azure Resource Inventory.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/0.MainFunctions/Start-AZTIExtractionOrchestration.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/0.MainFunctions/Start-AZSCExtractionOrchestration.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.11
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 
 #>
-function Start-AZTIExtractionOrchestration {
+function Start-AZSCExtractionOrchestration {
     Param($ManagementGroup, $Subscriptions, $SubscriptionID, $SkipPolicy, $ResourceGroup, $SecurityCenter, $SkipAdvisory, $IncludeTags, $TagKey, $TagValue, $SkipAPIs, $SkipVMDetails, $IncludeCosts, $Automation, $AzureEnvironment,
         [ValidateSet('All', 'ArmOnly', 'EntraOnly')]
         [string]$Scope = 'All',
@@ -37,7 +37,7 @@ function Start-AZTIExtractionOrchestration {
 
     # ── ARM Extraction (skip when Scope = EntraOnly) ──
     if ($Scope -ne 'EntraOnly') {
-        $GraphData = Start-AZTIGraphExtraction -ManagementGroup $ManagementGroup -Subscriptions $Subscriptions -SubscriptionID $SubscriptionID -ResourceGroup $ResourceGroup -SecurityCenter $SecurityCenter -SkipAdvisory $SkipAdvisory -IncludeTags $IncludeTags -TagKey $TagKey -TagValue $TagValue -AzureEnvironment $AzureEnvironment
+        $GraphData = Start-AZSCGraphExtraction -ManagementGroup $ManagementGroup -Subscriptions $Subscriptions -SubscriptionID $SubscriptionID -ResourceGroup $ResourceGroup -SecurityCenter $SecurityCenter -SkipAdvisory $SkipAdvisory -IncludeTags $IncludeTags -TagKey $TagKey -TagValue $TagValue -AzureEnvironment $AzureEnvironment
 
         $Resources = $GraphData.Resources
         $ResourceContainers = $GraphData.ResourceContainers
@@ -51,7 +51,7 @@ function Start-AZTIExtractionOrchestration {
             {
                 Write-Progress -activity 'Azure Inventory' -Status "12% Complete." -PercentComplete 12 -CurrentOperation "Starting API Extraction.."
                 Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Getting API Resources.')
-                $APIResults = Get-AZTIAPIResources -Subscriptions $Subscriptions -AzureEnvironment $AzureEnvironment -SkipPolicy $SkipPolicy
+                $APIResults = Get-AZSCAPIResources -Subscriptions $Subscriptions -AzureEnvironment $AzureEnvironment -SkipPolicy $SkipPolicy
                 $Resources += $APIResults.ResourceHealth
                 $Resources += $APIResults.ManagedIdentities
                 $Resources += $APIResults.AdvisorScore
@@ -64,7 +64,7 @@ function Start-AZTIExtractionOrchestration {
             }
 
         if ($IncludeCosts.IsPresent) {
-            $Costs = Get-AZTICostInventory -Subscriptions $Subscriptions -Days 60 -Granularity 'Monthly'
+            $Costs = Get-AZSCCostInventory -Subscriptions $Subscriptions -Days 60 -Granularity 'Monthly'
         }
 
         if (!$SkipVMDetails.IsPresent)
@@ -73,7 +73,7 @@ function Start-AZTIExtractionOrchestration {
                 Write-Host 'Quotas' -ForegroundColor Cyan
                 Write-Progress -activity 'Azure Inventory' -Status "13% Complete." -PercentComplete 13 -CurrentOperation "Starting VM Details Extraction.."
 
-                $VMQuotas = Get-AZTIVMQuotas -Subscriptions $Subscriptions -Resources $Resources
+                $VMQuotas = Get-AZSCVMQuotas -Subscriptions $Subscriptions -Resources $Resources
 
                 $Resources += $VMQuotas
 
@@ -82,7 +82,7 @@ function Start-AZTIExtractionOrchestration {
                 Write-Host 'Gathering VM Extra Details: ' -NoNewline
                 Write-Host 'Size SKU' -ForegroundColor Cyan
 
-                $VMSkuDetails = Get-AZTIVMSkuDetails -Resources $Resources
+                $VMSkuDetails = Get-AZSCVMSkuDetails -Resources $Resources
 
                 $Resources += $VMSkuDetails
 
@@ -104,7 +104,7 @@ function Start-AZTIExtractionOrchestration {
             Write-Progress -activity 'Azure Inventory' -Status "15% Complete." -PercentComplete 15 -CurrentOperation "Starting Entra ID Extraction.."
             Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + ' - Starting Entra ID extraction for tenant: ' + $TenantID)
 
-            $EntraData = Start-AZTIEntraExtraction -TenantID $TenantID
+            $EntraData = Start-AZSCEntraExtraction -TenantID $TenantID
             $EntraResources = $EntraData.EntraResources
 
             # Merge Entra resources into the main Resources array

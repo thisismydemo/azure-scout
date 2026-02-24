@@ -7,10 +7,10 @@ This script consolidates information for all microsoft.network/privateendpoints 
 Excel Sheet Name: Private Endpoints
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Network_2/PrivateEndpoint.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Network_2/PrivateEndpoint.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0

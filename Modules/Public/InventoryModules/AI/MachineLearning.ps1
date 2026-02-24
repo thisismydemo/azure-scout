@@ -7,10 +7,10 @@ This script consolidates information for all microsoft.machinelearningservices/w
 Excel Sheet Name: Machine Learning
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/AI/MachineLearning.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/AI/MachineLearning.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .CATEGORY AI
 

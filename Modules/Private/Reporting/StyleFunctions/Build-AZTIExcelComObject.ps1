@@ -6,10 +6,10 @@ Module for Excel COM Object Customizations
 This script applies additional customizations to the Excel report using the Excel COM object.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/3.ReportingFunctions/StyleFunctions/Build-AZTIExcelComObject.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/StyleFunctions/Build-AZSCExcelComObject.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Build-AZTIExcelComObject {
+function Build-AZSCExcelComObject {
     param($File)
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Validating if Excel is installed (Extra Customizations).')
@@ -45,8 +45,8 @@ function Build-AZTIExcelComObject {
                     }
 
 
-                $NoChangeChart = ('ChartP0', 'ChartP1', 'ChartP2', 'ChartP3', 'ChartP4', 'ChartP5', 'ChartP6', 'ChartP7', 'ChartP8', 'ChartP9', 'AZTI', 'RGs', 'TP00', 'TP0', 'TP1', 'TP2', 'TP3', 'TP4', 'TP5','TP6','TP7','TP8','TP9')
-                $ChangeChart = ('AZTI', 'RGs', 'TP00', 'TP0', 'TP1', 'TP2', 'TP3', 'TP4', 'TP5', 'TP6', 'TP7','TP8','TP9')
+                $NoChangeChart = ('ChartP0', 'ChartP1', 'ChartP2', 'ChartP3', 'ChartP4', 'ChartP5', 'ChartP6', 'ChartP7', 'ChartP8', 'ChartP9', 'AZSC', 'RGs', 'TP00', 'TP0', 'TP1', 'TP2', 'TP3', 'TP4', 'TP5','TP6','TP7','TP8','TP9')
+                $ChangeChart = ('AZSC', 'RGs', 'TP00', 'TP0', 'TP1', 'TP2', 'TP3', 'TP4', 'TP5', 'TP6', 'TP7','TP8','TP9')
 
                 if ($WSheet.Shapes | Where-Object { $_.name -eq 'ChartP0' })
                     {
@@ -112,7 +112,7 @@ function Build-AZTIExcelComObject {
                     Start-Sleep -Milliseconds 50
                 }
 
-                $Draw = ($WSheet.Shapes | Where-Object {$_.name -eq 'AZTI'})
+                $Draw = ($WSheet.Shapes | Where-Object {$_.name -eq 'AZSC'})
                 $Draw.Adjustments(1) = 0.07
                 Start-Sleep -Milliseconds 50
 

@@ -8,15 +8,15 @@ Captures security recommendations, severity, remediation steps, and compliance i
 Excel Sheet Name: Defender Assessments
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Security/DefenderAssessments.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Security/DefenderAssessments.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 1.0.0
 First Release Date: February 24, 2026
-Authors: AzureTenantInventory Contributors
+Authors: AzureScout Contributors
 
 #>
 
@@ -32,7 +32,7 @@ If ($Task -eq 'Processing')
         $assessments = @()
 
         foreach ($subscription in $Sub) {
-            Write-AZTILog -Message "  >> Processing Defender Assessments for subscription: $($subscription.Name)" -Color 'Cyan'
+            Write-AZSCLog -Message "  >> Processing Defender Assessments for subscription: $($subscription.Name)" -Color 'Cyan'
 
             try {
                 $subAssessments = Get-AzSecurityAssessment -ErrorAction SilentlyContinue | Where-Object { $_.Id -match "/subscriptions/$($subscription.Id)/" }
@@ -40,7 +40,7 @@ If ($Task -eq 'Processing')
                     $assessments += $subAssessments
                 }
             } catch {
-                Write-AZTILog -Message "    Failed to retrieve assessments: $_" -Color 'Yellow'
+                Write-AZSCLog -Message "    Failed to retrieve assessments: $_" -Color 'Yellow'
             }
         }
 

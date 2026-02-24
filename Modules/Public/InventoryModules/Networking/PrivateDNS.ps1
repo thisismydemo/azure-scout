@@ -7,10 +7,10 @@ This script consolidates information for all microsoft.network/privatednszones a
 Excel Sheet Name: PrivateDNS
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Network_2/PrivateDNS.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Network_2/PrivateDNS.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0

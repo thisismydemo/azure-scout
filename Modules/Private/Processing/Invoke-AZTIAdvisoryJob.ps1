@@ -6,10 +6,10 @@ Module responsible for invoking advisory processing jobs.
 This module starts jobs to process advisory data for Azure Resources, either in automation or manual mode.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/2.ProcessingFunctions/Invoke-AZTIAdvisoryJob.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/2.ProcessingFunctions/Invoke-AZSCAdvisoryJob.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .NOTES
 Version: 3.6.5
@@ -17,8 +17,8 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Invoke-AZTIAdvisoryJob {
-    Param($Advisories, $AZTIModule, $Automation)
+function Invoke-AZSCAdvisoryJob {
+    Param($Advisories, $AZSCModule, $Automation)
 
     if ($Automation.IsPresent)
         {
@@ -27,11 +27,11 @@ function Invoke-AZTIAdvisoryJob {
 
                 import-module $($args[1])
 
-                $AdvResult = Start-AZTIAdvisoryJob -Advisories $($args[0])
+                $AdvResult = Start-AZSCAdvisoryJob -Advisories $($args[0])
 
                 $AdvResult
 
-            } -ArgumentList $Advisories, $AZTIModule | Out-Null
+            } -ArgumentList $Advisories, $AZSCModule | Out-Null
         }
     else
         {
@@ -40,10 +40,10 @@ function Invoke-AZTIAdvisoryJob {
 
                 import-module $($args[1])
 
-                $AdvResult = Start-AZTIAdvisoryJob -Advisories $($args[0])
+                $AdvResult = Start-AZSCAdvisoryJob -Advisories $($args[0])
 
                 $AdvResult
 
-            } -ArgumentList $Advisories, $AZTIModule | Out-Null
+            } -ArgumentList $Advisories, $AZSCModule | Out-Null
         }
 }

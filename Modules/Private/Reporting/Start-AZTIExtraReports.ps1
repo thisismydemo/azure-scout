@@ -6,10 +6,10 @@ Module for Extra Reports
 This script processes and creates additional report sheets such as Quotas, Security Center, Policies, and Advisory.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/3.ReportingFunctions/Start-AZTIExtraReports.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/Start-AZSCExtraReports.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Start-AZTIExtraReports {
+function Start-AZSCExtraReports {
     Param($File, $Quotas, $SecurityCenter, $SkipPolicy, $SkipAdvisory, $IncludeCosts, $TableStyle, $ReportCache)
 
     Write-Progress -activity 'Azure Inventory' -Status "70% Complete." -PercentComplete 70 -CurrentOperation "Reporting Extra Resources.."
@@ -29,7 +29,7 @@ function Start-AZTIExtraReports {
             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Generating Quota Usage Sheet.')
             Write-Progress -Id 1 -activity 'Azure Resource Inventory Quota Usage' -Status "50% Complete." -PercentComplete 50 -CurrentOperation "Building Quota Sheet"
 
-            Build-AZTIQuotaReport -File $File -AzQuota $Quotas -TableStyle $TableStyle
+            Build-AZSCQuotaReport -File $File -AzQuota $Quotas -TableStyle $TableStyle
 
             Write-Progress -Id 1 -activity 'Azure Resource Inventory Quota Usage' -Status "100% Complete." -Completed
         }
@@ -50,7 +50,7 @@ function Start-AZTIExtraReports {
                 $Sec = Receive-Job -Name 'Security'
                 Remove-Job -Name 'Security' | Out-Null
 
-                Build-AZTISecCenterReport -File $File -Sec $Sec -TableStyle $TableStyle
+                Build-AZSCSecCenterReport -File $File -Sec $Sec -TableStyle $TableStyle
 
                 Write-Progress -Id 1 -activity 'Processing Security Center Advisories'  -Status "100% Complete." -Completed
             }
@@ -73,7 +73,7 @@ function Start-AZTIExtraReports {
                 $Pol = Receive-Job -Name 'Policy'
                 Remove-Job -Name 'Policy' | Out-Null
 
-                Build-AZTIPolicyReport -File $File -Pol $Pol -TableStyle $TableStyle
+                Build-AZSCPolicyReport -File $File -Pol $Pol -TableStyle $TableStyle
 
                 Write-Progress -Id 1 -activity 'Processing Policies'  -Status "100% Complete." -Completed
 
@@ -97,7 +97,7 @@ function Start-AZTIExtraReports {
                 $Adv = Receive-Job -Name 'Advisory'
                 Remove-Job -Name 'Advisory' | Out-Null
 
-                Build-AZTIAdvisoryReport -File $File -Adv $Adv -TableStyle $TableStyle
+                Build-AZSCAdvisoryReport -File $File -Adv $Adv -TableStyle $TableStyle
 
                 Write-Progress -Id 1 -activity 'Processing Advisories'  -Status "100% Complete." -Completed
 
@@ -119,9 +119,9 @@ function Start-AZTIExtraReports {
     $AzSubs = Receive-Job -Name 'Subscriptions'
     Remove-Job -Name 'Subscriptions' | Out-Null
 
-    Build-AZTISubsReport -File $File -Sub $AzSubs -IncludeCosts $IncludeCosts -TableStyle $TableStyle
+    Build-AZSCSubsReport -File $File -Sub $AzSubs -IncludeCosts $IncludeCosts -TableStyle $TableStyle
 
-    Clear-AZTIMemory
+    Clear-AZSCMemory
 
     Write-Progress -activity 'Azure Resource Inventory Subscriptions' -Status "100% Complete." -Completed
 
@@ -133,19 +133,19 @@ function Start-AZTIExtraReports {
         Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Building Phase 10 specialized report tabs.')
 
         Write-Progress -Id 1 -activity 'Building Cost Management tab' -Status "50% Complete." -PercentComplete 50
-        Build-AZTICostManagementReport -File $File -ReportCache $ReportCache -TableStyle $TableStyle
+        Build-AZSCCostManagementReport -File $File -ReportCache $ReportCache -TableStyle $TableStyle
         Write-Progress -Id 1 -activity 'Building Cost Management tab' -Completed
 
         Write-Progress -Id 1 -activity 'Building Security Overview tab' -Status "50% Complete." -PercentComplete 50
-        Build-AZTISecurityOverviewReport -File $File -ReportCache $ReportCache -TableStyle $TableStyle
+        Build-AZSCSecurityOverviewReport -File $File -ReportCache $ReportCache -TableStyle $TableStyle
         Write-Progress -Id 1 -activity 'Building Security Overview tab' -Completed
 
         Write-Progress -Id 1 -activity 'Building Azure Update Manager tab' -Status "50% Complete." -PercentComplete 50
-        Build-AZTIUpdateManagerReport -File $File -ReportCache $ReportCache -TableStyle $TableStyle
+        Build-AZSCUpdateManagerReport -File $File -ReportCache $ReportCache -TableStyle $TableStyle
         Write-Progress -Id 1 -activity 'Building Azure Update Manager tab' -Completed
 
         Write-Progress -Id 1 -activity 'Building Azure Monitor tab' -Status "50% Complete." -PercentComplete 50
-        Build-AZTIMonitorReport -File $File -ReportCache $ReportCache -TableStyle $TableStyle
+        Build-AZSCMonitorReport -File $File -ReportCache $ReportCache -TableStyle $TableStyle
         Write-Progress -Id 1 -activity 'Building Azure Monitor tab' -Completed
     }
 }

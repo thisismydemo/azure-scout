@@ -6,10 +6,10 @@ Process orchestration for Azure Resource Inventory
 This module orchestrates the processing of resources for Azure Resource Inventory.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/0.MainFunctions/Start-AZTIProcessOrchestration.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/0.MainFunctions/Start-AZSCProcessOrchestration.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.9
@@ -18,7 +18,7 @@ Authors: Claudio Merola
 
 #>
 
-function Start-AZTIProcessOrchestration {
+function Start-AZSCProcessOrchestration {
     Param($Subscriptions, $Resources, $Retirements, $DefaultPath, $File, $Heavy, $InTag, $Automation, $Category)
 
         Write-Progress -activity 'Azure Inventory' -Status "21% Complete." -PercentComplete 21 -CurrentOperation "Starting to process extracted data.."
@@ -27,7 +27,7 @@ function Start-AZTIProcessOrchestration {
 
         Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Importing List of Unsupported Versions.')
 
-        $Unsupported = Get-AZTIUnsupportedData
+        $Unsupported = Get-AZSCUnsupportedData
 
         <######################################################### RESOURCE GROUP JOB ######################################################################>
 
@@ -35,13 +35,13 @@ function Start-AZTIProcessOrchestration {
             {
                 Write-Output ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Processing Resources in Automation Mode')
 
-                Start-AZTIAutProcessJob -Resources $Resources -Retirements $Retirements -Subscriptions $Subscriptions -Heavy $Heavy -InTag $InTag -Unsupported $Unsupported -Category $Category
+                Start-AZSCAutProcessJob -Resources $Resources -Retirements $Retirements -Subscriptions $Subscriptions -Heavy $Heavy -InTag $InTag -Unsupported $Unsupported -Category $Category
             }
         else
             {
                 Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Processing Resources in Regular Mode')
 
-                Start-AZTIProcessJob -Resources $Resources -Retirements $Retirements -Subscriptions $Subscriptions -DefaultPath $DefaultPath -InTag $InTag -Heavy $Heavy -Unsupported $Unsupported -Category $Category
+                Start-AZSCProcessJob -Resources $Resources -Retirements $Retirements -Subscriptions $Subscriptions -DefaultPath $DefaultPath -InTag $InTag -Heavy $Heavy -Unsupported $Unsupported -Category $Category
             }
 
         Remove-Variable -Name Unsupported -ErrorAction SilentlyContinue
@@ -56,7 +56,7 @@ function Start-AZTIProcessOrchestration {
         else
             {
                 $JobNames = (Get-Job | Where-Object {$_.name -like 'ResourceJob_*'}).Name
-                Wait-AZTIJob -JobNames $JobNames -JobType 'Resource' -LoopTime 5
+                Wait-AZSCJob -JobNames $JobNames -JobType 'Resource' -LoopTime 5
             }
 
         if ($Automation.IsPresent)
@@ -68,7 +68,7 @@ function Start-AZTIProcessOrchestration {
                 Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Finished Waiting for Resource Jobs.')
             }
 
-        Build-AZTICacheFiles -DefaultPath $DefaultPath -JobNames $JobNames
+        Build-AZSCCacheFiles -DefaultPath $DefaultPath -JobNames $JobNames
 
         Write-Progress -activity 'Azure Inventory' -Status "60% Complete." -PercentComplete 60 -CurrentOperation "Completed Data Processing Phase.."
 

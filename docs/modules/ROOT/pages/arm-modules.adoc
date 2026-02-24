@@ -11,7 +11,7 @@ Run ARM-only extraction with:
 
 [source,powershell]
 ----
-Invoke-AzureTenantInventory -Scope ArmOnly
+Invoke-AzureScout -Scope ArmOnly
 ----
 
 == Module Catalog

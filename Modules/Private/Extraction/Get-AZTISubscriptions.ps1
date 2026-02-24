@@ -6,17 +6,17 @@ Module responsible for retrieving Azure subscriptions.
 This module retrieves Azure subscriptions for a given tenant or specific subscription IDs.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/1.ExtractionFunctions/Get-AZTISubscriptions.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/1.ExtractionFunctions/Get-AZSCSubscriptions.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .NOTES
 Version: 3.6.0
 First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
-function Get-AZTISubscriptions {
+function Get-AZSCSubscriptions {
     Param ($TenantID,$SubscriptionID,$PlatOS)
     if($PlatOS -eq 'Azure CloudShell')
         {

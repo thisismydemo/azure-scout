@@ -8,15 +8,15 @@ Captures threat intelligence, affected resources, severity, and recommended acti
 Excel Sheet Name: Defender Alerts
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Security/DefenderAlerts.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Security/DefenderAlerts.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 1.0.0
 First Release Date: February 24, 2026
-Authors: AzureTenantInventory Contributors
+Authors: AzureScout Contributors
 
 #>
 
@@ -32,7 +32,7 @@ If ($Task -eq 'Processing')
         $alerts = @()
 
         foreach ($subscription in $Sub) {
-            Write-AZTILog -Message "  >> Processing Defender Alerts for subscription: $($subscription.Name)" -Color 'Cyan'
+            Write-AZSCLog -Message "  >> Processing Defender Alerts for subscription: $($subscription.Name)" -Color 'Cyan'
 
             try {
                 $subAlerts = Get-AzSecurityAlert -ErrorAction SilentlyContinue
@@ -42,7 +42,7 @@ If ($Task -eq 'Processing')
                     }
                 }
             } catch {
-                Write-AZTILog -Message "    Failed to retrieve alerts: $_" -Color 'Yellow'
+                Write-AZSCLog -Message "    Failed to retrieve alerts: $_" -Color 'Yellow'
             }
         }
 

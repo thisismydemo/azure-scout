@@ -8,15 +8,15 @@ This script consolidates information for all Azure Monitor Workbooks
 Excel Sheet Name: Monitor Workbooks
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Monitoring/MonitorWorkbooks.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Monitoring/MonitorWorkbooks.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 1.0.0
 First Release Date: February 24, 2026
-Authors: AzureTenantInventory Contributors
+Authors: AzureScout Contributors
 
 #>
 

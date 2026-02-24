@@ -6,10 +6,10 @@ Module for Initial Block in Excel Report
 This script creates the initial block with metadata and summary information in the Excel report.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/3.ReportingFunctions/StyleFunctions/Build-AZTIExcelinitialBlock.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/StyleFunctions/Build-AZSCExcelinitialBlock.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Build-AZTIInitialBlock {
+function Build-AZSCInitialBlock {
     Param($Excel, $ExtractionRunTime, $ProcessingRunTime, $ReportingRunTime, $PlatOS, $ScriptVersion, $TotalRes, $Category)
 
     $Date = (get-date -Format "MM/dd/yyyy")
@@ -96,7 +96,7 @@ function Build-AZTIInitialBlock {
     $TabDraw.SetPosition(0, 10, 108, 0)
     $TabDraw.TextAlignment = 'Center'
 
-    $Draw = $WS.Drawings.AddShape('AZTI', 'RoundRect')
+    $Draw = $WS.Drawings.AddShape('AZSC', 'RoundRect')
     $Draw.SetSize(445, 240)
     $Draw.SetPosition(1, 0, 2, 5)
 
@@ -105,7 +105,7 @@ function Build-AZTIInitialBlock {
     $txt.ComplexFont = $Font
     $txt.LatinFont = $Font
 
-    $txt = $Draw.RichText.Add('https://github.com/thisismydemo/azure-inventory' + "`n" + "`n")
+    $txt = $Draw.RichText.Add('https://github.com/thisismydemo/azure-scout' + "`n" + "`n")
     $txt.Size = 11
     $txt.ComplexFont = $Font
     $txt.LatinFont = $Font

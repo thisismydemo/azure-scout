@@ -7,10 +7,10 @@ This script consolidates information for all 'microsoft.synapse/workspaces' reso
 Excel Sheet Name: Synapse
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Analytics/Synapse.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Analytics/Synapse.ps1
 
 .COMPONENT
-    This powershell Module is part of Azure Tenant Inventory (AZTI)
+    This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0

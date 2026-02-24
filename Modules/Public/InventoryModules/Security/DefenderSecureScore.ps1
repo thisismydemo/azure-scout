@@ -8,15 +8,15 @@ Captures overall secure score, security controls, max scores, and current achiev
 Excel Sheet Name: Defender Secure Score
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Security/DefenderSecureScore.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Security/DefenderSecureScore.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 1.0.0
 First Release Date: February 24, 2026
-Authors: AzureTenantInventory Contributors
+Authors: AzureScout Contributors
 
 #>
 
@@ -32,7 +32,7 @@ If ($Task -eq 'Processing')
         $secureScores = @()
 
         foreach ($subscription in $Sub) {
-            Write-AZTILog -Message "  >> Processing Defender Secure Score for subscription: $($subscription.Name)" -Color 'Cyan'
+            Write-AZSCLog -Message "  >> Processing Defender Secure Score for subscription: $($subscription.Name)" -Color 'Cyan'
 
             try {
                 $subScore = Get-AzSecuritySecureScore -ErrorAction SilentlyContinue
@@ -42,7 +42,7 @@ If ($Task -eq 'Processing')
                     }
                 }
             } catch {
-                Write-AZTILog -Message "    Failed to retrieve secure score: $_" -Color 'Yellow'
+                Write-AZSCLog -Message "    Failed to retrieve secure score: $_" -Color 'Yellow'
             }
         }
 
@@ -86,7 +86,7 @@ If ($Task -eq 'Processing')
                             }
                         }
                     } catch {
-                        Write-AZTILog -Message "    Failed to retrieve security controls: $_" -Color 'Yellow'
+                        Write-AZSCLog -Message "    Failed to retrieve security controls: $_" -Color 'Yellow'
                     }
                 }
 

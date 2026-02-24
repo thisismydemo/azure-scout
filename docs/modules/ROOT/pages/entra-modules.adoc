@@ -10,12 +10,12 @@ Run Entra-only extraction with:
 
 [source,powershell]
 ----
-Invoke-AzureTenantInventory -Scope EntraOnly
+Invoke-AzureScout -Scope EntraOnly
 ----
 
 == How Entra Extraction Works
 
-The `Start-AZTIEntraExtraction` function calls `Invoke-AZTIGraphRequest` for each Entra module, which:
+The `Start-AZSCEntraExtraction` function calls `Invoke-AZSCGraphRequest` for each Entra module, which:
 
 . Authenticates via the Graph token obtained during login
 . Queries the relevant Microsoft Graph endpoint

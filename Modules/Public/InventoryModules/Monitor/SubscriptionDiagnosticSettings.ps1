@@ -8,15 +8,15 @@ Captures log categories, retention policies, and destinations (Log Analytics, St
 Excel Sheet Name: Subscription Diagnostics
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Monitoring/SubscriptionDiagnosticSettings.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Monitoring/SubscriptionDiagnosticSettings.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 1.0.0
 First Release Date: February 24, 2026
-Authors: AzureTenantInventory Contributors
+Authors: AzureScout Contributors
 
 #>
 
@@ -32,7 +32,7 @@ If ($Task -eq 'Processing')
         $diagnosticSettings = @()
 
         foreach ($subscription in $Sub) {
-            Write-AZTILog -Message "  >> Processing Subscription Diagnostic Settings for: $($subscription.Name)" -Color 'Cyan'
+            Write-AZSCLog -Message "  >> Processing Subscription Diagnostic Settings for: $($subscription.Name)" -Color 'Cyan'
 
             try {
                 $subDiagSettings = Get-AzDiagnosticSetting -ResourceId "/subscriptions/$($subscription.Id)" -ErrorAction SilentlyContinue
@@ -43,7 +43,7 @@ If ($Task -eq 'Processing')
                     }
                 }
             } catch {
-                Write-AZTILog -Message "    Failed to retrieve diagnostic settings: $_" -Color 'Yellow'
+                Write-AZSCLog -Message "    Failed to retrieve diagnostic settings: $_" -Color 'Yellow'
             }
         }
 

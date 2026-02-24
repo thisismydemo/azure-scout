@@ -6,10 +6,10 @@ Module responsible for creating the local cache files for the report.
 This module receives the job names for the Azure Resources that were processed previously and creates the local cache files that will be used to build the Excel report.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/2.ProcessingFunctions/Build-AZTICacheFiles.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/2.ProcessingFunctions/Build-AZSCCacheFiles.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Build-AZTICacheFiles {
+function Build-AZSCCacheFiles {
     Param($DefaultPath, $JobNames)
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Checking Cache Folder.')
@@ -46,6 +46,6 @@ function Build-AZTICacheFiles {
             $Counter++
 
         }
-    Clear-AZTIMemory
+    Clear-AZSCMemory
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Cache Files Created.')
 }

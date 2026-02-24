@@ -8,17 +8,17 @@ This script consolidates information for all Arc-enabled SQL Server instances
 Excel Sheet Name: Arc SQL Servers
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Hybrid/ArcSQLServers.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Hybrid/ArcSQLServers.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .CATEGORY Hybrid
 
 .NOTES
 Version: 1.0.0
 First Release Date: February 24, 2026
-Authors: AzureTenantInventory Contributors
+Authors: AzureScout Contributors
 
 #>
 

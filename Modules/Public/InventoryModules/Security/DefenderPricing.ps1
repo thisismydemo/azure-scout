@@ -8,15 +8,15 @@ Captures which Defender plans are enabled, pricing tiers, and extensions.
 Excel Sheet Name: Defender Pricing
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Security/DefenderPricing.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Security/DefenderPricing.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 1.0.0
 First Release Date: February 24, 2026
-Authors: AzureTenantInventory Contributors
+Authors: AzureScout Contributors
 
 #>
 
@@ -32,7 +32,7 @@ If ($Task -eq 'Processing')
         $pricingPlans = @()
 
         foreach ($subscription in $Sub) {
-            Write-AZTILog -Message "  >> Processing Defender Pricing for subscription: $($subscription.Name)" -Color 'Cyan'
+            Write-AZSCLog -Message "  >> Processing Defender Pricing for subscription: $($subscription.Name)" -Color 'Cyan'
 
             try {
                 $subPricing = Get-AzSecurityPricing -ErrorAction SilentlyContinue
@@ -43,7 +43,7 @@ If ($Task -eq 'Processing')
                     }
                 }
             } catch {
-                Write-AZTILog -Message "    Failed to retrieve pricing: $_" -Color 'Yellow'
+                Write-AZSCLog -Message "    Failed to retrieve pricing: $_" -Color 'Yellow'
             }
         }
 

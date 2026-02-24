@@ -1,6 +1,6 @@
 # Azure Category Structure
 
-This document maps AZTI's `-Category` parameter values to Microsoft's official Azure portal category names, the corresponding folder paths in the module tree, and the primary resource types covered.
+This document maps AZSC's `-Category` parameter values to Microsoft's official Azure portal category names, the corresponding folder paths in the module tree, and the primary resource types covered.
 
 ## Category Mapping
 
@@ -39,7 +39,7 @@ The following long-form names (as shown in the Azure portal) are automatically n
 
 ## Category Selection Logic
 
-When `-Category` is specified, AZTI:
+When `-Category` is specified, AZSC:
 
 1. Normalizes any alias values to canonical short names
 2. Loads only the module files inside the matching category folders
@@ -53,6 +53,6 @@ When `-Category All` is used (the default), all category folders are included.
 To add a new category:
 
 1. Create a new folder under `Modules/Public/InventoryModules/`
-2. Add the folder name to `[ValidateSet]` for `-Category` in `Invoke-AzureTenantInventory.ps1`
-3. Add any alias entries to the `$_categoryAliasMap` hashtable in `Invoke-AzureTenantInventory.ps1`
+2. Add the folder name to `[ValidateSet]` for `-Category` in `Invoke-AzureScout.ps1`
+3. Add any alias entries to the `$_categoryAliasMap` hashtable in `Invoke-AzureScout.ps1`
 4. Update this document with the new mapping

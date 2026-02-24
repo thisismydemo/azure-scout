@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     Wrapper around Invoke-RestMethod for Microsoft Graph API calls. Automatically:
-      - Obtains a bearer token via Get-AZTIGraphToken
+      - Obtains a bearer token via Get-AZSCGraphToken
       - Builds the full URL from a relative path (e.g. /v1.0/users)
       - Follows @odata.nextLink for multi-page responses
       - Handles HTTP 429 (Too Many Requests) with Retry-After header
@@ -32,16 +32,16 @@
     [PSObject[]] Aggregated .value array, or the raw response for single-object endpoints.
 
 .LINK
-    https://github.com/thisismydemo/azure-inventory
+    https://github.com/thisismydemo/azure-scout
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
     Version: 1.0.0
     Authors: thisismydemo
 #>
-function Invoke-AZTIGraphRequest {
+function Invoke-AZSCGraphRequest {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -73,7 +73,7 @@ function Invoke-AZTIGraphRequest {
     $currentUri = $fullUri
 
     do {
-        $headers = Get-AZTIGraphToken
+        $headers = Get-AZSCGraphToken
 
         $requestParams = @{
             Uri         = $currentUri
@@ -136,7 +136,7 @@ function Invoke-AZTIGraphRequest {
                     Start-Sleep -Seconds $retryAfter
 
                     # Refresh token in case it expired during wait
-                    $headers = Get-AZTIGraphToken
+                    $headers = Get-AZSCGraphToken
                     $requestParams['Headers'] = $headers
                 }
                 else {

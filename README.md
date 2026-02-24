@@ -7,23 +7,23 @@ Tags: PowerShell, Azure, Inventory, Entra ID, Excel Report, JSON
 
 <div align="center">
 
-# Azure Tenant Inventory (AZTI)
+# Azure Tenant Inventory (AZSC)
 
 ### A PowerShell module for generating comprehensive Azure ARM and Entra ID inventory reports
 
-[![GitHub](https://img.shields.io/github/license/thisismydemo/azure-inventory)](https://github.com/thisismydemo/azure-inventory/blob/main/LICENSE)
-[![GitHub repo size](https://img.shields.io/github/repo-size/thisismydemo/azure-inventory)](https://github.com/thisismydemo/azure-inventory)
-[![GitHub last commit](https://img.shields.io/github/last-commit/thisismydemo/azure-inventory)](https://github.com/thisismydemo/azure-inventory/commits/main)
-[![GitHub top language](https://img.shields.io/github/languages/top/thisismydemo/azure-inventory)](https://github.com/thisismydemo/azure-inventory)
+[![GitHub](https://img.shields.io/github/license/thisismydemo/azure-scout)](https://github.com/thisismydemo/azure-scout/blob/main/LICENSE)
+[![GitHub repo size](https://img.shields.io/github/repo-size/thisismydemo/azure-scout)](https://github.com/thisismydemo/azure-scout)
+[![GitHub last commit](https://img.shields.io/github/last-commit/thisismydemo/azure-scout)](https://github.com/thisismydemo/azure-scout/commits/main)
+[![GitHub top language](https://img.shields.io/github/languages/top/thisismydemo/azure-scout)](https://github.com/thisismydemo/azure-scout)
 [![Azure](https://badgen.net/badge/icon/azure?icon=azure&label)](https://azure.microsoft.com)
 
 </div>
 
 ## Overview
 
-**AzureTenantInventory** (AZTI) is a PowerShell module that generates detailed Excel and JSON reports of an Azure tenant, covering both ARM resources and Entra ID (Azure AD) objects. It is designed for Cloud Administrators and technical professionals who need a consolidated view of their Azure environment.
+**AzureScout** (AZSC) is a PowerShell module that generates detailed Excel and JSON reports of an Azure tenant, covering both ARM resources and Entra ID (Azure AD) objects. It is designed for Cloud Administrators and technical professionals who need a consolidated view of their Azure environment.
 
-AZTI is forked from [microsoft/ARI](https://github.com/microsoft/ARI) (Azure Resource Inventory) v3.6.11 and extends it with:
+AZSC is forked from [microsoft/ARI](https://github.com/microsoft/ARI) (Azure Resource Inventory) v3.6.11 and extends it with:
 
 - **Entra ID inventory** — 15 modules covering users, groups, apps, conditional access, PIM, and more
 - **Dual Excel + JSON output** — Machine-readable JSON alongside interactive Excel reports
@@ -44,7 +44,7 @@ AZTI is forked from [microsoft/ARI](https://github.com/microsoft/ARI) (Azure Res
 | **Output Format Control** | `-OutputFormat All\|Excel\|Json\|Markdown\|AsciiDoc` to control report format |
 | **Category Filtering** | `-Category AI,Compute,Networking` to limit scope to selected categories |
 | **Network Diagrams** | Auto-generated draw.io topology diagrams |
-| **Permission Checker** | `Test-AZTIPermissions` validates access before running |
+| **Permission Checker** | `Test-AZSCPermissions` validates access before running |
 | **Security Analysis** | Optional Azure Security Center integration |
 | **Cross-Platform** | Windows, Linux, and Mac |
 | **No MgGraph Dependency** | Uses `Get-AzAccessToken -ResourceTypeName MSGraph` + REST API |
@@ -70,83 +70,83 @@ AZTI is forked from [microsoft/ARI](https://github.com/microsoft/ARI) (Azure Res
 
 ### Installation
 
-> **Note**: AZTI is not yet published to PowerShell Gallery. Install from source:
+> **Note**: AZSC is not yet published to PowerShell Gallery. Install from source:
 
 ```powershell
-git clone https://github.com/thisismydemo/azure-inventory.git
-Import-Module ./azure-inventory/AzureTenantInventory.psd1
+git clone https://github.com/thisismydemo/azure-scout.git
+Import-Module ./azure-scout/AzureScout.psd1
 ```
 
 Future PSGallery installation:
 
 ```powershell
-Install-Module -Name AzureTenantInventory
+Install-Module -Name AzureScout
 ```
 
 ## Quick Start
 
 ```powershell
 # Import the module
-Import-Module AzureTenantInventory
+Import-Module AzureScout
 
 # Full inventory (ARM + Entra ID) — uses current Azure context
-Invoke-AzureTenantInventory -TenantID <your-tenant-id>
+Invoke-AzureScout -TenantID <your-tenant-id>
 
 # Default run — ARM resources only (Entra ID excluded)
-Invoke-AzureTenantInventory -TenantID <your-tenant-id>
+Invoke-AzureScout -TenantID <your-tenant-id>
 
 # Full inventory: ARM + Entra ID
-Invoke-AzureTenantInventory -TenantID <your-tenant-id> -Scope All
+Invoke-AzureScout -TenantID <your-tenant-id> -Scope All
 
 # Entra ID only (fast — skips all Resource Graph queries)
-Invoke-AzureTenantInventory -TenantID <your-tenant-id> -Scope EntraOnly
+Invoke-AzureScout -TenantID <your-tenant-id> -Scope EntraOnly
 
 # JSON output only (no Excel)
-Invoke-AzureTenantInventory -TenantID <your-tenant-id> -OutputFormat Json
+Invoke-AzureScout -TenantID <your-tenant-id> -OutputFormat Json
 
 # Markdown + AsciiDoc outputs
-Invoke-AzureTenantInventory -TenantID <your-tenant-id> -OutputFormat Markdown
-Invoke-AzureTenantInventory -TenantID <your-tenant-id> -OutputFormat AsciiDoc
+Invoke-AzureScout -TenantID <your-tenant-id> -OutputFormat Markdown
+Invoke-AzureScout -TenantID <your-tenant-id> -OutputFormat AsciiDoc
 
 # Check permissions before running
-Test-AZTIPermissions -TenantID <your-tenant-id>
+Test-AZSCPermissions -TenantID <your-tenant-id>
 ```
 
 ## Authentication Methods
 
-AZTI supports five authentication methods. If you are already logged in via `Connect-AzAccount`, AZTI reuses your existing session.
+AZSC supports five authentication methods. If you are already logged in via `Connect-AzAccount`, AZSC reuses your existing session.
 
 ### 1. Current User (Default)
 
 ```powershell
 # Already logged in — just run
-Invoke-AzureTenantInventory -TenantID <tenant-id>
+Invoke-AzureScout -TenantID <tenant-id>
 ```
 
 ### 2. Service Principal + Secret
 
 ```powershell
-Invoke-AzureTenantInventory -TenantID <tenant-id> -AppId <app-id> -Secret <secret>
+Invoke-AzureScout -TenantID <tenant-id> -AppId <app-id> -Secret <secret>
 ```
 
 ### 3. Service Principal + Certificate
 
 ```powershell
-Invoke-AzureTenantInventory -TenantID <tenant-id> -AppId <app-id> `
+Invoke-AzureScout -TenantID <tenant-id> -AppId <app-id> `
     -CertificatePath "C:\certs\spn.pfx" -Secret <cert-password>
 ```
 
 ### 4. Device Code
 
 ```powershell
-Invoke-AzureTenantInventory -TenantID <tenant-id> -DeviceLogin
+Invoke-AzureScout -TenantID <tenant-id> -DeviceLogin
 ```
 
 ### 5. Managed Identity
 
 ```powershell
 # From an Azure VM or container with managed identity
-Invoke-AzureTenantInventory -TenantID <tenant-id>
+Invoke-AzureScout -TenantID <tenant-id>
 ```
 
 ## Usage Guide
@@ -173,10 +173,10 @@ Invoke-AzureTenantInventory -TenantID <tenant-id>
 
 ### Permission Checker
 
-Run `Test-AZTIPermissions` to validate access before a full inventory:
+Run `Test-AZSCPermissions` to validate access before a full inventory:
 
 ```powershell
-$result = Test-AZTIPermissions -TenantID <tenant-id> -Scope All
+$result = Test-AZSCPermissions -TenantID <tenant-id> -Scope All
 $result.ArmAccess    # $true / $false
 $result.GraphAccess  # $true / $false
 $result.Details      # Array of check results with remediation guidance
@@ -186,25 +186,25 @@ $result.Details      # Array of check results with remediation guidance
 
 ```powershell
 # Include Security Center recommendations
-Invoke-AzureTenantInventory -TenantID <id> -SecurityCenter
+Invoke-AzureScout -TenantID <id> -SecurityCenter
 
 # Include resource tags in reports
-Invoke-AzureTenantInventory -TenantID <id> -IncludeTags
+Invoke-AzureScout -TenantID <id> -IncludeTags
 
 # Skip optional data collections
-Invoke-AzureTenantInventory -TenantID <id> -SkipAdvisory -SkipPolicy -SkipDiagram
+Invoke-AzureScout -TenantID <id> -SkipAdvisory -SkipPolicy -SkipDiagram
 
 # Target specific subscriptions
-Invoke-AzureTenantInventory -TenantID <id> -SubscriptionID <sub-id>
+Invoke-AzureScout -TenantID <id> -SubscriptionID <sub-id>
 
 # Target a management group
-Invoke-AzureTenantInventory -TenantID <id> -ManagementGroup <mg-id>
+Invoke-AzureScout -TenantID <id> -ManagementGroup <mg-id>
 ```
 
 ### Custom Output Location
 
 ```powershell
-Invoke-AzureTenantInventory -TenantID <id> -ReportDir "D:\Reports" -ReportName "Q1-Inventory"
+Invoke-AzureScout -TenantID <id> -ReportDir "D:\Reports" -ReportName "Q1-Inventory"
 ```
 
 ## Required Permissions
@@ -245,7 +245,7 @@ Required only when using `-Scope All` or `-Scope EntraOnly`.
 **For interactive user accounts:** Assign the **Global Reader** or **Directory Readers** Entra role.  
 **For service principals (non-interactive):** Grant application permissions above and perform admin consent.
 
-> **Tip**: Missing Graph permissions cause only the affected module to be skipped — AZTI continues with available data.
+> **Tip**: Missing Graph permissions cause only the affected module to be skipped — AZSC continues with available data.
 
 ### Troubleshooting Permission Errors
 
@@ -258,7 +258,7 @@ Required only when using `-Scope All` or `-Scope EntraOnly`.
 
 ### Required Resource Providers
 
-AZTI queries the following resource providers. If a provider is not registered, the corresponding modules are skipped with a warning.
+AZSC queries the following resource providers. If a provider is not registered, the corresponding modules are skipped with a warning.
 
 | Resource Provider | Purpose |
 |-------------------|---------|
@@ -270,7 +270,7 @@ AZTI queries the following resource providers. If a provider is not registered, 
 | `Microsoft.Kubernetes` | Arc-enabled Kubernetes |
 | `Microsoft.AzureStackHCI` | Azure Local (Stack HCI) clusters |
 
-Run `Test-AZTIPermissions` to check provider registration status before a full run.
+Run `Test-AZSCPermissions` to check provider registration status before a full run.
 
 ## Output
 
@@ -278,25 +278,25 @@ Run `Test-AZTIPermissions` to check provider registration status before a full r
 
 | OS | Path |
 |----|------|
-| Windows | `C:\AzureTenantInventory\` |
-| Linux/Mac | `$HOME/AzureTenantInventory/` |
+| Windows | `C:\AzureScout\` |
+| Linux/Mac | `$HOME/AzureScout/` |
 
 ### Output Files
 
 | File | Format | Description |
 |------|--------|-------------|
-| `AzureTenantInventory_Report_<timestamp>.xlsx` | Excel | Interactive spreadsheet with all inventory data |
-| `AzureTenantInventory_Report_<timestamp>.json` | JSON | Machine-readable inventory with `_metadata` envelope |
-| `AzureTenantInventory_Report_<timestamp>.md` | Markdown | GitHub-Flavored Markdown with pipe tables per module |
-| `AzureTenantInventory_Report_<timestamp>.adoc` | AsciiDoc | AsciiDoc document for Antora/Confluence rendering |
-| `AzureTenantInventory_Diagram_<timestamp>.xml` | Draw.io XML | Network topology diagram |
+| `AzureScout_Report_<timestamp>.xlsx` | Excel | Interactive spreadsheet with all inventory data |
+| `AzureScout_Report_<timestamp>.json` | JSON | Machine-readable inventory with `_metadata` envelope |
+| `AzureScout_Report_<timestamp>.md` | Markdown | GitHub-Flavored Markdown with pipe tables per module |
+| `AzureScout_Report_<timestamp>.adoc` | AsciiDoc | AsciiDoc document for Antora/Confluence rendering |
+| `AzureScout_Diagram_<timestamp>.xml` | Draw.io XML | Network topology diagram |
 
 ### JSON Structure
 
 ```json
 {
   "_metadata": {
-    "tool": "AzureTenantInventory",
+    "tool": "AzureScout",
     "version": "1.5.0",
     "tenantId": "...",
     "subscriptions": ["..."],
@@ -346,14 +346,14 @@ Use `-Category` to limit the inventory to specific Azure resource categories. Th
 
 ```powershell
 # Inventory only Compute and Networking resources
-Invoke-AzureTenantInventory -TenantID <id> -Category Compute,Networking
+Invoke-AzureScout -TenantID <id> -Category Compute,Networking
 
 # Inventory AI resources with JSON output
-Invoke-AzureTenantInventory -TenantID <id> -Category AI -OutputFormat Json
+Invoke-AzureScout -TenantID <id> -Category AI -OutputFormat Json
 
 # Long-form names (from the Azure Portal) are also accepted
-Invoke-AzureTenantInventory -TenantID <id> -Category 'AI + Machine Learning'
-Invoke-AzureTenantInventory -TenantID <id> -Category 'Internet of Things'
+Invoke-AzureScout -TenantID <id> -Category 'AI + Machine Learning'
+Invoke-AzureScout -TenantID <id> -Category 'Internet of Things'
 ```
 
 ## Module Catalog
@@ -460,13 +460,13 @@ Use `-Category` to limit the inventory to specific Azure resource categories. Th
 
 ```powershell
 # Inventory only Compute and Networking resources
-Invoke-AzureTenantInventory -TenantID <id> -Category Compute,Networking
+Invoke-AzureScout -TenantID <id> -Category Compute,Networking
 
 # Inventory only AI resources, JSON output
-Invoke-AzureTenantInventory -TenantID <id> -Category AI -OutputFormat Json
+Invoke-AzureScout -TenantID <id> -Category AI -OutputFormat Json
 
 # Long-form category names are also accepted
-Invoke-AzureTenantInventory -TenantID <id> -Category 'AI + Machine Learning'
+Invoke-AzureScout -TenantID <id> -Category 'AI + Machine Learning'
 ```
 
 ## Attribution

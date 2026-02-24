@@ -6,10 +6,10 @@ Subscription Module for Draw.io Diagram
 This module is used for the Subscription topology in the Draw.io Diagram.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/PublicFunctions/Diagram/Start-AZTIDiagramSubscription.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/PublicFunctions/Diagram/Start-AZSCDiagramSubscription.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 
 #>
-Function Start-AZTIDiagramSubscription {
+Function Start-AZSCDiagramSubscription {
     Param($Subscriptions,$Resources,$DiagramCache,$LogFile) 
 
     ('DrawIOSubsFile - '+(get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - Starting Subscription Function')

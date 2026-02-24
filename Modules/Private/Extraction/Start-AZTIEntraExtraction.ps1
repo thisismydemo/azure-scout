@@ -13,7 +13,7 @@
       - tenantId   : The tenant ID
       - properties : Nested PSObject containing the full original data
 
-    Uses Invoke-AZTIGraphRequest (Phase 2) for all Graph calls with automatic
+    Uses Invoke-AZSCGraphRequest (Phase 2) for all Graph calls with automatic
     pagination, throttle handling, and exponential backoff.
 
 .PARAMETER TenantID
@@ -23,16 +23,16 @@
     [PSCustomObject] with property EntraResources (array of normalized objects).
 
 .LINK
-    https://github.com/thisismydemo/azure-inventory
+    https://github.com/thisismydemo/azure-scout
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
     Version: 1.0.0
     Authors: thisismydemo
 #>
-function Start-AZTIEntraExtraction {
+function Start-AZSCEntraExtraction {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -197,7 +197,7 @@ function Start-AZTIEntraExtraction {
         Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + " - Entra: Querying $($query.Name) [$($query.Uri)]")
 
         try {
-            $result = Invoke-AZTIGraphRequest -Uri $query.Uri
+            $result = Invoke-AZSCGraphRequest -Uri $query.Uri
 
             if ($null -ne $result) {
                 # Handle single-object endpoints (e.g., authorizationPolicy)
@@ -211,7 +211,7 @@ function Start-AZTIEntraExtraction {
                     }
                 }
                 else {
-                    # Collection endpoint — result is already an array from Invoke-AZTIGraphRequest
+                    # Collection endpoint — result is already an array from Invoke-AZSCGraphRequest
                     if ($result -is [array]) {
                         Add-NormalizedResource -Items $result -SyntheticType $query.Type -NameProperty $query.NameProperty
                     }

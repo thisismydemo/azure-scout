@@ -5,7 +5,7 @@
 
 == Overview
 
-Azure Tenant Inventory (AZTI) is a PowerShell module that generates comprehensive inventory reports for a single Azure tenant — covering both ARM resources and Entra ID (Azure AD) objects.
+Azure Tenant Inventory (AZSC) is a PowerShell module that generates comprehensive inventory reports for a single Azure tenant — covering both ARM resources and Entra ID (Azure AD) objects.
 
 [cols="1,3",options="header"]
 |===
@@ -35,19 +35,19 @@ Azure Tenant Inventory (AZTI) is a PowerShell module that generates comprehensiv
 [source,powershell]
 ----
 # Import from local clone
-Import-Module ./AzureTenantInventory.psd1
+Import-Module ./AzureScout.psd1
 
 # Run full inventory (uses current Azure context)
-Invoke-AzureTenantInventory
+Invoke-AzureScout
 
 # ARM-only scan with JSON output
-Invoke-AzureTenantInventory -Scope ArmOnly -OutputFormat Json
+Invoke-AzureScout -Scope ArmOnly -OutputFormat Json
 
 # Entra ID only
-Invoke-AzureTenantInventory -Scope EntraOnly
+Invoke-AzureScout -Scope EntraOnly
 ----
 
-TIP: If you're already logged in via `Connect-AzAccount`, AZTI uses your existing session — no additional flags needed.
+TIP: If you're already logged in via `Connect-AzAccount`, AZSC uses your existing session — no additional flags needed.
 
 == Documentation
 

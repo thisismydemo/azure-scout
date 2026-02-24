@@ -3,15 +3,15 @@
 Set the report path for Azure Tenant Inventory
 
 .DESCRIPTION
-This module sets the default paths for report generation in Azure Tenant Inventory (AZTI).
-Windows default: C:\AzureTenantInventory
-Linux/Mac default: $HOME/AzureTenantInventory
+This module sets the default paths for report generation in Azure Tenant Inventory (AZSC).
+Windows default: C:\AzureScout
+Linux/Mac default: $HOME/AzureScout
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/Main/Set-AZTIReportPath.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/Main/Set-AZSCReportPath.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 1.5.0
@@ -19,7 +19,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola (original), thisismydemo (fork)
 
 #>
-function Set-AZTIReportPath {
+function Set-AZSCReportPath {
     Param($ReportDir)
 
     if ($ReportDir)
@@ -30,15 +30,15 @@ function Set-AZTIReportPath {
         }
     elseif (Resolve-Path -Path 'C:\' -ErrorAction SilentlyContinue)
         {
-            $DefaultPath = Join-Path "C:\" "AzureTenantInventory"
-            $DiagramCache = Join-Path "C:\" "AzureTenantInventory" "DiagramCache"
-            $ReportCache = Join-Path "C:\" "AzureTenantInventory"'ReportCache'
+            $DefaultPath = Join-Path "C:\" "AzureScout"
+            $DiagramCache = Join-Path "C:\" "AzureScout" "DiagramCache"
+            $ReportCache = Join-Path "C:\" "AzureScout"'ReportCache'
         }
     else
         {
-            $DefaultPath = Join-Path "$HOME" "AzureTenantInventory"
-            $DiagramCache = Join-Path "$HOME" "AzureTenantInventory" "DiagramCache"
-            $ReportCache = Join-Path "$HOME" "AzureTenantInventory" 'ReportCache'
+            $DefaultPath = Join-Path "$HOME" "AzureScout"
+            $DiagramCache = Join-Path "$HOME" "AzureScout" "DiagramCache"
+            $ReportCache = Join-Path "$HOME" "AzureScout" 'ReportCache'
         }
 
     $ReportPath = @{

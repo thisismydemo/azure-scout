@@ -6,17 +6,17 @@ Module responsible for looping through Azure Resource Graph queries.
 This module is used to loop through Azure Resource Graph queries and retrieve resources in batches.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/1.ExtractionFunctions/Invoke-AZTIInventoryLoop.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/1.ExtractionFunctions/Invoke-AZSCInventoryLoop.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .NOTES
 Version: 3.6.0
 First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
-function Invoke-AZTIInventoryLoop {
+function Invoke-AZSCInventoryLoop {
     param($GraphQuery, $FSubscri, $LoopName)
 
     # Helper: emit a clear, actionable message for permission-related errors (19.7.4)
@@ -26,7 +26,7 @@ function Invoke-AZTIInventoryLoop {
         if ($msg -match 'AuthorizationFailed|Forbidden|does not have authorization|Access to.*subscription.*denied|403') {
             $subHint = if ($SubscriptionContext) { " (subscription: $SubscriptionContext)" } else { '' }
             Write-Warning (
-                "[AZTI] Permission error extracting '$LoopName'$subHint. " +
+                "[AZSC] Permission error extracting '$LoopName'$subHint. " +
                 "The identity is missing the 'Reader' role (or equivalent). " +
                 "Remediation: New-AzRoleAssignment -ObjectId <principalId> -RoleDefinitionName 'Reader' -Scope '/subscriptions/<subId>'"
             )

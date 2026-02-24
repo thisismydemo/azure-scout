@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1A86D8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#003A70;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="glowLeft" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#50B4FF;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#0078D4;stop-opacity:0" />
+    </radialGradient>
+    <radialGradient id="glowRight" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#50B4FF;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#0078D4;stop-opacity:0" />
+    </radialGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#001A3A" flood-opacity="0.4"/>
+    </filter>
+    <clipPath id="leftLens">
+      <circle cx="72" cy="118" r="22"/>
+    </clipPath>
+    <clipPath id="rightLens">
+      <circle cx="128" cy="118" r="22"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="200" height="200" rx="38" ry="38" fill="url(#bgGrad)"/>
+
+  <!-- Subtle grid lines (terrain map feel) -->
+  <g opacity="0.08" stroke="white" stroke-width="0.8">
+    <line x1="0" y1="50" x2="200" y2="50"/>
+    <line x1="0" y1="100" x2="200" y2="100"/>
+    <line x1="0" y1="150" x2="200" y2="150"/>
+    <line x1="50" y1="0" x2="50" y2="200"/>
+    <line x1="100" y1="0" x2="100" y2="200"/>
+    <line x1="150" y1="0" x2="150" y2="200"/>
+  </g>
+
+  <!-- Scout merit badge star (top center) -->
+  <g transform="translate(100,38)" filter="url(#shadow)">
+    <polygon points="0,-14 3.3,-4.5 13.3,-4.5 5.3,1.7 8.2,11.5 0,5.5 -8.2,11.5 -5.3,1.7 -13.3,-4.5 -3.3,-4.5"
+      fill="#FFD700" stroke="#FFA500" stroke-width="0.8"/>
+    <!-- Azure 'A' in badge -->
+    <text x="0" y="5" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold"
+      font-size="8" fill="#003A70">A</text>
+  </g>
+
+  <!-- Binoculars body -->
+  <g filter="url(#shadow)">
+    <!-- Left barrel top grip -->
+    <rect x="50" y="82" width="40" height="16" rx="8" fill="white"/>
+    <!-- Right barrel top grip -->
+    <rect x="110" y="82" width="40" height="16" rx="8" fill="white"/>
+
+    <!-- Center bridge -->
+    <rect x="84" y="98" width="32" height="14" rx="7" fill="white"/>
+
+    <!-- Left barrel outer ring -->
+    <circle cx="72" cy="118" r="32" fill="white"/>
+    <!-- Right barrel outer ring -->
+    <circle cx="128" cy="118" r="32" fill="white"/>
+
+    <!-- Left lens background -->
+    <circle cx="72" cy="118" r="23" fill="url(#bgGrad)"/>
+    <!-- Right lens background -->
+    <circle cx="128" cy="118" r="23" fill="url(#bgGrad)"/>
+
+    <!-- Left lens glow -->
+    <circle cx="72" cy="118" r="23" fill="url(#glowLeft)"/>
+    <!-- Right lens glow -->
+    <circle cx="128" cy="118" r="23" fill="url(#glowRight)"/>
+
+    <!-- LEFT LENS: Azure cloud -->
+    <g clip-path="url(#leftLens)">
+      <ellipse cx="72" cy="122" rx="15" ry="8" fill="white" opacity="0.9"/>
+      <ellipse cx="65" cy="118" rx="9" ry="8" fill="white" opacity="0.9"/>
+      <ellipse cx="77" cy="116" rx="10" ry="8" fill="white" opacity="0.9"/>
+    </g>
+
+    <!-- RIGHT LENS: Targeting crosshair / compass -->
+    <g clip-path="url(#rightLens)">
+      <!-- Compass rose -->
+      <circle cx="128" cy="118" r="16" fill="none" stroke="white" stroke-width="1.2" opacity="0.6"/>
+      <line x1="128" y1="102" x2="128" y2="134" stroke="white" stroke-width="1.5" opacity="0.8"/>
+      <line x1="112" y1="118" x2="144" y2="118" stroke="white" stroke-width="1.5" opacity="0.8"/>
+      <!-- N/S/E/W ticks -->
+      <line x1="128" y1="102" x2="128" y2="106" stroke="white" stroke-width="2.5"/>
+      <line x1="128" y1="130" x2="128" y2="134" stroke="white" stroke-width="2.5"/>
+      <line x1="112" y1="118" x2="116" y2="118" stroke="white" stroke-width="2.5"/>
+      <line x1="140" y1="118" x2="144" y2="118" stroke="white" stroke-width="2.5"/>
+      <!-- Center dot -->
+      <circle cx="128" cy="118" r="2.5" fill="white"/>
+    </g>
+
+    <!-- Lens rim highlight -->
+    <circle cx="72" cy="118" r="23" fill="none" stroke="white" stroke-width="2" opacity="0.3"/>
+    <circle cx="128" cy="118" r="23" fill="none" stroke="white" stroke-width="2" opacity="0.3"/>
+
+    <!-- Focus wheel center -->
+    <rect x="95" y="100" width="10" height="10" rx="5" fill="#FFD700"/>
+  </g>
+
+  <!-- Bottom label -->
+  <text x="100" y="172" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif"
+    font-weight="bold" font-size="15" fill="white" letter-spacing="1" opacity="0.95">AZURE</text>
+  <text x="100" y="189" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif"
+    font-weight="bold" font-size="15" fill="#FFD700" letter-spacing="2" opacity="0.95">SCOUT</text>
+</svg>

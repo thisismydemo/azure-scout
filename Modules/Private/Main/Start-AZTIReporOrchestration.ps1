@@ -6,10 +6,10 @@ Main module for Excel Report Building
 This module is the main module for building the Excel Report.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/0.MainFunctions/Start-AZTIReporOrchestration.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/0.MainFunctions/Start-AZSCReporOrchestration.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 
 #>
-Function Start-AZTIReporOrchestration {
+Function Start-AZSCReporOrchestration {
     Param($ReportCache,
     $SecurityCenter,
     $File,
@@ -33,17 +33,17 @@ Function Start-AZTIReporOrchestration {
     <############################################################## REPORT CREATION ###################################################################>
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting Resource Reporting Cache.')
-    Start-AZTIExcelJob -ReportCache $ReportCache -TableStyle $TableStyle -File $File
+    Start-AZSCExcelJob -ReportCache $ReportCache -TableStyle $TableStyle -File $File
 
     <############################################################## REPORT EXTRA DETAILS ###################################################################>
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting Reporting Extra Details.')
-    Start-AZTIExcelExtraData -File $File
+    Start-AZSCExcelExtraData -File $File
 
     <############################################################## EXTRA REPORTS ###################################################################>
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting Default Data Reporting.')
 
-    Start-AZTIExtraReports -File $File -Quotas $Quotas -SecurityCenter $SecurityCenter -SkipPolicy $SkipPolicy -SkipAdvisory $SkipAdvisory -IncludeCosts $IncludeCosts -TableStyle $TableStyle -ReportCache $ReportCache
+    Start-AZSCExtraReports -File $File -Quotas $Quotas -SecurityCenter $SecurityCenter -SkipPolicy $SkipPolicy -SkipAdvisory $SkipAdvisory -IncludeCosts $IncludeCosts -TableStyle $TableStyle -ReportCache $ReportCache
 
 }

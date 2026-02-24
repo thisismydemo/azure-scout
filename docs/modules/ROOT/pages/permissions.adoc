@@ -76,7 +76,7 @@ The following Microsoft Graph API permissions are required for Entra ID inventor
 
 == Pre-flight Validation
 
-The `Test-AZTIPermissions` function runs automatically before extraction (unless `-SkipPermissionCheck` is set):
+The `Test-AZSCPermissions` function runs automatically before extraction (unless `-SkipPermissionCheck` is set):
 
 [cols="2,1,3",options="header"]
 |===
@@ -122,6 +122,6 @@ If the permission checker reports failures:
 [source,powershell]
 ----
 # Check permissions without running a full inventory
-Import-Module ./AzureTenantInventory.psd1
-Test-AZTIPermissions -TenantID '00000000-...' -Scope All
+Import-Module ./AzureScout.psd1
+Test-AZSCPermissions -TenantID '00000000-...' -Scope All
 ----

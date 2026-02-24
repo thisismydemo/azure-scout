@@ -6,10 +6,10 @@ Test Powershell environment
 This module is used to test and validate the Powershell environment.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/0.MainFunctions/Test-AZTIPS.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/0.MainFunctions/Test-AZSCPS.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,8 +17,8 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 
 #>
-function Test-AZTIPS {
-    Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting Test-AZTIPS function')
+function Test-AZSCPS {
+    Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting Test-AZSCPS function')
     $CShell = try{Get-CloudShellTip}catch{$null}
     if ($CShell) {
         Write-Host 'Azure CloudShell Identified.' -ForegroundColor Cyan

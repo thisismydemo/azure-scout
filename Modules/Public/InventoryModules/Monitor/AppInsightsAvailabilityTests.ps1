@@ -8,17 +8,17 @@ Web Tests (microsoft.insights/webtests).
 Excel Sheet Name: App Insights Availability Tests
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Monitoring/AppInsightsAvailabilityTests.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Monitoring/AppInsightsAvailabilityTests.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .CATEGORY Monitor
 
 .NOTES
 Version: 1.0.0
 First Release Date: February 24, 2026
-Authors: AzureTenantInventory Contributors
+Authors: AzureScout Contributors
 
 #>
 

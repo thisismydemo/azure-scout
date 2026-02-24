@@ -6,10 +6,10 @@ Module responsible for coordinate the extraction of Resource and build the Graph
 This module is the main module for the Azure Resource Graphs that will be run against the environment.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/1.ExtractionFunctions/Start-AZTIGraphExtraction.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/1.ExtractionFunctions/Start-AZSCGraphExtraction.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.11
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 
 #>
-Function Start-AZTIGraphExtraction {
+Function Start-AZSCGraphExtraction {
     Param($ManagementGroup, $Subscriptions, $SubscriptionID, $ResourceGroup, $SecurityCenter, $SkipAdvisory, $IncludeTags, $TagKey, $TagValue, $AzureEnvironment)
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting Extractor function')
@@ -40,7 +40,7 @@ Function Start-AZTIGraphExtraction {
 
     if (![string]::IsNullOrEmpty($ManagementGroup))
         {
-            $Subscriptions = Get-AZTIManagementGroups -ManagementGroup $ManagementGroup -Subscriptions $Subscriptions
+            $Subscriptions = Get-AZSCManagementGroups -ManagementGroup $ManagementGroup -Subscriptions $Subscriptions
         }
 
     $SubCount = [string]$Subscriptions.id.count
@@ -97,35 +97,35 @@ Function Start-AZTIGraphExtraction {
             $GraphQuery = "resources $RGQueryExtension $TagQueryExtension $MGQueryExtension $ExcludedTypes | project id,name,type,tenantId,kind,location,resourceGroup,subscriptionId,managedBy,sku,plan,properties,identity,zones,extendedLocation$($GraphQueryTags) | order by id asc"
 
             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Invoking Inventory Loop for Resources')
-            $Resources += Invoke-AZTIInventoryLoop -GraphQuery $GraphQuery -FSubscri $Subscri -LoopName 'Resources'
+            $Resources += Invoke-AZSCInventoryLoop -GraphQuery $GraphQuery -FSubscri $Subscri -LoopName 'Resources'
 
             $GraphQuery = "networkresources $RGQueryExtension $TagQueryExtension $MGQueryExtension | project id,name,type,tenantId,kind,location,resourceGroup,subscriptionId,managedBy,sku,plan,properties,identity,zones,extendedLocation$($GraphQueryTags) | order by id asc"
 
             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Invoking Inventory Loop for Network Resources')
-            $Resources += Invoke-AZTIInventoryLoop -GraphQuery $GraphQuery -FSubscri $Subscri -LoopName 'Network Resources'
+            $Resources += Invoke-AZSCInventoryLoop -GraphQuery $GraphQuery -FSubscri $Subscri -LoopName 'Network Resources'
 
             if ($AzureEnvironment -ne 'AzureUSGovernment')
                 {
                     $GraphQuery = "SupportResources $RGQueryExtension $TagQueryExtension $MGQueryExtension | project id,name,type,tenantId,kind,location,resourceGroup,subscriptionId,managedBy,sku,plan,properties,identity,zones,extendedLocation$($GraphQueryTags) | order by id asc"
 
                     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Invoking Inventory Loop for Support Tickets')
-                    $Resources += Invoke-AZTIInventoryLoop -GraphQuery $GraphQuery -FSubscri $Subscri -LoopName 'SupportTickets'
+                    $Resources += Invoke-AZSCInventoryLoop -GraphQuery $GraphQuery -FSubscri $Subscri -LoopName 'SupportTickets'
                 }
 
             $GraphQuery = "recoveryservicesresources $RGQueryExtension $TagQueryExtension | where type =~ 'microsoft.recoveryservices/vaults/backupfabrics/protectioncontainers/protecteditems' or type =~ 'microsoft.recoveryservices/vaults/backuppolicies' $MGQueryExtension  | project id,name,type,tenantId,kind,location,resourceGroup,subscriptionId,managedBy,sku,plan,properties,identity,zones,extendedLocation$($GraphQueryTags) | order by id asc"
 
             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Invoking Inventory Loop for Backup Resources')
-            $Resources += Invoke-AZTIInventoryLoop -GraphQuery $GraphQuery -FSubscri $Subscri -LoopName 'Backup Items'
+            $Resources += Invoke-AZSCInventoryLoop -GraphQuery $GraphQuery -FSubscri $Subscri -LoopName 'Backup Items'
 
             $GraphQuery = "desktopvirtualizationresources $RGQueryExtension $MGQueryExtension| project id,name,type,tenantId,kind,location,resourceGroup,subscriptionId,managedBy,sku,plan,properties,identity,zones,extendedLocation$($GraphQueryTags) | order by id asc"
 
             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Invoking Inventory Loop for AVD Resources')
-            $Resources += Invoke-AZTIInventoryLoop -GraphQuery $GraphQuery -FSubscri $Subscri -LoopName 'Virtual Desktop'
+            $Resources += Invoke-AZSCInventoryLoop -GraphQuery $GraphQuery -FSubscri $Subscri -LoopName 'Virtual Desktop'
 
             $GraphQuery = "resourcecontainers $RGQueryExtension $TagQueryExtension $MGContainerExtension | project id,name,type,tenantId,kind,location,resourceGroup,subscriptionId,managedBy,sku,plan,properties,identity,zones,extendedLocation$($GraphQueryTags) | order by id asc"
 
             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Invoking Inventory Loop for Resource Containers')
-            $ResourceContainers = Invoke-AZTIInventoryLoop -GraphQuery $GraphQuery -FSubscri $Subscri -LoopName 'Subscriptions and Resource Groups'
+            $ResourceContainers = Invoke-AZSCInventoryLoop -GraphQuery $GraphQuery -FSubscri $Subscri -LoopName 'Subscriptions and Resource Groups'
 
             $ContainerCount = $ResourceContainers.count
             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Number of Resource Containers: '+ $ContainerCount)
@@ -135,7 +135,7 @@ Function Start-AZTIGraphExtraction {
                     $GraphQuery = "advisorresources $RGQueryExtension $MGQueryExtension | where properties.impact in~ ('Medium','High') | order by id asc"
 
                     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Invoking Inventory Loop for Advisories')
-                    $Advisories = Invoke-AZTIInventoryLoop -GraphQuery $GraphQuery -FSubscri $Subscri -LoopName 'Advisories'
+                    $Advisories = Invoke-AZSCInventoryLoop -GraphQuery $GraphQuery -FSubscri $Subscri -LoopName 'Advisories'
 
                     $AdvisorCount = $Advisories.count
                     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Number of Advisors: '+ $AdvisorCount)
@@ -145,7 +145,7 @@ Function Start-AZTIGraphExtraction {
                     $GraphQuery = "securityresources $RGQueryExtension | where type =~ 'microsoft.security/assessments' and properties['status']['code'] == 'Unhealthy' $MGQueryExtension | order by id asc"
 
                     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Invoking Inventory Loop for Security Resources')
-                    $Security = Invoke-AZTIInventoryLoop -GraphQuery $GraphQuery -FSubscri $Subscri -LoopName 'Security Center'
+                    $Security = Invoke-AZSCInventoryLoop -GraphQuery $GraphQuery -FSubscri $Subscri -LoopName 'Security Center'
 
                     $SecurityCount = $Security.count
                     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Number of Security Center Advisors: '+ $SecurityCount)
@@ -159,7 +159,7 @@ Function Start-AZTIGraphExtraction {
 
     $RetirementQuery = Get-Content -Path $RetirementPath | Out-String
 
-    $ResourceRetirements = Invoke-AZTIInventoryLoop -GraphQuery $RetirementQuery -FSubscri $Subscri -LoopName 'Retirements'
+    $ResourceRetirements = Invoke-AZSCInventoryLoop -GraphQuery $RetirementQuery -FSubscri $Subscri -LoopName 'Retirements'
 
     $RetirementCount = $ResourceRetirements.count
 

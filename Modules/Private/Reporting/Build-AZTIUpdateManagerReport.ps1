@@ -8,15 +8,15 @@ maintenance schedule assignments and patch compliance status, sourced from the
 Management/MaintenanceConfigurations and Compute/VirtualMachine cache data.
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 1.0.0
 First Release Date: February 24, 2026
-Authors: AzureTenantInventory Contributors
+Authors: AzureScout Contributors
 #>
 
-function Build-AZTIUpdateManagerReport {
+function Build-AZSCUpdateManagerReport {
     Param($File, $ReportCache, $TableStyle)
 
     Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + ' - Building Azure Update Manager worksheet.')

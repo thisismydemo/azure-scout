@@ -6,10 +6,10 @@ Inventory for Azure Outages
 Excel Sheet Name: Outages
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/APIs/Outages.ps1
+https://github.com/thisismydemo/azure-scout/Modules/APIs/Outages.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .CATEGORY Monitor
 

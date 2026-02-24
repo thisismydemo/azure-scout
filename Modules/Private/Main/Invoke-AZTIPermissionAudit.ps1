@@ -21,11 +21,11 @@
 
 .PARAMETER OutputFormat
     If 'Json' or 'Markdown', saves the audit result as a file alongside where the
-    Excel report would normally land (the user's AZTI report directory).
+    Excel report would normally land (the user's AZSC report directory).
 
 .PARAMETER ReportDir
     Directory where the audit file is written when -OutputFormat is Json or Markdown.
-    Defaults to the same path that Invoke-AzureTenantInventory would use.
+    Defaults to the same path that Invoke-AzureScout would use.
 
 .OUTPUTS
     [PSCustomObject] with:
@@ -41,19 +41,19 @@
         OverallReadiness        [string]  — 'FullARM', 'FullARMAndEntra', 'Partial', 'Insufficient'
 
 .LINK
-    https://github.com/thisismydemo/azure-inventory
+    https://github.com/thisismydemo/azure-scout
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .CATEGORY Management
 
 .NOTES
     Version: 1.0.0
     First Release Date: February 24, 2026
-    Authors: AzureTenantInventory Contributors
+    Authors: AzureScout Contributors
 #>
-function Invoke-AZTIPermissionAudit {
+function Invoke-AZSCPermissionAudit {
     [CmdletBinding()]
     param(
         [switch]$IncludeEntraPermissions,
@@ -299,7 +299,7 @@ function Invoke-AZTIPermissionAudit {
 
         $graphToken = $null
         try {
-            $graphToken = Get-AZTIGraphToken
+            $graphToken = Get-AZSCGraphToken
             Write-AuditLine -Status Pass -Text 'Microsoft Graph token acquired successfully'
         }
         catch {
@@ -326,7 +326,7 @@ function Invoke-AZTIPermissionAudit {
             foreach ($checkName in $graphChecks.Keys) {
                 $check = $graphChecks[$checkName]
                 try {
-                    $null = Invoke-AZTIGraphRequest -Uri $check.Uri -SinglePage
+                    $null = Invoke-AZSCGraphRequest -Uri $check.Uri -SinglePage
                     $r = New-CheckResult $checkName 'Pass' "$($check.Permission)  — $($check.Purpose)"
                     Write-AuditLine -Status Pass -Text "$checkName  [$($check.Permission)]"
                 }
@@ -397,9 +397,9 @@ function Invoke-AZTIPermissionAudit {
     }
 
     # Suggested command
-    Write-Host '  Suggested Invoke-AzureTenantInventory command:' -ForegroundColor Cyan
+    Write-Host '  Suggested Invoke-AzureScout command:' -ForegroundColor Cyan
     $scopeSuggestion = if ($overallReadiness -eq 'FullARMAndEntra') { '-Scope All' } else { '-Scope ArmOnly' }
-    Write-Host "    Invoke-AzureTenantInventory -TenantID $tenantId $scopeSuggestion" -ForegroundColor Cyan
+    Write-Host "    Invoke-AzureScout -TenantID $tenantId $scopeSuggestion" -ForegroundColor Cyan
     Write-Host ''
 
     # ── Build result object ────────────────────────────────────────────────────
@@ -420,7 +420,7 @@ function Invoke-AZTIPermissionAudit {
     # ── Optional file output ───────────────────────────────────────────────────
     if ($OutputFormat -in 'Json', 'All') {
         $reportPath = if ($ReportDir) { $ReportDir } else {
-            $rp = Set-AZTIReportPath -ReportDir $null
+            $rp = Set-AZSCReportPath -ReportDir $null
             $rp.DefaultPath
         }
         if (-not (Test-Path $reportPath)) { New-Item -ItemType Directory -Path $reportPath -Force | Out-Null }
@@ -431,7 +431,7 @@ function Invoke-AZTIPermissionAudit {
 
     if ($OutputFormat -in 'Markdown', 'All') {
         $reportPath = if ($ReportDir) { $ReportDir } else {
-            $rp = Set-AZTIReportPath -ReportDir $null
+            $rp = Set-AZSCReportPath -ReportDir $null
             $rp.DefaultPath
         }
         if (-not (Test-Path $reportPath)) { New-Item -ItemType Directory -Path $reportPath -Force | Out-Null }
@@ -488,7 +488,7 @@ function Invoke-AZTIPermissionAudit {
 
     if ($OutputFormat -in 'AsciiDoc', 'All') {
         $reportPath = if ($ReportDir) { $ReportDir } else {
-            $rp = Set-AZTIReportPath -ReportDir $null
+            $rp = Set-AZSCReportPath -ReportDir $null
             $rp.DefaultPath
         }
         if (-not (Test-Path $reportPath)) { New-Item -ItemType Directory -Path $reportPath -Force | Out-Null }

@@ -7,10 +7,10 @@ This script consolidates information for all microsoft.sqlvirtualmachine/sqlvirt
 Excel Sheet Name: SQLVM
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Database/SQLVM.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Database/SQLVM.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0

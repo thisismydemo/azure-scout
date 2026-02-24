@@ -8,7 +8,7 @@
 .DESCRIPTION
     Tests both Processing and Reporting phases for each Identity module
     using synthetic mock data that mirrors the normalized PSCustomObject shape
-    produced by Start-AZTIEntraExtraction.ps1.
+    produced by Start-AZSCEntraExtraction.ps1.
 
     Processing phase: Verifies each module correctly filters and transforms
     resources into flat hashtable arrays.
@@ -19,7 +19,7 @@
     NO live Azure/Graph authentication is required.
 
 .NOTES
-    Author:  AzureTenantInventory Contributors
+    Author:  AzureScout Contributors
     Version: 1.1.0
     Created: 2026-02-23
     Phase:   5.18 — Full run with Entra modules producing Excel worksheets
@@ -56,7 +56,7 @@ $ModuleSpecs = @(
 BeforeAll {
     $script:ModuleRoot    = Split-Path -Parent $PSScriptRoot
     $script:IdentityPath  = Join-Path $script:ModuleRoot 'Modules' 'Public' 'InventoryModules' 'Identity'
-    $script:TestOutputDir = Join-Path $env:TEMP 'AZTI_IdentityTests'
+    $script:TestOutputDir = Join-Path $env:TEMP 'AZSC_IdentityTests'
 
     if (Test-Path $script:TestOutputDir) { Remove-Item $script:TestOutputDir -Recurse -Force }
     New-Item -ItemType Directory -Path $script:TestOutputDir -Force | Out-Null

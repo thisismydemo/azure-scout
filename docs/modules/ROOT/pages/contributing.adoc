@@ -22,7 +22,7 @@ If the category doesn't exist, create a new folder.
 +
 [source,powershell]
 ----
-function Get-AZTINewResource {
+function Get-AZSCNewResource {
     param(
         [Parameter(Mandatory)]
         [object]$Resources,
@@ -51,17 +51,17 @@ function Get-AZTINewResource {
 
 . Add a new `.ps1` file in `Modules/Public/InventoryModules/Identity/`.
 
-. Use `Invoke-AZTIGraphRequest` for the Graph API call:
+. Use `Invoke-AZSCGraphRequest` for the Graph API call:
 +
 [source,powershell]
 ----
-function Get-AZTINewEntraObject {
+function Get-AZSCNewEntraObject {
     param(
         [Parameter(Mandatory)]
         [string]$TenantID
     )
 
-    $results = Invoke-AZTIGraphRequest -Uri '/newEndpoint' -Method GET
+    $results = Invoke-AZSCGraphRequest -Uri '/newEndpoint' -Method GET
     foreach ($item in $results) {
         [PSCustomObject]@{
             id         = $item.id
@@ -74,7 +74,7 @@ function Get-AZTINewEntraObject {
 }
 ----
 
-. Register the Graph query in `Start-AZTIEntraExtraction`.
+. Register the Graph query in `Start-AZSCEntraExtraction`.
 
 == Writing Pester Tests
 
@@ -84,13 +84,13 @@ All tests use Pester v5+ and live in the `tests/` directory.
 ----
 BeforeAll {
     $ModuleRoot = Split-Path -Parent $PSScriptRoot
-    Import-Module "$ModuleRoot/AzureTenantInventory.psd1" -Force
+    Import-Module "$ModuleRoot/AzureScout.psd1" -Force
 }
 
-Describe 'Get-AZTINewResource' {
+Describe 'Get-AZSCNewResource' {
     It 'returns normalized objects' {
-        Mock Invoke-AZTIGraphRequest { return @(@{ id = '1'; displayName = 'Test' }) }
-        $result = Get-AZTINewEntraObject -TenantID '00000000-...'
+        Mock Invoke-AZSCGraphRequest { return @(@{ id = '1'; displayName = 'Test' }) }
+        $result = Get-AZSCNewEntraObject -TenantID '00000000-...'
         $result | Should -Not -BeNullOrEmpty
         $result[0].TYPE | Should -Be 'microsoft.graph/newobject'
     }
@@ -116,7 +116,7 @@ Invoke-Pester ./tests/ -Output Detailed
 == Code Style
 
 * PowerShell scripts use **PascalCase** file names
-* Functions use the `Get-AZTI` / `Invoke-AZTI` / `Set-AZTI` / `Start-AZTI` / `Test-AZTI` prefix
+* Functions use the `Get-AZSC` / `Invoke-AZSC` / `Set-AZSC` / `Start-AZSC` / `Test-AZSC` prefix
 * Full comment-based help on all exported functions
 * `try`/`catch`/`finally` error handling
 * No hardcoded secrets — use environment variables or Key Vault
@@ -127,5 +127,5 @@ Open a GitHub issue with:
 
 * Steps to reproduce
 * Expected vs. actual behavior
-* Module version (`(Get-Module AzureTenantInventory).Version`)
+* Module version (`(Get-Module AzureScout).Version`)
 * PowerShell version (`$PSVersionTable.PSVersion`)

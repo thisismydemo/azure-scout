@@ -6,10 +6,10 @@ Inventory for Azure Managed Identities
 Excel Sheet Name: ManagedIdentities
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/APIs/ManagedIdentities.ps1
+https://github.com/thisismydemo/azure-scout/Modules/APIs/ManagedIdentities.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 4.0.1

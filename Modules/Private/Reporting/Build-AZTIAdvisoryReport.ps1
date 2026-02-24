@@ -6,10 +6,10 @@ Module for Advisory Report
 This script processes and creates the Advisory sheet in the Excel report.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/3.ReportingFunctions/Build-AZTIAdvisoryReport.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/Build-AZSCAdvisoryReport.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.9
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Build-AZTIAdvisoryReport {
+function Build-AZSCAdvisoryReport {
     param($File, $Adv, $TableStyle)
     $condtxtadv = @()
     $condtxtadv += New-ConditionalText High -Range H:H

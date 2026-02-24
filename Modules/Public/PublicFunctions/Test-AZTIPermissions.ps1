@@ -7,7 +7,7 @@
     permissions before the main inventory extraction runs. Returns a structured
     result object with per-check status, messages, and remediation guidance.
 
-    This function delegates to Invoke-AZTIPermissionAudit to avoid duplicating
+    This function delegates to Invoke-AZSCPermissionAudit to avoid duplicating
     permission-check logic. It maps the richer audit result back to the simpler
     shape that existing callers expect.
 
@@ -32,35 +32,35 @@
         Details     [array]  — Per-check objects: Check, Status (Pass/Warn/Fail), Message, Remediation
 
 .EXAMPLE
-    $result = Test-AZTIPermissions -TenantID '00000000-0000-0000-0000-000000000000'
+    $result = Test-AZSCPermissions -TenantID '00000000-0000-0000-0000-000000000000'
     $result.Details | Format-Table -AutoSize
 
 .LINK
-    https://github.com/thisismydemo/azure-inventory
+    https://github.com/thisismydemo/azure-scout
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
     Version: 2.0.0
     Authors: Claudio Merola, thisismydemo
-    Refactored (20.4.1): delegates to Invoke-AZTIPermissionAudit to avoid duplicate logic.
+    Refactored (20.4.1): delegates to Invoke-AZSCPermissionAudit to avoid duplicate logic.
 #>
-function Test-AZTIPermissions {
+function Test-AZSCPermissions {
     [CmdletBinding()]
     param(
         [string]$TenantID,
 
         # SubscriptionID is retained for backward API compatibility but is not consumed by the
-        # delegated Invoke-AZTIPermissionAudit call (which auto-enumerates all accessible subs).
+        # delegated Invoke-AZSCPermissionAudit call (which auto-enumerates all accessible subs).
         [string[]]$SubscriptionID,
 
         [ValidateSet('All', 'ArmOnly', 'EntraOnly')]
         [string]$Scope = 'All'
     )
 
-    # ── Delegate to Invoke-AZTIPermissionAudit ───────────────────────────────
-    # Map the -Scope parameter to Invoke-AZTIPermissionAudit's -IncludeEntraPermissions switch.
+    # ── Delegate to Invoke-AZSCPermissionAudit ───────────────────────────────
+    # Map the -Scope parameter to Invoke-AZSCPermissionAudit's -IncludeEntraPermissions switch.
     # The full audit function performs a strict superset of the checks this function used to do.
     $includeEntra = $Scope -in 'All', 'EntraOnly'
 
@@ -70,10 +70,10 @@ function Test-AZTIPermissions {
     if ($TenantID)     { $auditParams['TenantID']                = $TenantID }
     if ($includeEntra) { $auditParams['IncludeEntraPermissions'] = $true }
 
-    $auditResult = Invoke-AZTIPermissionAudit @auditParams
+    $auditResult = Invoke-AZSCPermissionAudit @auditParams
 
     if (-not $auditResult) {
-        # Invoke-AZTIPermissionAudit returned $null — no auth context available
+        # Invoke-AZSCPermissionAudit returned $null — no auth context available
         return [PSCustomObject]@{
             ArmAccess   = $false
             GraphAccess = $false

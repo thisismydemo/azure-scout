@@ -1,10 +1,10 @@
 <#
 .SYNOPSIS
-    AzureTenantInventory — Single-tenant Azure ARM + Entra ID inventory tool.
+    AzureScout — Single-tenant Azure ARM + Entra ID inventory tool.
 
 .DESCRIPTION
     This module orchestrates dot-sourcing of all private and public functions
-    that are triggered by the Invoke-AzureTenantInventory cmdlet.
+    that are triggered by the Invoke-AzureScout cmdlet.
 
 .AUTHOR
     thisismydemo
@@ -31,7 +31,7 @@ $_requiredModules = @(
 )
 foreach ($_mod in $_requiredModules) {
     if (-not (Get-Module -Name $_mod -ListAvailable)) {
-        Write-Host "[AzureTenantInventory] Installing required module: $_mod" -ForegroundColor Cyan
+        Write-Host "[AzureScout] Installing required module: $_mod" -ForegroundColor Cyan
         Install-Module -Name $_mod -Scope CurrentUser -Force -AllowClobber -ErrorAction Stop
     }
     if (-not (Get-Module -Name $_mod)) {

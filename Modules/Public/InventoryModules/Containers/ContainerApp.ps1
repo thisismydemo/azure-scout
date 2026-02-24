@@ -7,10 +7,10 @@ This script consolidates information for all microsoft.app/containerapps resourc
 Excel Sheet Name: Container App
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Container/ContainerApp.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Container/ContainerApp.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.7

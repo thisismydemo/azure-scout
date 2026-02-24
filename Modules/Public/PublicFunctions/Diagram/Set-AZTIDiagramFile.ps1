@@ -6,10 +6,10 @@ File Module for Draw.io Diagram
 This module is used for setting and managing files in the Draw.io Diagram.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/PublicFunctions/Diagram/Set-AZTIDiagramFile.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/PublicFunctions/Diagram/Set-AZSCDiagramFile.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 
 #>
-function Set-AZTIDiagramFile {
+function Set-AZSCDiagramFile {
     Param ($XMLFiles, $DDFile, $LogFile)
     try 
     {

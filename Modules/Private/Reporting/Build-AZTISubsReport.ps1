@@ -6,10 +6,10 @@ Module for Subscription Report
 This script processes and creates the Subscription sheet in the Excel report.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/3.ReportingFunctions/Build-AZTISubsReport.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/Build-AZSCSubsReport.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Build-AZTISubsReport {
+function Build-AZSCSubsReport {
     param($File, $Sub, $IncludeCosts, $TableStyle)
     $TableName = ('SubsTable_'+($Sub.Subscription | Select-Object -Unique).count)
 

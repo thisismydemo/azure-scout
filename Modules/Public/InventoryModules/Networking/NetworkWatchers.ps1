@@ -8,15 +8,15 @@ Captures flow logs, connection monitors, packet captures, and diagnostic capabil
 Excel Sheet Name: Network Watchers
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Network/NetworkWatchers.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Network/NetworkWatchers.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 1.0.0
 First Release Date: February 24, 2026
-Authors: AzureTenantInventory Contributors
+Authors: AzureScout Contributors
 
 #>
 

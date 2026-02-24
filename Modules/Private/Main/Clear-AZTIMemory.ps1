@@ -6,10 +6,10 @@ Clear memory for Azure Resource Inventory
 This module clears memory to optimize performance for Azure Resource Inventory.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/0.MainFunctions/Clear-AZTIMemory.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/0.MainFunctions/Clear-AZSCMemory.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 
 #>
-function Clear-AZTIMemory {
+function Clear-AZSCMemory {
 
     [System.GC]::GetTotalMemory($true) | Out-Null
     Start-Sleep -Milliseconds 100

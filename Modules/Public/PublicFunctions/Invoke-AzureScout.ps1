@@ -98,7 +98,7 @@
     - Json: Generate only the JSON report (skip Excel generation)
 
 .PARAMETER SkipPermissionCheck
-    Skip the pre-flight permission validation. By default, AZTI checks ARM and Graph
+    Skip the pre-flight permission validation. By default, AZSC checks ARM and Graph
     permissions before running and displays warnings for any missing access.
 
 .PARAMETER ResourceGroup
@@ -135,51 +135,51 @@
     Use this parameter to include the full environment in the diagram. By default the Network Topology Diagram will only include VNETs that are peered with other VNETs, this parameter will force the diagram to include all VNETs.
 
 .PARAMETER ReportName
-    Specifies the name of the report. Default is 'AzureTenantInventory'.
+    Specifies the name of the report. Default is 'AzureScout'.
 
 .PARAMETER ReportDir
     Specifies the directory where the report will be saved.
 
 .EXAMPLE
     Default utilization. Read all tenants you have privileges, select a tenant in menu and collect from all subscriptions:
-    PS C:\> Invoke-AzureTenantInventory
+    PS C:\> Invoke-AzureScout
 
     Define the Tenant ID:
-    PS C:\> Invoke-AzureTenantInventory -TenantID <your-Tenant-Id>
+    PS C:\> Invoke-AzureScout -TenantID <your-Tenant-Id>
 
     Define the Tenant ID and for a specific Subscription:
-    PS C:\> Invoke-AzureTenantInventory -TenantID <your-Tenant-Id> -SubscriptionID <your-Subscription-Id>
+    PS C:\> Invoke-AzureScout -TenantID <your-Tenant-Id> -SubscriptionID <your-Subscription-Id>
 
     Run a permission audit (ARM only) before a full inventory run:
-    PS C:\> Invoke-AzureTenantInventory -TenantID <your-Tenant-Id> -PermissionAudit
+    PS C:\> Invoke-AzureScout -TenantID <your-Tenant-Id> -PermissionAudit
 
     Run a full permission audit including Entra ID / Microsoft Graph:
-    PS C:\> Invoke-AzureTenantInventory -TenantID <your-Tenant-Id> -PermissionAudit -IncludeEntraPermissions
+    PS C:\> Invoke-AzureScout -TenantID <your-Tenant-Id> -PermissionAudit -IncludeEntraPermissions
 
     Audit permissions for a service principal (ARM + Entra):
-    PS C:\> Invoke-AzureTenantInventory -TenantID <your-Tenant-Id> -AppId <appId> -Secret <secret> -PermissionAudit -IncludeEntraPermissions
+    PS C:\> Invoke-AzureScout -TenantID <your-Tenant-Id> -AppId <appId> -Secret <secret> -PermissionAudit -IncludeEntraPermissions
 
     Save the permission audit as a JSON file:
-    PS C:\> Invoke-AzureTenantInventory -TenantID <your-Tenant-Id> -PermissionAudit -OutputFormat Json
+    PS C:\> Invoke-AzureScout -TenantID <your-Tenant-Id> -PermissionAudit -OutputFormat Json
 
     Save the permission audit as a Markdown report:
-    PS C:\> Invoke-AzureTenantInventory -TenantID <your-Tenant-Id> -PermissionAudit -OutputFormat Markdown
+    PS C:\> Invoke-AzureScout -TenantID <your-Tenant-Id> -PermissionAudit -OutputFormat Markdown
 
 .EXAMPLE
     ARM/RBAC audit for the current logged-in user:
-    PS C:\> Invoke-AzureTenantInventory -PermissionAudit
+    PS C:\> Invoke-AzureScout -PermissionAudit
 
 .EXAMPLE
     ARM + Microsoft Graph / Entra ID audit for the current user:
-    PS C:\> Invoke-AzureTenantInventory -PermissionAudit -IncludeEntraPermissions
+    PS C:\> Invoke-AzureScout -PermissionAudit -IncludeEntraPermissions
 
 .EXAMPLE
     Full ARM + Graph audit using a service principal (SPN):
-    PS C:\> Invoke-AzureTenantInventory -TenantID <id> -AppId <id> -Secret <secret> -PermissionAudit -IncludeEntraPermissions
+    PS C:\> Invoke-AzureScout -TenantID <id> -AppId <id> -Secret <secret> -PermissionAudit -IncludeEntraPermissions
 
 .EXAMPLE
     Check permissions for a specific tenant before running a full inventory:
-    PS C:\> Invoke-AzureTenantInventory -TenantID <id> -PermissionAudit
+    PS C:\> Invoke-AzureScout -TenantID <id> -PermissionAudit
 
 .NOTES
     AUTHORS: Claudio Merola and Renato Gregio | Azure Infrastucture/Automation/Devops/Governance
@@ -195,9 +195,9 @@
     THE SOFTWARE.
 
 .LINK
-    Official Repository: https://github.com/thisismydemo/azure-inventory
+    Official Repository: https://github.com/thisismydemo/azure-scout
 #>
-Function Invoke-AzureTenantInventory {
+Function Invoke-AzureScout {
     [CmdletBinding(PositionalBinding=$false)]
     param (
         [ValidateSet(1, 2, 3)]
@@ -209,7 +209,7 @@ Function Invoke-AzureTenantInventory {
         [string]$Secret,
         [string]$CertificatePath,
         [string]$CertificatePassword,
-        [string]$ReportName = 'AzureTenantInventory',
+        [string]$ReportName = 'AzureScout',
         [string]$ReportDir,
         [string]$StorageAccount,
         [string]$StorageContainer,
@@ -310,7 +310,7 @@ Function Invoke-AzureTenantInventory {
 
     <#########################################################          Help          ######################################################################>
 
-    Function Get-AZTIUsageMode() {
+    Function Get-AZSCUsageMode() {
         Write-Host ""
         Write-Host "Parameters"
         Write-Host ""
@@ -342,40 +342,40 @@ Function Invoke-AzureTenantInventory {
         Write-Host ""
         Write-Host "Usage Mode and Examples: "
         Write-Host "If you do not specify Resource Inventory will be performed on all subscriptions for the selected tenant. "
-        Write-Host "e.g. /> Invoke-AzureTenantInventory"
+        Write-Host "e.g. /> Invoke-AzureScout"
         Write-Host ""
         Write-Host "To perform the inventory in a specific Tenant and subscription use <-TenantID> and <-SubscriptionID> parameter "
-        Write-Host "e.g. /> Invoke-AzureTenantInventory -TenantID <Azure Tenant ID> -SubscriptionID <Subscription ID>"
+        Write-Host "e.g. /> Invoke-AzureScout -TenantID <Azure Tenant ID> -SubscriptionID <Subscription ID>"
         Write-Host ""
         Write-Host "Including Tags:"
         Write-Host " By Default Azure Resource inventory do not include Resource Tags."
         Write-Host " To include Tags at the inventory use <-IncludeTags> parameter. "
-        Write-Host "e.g. /> Invoke-AzureTenantInventory -TenantID <Azure Tenant ID> -IncludeTags"
+        Write-Host "e.g. /> Invoke-AzureScout -TenantID <Azure Tenant ID> -IncludeTags"
         Write-Host ""
         Write-Host "Skipping Azure Advisor:"
         Write-Host " By Default Azure Resource inventory collects Azure Advisor Data."
         Write-Host " To ignore this  use <-SkipAdvisory> parameter. "
-        Write-Host "e.g. /> Invoke-AzureTenantInventory -TenantID <Azure Tenant ID> -SubscriptionID <Subscription ID> -SkipAdvisory"
+        Write-Host "e.g. /> Invoke-AzureScout -TenantID <Azure Tenant ID> -SubscriptionID <Subscription ID> -SkipAdvisory"
         Write-Host ""
         Write-Host "Using the latest modules :"
         Write-Host " You can use the latest modules. For this use <-Online> parameter."
-        Write-Host " It's a pre-requisite to have internet access for AZTI GitHub repo"
-        Write-Host "e.g. /> Invoke-AzureTenantInventory -TenantID <Azure Tenant ID> -Online"
+        Write-Host " It's a pre-requisite to have internet access for AZSC GitHub repo"
+        Write-Host "e.g. /> Invoke-AzureScout -TenantID <Azure Tenant ID> -Online"
         Write-Host ""
         Write-Host "Running in Debug Mode :"
         Write-Host " To run in a Debug Mode use <-Debug> parameter."
-        Write-Host ".e.g. /> Invoke-AzureTenantInventory -TenantID <Azure Tenant ID> -Debug"
+        Write-Host ".e.g. /> Invoke-AzureScout -TenantID <Azure Tenant ID> -Debug"
         Write-Host ""
     }
 
     $TotalRunTime = [System.Diagnostics.Stopwatch]::StartNew()
 
     if ($Help.IsPresent) {
-        Get-AZTIUsageMode
+        Get-AZSCUsageMode
         Exit
     }
 
-    $PlatOS = Test-AZTIPS
+    $PlatOS = Test-AZSCPS
 
     # ── Permission Audit mode (early exit — no inventory collected) ──────────
     if ($PermissionAudit.IsPresent)
@@ -384,7 +384,7 @@ Function Invoke-AzureTenantInventory {
 
             if ($PlatOS -ne 'Azure CloudShell' -and !$Automation.IsPresent)
                 {
-                    $TenantID = Connect-AZTILoginSession -AzureEnvironment $AzureEnvironment -TenantID $TenantID -DeviceLogin:$DeviceLogin -AppId $AppId -Secret $Secret -CertificatePath $CertificatePath -CertificatePassword $CertificatePassword
+                    $TenantID = Connect-AZSCLoginSession -AzureEnvironment $AzureEnvironment -TenantID $TenantID -DeviceLogin:$DeviceLogin -AppId $AppId -Secret $Secret -CertificatePath $CertificatePath -CertificatePassword $CertificatePassword
                 }
 
             $auditOutputFormat = switch ($OutputFormat) {
@@ -397,7 +397,7 @@ Function Invoke-AzureTenantInventory {
                 default     { 'Console' }
             }
 
-            $auditResult = Invoke-AZTIPermissionAudit `
+            $auditResult = Invoke-AZSCPermissionAudit `
                 -IncludeEntraPermissions:$IncludeEntraPermissions `
                 -TenantID $TenantID `
                 -OutputFormat $auditOutputFormat `
@@ -408,7 +408,7 @@ Function Invoke-AzureTenantInventory {
 
     if ($PlatOS -ne 'Azure CloudShell' -and !$Automation.IsPresent)
         {
-            $TenantID = Connect-AZTILoginSession -AzureEnvironment $AzureEnvironment -TenantID $TenantID -DeviceLogin:$DeviceLogin -AppId $AppId -Secret $Secret -CertificatePath $CertificatePath -CertificatePassword $CertificatePassword
+            $TenantID = Connect-AZSCLoginSession -AzureEnvironment $AzureEnvironment -TenantID $TenantID -DeviceLogin:$DeviceLogin -AppId $AppId -Secret $Secret -CertificatePath $CertificatePath -CertificatePassword $CertificatePassword
 
 
         }
@@ -436,7 +436,7 @@ Function Invoke-AzureTenantInventory {
             $StorageContext = New-AzStorageContext -StorageAccountName $StorageAccount -UseConnectedAccount
         }
 
-    $Subscriptions = Get-AZTISubscriptions -TenantID $TenantID -SubscriptionID $SubscriptionID -PlatOS $PlatOS
+    $Subscriptions = Get-AZSCSubscriptions -TenantID $TenantID -SubscriptionID $SubscriptionID -PlatOS $PlatOS
 
     # --- Resource provider pre-flight check ---
     if ($CheckResourceProviders.IsPresent) {
@@ -468,7 +468,7 @@ Function Invoke-AzureTenantInventory {
     # --- Pre-flight permission check ---
     if (-not $SkipPermissionCheck.IsPresent) {
         Write-Host 'Running pre-flight permission checks...' -ForegroundColor Cyan
-        $permResult = Test-AZTIPermissions -TenantID $TenantID -SubscriptionID $SubscriptionID -Scope $Scope
+        $permResult = Test-AZSCPermissions -TenantID $TenantID -SubscriptionID $SubscriptionID -Scope $Scope
         foreach ($detail in $permResult.Details) {
             switch ($detail.Status) {
                 'Pass' { Write-Host "  [PASS] $($detail.Check): $($detail.Message)" -ForegroundColor Green }
@@ -479,7 +479,7 @@ Function Invoke-AzureTenantInventory {
         Write-Host ''
     }
 
-    $ReportingPath = Set-AZTIReportPath -ReportDir $ReportDir
+    $ReportingPath = Set-AZSCReportPath -ReportDir $ReportDir
 
     $DefaultPath = $ReportingPath.DefaultPath
     $DiagramCache = $ReportingPath.DiagramCache
@@ -487,18 +487,18 @@ Function Invoke-AzureTenantInventory {
 
     if ($Automation.IsPresent)
         {
-            $ReportName = 'AZTI_Automation'
+            $ReportName = 'AZSC_Automation'
         }
 
-    Set-AZTIFolder -DefaultPath $DefaultPath -DiagramCache $DiagramCache -ReportCache $ReportCache
+    Set-AZSCFolder -DefaultPath $DefaultPath -DiagramCache $DiagramCache -ReportCache $ReportCache
 
-    Clear-AZTICacheFolder -ReportCache $ReportCache
+    Clear-AZSCCacheFolder -ReportCache $ReportCache
 
     Get-Job | Where-Object {$_.name -like 'ResourceJob_*'} | Remove-Job -Force | Out-Null
 
     $ExtractionRuntime = [System.Diagnostics.Stopwatch]::StartNew()
 
-        $ExtractionData = Start-AZTIExtractionOrchestration -ManagementGroup $ManagementGroup -Subscriptions $Subscriptions -SubscriptionID $SubscriptionID -ResourceGroup $ResourceGroup -SecurityCenter $SecurityCenter -SkipAdvisory $SkipAdvisory -SkipPolicy $SkipPolicy -IncludeTags $IncludeTags -TagKey $TagKey -TagValue $TagValue -SkipAPIs $SkipAPIs -SkipVMDetails $SkipVMDetails -IncludeCosts $IncludeCosts -Automation $Automation -AzureEnvironment $AzureEnvironment -Scope $Scope -TenantID $TenantID
+        $ExtractionData = Start-AZSCExtractionOrchestration -ManagementGroup $ManagementGroup -Subscriptions $Subscriptions -SubscriptionID $SubscriptionID -ResourceGroup $ResourceGroup -SecurityCenter $SecurityCenter -SkipAdvisory $SkipAdvisory -SkipPolicy $SkipPolicy -IncludeTags $IncludeTags -TagKey $TagKey -TagValue $TagValue -SkipAPIs $SkipAPIs -SkipVMDetails $SkipVMDetails -IncludeCosts $IncludeCosts -Automation $Automation -AzureEnvironment $AzureEnvironment -Scope $Scope -TenantID $TenantID
 
     $ExtractionRuntime.Stop()
 
@@ -546,9 +546,9 @@ Function Invoke-AzureTenantInventory {
 
     $ProcessingRunTime = [System.Diagnostics.Stopwatch]::StartNew()
 
-        Start-AZTIExtraJobs -SkipDiagram $SkipDiagram -SkipAdvisory $SkipAdvisory -SkipPolicy $SkipPolicy -SecurityCenter $Security -Subscriptions $Subscriptions -Resources $Resources -Advisories $Advisories -DDFile $DDFile -DiagramCache $DiagramCache -FullEnv $FullEnv -ResourceContainers $ResourceContainers -Security $Security -PolicyAssign $PolicyAssign -PolicySetDef $PolicySetDef -PolicyDef $PolicyDef -IncludeCosts $IncludeCosts -CostData $CostData -Automation $Automation
+        Start-AZSCExtraJobs -SkipDiagram $SkipDiagram -SkipAdvisory $SkipAdvisory -SkipPolicy $SkipPolicy -SecurityCenter $Security -Subscriptions $Subscriptions -Resources $Resources -Advisories $Advisories -DDFile $DDFile -DiagramCache $DiagramCache -FullEnv $FullEnv -ResourceContainers $ResourceContainers -Security $Security -PolicyAssign $PolicyAssign -PolicySetDef $PolicySetDef -PolicyDef $PolicyDef -IncludeCosts $IncludeCosts -CostData $CostData -Automation $Automation
 
-        Start-AZTIProcessOrchestration -Subscriptions $Subscriptions -Resources $Resources -Retirements $Retirements -DefaultPath $DefaultPath -Heavy $Heavy -File $File -InTag $InTag -Automation $Automation -Category $Category
+        Start-AZSCProcessOrchestration -Subscriptions $Subscriptions -Resources $Resources -Retirements $Retirements -DefaultPath $DefaultPath -Heavy $Heavy -File $File -InTag $InTag -Automation $Automation -Category $Category
 
     $ProcessingRunTime.Stop()
 
@@ -573,11 +573,11 @@ Function Invoke-AzureTenantInventory {
     # ── Excel Report ─────────────────────────────────────────────────────
     if ($OutputFormat -in ('All', 'Excel'))
     {
-        Start-AZTIReporOrchestration -ReportCache $ReportCache -SecurityCenter $SecurityCenter -File $File -Quotas $Quotas -SkipPolicy $SkipPolicy -SkipAdvisory $SkipAdvisory -IncludeCosts $IncludeCosts -Automation $Automation -TableStyle $TableStyle
+        Start-AZSCReporOrchestration -ReportCache $ReportCache -SecurityCenter $SecurityCenter -File $File -Quotas $Quotas -SkipPolicy $SkipPolicy -SkipAdvisory $SkipAdvisory -IncludeCosts $IncludeCosts -Automation $Automation -TableStyle $TableStyle
 
         Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Generating Overview sheet (Charts).')
 
-        $TotalRes = Start-AZTIExcelCustomization -File $File -TableStyle $TableStyle -PlatOS $PlatOS -Subscriptions $Subscriptions -ExtractionRunTime $ExtractionRuntime -ProcessingRunTime $ProcessingRunTime -ReportingRunTime $ReportingRunTime -IncludeCosts $IncludeCosts -RunLite $RunLite -Overview $Overview -Category $Category
+        $TotalRes = Start-AZSCExcelCustomization -File $File -TableStyle $TableStyle -PlatOS $PlatOS -Subscriptions $Subscriptions -ExtractionRunTime $ExtractionRuntime -ProcessingRunTime $ProcessingRunTime -ReportingRunTime $ReportingRunTime -IncludeCosts $IncludeCosts -RunLite $RunLite -Overview $Overview -Category $Category
 
         Write-Progress -activity 'Azure Inventory' -Status "95% Complete." -PercentComplete 95 -CurrentOperation "Excel Customization Completed. Total resources inventoried: $TotalRes"
     }
@@ -590,21 +590,21 @@ Function Invoke-AzureTenantInventory {
     if ($OutputFormat -in ('All', 'Json'))
     {
         Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting JSON report export.')
-        $JsonFile = Export-AZTIJsonReport -ReportCache $ReportCache -File $File -TenantID $TenantID -Subscriptions $Subscriptions -Scope $Scope -Quotas $Quotas -SecurityCenter:$SecurityCenter -SkipAdvisory:$SkipAdvisory -SkipPolicy:$SkipPolicy -IncludeCosts:$IncludeCosts
+        $JsonFile = Export-AZSCJsonReport -ReportCache $ReportCache -File $File -TenantID $TenantID -Subscriptions $Subscriptions -Scope $Scope -Quotas $Quotas -SecurityCenter:$SecurityCenter -SkipAdvisory:$SkipAdvisory -SkipPolicy:$SkipPolicy -IncludeCosts:$IncludeCosts
     }
 
     # ── Markdown Report ──────────────────────────────────────────────────
     if ($OutputFormat -in ('All', 'Markdown', 'MD'))
     {
         Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting Markdown report export.')
-        $MarkdownFile = Export-AZTIMarkdownReport -ReportCache $ReportCache -File $File -TenantID $TenantID -Subscriptions $Subscriptions -Scope $Scope
+        $MarkdownFile = Export-AZSCMarkdownReport -ReportCache $ReportCache -File $File -TenantID $TenantID -Subscriptions $Subscriptions -Scope $Scope
     }
 
     # ── AsciiDoc Report ──────────────────────────────────────────────────
     if ($OutputFormat -in ('All', 'AsciiDoc', 'Adoc'))
     {
         Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting AsciiDoc report export.')
-        $AsciiDocFile = Export-AZTIAsciiDocReport -ReportCache $ReportCache -File $File -TenantID $TenantID -Subscriptions $Subscriptions -Scope $Scope
+        $AsciiDocFile = Export-AZSCAsciiDocReport -ReportCache $ReportCache -File $File -TenantID $TenantID -Subscriptions $Subscriptions -Scope $Scope
     }
 
     $ReportingRunTime.Stop()
@@ -623,10 +623,10 @@ Function Invoke-AzureTenantInventory {
         }
 
         # Clear memory to remove as many memory footprint as possible
-        Clear-AZTIMemory
+        Clear-AZSCMemory
 
         # Clear Cache Folder for future runs
-        Clear-AZTICacheFolder -ReportCache $ReportCache
+        Clear-AZSCCacheFolder -ReportCache $ReportCache
 
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Finished Charts Phase.')
@@ -637,7 +637,7 @@ Function Invoke-AzureTenantInventory {
 
         $JobNames = (Get-Job | Where-Object {$_.name -eq 'DrawDiagram'}).Name
 
-        Wait-AZTIJob -JobNames $JobNames -JobType 'Diagram' -LoopTime 5
+        Wait-AZSCJob -JobNames $JobNames -JobType 'Diagram' -LoopTime 5
 
         Remove-Job -Name 'DrawDiagram' | Out-Null
 
@@ -678,6 +678,6 @@ Function Invoke-AzureTenantInventory {
 
 Write-Progress -activity 'Azure Inventory' -Status "100% Complete." -Completed
 
-Out-AZTIReportResults -Measure $Measure -ResourcesCount $ResourcesCount -TotalRes $TotalRes -SkipAdvisory $SkipAdvisory -AdvisoryData $AdvisoryCount -SkipPolicy $SkipPolicy -SkipAPIs $SkipAPIs -PolicyData $PolicyCount -SecurityCenter $SecurityCenter -SecurityCenterData $SecCenterCount -File $File -SkipDiagram $SkipDiagram -DDFile $DDFile
+Out-AZSCReportResults -Measure $Measure -ResourcesCount $ResourcesCount -TotalRes $TotalRes -SkipAdvisory $SkipAdvisory -AdvisoryData $AdvisoryCount -SkipPolicy $SkipPolicy -SkipAPIs $SkipAPIs -PolicyData $PolicyCount -SecurityCenter $SecurityCenter -SecurityCenterData $SecCenterCount -File $File -SkipDiagram $SkipDiagram -DDFile $DDFile
 
 }

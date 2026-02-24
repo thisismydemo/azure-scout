@@ -6,10 +6,10 @@ Module responsible for starting the processing jobs for Azure Resources.
 This module creates and manages jobs to process Azure Resources in batches based on the environment size. It ensures efficient resource processing and avoids CPU overload.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/2.ProcessingFunctions/Start-AZTIProcessJob.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/2.ProcessingFunctions/Start-AZSCProcessJob.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .NOTES
 Version: 3.6.5
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Start-AZTIProcessJob {
+function Start-AZSCProcessJob {
     Param($Resources, $Retirements, $Subscriptions, $DefaultPath, $Heavy, $InTag, $Unsupported, $Category)
 
     Write-Progress -activity 'Azure Inventory' -Status "22% Complete." -PercentComplete 22 -CurrentOperation "Creating Jobs to Process Data.."
@@ -65,7 +65,7 @@ function Start-AZTIProcessJob {
     $NewResources = ($Resources | ConvertTo-Json -Depth 40 -Compress)
 
     Remove-Variable -Name Resources
-    Clear-AZTIMemory
+    Clear-AZSCMemory
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting to Create Jobs to Process the Resources.')
 
@@ -186,11 +186,11 @@ function Start-AZTIProcessJob {
 
                 $InterJobNames = (Get-Job | Where-Object {$_.name -like 'ResourceJob_*' -and $_.State -eq 'Running'}).Name
 
-                Wait-AZTIJob -JobNames $InterJobNames -JobType 'Resource Batch' -LoopTime 5
+                Wait-AZSCJob -JobNames $InterJobNames -JobType 'Resource Batch' -LoopTime 5
 
                 $JobNames = (Get-Job | Where-Object {$_.name -like 'ResourceJob_*'}).Name
 
-                Build-AZTICacheFiles -DefaultPath $DefaultPath -JobNames $JobNames
+                Build-AZSCCacheFiles -DefaultPath $DefaultPath -JobNames $JobNames
 
                 $JobLoop = 0
             }
@@ -199,5 +199,5 @@ function Start-AZTIProcessJob {
         }
 
         Remove-Variable -Name NewResources
-        Clear-AZTIMemory
+        Clear-AZSCMemory
 }

@@ -6,10 +6,10 @@ Public Advisory Job Module
 This script creates the job to process the Advisory data.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/PublicFunctions/Jobs/Start-AZTIAdvisoryJob.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/PublicFunctions/Jobs/Start-AZSCAdvisoryJob.ps1
 
 .COMPONENT
-    This powershell Module is part of Azure Tenant Inventory (AZTI)
+    This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.9
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 
 #>
-function Start-AZTIAdvisoryJob {
+function Start-AZSCAdvisoryJob {
     param($Advisories)
 
     $tmp = foreach ($1 in $Advisories)

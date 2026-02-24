@@ -1,15 +1,15 @@
 <#
 .Synopsis
-Wait for AZTI Jobs to Complete
+Wait for AZSC Jobs to Complete
 
 .DESCRIPTION
-This script waits for the completion of specified AZTI jobs.
+This script waits for the completion of specified AZSC jobs.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/PublicFunctions/Jobs/Wait-AZTIJob.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/PublicFunctions/Jobs/Wait-AZSCJob.ps1
 
 .COMPONENT
-    This powershell Module is part of Azure Tenant Inventory (AZTI)
+    This powershell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -17,7 +17,7 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 
 #>
-function Wait-AZTIJob {
+function Wait-AZSCJob {
     Param($JobNames, $JobType, $LoopTime)
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting Jobs Collector.')

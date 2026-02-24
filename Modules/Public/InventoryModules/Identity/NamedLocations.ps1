@@ -7,15 +7,15 @@ This script consolidates information for all entra/namedlocations resources.
 Excel Sheet Name: Named Locations
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Identity/NamedLocations.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Identity/NamedLocations.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 1.0.0
 First Release Date: 2026-02-23
-Authors: AzureTenantInventory Contributors
+Authors: AzureScout Contributors
 #>
 
 <######## Default Parameters. Don't modify this ########>

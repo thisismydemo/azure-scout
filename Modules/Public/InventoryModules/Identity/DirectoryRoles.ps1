@@ -7,15 +7,15 @@ This script consolidates information for all entra/directoryroles resources.
 Excel Sheet Name: Directory Roles
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Identity/DirectoryRoles.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Identity/DirectoryRoles.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
 Version: 1.0.0
 First Release Date: 2026-02-23
-Authors: AzureTenantInventory Contributors
+Authors: AzureScout Contributors
 #>
 
 <######## Default Parameters. Don't modify this ########>

@@ -6,10 +6,10 @@ Module responsible for invoking policy evaluation jobs.
 This module starts jobs to evaluate Azure policies, including policy definitions, assignments, and set definitions, either in automation or manual mode.
 
 .Link
-https://github.com/thisismydemo/azure-inventory/Modules/Private/2.ProcessingFunctions/Invoke-AZTIPolicyJob.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/2.ProcessingFunctions/Invoke-AZSCPolicyJob.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+This PowerShell Module is part of Azure Tenant Inventory (AZSC).
 
 .NOTES
 Version: 3.6.5
@@ -17,8 +17,8 @@ First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
 
-function Invoke-AZTIPolicyJob {
-    Param($Subscriptions, $PolicySetDef, $PolicyAssign, $PolicyDef, $AZTIModule, $Automation)
+function Invoke-AZSCPolicyJob {
+    Param($Subscriptions, $PolicySetDef, $PolicyAssign, $PolicyDef, $AZSCModule, $Automation)
 
     if ($Automation.IsPresent)
         {
@@ -27,11 +27,11 @@ function Invoke-AZTIPolicyJob {
 
                 import-module $($args[4])
 
-                $PolResult = Start-AZTIPolicyJob -Subscriptions $($args[0]) -PolicySetDef $($args[1]) -PolicyAssign $($args[2]) -PolicyDef $($args[3])
+                $PolResult = Start-AZSCPolicyJob -Subscriptions $($args[0]) -PolicySetDef $($args[1]) -PolicyAssign $($args[2]) -PolicyDef $($args[3])
 
                 $PolResult
 
-            } -ArgumentList $Subscriptions, $PolicySetDef, $PolicyAssign, $PolicyDef, $AZTIModule | Out-Null
+            } -ArgumentList $Subscriptions, $PolicySetDef, $PolicyAssign, $PolicyDef, $AZSCModule | Out-Null
         }
     else
         {
@@ -40,10 +40,10 @@ function Invoke-AZTIPolicyJob {
 
                 import-module $($args[4])
 
-                $PolResult = Start-AZTIPolicyJob -Subscriptions $($args[0]) -PolicySetDef $($args[1]) -PolicyAssign $($args[2]) -PolicyDef $($args[3])
+                $PolResult = Start-AZSCPolicyJob -Subscriptions $($args[0]) -PolicySetDef $($args[1]) -PolicyAssign $($args[2]) -PolicyDef $($args[3])
 
                 $PolResult
 
-            } -ArgumentList $Subscriptions, $PolicySetDef, $PolicyAssign, $PolicyDef, $AZTIModule | Out-Null
+            } -ArgumentList $Subscriptions, $PolicySetDef, $PolicyAssign, $PolicyDef, $AZSCModule | Out-Null
         }
 }

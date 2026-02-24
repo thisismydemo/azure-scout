@@ -15,27 +15,27 @@
     @{ 'Authorization' = 'Bearer <token>'; 'Content-Type' = 'application/json' }
 
 .LINK
-    https://github.com/thisismydemo/azure-inventory
+    https://github.com/thisismydemo/azure-scout
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZSC)
 
 .NOTES
     Version: 2.0.0
     Authors: thisismydemo
     Modified: 2026-02-24 - Changed from Get-AzAccessToken to Azure CLI for proper Graph scopes
 #>
-function Get-AZTIGraphToken {
+function Get-AZSCGraphToken {
     [CmdletBinding()]
     param()
 
     # Script-scope cache — persists across calls within the same module session
-    if (-not (Get-Variable -Name '_AZTIGraphTokenCache' -Scope Script -ErrorAction SilentlyContinue)) {
-        Set-Variable -Name '_AZTIGraphTokenCache' -Scope Script -Value $null
+    if (-not (Get-Variable -Name '_AZSCGraphTokenCache' -Scope Script -ErrorAction SilentlyContinue)) {
+        Set-Variable -Name '_AZSCGraphTokenCache' -Scope Script -Value $null
     }
 
     $now = [DateTimeOffset]::UtcNow
-    $cache = $Script:_AZTIGraphTokenCache
+    $cache = $Script:_AZSCGraphTokenCache
 
     # Reuse cached token if still valid (more than 5 min from expiry)
     if ($cache -and $cache.ExpiresOn -gt $now.AddMinutes(5)) {
@@ -64,7 +64,7 @@ function Get-AZTIGraphToken {
         }
 
         # Cache for reuse
-        $Script:_AZTIGraphTokenCache = [PSCustomObject]@{
+        $Script:_AZSCGraphTokenCache = [PSCustomObject]@{
             Headers   = $headers
             ExpiresOn = $expiresOn
         }

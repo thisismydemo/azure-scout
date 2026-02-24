@@ -1,4 +1,4 @@
-function Get-AZTICostInventory {
+function Get-AZSCCostInventory {
     Param($Subscriptions, $Days, $Granularity)
 
     #$Days = 60
