@@ -18,7 +18,7 @@ Authors: Claudio Merola
 #>
 
 function Build-AZTIInitialBlock {
-    Param($Excel, $ExtractionRunTime, $ProcessingRunTime, $ReportingRunTime, $PlatOS, $ScriptVersion, $TotalRes)
+    Param($Excel, $ExtractionRunTime, $ProcessingRunTime, $ReportingRunTime, $PlatOS, $ScriptVersion, $TotalRes, $Category)
 
     $Date = (get-date -Format "MM/dd/yyyy")
     $Font = 'Segoe UI'
@@ -169,6 +169,29 @@ function Build-AZTIInitialBlock {
     $txt.Size = 12
     $txt.ComplexFont = $Font
     $txt.LatinFont = $Font
+
+    if ($Category -and $Category -notcontains 'All') {
+        $categoryDisplay = ($Category -join ', ')
+        $txt = $Draw.RichText.Add("`nCategories: ")
+        $txt.Size = 11
+        $txt.ComplexFont = $Font
+        $txt.LatinFont = $Font
+
+        $txt = $Draw.RichText.Add($categoryDisplay)
+        $txt.Size = 12
+        $txt.ComplexFont = $Font
+        $txt.LatinFont = $Font
+    } else {
+        $txt = $Draw.RichText.Add("`nCategories: ")
+        $txt.Size = 11
+        $txt.ComplexFont = $Font
+        $txt.LatinFont = $Font
+
+        $txt = $Draw.RichText.Add('All')
+        $txt.Size = 12
+        $txt.ComplexFont = $Font
+        $txt.LatinFont = $Font
+    }
 
     $Draw.TextAlignment = 'Center'
 

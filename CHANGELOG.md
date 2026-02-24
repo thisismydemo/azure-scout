@@ -131,10 +131,140 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Module metadata (author, description, project URI, tags)
 - LICENSE updated with dual copyright (original + fork)
 
+#### Phase 11 — Comprehensive Subscription & Management Group Logging
+
+- **Subscription completeness**: Updated extraction layer to enumerate ALL tenant subscriptions (including empty/disabled ones), not just subscriptions containing resources
+- **Subscription properties** per record: Subscription ID, Name, State (Enabled/Disabled/Warned), Tenant ID, Management Group path/hierarchy, Tags, Resource count, Spending limit status, Authorization source
+- **"All Subscriptions" worksheet** added to Excel report with conditional formatting (empty subscriptions highlighted)
+- **Management Group completeness**: Captures ALL management groups in tenant hierarchy via `Get-AzManagementGroup -Expand -Recurse`
+- **Management Group properties** per record: ID, display name, parent MG ID, children (child MGs + subscriptions), hierarchy level/depth, policy assignment count, role assignment count
+- **"Management Groups" worksheet** added to Excel report with indented hierarchy visualization
+- Overview tab resource counts updated to reflect all subscriptions and management groups (not just resource-bearing ones)
+
+#### Phase 13 — Comprehensive Azure Monitor / Insights Coverage
+
+**Core Azure Monitor Resources — 6 new modules** (`Modules/Public/InventoryModules/Monitor/`):
+- `ResourceDiagnosticSettings.ps1` — Per-resource diagnostic settings via `Get-AzDiagnosticSetting`: ResourceId, ResourceName, ResourceType, log/metric categories (enabled/disabled), destinations (Log Analytics, Storage, Event Hub, Partner Solutions). Excel: "Resource Diagnostic Settings"
+- `ActivityLogAlertRules.ps1` — Activity log alerts via `Get-AzActivityLogAlert`: Name, ResourceGroup, Enabled, Scopes, Condition (category, level, status), Actions (Action Group names). Excel: "Activity Log Alerts"
+- `SmartDetectorAlertRules.ps1` — Smart detector alerts via `microsoft.alertsmanagement/smartDetectorAlertRules`: Name, Severity, Frequency, Detector type, Application Insights scope, ActionGroups. Excel: "Smart Detector Alerts"
+- `AutoscaleSettings.ps1` — Autoscale configurations via `Get-AzAutoscaleSetting`: TargetResourceId, Enabled, Profiles (name, capacity min/max/default, rules count), Notifications (webhooks, email). Excel: "Autoscale Settings"
+- `MonitorWorkbooks.ps1` — Azure Monitor Workbooks via `microsoft.insights/workbooks`: Name, Category, SourceId (linked resource), TimeModified. Excel: "Azure Monitor Workbooks"
+- `MonitorPrivateLinkScopes.ps1` — Monitor Private Link Scopes via `microsoft.insights/privateLinkScopes`: Name, PrivateEndpointConnections count, ScopedResources count/types. Excel: "Monitor Private Link Scopes"
+
+**Log Analytics Enhancements — 3 new modules** (`Modules/Public/InventoryModules/Monitor/`):
+- `LAWorkspaceSavedSearches.ps1` — Saved searches per workspace: DisplayName, Category, Query, Version. Excel: "LA Saved Searches"
+- `LAWorkspaceSolutions.ps1` — Installed solutions via `microsoft.operationsmanagement/solutions`: WorkspaceResourceId, Plan (name, publisher, product), ProvisioningState. Excel: "LA Solutions"
+- `LAWorkspaceLinkedServices.ps1` — Linked services per workspace: WorkspaceName, ResourceId, WriteAccessResourceId (Automation Account). Excel: "LA Linked Services"
+
+**Application Insights Deep Data — 5 new modules** (`Modules/Public/InventoryModules/Monitor/`):
+- `AppInsightsAvailabilityTests.ps1` — Classic availability tests, Enabled, Frequency, Timeout, Locations count. Excel: "App Insights Availability Tests"
+- `AppInsightsWebTests.ps1` — Web tests via `microsoft.insights/webtests`: Kind (ping/multistep/standard), SyntheticMonitorId, Enabled, Frequency, Timeout. Excel: "App Insights Web Tests"
+- `AppInsightsProactiveDetection.ps1` — Proactive detection configurations: RuleDefinitions (name, enabled, email settings). Excel: "App Insights Proactive Detection"
+- `AppInsightsContinuousExport.ps1` — Continuous export configurations: ExportId, DestinationStorageId, IsEnabled, RecordTypes. Excel: "App Insights Continuous Export"
+- `AppInsightsWorkItems.ps1` — Work item configurations via `microsoft.insights/workitemconfigs`: ConnectorId (Azure DevOps, GitHub), IsValidated. Excel: "App Insights Work Items"
+
+**Metrics & Ingestion — 1 new module** (`Modules/Public/InventoryModules/Monitor/`):
+- `MonitorMetricsIngestion.ps1` — Log Analytics workspace ingestion statistics: WorkspaceName, DailyIngestionGB, MonthlyIngestionGB, RetentionDays, CapGB (daily cap). Excel: "Metrics Ingestion Stats"
+
+#### Phase 16 — Arc Enhanced Configuration Coverage
+
+**New Hybrid modules** (`Modules/Public/InventoryModules/Hybrid/`):
+- `ArcSiteConfigurations.ps1` — Arc Site Manager configurations via `microsoft.hybridcompute/sites`: SiteName, ResourceGroup, Location, ConnectedMachines count, Kubernetes clusters count, governance policy count, update schedule configuration. Excel: "Arc Site Configurations"
+- `ArcEnabledSQLServer.ps1` — Arc-enabled SQL Server instances via `microsoft.azurearcdata/sqlServerInstances`: ServerName, ArcServerResourceId, SQLVersion, Edition, LicenseType, Cores, MemoryMB, Databases count, ESU (enabled/disabled). Excel: "Arc-Enabled SQL Server"
+- `ArcDataServices.ps1` — Arc Data Controllers and SQL Managed Instances via `microsoft.azurearcdata/dataControllers`: DataControllerName, K8sNamespace, InfrastructureType (direct/indirect), K8sDistribution, SQLManagedInstances count, PostgreSQL count, DataUploadState. Excel: "Arc Data Services"
+
+**Enhanced existing modules** (`Modules/Public/InventoryModules/Hybrid/`):
+- `ArcExtensions.ps1` — Enhanced with deep configuration data: extension settings (parsed JSON), version, auto-upgrade settings, protected settings indicator (yes/no — never actual values), provisioning state, error messages
+- `ArcResourceBridge.ps1` — Enhanced with detailed configurations: management IP, subnet, connected cluster details, custom locations linked, provider configurations (VMware, SCVMM, Azure Local)
+
+#### Phase 10 — Excel Specialized Tabs
+
+**New Excel worksheets — all read from `{ReportCache}/{Category}.json` cache files:**
+- **`Build-AZTICostManagementReport.ps1`** — "Cost Management" worksheet: VM cost estimates from `Compute.json`, Arc Server ESU/cost estimates from `Hybrid.json`, reservation recommendations from `Management.json`
+- **`Build-AZTISecurityOverviewReport.ps1`** — "Security Overview" worksheet: Defender for Cloud secure score, high/critical assessments, active alerts, and Defender plan pricing (reads `Security.json`)
+- **`Build-AZTIUpdateManagerReport.ps1`** — "Azure Update Manager" worksheet: VMs and Arc servers with patch compliance, NonCompliant rows highlighted yellow
+- **`Build-AZTIMonitorReport.ps1`** — "Azure Monitor" worksheet: Action groups, DCRs, DCEs, App Insights, alert rules, autoscale settings — rendered as sequential table sections from `Monitor.json`
+- **`Start-AZTIExtraReports.ps1`** — Updated: added `$ReportCache` parameter; calls all four Phase 10 builders after existing quota/policy/advisory reports
+- **`Start-AZTIReporOrchestration.ps1`** — Updated: passes `-ReportCache $ReportCache` to `Start-AZTIExtraReports`
+- **`Start-AZTIExcelCustomization.ps1`** — Updated: Phase 10 tab names (`Cost Management`, `Security Overview`, `Azure Update Manager`, `Azure Monitor`) excluded from Overview tab row count and resource size sort
+- **`Build-AZTIExcelChart.ps1`** — Updated (10.1.2): P00 Overview chart no longer shows "Reservation Advisor" pivot when a "Cost Management" tab exists; reservation data is now exclusively in the dedicated tab. Falls through to the resources area chart instead
+
+#### Phase 18 — Category Metadata Auto-Discovery (18.4.1)
+
+- **`Start-AZTIProcessJob.ps1`** — Enhanced module auto-discovery to parse `.CATEGORY` comment headers from individual `.ps1` files:
+  - Builds per-file `ModuleInfoList` objects with `Name`, `FolderCategory`, `FileCategory`, and `Categories` properties
+  - When category filtering is active, applies a second per-file filter pass using the `.CATEGORY` header to support cross-category modules that live in one folder but logically belong to another
+  - Files with no `.CATEGORY` header fall back to their folder name (backward compatible)
+  - Logs filtered file names via `Write-Debug` for traceability
+
+#### Phase 19 — Version Bump
+
+- **`AzureTenantInventory.psd1`** — `ModuleVersion` updated from `1.0.0` to **`2.0.0`** (major version for breaking changes: scope default change, category filtering, rearchitected module structure)
+- Updated `README.md` with ARM-only default documentation, expanded permission tables (ARM + Graph), resource provider requirements, and troubleshooting guide
+- Added Markdown and AsciiDoc to output file table in README
+
+#### Phase 14 — AI Category Expansion
+
+- **`MLPipelines.ps1`** (`Modules/Public/InventoryModules/AI/`) — Pipeline job inventory via ML REST API (`workspaces/{name}/jobs?$filter=jobType eq 'Pipeline'`): workspace name, pipeline name, pipeline ID, status, created/modified time, experiment name, compute ID. Excel sheet: "ML Pipelines"
+
+#### Phase 15 — Compute Category Expansion
+
+- **`AVDAzureLocal.ps1`** (`Modules/Public/InventoryModules/Compute/`) — AVD session hosts running on Azure Local (HCI) and Arc-enabled infrastructure. Discovers Arc machines and HCI VM instances tagged `AvdSessionHost=true`, plus registered AVD session hosts whose resource IDs reference Arc/HCI VMs. Fields: Platform, Host Pool, Status, Agent Version, Last Heartbeat, Azure Local Cluster, Sessions. Excel sheet: "AVD on Azure Local/Arc"
+
+#### Phase 17 — Resource Enrichment
+
+**Virtual Machine enhancements** (`VirtualMachine.ps1`):
+- Azure Monitor Metrics integration: CPU percentage (7-day average) and memory percentage via `/providers/microsoft.insights/metrics?metricnames=Percentage+CPU`
+- Azure Site Recovery integration: DR replication status, target region, replication health via Recovery Vault `/replicationProtectedItems` API
+- Cost Management integration: Estimated monthly cost (USD) via `Microsoft.CostManagement/query` API
+- New Excel columns: `Avg CPU % (7d)`, `Avg Memory % (7d)`, `DR Replicated`, `DR Target Region`, `DR Replication Health`, `Est. Monthly Cost (USD)`
+
+**Arc Server enhancements** (`ARCServers.ps1`):
+- PolicyInsights API: Policy assignment count and compliance state (Compliant/NonCompliant)
+- Azure Monitor Metrics: CPU usage active percentage (7-day average) for Arc agents
+- Cost Management API: ESU enablement status and estimated monthly cost
+- Hybrid connectivity: Proxy configuration status and private link scope association
+- New Excel columns: `ESU Enabled`, `Est. Monthly Cost (USD)`, `Policy Assignments`, `Policy Compliance`, `Avg CPU % (7d)`, `Proxy Configured`, `Private Link Scope`
+
+#### Phase 18 — Category Structure Alignment
+
+- Category alias normalization added to `Invoke-AzureTenantInventory.ps1`: long-form Azure portal names (e.g., `AI + machine learning`, `Internet of Things`, `Management and governance`) automatically mapped to short folder names
+- Updated `.vscode/settings.json` with PowerShell extension settings, formatting rules, file associations, and Pester test path configuration
+- Created `docs/azure-category-structure.md` — category-to-folder mapping reference with alias table and instructions for adding new categories
+- Created `docs/azure-coverage-table.md` — comprehensive inventory coverage table (171 modules across 15 categories)
+- Created `docs/modules/ROOT/pages/category-filtering.adoc` — Antora AsciiDoc guide for category filtering with examples, alias support, and execution flow diagram
+- Updated `docs/modules/ROOT/nav.adoc` — added Category Filtering to navigation
+
+#### Phase 20 — Help & Examples
+
+- Added 4 `.EXAMPLE` blocks to `Invoke-AzureTenantInventory`:
+  - `-PermissionAudit` basic usage
+  - `-PermissionAudit -OutputFormat Markdown`
+  - `-PermissionAudit -Scope All` (ARM + Graph)
+  - Full inventory with `-PermissionAudit -Scope All -OutputFormat All`
+- **`Test-AZTIPermissions.ps1`** refactored (20.4.1): Now delegates to `Invoke-AZTIPermissionAudit` instead of containing duplicate permission-check logic. Maps the richer audit result back to the simplified `{ArmAccess, GraphAccess, Details}` shape that existing callers expect. Backward compatible — same parameter surface, same return properties
+
+#### Phase 21 — Markdown & AsciiDoc Report Output
+
+- **`Export-AZTIMarkdownReport.ps1`** (`Modules/Private/Reporting/`) — New function generating GitHub-Flavored Markdown reports from cache files. Reads `{CategoryFolder}.json` cache files, renders per-module pipe tables, generates anchored ToC, writes `{ReportName}.md`. Parameters: `ReportCache`, `File`, `TenantID`, `Subscriptions`, `Scope`
+- **`Export-AZTIAsciiDocReport.ps1`** (`Modules/Private/Reporting/`) — New function generating AsciiDoc reports from cache files. Same cache-reading pattern as Markdown export, outputs AsciiDoc tables with `:toc: left`, `[TIP]` admonitions per module, writes `{ReportName}.adoc`. Compatible with Antora and Confluence
+- **`-OutputFormat Markdown` / `-OutputFormat AsciiDoc`** wired into `Invoke-AzureTenantInventory.ps1` — parallel to JSON export block in the reporting phase
+- Added `MD` and `Adoc` as `[ValidateSet]` aliases for `Markdown` and `AsciiDoc` respectively
+- Updated `-OutputFormat` description in `README.md` to include Markdown and AsciiDoc values with aliases
+- Updated output files table in `README.md` to include `.md` and `.adoc` entries
+- **21.5.1/21.5.2 — PermissionAudit format support**: `-PermissionAudit -OutputFormat Markdown` now saves a permission audit `.md` report; `-PermissionAudit -OutputFormat AsciiDoc` saves a permission audit `.adoc` report with AsciiDoc role icons and `[source,powershell]` recommendation blocks
+- **`Invoke-AZTIPermissionAudit.ps1`** — Added `AsciiDoc` to `[ValidateSet]` for `-OutputFormat`; new AsciiDoc output block with `:toc: left`, `icon:check-circle[]`/`icon:times-circle[]` status icons, and `[source,powershell]` blocks for each recommendation
+- **`Invoke-AzureTenantInventory.ps1`** — Updated `auditOutputFormat` switch: `MD` → `Markdown`, `AsciiDoc` → `AsciiDoc`, `Adoc` → `AsciiDoc`, `All` → `All` (previously `All` mapped to `Console`)
+
+#### Dependency Bootstrap
+
+- Removed `RequiredModules` hard requirement from `AzureTenantInventory.psd1` (changed to `@()`)
+- Added auto-install bootstrap to `AzureTenantInventory.psm1`: automatically installs and imports `ImportExcel`, `Az.Accounts`, `Az.ResourceGraph`, `Az.Storage`, `Az.Compute`, `Az.Authorization`, `Az.Resources` if not already available
+
 ---
 
 **Version Control**
 - Created: 2026-02-22 by thisismydemo
-- Last Edited: 2026-02-23 by thisismydemo
+- Last Edited: 2026-02-24 by thisismydemo
 - Version: 1.6.0
 - Tags: changelog, azuretenantinventory, json-output, phase-7, antora, pester

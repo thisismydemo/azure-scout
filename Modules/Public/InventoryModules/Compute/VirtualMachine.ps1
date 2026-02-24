@@ -10,7 +10,9 @@ Excel Sheet Name: Virtual Machines
 https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Compute/VirtualMachine.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+
+.CATEGORY Compute
 
 .NOTES
 Version: 3.6.0
@@ -266,6 +268,95 @@ If ($Task -eq 'Processing')
                                 $AcceleratedNetwork = $false
                             }
 
+                        # ── Phase 17: Performance Metrics (Azure Monitor) ──────────────────
+                        $avgCpu    = 'N/A'
+                        $avgMem    = 'N/A'
+                        try {
+                            $monEnd   = (Get-Date).ToUniversalTime().ToString('o')
+                            $monStart = (Get-Date).AddDays(-7).ToUniversalTime().ToString('o')
+                            $cpuUri   = "/subscriptions/$($1.subscriptionId)/resourceGroups/$($1.RESOURCEGROUP)/providers/Microsoft.Compute/virtualMachines/$($1.NAME)/providers/microsoft.insights/metrics?api-version=2019-07-01&metricnames=Percentage+CPU&timespan=$monStart/$monEnd&interval=P1D&aggregation=Average"
+                            $cpuResp  = Invoke-AzRestMethod -Path $cpuUri -Method GET -ErrorAction SilentlyContinue
+                            if ($cpuResp.StatusCode -eq 200) {
+                                $cpuData = $cpuResp.Content | ConvertFrom-Json
+                                $vals    = $cpuData.value[0].timeseries[0].data.average | Where-Object { $_ -ne $null }
+                                if ($vals) { $avgCpu = [math]::Round(($vals | Measure-Object -Average).Average, 1) }
+                            }
+                        } catch {}
+                        try {
+                            $memUri  = "/subscriptions/$($1.subscriptionId)/resourceGroups/$($1.RESOURCEGROUP)/providers/Microsoft.Compute/virtualMachines/$($1.NAME)/providers/microsoft.insights/metrics?api-version=2019-07-01&metricnames=Available+Memory+Bytes&timespan=$monStart/$monEnd&interval=P1D&aggregation=Average"
+                            $memResp = Invoke-AzRestMethod -Path $memUri -Method GET -ErrorAction SilentlyContinue
+                            if ($memResp.StatusCode -eq 200) {
+                                $memData  = $memResp.Content | ConvertFrom-Json
+                                $memVals  = $memData.value[0].timeseries[0].data.average | Where-Object { $_ -ne $null }
+                                $ramBytes = [double]$RAM * 1073741824
+                                if ($memVals -and $ramBytes -gt 0) {
+                                    $avgAvailBytes = ($memVals | Measure-Object -Average).Average
+                                    $avgMem = [math]::Round((($ramBytes - $avgAvailBytes) / $ramBytes) * 100, 1)
+                                }
+                            }
+                        } catch {}
+
+                        # ── Phase 17: DR Status (Azure Site Recovery) ─────────────────────
+                        $drReplicated  = 'N/A'
+                        $drTargetRegion = 'N/A'
+                        $drHealth      = 'N/A'
+                        try {
+                            $asrUri  = "/subscriptions/$($1.subscriptionId)/providers/Microsoft.RecoveryServices/replicationEligibilityResults/$($1.NAME)?api-version=2022-10-01"
+                            $asrResp = Invoke-AzRestMethod -Path $asrUri -Method GET -ErrorAction SilentlyContinue
+                            if ($asrResp.StatusCode -eq 200) {
+                                $asrData = $asrResp.Content | ConvertFrom-Json
+                                if ($asrData.properties.eligible -eq $false -and $asrData.properties.errorDetails) {
+                                    # Not eligible may mean already replicated; check replication
+                                    $drReplicated = 'Check ASR'
+                                } elseif ($asrData.properties.eligible -eq $true) {
+                                    $drReplicated = $false
+                                }
+                            }
+                            # Try to find replication protected items across vaults
+                            $vaultUri  = "/subscriptions/$($1.subscriptionId)/providers/Microsoft.RecoveryServices/vaults?api-version=2023-04-01"
+                            $vaultResp = Invoke-AzRestMethod -Path $vaultUri -Method GET -ErrorAction SilentlyContinue
+                            if ($vaultResp.StatusCode -eq 200) {
+                                $vaults = ($vaultResp.Content | ConvertFrom-Json).value
+                                foreach ($vault in $vaults) {
+                                    $rpUri  = "/subscriptions/$($1.subscriptionId)/resourceGroups/$($vault.id.split('/')[4])/providers/Microsoft.RecoveryServices/vaults/$($vault.name)/replicationProtectedItems?api-version=2022-10-01"
+                                    $rpResp = Invoke-AzRestMethod -Path $rpUri -Method GET -ErrorAction SilentlyContinue
+                                    if ($rpResp.StatusCode -eq 200) {
+                                        $rpItems = ($rpResp.Content | ConvertFrom-Json).value
+                                        $vmItem  = $rpItems | Where-Object { $_.properties.friendlyName -eq $1.NAME }
+                                        if ($vmItem) {
+                                            $drReplicated   = $true
+                                            $drTargetRegion = $vmItem.properties.recoveryAzureResourceGroupId -split '/'  | Select-Object -Index 4
+                                            $drHealth       = $vmItem.properties.replicationHealth
+                                            break
+                                        }
+                                    }
+                                }
+                            }
+                        } catch {}
+
+                        # ── Phase 17: Cost Estimate (Cost Management) ─────────────────────
+                        $estMonthlyCost = 'N/A'
+                        try {
+                            $costUri  = "/subscriptions/$($1.subscriptionId)/providers/Microsoft.CostManagement/query?api-version=2023-03-01"
+                            $costBody = @{
+                                type       = 'Usage'
+                                timeframe  = 'MonthToDate'
+                                dataset    = @{
+                                    granularity = 'None'
+                                    filter      = @{
+                                        dimensions = @{ name = 'ResourceId'; operator = 'In'; values = @($1.id) }
+                                    }
+                                    aggregation = @{ totalCost = @{ name = 'PreTaxCost'; function = 'Sum' } }
+                                }
+                            } | ConvertTo-Json -Depth 10
+                            $costResp = Invoke-AzRestMethod -Path $costUri -Method POST -Payload $costBody -ErrorAction SilentlyContinue
+                            if ($costResp.StatusCode -eq 200) {
+                                $costData = $costResp.Content | ConvertFrom-Json
+                                $rawCost  = $costData.properties.rows[0][0]
+                                if ($rawCost -ne $null) { $estMonthlyCost = [math]::Round([double]$rawCost, 2) }
+                            }
+                        } catch {}
+
                         foreach ($Tag in $Tags) 
                             {
                                 $obj = @{
@@ -319,6 +410,12 @@ If ($Task -eq 'Processing')
                                 'Private IP Allocation'                 = [string]$vmnic.properties.ipConfigurations.properties.privateIPAllocationMethod;
                                 'Creation Time'                         = $timecreated;
                                 'VM Extensions'                         = $ext;
+                                'Avg CPU % (7d)'                        = $avgCpu;
+                                'Avg Memory % (7d)'                     = $avgMem;
+                                'DR Replicated'                         = $drReplicated;
+                                'DR Target Region'                      = $drTargetRegion;
+                                'DR Replication Health'                 = $drHealth;
+                                'Est. Monthly Cost (USD)'               = $estMonthlyCost;
                                 'Resource U'                            = $ResUCount;
                                 'Tag Name'                              = [string]$Tag.Name;
                                 'Tag Value'                             = [string]$Tag.Value
@@ -411,6 +508,12 @@ else
             $Exc.Add('Public IP')
             $Exc.Add('Creation Time')                
             $Exc.Add('VM Extensions')
+            $Exc.Add('Avg CPU % (7d)')
+            $Exc.Add('Avg Memory % (7d)')
+            $Exc.Add('DR Replicated')
+            $Exc.Add('DR Target Region')
+            $Exc.Add('DR Replication Health')
+            $Exc.Add('Est. Monthly Cost (USD)')
             $Exc.Add('Resource U')
             if($InTag)
             {

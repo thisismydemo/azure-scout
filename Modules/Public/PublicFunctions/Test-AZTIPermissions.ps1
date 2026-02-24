@@ -7,6 +7,10 @@
     permissions before the main inventory extraction runs. Returns a structured
     result object with per-check status, messages, and remediation guidance.
 
+    This function delegates to Invoke-AZTIPermissionAudit to avoid duplicating
+    permission-check logic. It maps the richer audit result back to the simpler
+    shape that existing callers expect.
+
     This function never blocks execution — callers should inspect the result and
     display warnings for any failed or degraded checks.
 
@@ -38,164 +42,73 @@
     This PowerShell Module is part of Azure Tenant Inventory (AZTI)
 
 .NOTES
-    Version: 1.0.0
+    Version: 2.0.0
     Authors: Claudio Merola, thisismydemo
+    Refactored (20.4.1): delegates to Invoke-AZTIPermissionAudit to avoid duplicate logic.
 #>
 function Test-AZTIPermissions {
     [CmdletBinding()]
     param(
         [string]$TenantID,
 
+        # SubscriptionID is retained for backward API compatibility but is not consumed by the
+        # delegated Invoke-AZTIPermissionAudit call (which auto-enumerates all accessible subs).
         [string[]]$SubscriptionID,
 
         [ValidateSet('All', 'ArmOnly', 'EntraOnly')]
         [string]$Scope = 'All'
     )
 
-    $details = [System.Collections.Generic.List[PSCustomObject]]::new()
-    $armAccess   = $true
-    $graphAccess = $true
+    # ── Delegate to Invoke-AZTIPermissionAudit ───────────────────────────────
+    # Map the -Scope parameter to Invoke-AZTIPermissionAudit's -IncludeEntraPermissions switch.
+    # The full audit function performs a strict superset of the checks this function used to do.
+    $includeEntra = $Scope -in 'All', 'EntraOnly'
 
-    # ---------------------------------------------------------------
-    # ARM Permission Checks
-    # ---------------------------------------------------------------
-    if ($Scope -in 'All', 'ArmOnly') {
-
-        # Check 1 — Subscription enumeration
-        $enumeratedSubs = $null
-        try {
-            $getSubParams = @{ ErrorAction = 'Stop' }
-            if ($TenantID) { $getSubParams['TenantId'] = $TenantID }
-
-            $enumeratedSubs = @(Get-AzSubscription @getSubParams)
-
-            if ($enumeratedSubs.Count -gt 0) {
-                $details.Add([PSCustomObject]@{
-                    Check       = 'ARM: Subscription Enumeration'
-                    Status      = 'Pass'
-                    Message     = "Found $($enumeratedSubs.Count) subscription(s)"
-                    Remediation = $null
-                })
-            }
-            else {
-                $armAccess = $false
-                $details.Add([PSCustomObject]@{
-                    Check       = 'ARM: Subscription Enumeration'
-                    Status      = 'Fail'
-                    Message     = 'No subscriptions found in tenant'
-                    Remediation = 'Grant the identity at least Reader role on one or more subscriptions.'
-                })
-            }
-        }
-        catch {
-            $armAccess = $false
-            $details.Add([PSCustomObject]@{
-                Check       = 'ARM: Subscription Enumeration'
-                Status      = 'Fail'
-                Message     = $_.Exception.Message
-                Remediation = 'Ensure the identity has Reader role on the tenant or target subscriptions.'
-            })
-        }
-
-        # Check 2 — Role assignment read on first available subscription
-        $targetSub = if ($SubscriptionID) { $SubscriptionID[0] }
-                     elseif ($enumeratedSubs -and $enumeratedSubs.Count -gt 0) { $enumeratedSubs[0].Id }
-                     else { $null }
-
-        if ($targetSub) {
-            try {
-                $null = Get-AzRoleAssignment -Scope "/subscriptions/$targetSub" -ErrorAction Stop |
-                        Select-Object -First 1
-                $details.Add([PSCustomObject]@{
-                    Check       = 'ARM: Role Assignment Read'
-                    Status      = 'Pass'
-                    Message     = "Can read role assignments on subscription $targetSub"
-                    Remediation = $null
-                })
-            }
-            catch {
-                $details.Add([PSCustomObject]@{
-                    Check       = 'ARM: Role Assignment Read'
-                    Status      = 'Warn'
-                    Message     = "Cannot read role assignments: $($_.Exception.Message)"
-                    Remediation = 'Reader role is sufficient for most inventory data; role-assignment reads require Microsoft.Authorization/roleAssignments/read.'
-                })
-            }
-        }
+    $auditParams = @{
+        OutputFormat = 'Console'
     }
+    if ($TenantID)     { $auditParams['TenantID']                = $TenantID }
+    if ($includeEntra) { $auditParams['IncludeEntraPermissions'] = $true }
 
-    # ---------------------------------------------------------------
-    # Microsoft Graph Permission Checks
-    # ---------------------------------------------------------------
-    if ($Scope -in 'All', 'EntraOnly') {
+    $auditResult = Invoke-AZTIPermissionAudit @auditParams
 
-        # Check 1 — Organization (basic directory read)
-        try {
-            $null = Invoke-AZTIGraphRequest -Uri '/v1.0/organization' -SinglePage
-            $details.Add([PSCustomObject]@{
-                Check       = 'Graph: Organization Read'
-                Status      = 'Pass'
-                Message     = 'Can read organization object'
-                Remediation = $null
-            })
-        }
-        catch {
-            $graphAccess = $false
-            $details.Add([PSCustomObject]@{
-                Check       = 'Graph: Organization Read'
+    if (-not $auditResult) {
+        # Invoke-AZTIPermissionAudit returned $null — no auth context available
+        return [PSCustomObject]@{
+            ArmAccess   = $false
+            GraphAccess = $false
+            Details     = @([PSCustomObject]@{
+                Check       = 'Azure Authentication'
                 Status      = 'Fail'
-                Message     = "Cannot read organization: $($_.Exception.Message)"
-                Remediation = 'Grant Directory.Read.All (application) or User.Read.All (delegated) permission in Entra ID.'
-            })
-        }
-
-        # Check 2 — Users (read permission)
-        try {
-            $null = Invoke-AZTIGraphRequest -Uri '/v1.0/users?$top=1' -SinglePage
-            $details.Add([PSCustomObject]@{
-                Check       = 'Graph: User Read'
-                Status      = 'Pass'
-                Message     = 'Can read user objects'
-                Remediation = $null
-            })
-        }
-        catch {
-            $graphAccess = $false
-            $details.Add([PSCustomObject]@{
-                Check       = 'Graph: User Read'
-                Status      = 'Fail'
-                Message     = "Cannot read users: $($_.Exception.Message)"
-                Remediation = 'Grant User.Read.All permission in Entra ID.'
-            })
-        }
-
-        # Check 3 — Conditional Access policies (optional, warn-only)
-        try {
-            $null = Invoke-AZTIGraphRequest -Uri '/v1.0/identity/conditionalAccess/policies' -SinglePage
-            $details.Add([PSCustomObject]@{
-                Check       = 'Graph: Conditional Access Policies'
-                Status      = 'Pass'
-                Message     = 'Can read Conditional Access policies'
-                Remediation = $null
-            })
-        }
-        catch {
-            # This is optional — CA policy inventory is a bonus, not a requirement
-            $details.Add([PSCustomObject]@{
-                Check       = 'Graph: Conditional Access Policies'
-                Status      = 'Warn'
-                Message     = "Cannot read CA policies: $($_.Exception.Message)"
-                Remediation = 'Grant Policy.Read.All permission for Conditional Access inventory (optional).'
+                Message     = 'No Azure authentication context found. Run Connect-AzAccount first.'
+                Remediation = 'Connect-AzAccount -TenantId <tenantId>'
             })
         }
     }
 
-    # ---------------------------------------------------------------
-    # Return structured result
-    # ---------------------------------------------------------------
+    # ── Map richer result to simplified shape expected by existing callers ────
+    # Combine ARM + provider + Graph details into the single Details array.
+    $allDetails = [System.Collections.Generic.List[PSCustomObject]]::new()
+
+    foreach ($d in $auditResult.ArmDetails)     { $allDetails.Add($d) }
+    foreach ($p in $auditResult.ProviderResults) {
+        $allDetails.Add([PSCustomObject]@{
+            Check       = "Provider: $($p.Provider)"
+            Status      = $p.Status
+            Message     = "$($p.Purpose) — $($p.RegistrationState)"
+            Remediation = if ($p.Status -ne 'Pass') { "Register-AzResourceProvider -ProviderNamespace '$($p.Provider)'" } else { $null }
+        })
+    }
+    foreach ($g in $auditResult.GraphDetails)    { $allDetails.Add($g) }
+
+    # For EntraOnly scope suppress ARM details from the returned Details array.
+    if ($Scope -eq 'EntraOnly') {
+        $allDetails = [System.Collections.Generic.List[PSCustomObject]]($allDetails | Where-Object { $_.Check -like 'Graph:*' })
+    }
+
     return [PSCustomObject]@{
-        ArmAccess   = $armAccess
-        GraphAccess = $graphAccess
-        Details     = $details
+        ArmAccess   = $auditResult.ArmAccess
+        GraphAccess = if ($Scope -eq 'ArmOnly') { $null } else { $auditResult.GraphAccess }
+        Details     = $allDetails.ToArray()
     }
 }

@@ -10,7 +10,9 @@ Excel Sheet Name: EvHub
 https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Hybrid/ARCServers.ps1
 
 .COMPONENT
-    This powershell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+
+.CATEGORY Hybrid
 
 .NOTES
 Version: 3.6.0
@@ -113,6 +115,63 @@ If ($Task -eq 'Processing')
                             $InstallDate = $null
                         }
 
+                    # ── Phase 17.2.6: Policies Applied ───────────────────────────────
+                    $policyCount    = 'N/A'
+                    $policyCompliant = 'N/A'
+                    try {
+                        $policyUri  = "/subscriptions/$($1.subscriptionId)/providers/Microsoft.PolicyInsights/policyStates/latest/queryResults?api-version=2019-10-01&`$filter=resourceId eq '$($1.id)'&`$top=100"
+                        $policyResp = Invoke-AzRestMethod -Path $policyUri -Method POST -Payload '{}' -ErrorAction SilentlyContinue
+                        if ($policyResp.StatusCode -eq 200) {
+                            $pData       = $policyResp.Content | ConvertFrom-Json
+                            $states      = $pData.value
+                            $policyCount = @($states).Count
+                            $nonCompliant = @($states | Where-Object { $_.complianceState -eq 'NonCompliant' }).Count
+                            $policyCompliant = if ($nonCompliant -eq 0) { 'Compliant' } else { "$nonCompliant NonCompliant" }
+                        }
+                    } catch {}
+
+                    # ── Phase 17.2.7: Performance Metrics ────────────────────────────
+                    $arcAvgCpu = 'N/A'
+                    $arcAvgMem = 'N/A'
+                    try {
+                        $monEnd2   = (Get-Date).ToUniversalTime().ToString('o')
+                        $monStart2 = (Get-Date).AddDays(-7).ToUniversalTime().ToString('o')
+                        $arcCpuUri = "/subscriptions/$($1.subscriptionId)/resourceGroups/$($1.RESOURCEGROUP)/providers/Microsoft.HybridCompute/machines/$($1.NAME)/providers/microsoft.insights/metrics?api-version=2019-07-01&metricnames=cpu_usage_active&timespan=$monStart2/$monEnd2&interval=P1D&aggregation=Average"
+                        $arcCpuResp = Invoke-AzRestMethod -Path $arcCpuUri -Method GET -ErrorAction SilentlyContinue
+                        if ($arcCpuResp.StatusCode -eq 200) {
+                            $arcCpuData = $arcCpuResp.Content | ConvertFrom-Json
+                            $arcCpuVals = $arcCpuData.value[0].timeseries[0].data.average | Where-Object { $_ -ne $null }
+                            if ($arcCpuVals) { $arcAvgCpu = [math]::Round(($arcCpuVals | Measure-Object -Average).Average, 1) }
+                        }
+                    } catch {}
+
+                    # ── Phase 17.2.9: Cost / ESU Tracking ─────────────────────────────
+                    $esuEnabled     = if ($data.licenseprofile.esuprofile.servertype) { $true } else { $false }
+                    $arcMonthlyCost = 'N/A'
+                    try {
+                        $arcCostUri  = "/subscriptions/$($1.subscriptionId)/providers/Microsoft.CostManagement/query?api-version=2023-03-01"
+                        $arcCostBody = @{
+                            type      = 'Usage'
+                            timeframe = 'MonthToDate'
+                            dataset   = @{
+                                granularity = 'None'
+                                filter      = @{ dimensions = @{ name = 'ResourceId'; operator = 'In'; values = @($1.id) } }
+                                aggregation = @{ totalCost = @{ name = 'PreTaxCost'; function = 'Sum' } }
+                            }
+                        } | ConvertTo-Json -Depth 10
+                        $arcCostResp = Invoke-AzRestMethod -Path $arcCostUri -Method POST -Payload $arcCostBody -ErrorAction SilentlyContinue
+                        if ($arcCostResp.StatusCode -eq 200) {
+                            $arcCostData = $arcCostResp.Content | ConvertFrom-Json
+                            $rawArcCost  = $arcCostData.properties.rows[0][0]
+                            if ($rawArcCost -ne $null) { $arcMonthlyCost = [math]::Round([double]$rawArcCost, 2) }
+                        }
+                    } catch {}
+
+                    # ── Phase 17.2.10: Hybrid Connectivity ─────────────────────────────
+                    $proxyConfigured  = if ($data.agentConfiguration.proxy.url) { $true } else { $false }
+                    $privateLinkScope = if ($data.privateLinkScopeResourceId) { ($data.privateLinkScopeResourceId -split '/')[-1] } else { 'None' }
+                    $connStatus       = if ($data.status) { $data.status } else { 'N/A' }
+
                     foreach ($Tag in $Tags) { 
                         $obj = @{
                             'ID'                   = $1.id;
@@ -148,6 +207,13 @@ If ($Task -eq 'Processing')
                             'License Status'       = $data.licenseprofile.licensestatus;
                             'License Channel'      = $data.licenseprofile.licensechannel;
                             'License Type'         = $data.licenseprofile.esuprofile.servertype;
+                            'ESU Enabled'          = $esuEnabled;
+                            'Est. Monthly Cost (USD)' = $arcMonthlyCost;
+                            'Policy Assignments'   = $policyCount;
+                            'Policy Compliance'    = $policyCompliant;
+                            'Avg CPU % (7d)'       = $arcAvgCpu;
+                            'Proxy Configured'     = $proxyConfigured;
+                            'Private Link Scope'   = $privateLinkScope;
                             'Resource U'           = $ResUCount;
                             'Tag Name'             = [string]$Tag.Name;
                             'Tag Value'            = [string]$Tag.Value
@@ -208,6 +274,13 @@ Else
         $Exc.Add('License Status')
         $Exc.Add('License Channel')
         $Exc.Add('License Type')
+        $Exc.Add('ESU Enabled')
+        $Exc.Add('Est. Monthly Cost (USD)')
+        $Exc.Add('Policy Assignments')
+        $Exc.Add('Policy Compliance')
+        $Exc.Add('Avg CPU % (7d)')
+        $Exc.Add('Proxy Configured')
+        $Exc.Add('Private Link Scope')
         if($InTag)
             {
                 $Exc.Add('Tag Name')

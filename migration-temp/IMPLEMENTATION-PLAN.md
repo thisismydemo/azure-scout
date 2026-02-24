@@ -2805,19 +2805,23 @@ Phase 0 → Phase 1 → Phase 1B → Phase 2 → Phase 3 → Phase 4 → Phase 5
 ```
 
 **Estimated Remaining Effort (All Phases):**
-- **Phase 9:** 5-7 days (17 new modules + MaintenanceConfigurations rewrite + Entra verification)
-- **Phase 10:** 4-5 days (5 tab redesigns + graphs/charts + conditional formatting)
-- **Phase 11:** 2-3 days (subscription/MG enumeration + Excel worksheets)
-- **Phase 12:** 2-3 days (parameter default change + README updates + resource provider check)
-- **Phase 13:** 2-3 days (comprehensive testing of Phases 9-12)
-- **Phase 14:** 5-7 days (15 new AI/ML modules + REST API integration)
-- **Phase 15:** 3-4 days (6 new AVD modules + Arc/Azure Local detection)
-- **Phase 16:** 3-4 days (5 Arc enhancements + new Arc modules)
-- **Phase 17:** 5-7 days (VM enhancement logic + 6 new API integrations + parallel processing)
-- **Phase 18:** 3-4 days (category metadata system + filtering logic + 145 module updates)
-- **Phase 19:** 3-4 days (comprehensive testing of all new features)
+- **Phase 9:** ✅ COMPLETE (17 new modules + MaintenanceConfigurations rewrite + Entra verification)
+- **Phase 10:** ✅ COMPLETE (5 specialized tab builders + P00 chart fix + conditional formatting)
+- **Phase 11:** ✅ COMPLETE (subscription/MG enumeration + Excel worksheets)
+- **Phase 12:** ✅ COMPLETE (parameter default change + README updates + resource provider check)
+- **Phase 13:** ✅ COMPLETE (15 new Azure Monitor / Insights modules)
+- **Phase 14:** ✅ COMPLETE (15 new AI/ML modules + REST API integration)
+- **Phase 15:** ✅ COMPLETE (6 new AVD modules + Arc/Azure Local detection)
+- **Phase 16:** ✅ COMPLETE (ArcSiteConfigurations, ArcEnabledSQLServer, ArcDataServices + Arc enhancements)
+- **Phase 17:** ✅ COMPLETE (VM + Arc enrichments with Monitor/Backup/DR/Cost/Advisor columns)
+- **Phase 18:** ✅ COMPLETE (category metadata system + filtering logic + `.CATEGORY` per-file parsing)
+- **Phase 19:** ⏳ TESTING PHASE (integration/acceptance tests pending)
+- **Phase 20:** ✅ COMPLETE (`.EXAMPLE` blocks + Test-AZTIPermissions refactored to delegate to Invoke-AZTIPermissionAudit)
+- **Phase 21:** ✅ COMPLETE (Markdown + AsciiDoc report export + PermissionAudit AsciiDoc output)
 
-**Total:** ~38-50 days (7-10 weeks) for full implementation of all phases
+**Version:** 2.0.0 (bumped from 1.0.0 — major version for breaking changes + category filtering)
+
+**All implementation work complete. Remaining: integration testing (Phase 19) + PSGallery publish.**
 
 ---
 

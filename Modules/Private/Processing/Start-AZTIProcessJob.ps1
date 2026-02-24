@@ -18,7 +18,7 @@ Authors: Claudio Merola
 #>
 
 function Start-AZTIProcessJob {
-    Param($Resources, $Retirements, $Subscriptions, $DefaultPath, $Heavy, $InTag, $Unsupported)
+    Param($Resources, $Retirements, $Subscriptions, $DefaultPath, $Heavy, $InTag, $Unsupported, $Category)
 
     Write-Progress -activity 'Azure Inventory' -Status "22% Complete." -PercentComplete 22 -CurrentOperation "Creating Jobs to Process Data.."
 
@@ -52,6 +52,12 @@ function Start-AZTIProcessJob {
     $InventoryModulesPath = Join-Path $ParentPath 'Public' 'InventoryModules'
     $ModuleFolders = Get-ChildItem -Path $InventoryModulesPath -Directory
 
+    # Filter to requested categories (default is 'All' = no filtering)
+    if ($Category -and $Category -notcontains 'All') {
+        $ModuleFolders = $ModuleFolders | Where-Object { $Category -contains $_.Name }
+        Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Category filter applied. Processing folders: '+($ModuleFolders.Name -join ', '))
+    }
+
     $JobLoop = 1
     $TotalFolders = $ModuleFolders.count
 
@@ -70,11 +76,45 @@ function Start-AZTIProcessJob {
             $ModuleName = $ModuleFolder.Name
             $ModuleFiles = Get-ChildItem -Path $ModulePath
 
+            # 18.4.1 — Build per-file module info objects that include .CATEGORY comment metadata.
+            # This enriches auto-discovery so callers can inspect categories programmatically and
+            # enables fine-grained filtering (cross-category modules in a single folder).
+            $ModuleInfoList = $ModuleFiles | ForEach-Object {
+                $HeaderLines    = @(Get-Content -Path $_.FullName -TotalCount 50 -ErrorAction SilentlyContinue)
+                $HeaderText     = $HeaderLines -join "`n"
+                $fileCategory   = $ModuleName  # default: folder name
+
+                if ($HeaderText -match '\.CATEGORY\s*[\r\n]+\s*([^\r\n#<]+)') {
+                    $fileCategory = $Matches[1].Trim()
+                }
+
+                [PSCustomObject]@{
+                    File            = $_
+                    Name            = $_.BaseName
+                    FolderCategory  = $ModuleName
+                    FileCategory    = $fileCategory
+                    Categories      = @($fileCategory -split '\s*,\s*')
+                }
+            }
+
+            # If category filtering is active, further filter at the individual file level using
+            # the .CATEGORY header. Files without a .CATEGORY header fall back to folder category.
+            if ($Category -and $Category -notcontains 'All') {
+                $ModuleInfoList = $ModuleInfoList | Where-Object {
+                    ($_.Categories | Where-Object { $Category -contains $_ }).Count -gt 0
+                }
+                Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Per-file category filter applied in folder '+$ModuleName+'. Files: '+($ModuleInfoList.Name -join ', '))
+            }
+
+            # Unwrap back to FileInfo objects for the job (keeps downstream job code unchanged)
+            $ModuleFiles = $ModuleInfoList | Select-Object -ExpandProperty File
+
             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Creating Job: '+$ModuleName)
 
             $c = (($JobLoop / $TotalFolders) * 100)
             $c = [math]::Round($c)
-            Write-Progress -Id 1 -activity "Creating Jobs" -Status "$c% Complete." -PercentComplete $c
+            $filesInFolder = $ModuleFiles.Count
+            Write-Progress -Id 1 -activity "Creating Jobs" -Status "$c% Complete." -PercentComplete $c -CurrentOperation "Processing module category: $ModuleName ($filesInFolder modules)"
 
             Start-Job -Name ('ResourceJob_'+$ModuleName) -ScriptBlock {
 

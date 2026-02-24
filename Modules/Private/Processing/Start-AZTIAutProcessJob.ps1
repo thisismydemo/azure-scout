@@ -18,11 +18,18 @@ Authors: Claudio Merola
 #>
 
 function Start-AZTIAutProcessJob {
-    Param($Resources, $Retirements, $Subscriptions, $Heavy, $InTag, $Unsupported)
+    Param($Resources, $Retirements, $Subscriptions, $Heavy, $InTag, $Unsupported, $Category)
 
     $ParentPath = (get-item $PSScriptRoot).parent.parent
     $InventoryModulesPath = Join-Path $ParentPath 'Public' 'InventoryModules'
     $Modules = Get-ChildItem -Path $InventoryModulesPath -Directory
+
+    # Filter to requested categories (default is 'All' = no filtering)
+    if ($Category -and $Category -notcontains 'All') {
+        $Modules = $Modules | Where-Object { $Category -contains $_.Name }
+        Write-Output ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Category filter applied. Processing folders: '+($Modules.Name -join ', '))
+    }
+
     $NewResources = ($Resources | ConvertTo-Json -Depth 40 -Compress)
     $JobLoop = 1
     Write-Output ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+"Starting AZTI Automation Processing Jobs...")

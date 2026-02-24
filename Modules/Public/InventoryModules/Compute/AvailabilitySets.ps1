@@ -10,7 +10,9 @@ Excel Sheet Name: AvSet
 https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Compute/AvailabilitySets.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+
+.CATEGORY Compute
 
 .NOTES
 Version: 3.6.0

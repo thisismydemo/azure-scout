@@ -10,7 +10,9 @@ Excel Sheet Name: Maintenance Configs
 https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Management/MaintenanceConfigurations.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+
+.CATEGORY Management
 
 .NOTES
 Version: 1.0.0

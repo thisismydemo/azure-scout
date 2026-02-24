@@ -41,7 +41,8 @@ AZTI is forked from [microsoft/ARI](https://github.com/microsoft/ARI) (Azure Res
 | **Entra ID Inventory** | 15 modules: users, groups, apps, roles, PIM, conditional access, and more |
 | **Dual Output** | Excel (.xlsx) and JSON (.json) reports from every run |
 | **Scoped Execution** | `-Scope All\|ArmOnly\|EntraOnly` to control what gets inventoried |
-| **Output Format Control** | `-OutputFormat All\|Excel\|Json` to control report format |
+| **Output Format Control** | `-OutputFormat All\|Excel\|Json\|Markdown\|AsciiDoc` to control report format |
+| **Category Filtering** | `-Category AI,Compute,Networking` to limit scope to selected categories |
 | **Network Diagrams** | Auto-generated draw.io topology diagrams |
 | **Permission Checker** | `Test-AZTIPermissions` validates access before running |
 | **Security Analysis** | Optional Azure Security Center integration |
@@ -91,14 +92,21 @@ Import-Module AzureTenantInventory
 # Full inventory (ARM + Entra ID) — uses current Azure context
 Invoke-AzureTenantInventory -TenantID <your-tenant-id>
 
-# ARM resources only
-Invoke-AzureTenantInventory -TenantID <your-tenant-id> -Scope ArmOnly
+# Default run — ARM resources only (Entra ID excluded)
+Invoke-AzureTenantInventory -TenantID <your-tenant-id>
 
-# Entra ID only (fast — skips all resource graph queries)
+# Full inventory: ARM + Entra ID
+Invoke-AzureTenantInventory -TenantID <your-tenant-id> -Scope All
+
+# Entra ID only (fast — skips all Resource Graph queries)
 Invoke-AzureTenantInventory -TenantID <your-tenant-id> -Scope EntraOnly
 
 # JSON output only (no Excel)
 Invoke-AzureTenantInventory -TenantID <your-tenant-id> -OutputFormat Json
+
+# Markdown + AsciiDoc outputs
+Invoke-AzureTenantInventory -TenantID <your-tenant-id> -OutputFormat Markdown
+Invoke-AzureTenantInventory -TenantID <your-tenant-id> -OutputFormat AsciiDoc
 
 # Check permissions before running
 Test-AZTIPermissions -TenantID <your-tenant-id>
@@ -147,17 +155,21 @@ Invoke-AzureTenantInventory -TenantID <tenant-id>
 
 | Value | Behavior |
 |-------|----------|
-| `All` (default) | Inventory ARM resources and Entra ID objects |
-| `ArmOnly` | ARM resources only — skips all Graph/Entra calls |
+| `ArmOnly` **(default)** | ARM resources only — skips all Graph/Entra calls |
+| `All` | Inventory ARM resources **and** Entra ID objects |
 | `EntraOnly` | Entra ID only — skips all Resource Graph queries |
+
+> **Note**: The default scope is `ArmOnly`. Pass `-Scope All` to include Entra ID (Azure AD) data — this requires Microsoft Graph permissions in addition to ARM Reader access.
 
 ### Output Format (`-OutputFormat`)
 
-| Value | Behavior |
-|-------|----------|
-| `All` (default) | Generates both Excel (.xlsx) and JSON (.json) |
-| `Excel` | Excel report only |
-| `Json` | JSON report only — significantly faster (no Excel formatting) |
+| Value | Aliases | Behavior |
+|-------|---------|----------|
+| `All` (default) | — | Excel + JSON + Markdown + AsciiDoc |
+| `Excel` | — | Excel report only |
+| `Json` | — | JSON report only — fastest (no formatting) |
+| `Markdown` | `MD` | GitHub-Flavored Markdown (`.md`) |
+| `AsciiDoc` | `Adoc` | AsciiDoc document (`.adoc`) for Antora/Confluence |
 
 ### Permission Checker
 
@@ -201,18 +213,64 @@ Invoke-AzureTenantInventory -TenantID <id> -ReportDir "D:\Reports" -ReportName "
 
 | Role | Scope | Purpose |
 |------|-------|---------|
-| `Reader` | Subscription(s) | Read all ARM resources |
+| `Reader` | Root Management Group or all target Subscription(s) | Read all ARM resources |
+| `Security Reader` | Subscription(s) | Defender for Cloud assessments and secure score |
+| `Monitoring Reader` | Subscription(s) | Azure Monitor resources (DCRs, alerts, workspaces) |
+
+> **Tip**: Assigning `Reader` at the **Root Management Group** is the easiest approach — it automatically covers all subscriptions in the tenant. Use subscription-level roles for least-privilege deployments.
 
 ### Microsoft Graph Permissions
 
-| Permission | Type | Purpose |
-|------------|------|---------|
-| `Directory.Read.All` | Application or Delegated | Users, groups, roles, apps |
-| `Policy.Read.All` | Application or Delegated | Conditional access, auth policies |
-| `IdentityRiskyUser.Read.All` | Application or Delegated | Risky users (optional) |
-| `PrivilegedAccess.Read.AzureADGroup` | Application or Delegated | PIM assignments (optional) |
+Required only when using `-Scope All` or `-Scope EntraOnly`.
 
-> **Tip**: If specific Graph permissions are missing, AZTI gracefully skips those modules and continues with available data.
+**Minimum permission:**
+
+| Permission | Type | Purpose |
+|------------|------|--------|
+| `Directory.Read.All` | Application or Delegated | Users, groups, roles, apps |
+
+**Recommended set for full Entra ID inventory:**
+
+| Permission | Type | Purpose |
+|------------|------|--------|
+| `Directory.Read.All` | App or Delegated | Core directory objects |
+| `User.Read.All` | App or Delegated | Full user property set |
+| `Group.Read.All` | App or Delegated | Group membership and owners |
+| `Application.Read.All` | App or Delegated | App registrations and service principals |
+| `RoleManagement.Read.Directory` | App or Delegated | Directory role assignments |
+| `Policy.Read.All` | App or Delegated | Conditional access, auth policies |
+| `IdentityRiskyUser.Read.All` | App or Delegated | Risky users (optional) |
+| `PrivilegedAccess.Read.AzureADGroup` | App or Delegated | PIM group assignments (optional) |
+
+**For interactive user accounts:** Assign the **Global Reader** or **Directory Readers** Entra role.  
+**For service principals (non-interactive):** Grant application permissions above and perform admin consent.
+
+> **Tip**: Missing Graph permissions cause only the affected module to be skipped — AZTI continues with available data.
+
+### Troubleshooting Permission Errors
+
+| Error | Cause | Fix |
+|-------|-------|-----|
+| `Insufficient privileges to complete the operation` | Missing Graph permission | Grant the permission and re-run admin consent |
+| `Authorization_RequestDenied` | Delegated permission not consented | Sign-in with Global Admin and consent |
+| `Get-AzRoleAssignment: command not found` | `Az.Authorization` not installed | Module is auto-installed at first load |
+| `Resource provider not registered` | Provider not enabled in subscription | Run `Register-AzResourceProvider -ProviderNamespace <ns>` |
+
+### Required Resource Providers
+
+AZTI queries the following resource providers. If a provider is not registered, the corresponding modules are skipped with a warning.
+
+| Resource Provider | Purpose |
+|-------------------|---------|
+| `Microsoft.Security` | Defender for Cloud assessments, alerts, and secure score |
+| `Microsoft.Insights` | Azure Monitor: DCRs, action groups, alert rules |
+| `Microsoft.Maintenance` | Azure Update Manager maintenance configurations |
+| `Microsoft.RecoveryServices` | Azure Backup and Azure Site Recovery |
+| `Microsoft.HybridCompute` | Arc-enabled servers |
+| `Microsoft.Kubernetes` | Arc-enabled Kubernetes |
+| `Microsoft.AzureStackHCI` | Azure Local (Stack HCI) clusters |
+
+Run `Test-AZTIPermissions` to check provider registration status before a full run.
 
 ## Output
 
@@ -229,6 +287,8 @@ Invoke-AzureTenantInventory -TenantID <id> -ReportDir "D:\Reports" -ReportName "
 |------|--------|-------------|
 | `AzureTenantInventory_Report_<timestamp>.xlsx` | Excel | Interactive spreadsheet with all inventory data |
 | `AzureTenantInventory_Report_<timestamp>.json` | JSON | Machine-readable inventory with `_metadata` envelope |
+| `AzureTenantInventory_Report_<timestamp>.md` | Markdown | GitHub-Flavored Markdown with pipe tables per module |
+| `AzureTenantInventory_Report_<timestamp>.adoc` | AsciiDoc | AsciiDoc document for Antora/Confluence rendering |
 | `AzureTenantInventory_Diagram_<timestamp>.xml` | Draw.io XML | Network topology diagram |
 
 ### JSON Structure
@@ -258,6 +318,42 @@ Invoke-AzureTenantInventory -TenantID <id> -ReportDir "D:\Reports" -ReportName "
   "security": [ ... ],
   "quotas": [ ... ]
 }
+```
+
+## Category Filtering
+
+Use `-Category` to limit the inventory to specific Azure resource categories. This can significantly speed up targeted scans. Multiple values are accepted as comma-separated or as an array.
+
+| Category | Azure Portal Label | Key Resource Types |
+|----------|--------------------|-------------------|
+| `AI` | AI + Machine Learning | Cognitive Services, OpenAI, ML Workspaces, Bot Service |
+| `Analytics` | Analytics | Synapse, Databricks, Data Factory, Stream Analytics |
+| `Compute` | Compute | VMs, VMSS, Disks, Availability Sets, AVD |
+| `Containers` | Containers | AKS, Container Instances, Container Registry |
+| `Databases` | Databases | SQL, PostgreSQL, MySQL, Cosmos DB, Redis |
+| `Hybrid` | Hybrid + Multicloud | Arc Servers, Arc Kubernetes, Arc Gateways, Arc Extensions |
+| `Identity` | Identity | Key Vault |
+| `Integration` | Integration | Service Bus, Event Hubs, API Management, Logic Apps |
+| `IoT` | Internet of Things | IoT Hub, IoT DPS |
+| `Management` | Management and governance | Recovery Services, Automation, Log Analytics |
+| `Monitor` | Monitor | Application Insights, Alert Rules, Action Groups, DCRs |
+| `Networking` | Networking | VNets, NSGs, Load Balancers, VPN, Firewall, Front Door |
+| `Security` | Security | Key Vault, Defender |
+| `Storage` | Storage | Storage Accounts, Data Lake |
+| `Web` | Web & Mobile | App Service, Function Apps |
+
+**Examples:**
+
+```powershell
+# Inventory only Compute and Networking resources
+Invoke-AzureTenantInventory -TenantID <id> -Category Compute,Networking
+
+# Inventory AI resources with JSON output
+Invoke-AzureTenantInventory -TenantID <id> -Category AI -OutputFormat Json
+
+# Long-form names (from the Azure Portal) are also accepted
+Invoke-AzureTenantInventory -TenantID <id> -Category 'AI + Machine Learning'
+Invoke-AzureTenantInventory -TenantID <id> -Category 'Internet of Things'
 ```
 
 ## Module Catalog
@@ -312,8 +408,9 @@ Invoke-AzureTenantInventory -TenantID <id> -ReportDir "D:\Reports" -ReportName "
 | `-SubscriptionID` | Limit to specific subscription(s) |
 | `-ResourceGroup` | Limit to specific resource group(s) |
 | `-ManagementGroup` | Inventory all subscriptions in a management group |
-| `-Scope` | `All` (default), `ArmOnly`, `EntraOnly` |
-| `-OutputFormat` | `All` (default), `Excel`, `Json` |
+| `-Scope` | `ArmOnly` (default), `All`, `EntraOnly` |
+| `-OutputFormat` | `All` (default), `Excel`, `Json`, `Markdown` (`MD`), `AsciiDoc` (`Adoc`) |
+| `-Category` | Filter by category: `AI`, `Compute`, `Networking`, `Storage`, … (see [Category Filtering](#category-filtering)) |
 | **Authentication** | |
 | `-AppId` | Service principal application ID |
 | `-Secret` | SPN secret or certificate password |
@@ -336,6 +433,41 @@ Invoke-AzureTenantInventory -TenantID <id> -ReportDir "D:\Reports" -ReportName "
 | **Other** | |
 | `-AzureEnvironment` | Azure cloud (`AzureCloud`, `AzureUSGovernment`, etc.) |
 | `-Debug` | Verbose debug output |
+
+### Category Filtering
+
+Use `-Category` to limit the inventory to specific Azure resource categories. This can significantly speed up targeted scans.
+
+| Category | Azure Portal Label | Key Resource Types |
+|----------|--------------------|--------------------|
+| `AI` | AI + Machine Learning | Cognitive Services, OpenAI, ML Workspaces |
+| `Analytics` | Analytics | Synapse, Databricks, Data Factory |
+| `Compute` | Compute | VMs, VMSS, Disks, Availability Sets |
+| `Containers` | Containers | AKS, Container Instances, Container Registry |
+| `Databases` | Databases | SQL, PostgreSQL, MySQL, Cosmos DB, Redis |
+| `Hybrid` | Hybrid + Multicloud | Arc Servers, Arc Kubernetes, Arc Gateways |
+| `Identity` | Identity | Key Vault, Managed Identities |
+| `Integration` | Integration | Service Bus, Event Hubs, API Management |
+| `IoT` | Internet of Things | IoT Hub, IoT DPS |
+| `Management` | Management and governance | Recovery Services, Automation, Log Analytics |
+| `Monitor` | Monitor | Application Insights, Alert Rules, DCRs |
+| `Networking` | Networking | VNets, NSGs, Load Balancers, VPN, Firewall |
+| `Security` | Security | Defender, Key Vault, Sentinel |
+| `Storage` | Storage | Storage Accounts, Data Lake |
+| `Web` | Web & Mobile | App Service, Function Apps |
+
+**Examples:**
+
+```powershell
+# Inventory only Compute and Networking resources
+Invoke-AzureTenantInventory -TenantID <id> -Category Compute,Networking
+
+# Inventory only AI resources, JSON output
+Invoke-AzureTenantInventory -TenantID <id> -Category AI -OutputFormat Json
+
+# Long-form category names are also accepted
+Invoke-AzureTenantInventory -TenantID <id> -Category 'AI + Machine Learning'
+```
 
 ## Attribution
 

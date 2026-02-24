@@ -10,7 +10,9 @@ Excel Sheet Name: RecoveryVault
 https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Management/RecoveryVault.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+
+.CATEGORY Management
 
 .NOTES
 Version: 3.6.0

@@ -10,7 +10,9 @@ Excel Sheet Name: AVD
 https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Compute/AVD.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+
+.CATEGORY Compute
 
 .NOTES
 Version: 3.6.0

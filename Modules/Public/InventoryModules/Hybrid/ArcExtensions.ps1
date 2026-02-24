@@ -10,7 +10,9 @@ Excel Sheet Name: Arc Extensions
 https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Hybrid/ArcExtensions.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+
+.CATEGORY Hybrid
 
 .NOTES
 Version: 1.0.0
@@ -65,6 +67,11 @@ If ($Task -eq 'Processing') {
                 $data.instanceView.status.message.Substring(0, [Math]::Min($data.instanceView.status.message.Length, 100))
             } else { $null }
 
+            # Deep config additions
+            $SettingsJson        = if ($data.settings) { ($data.settings | ConvertTo-Json -Compress -Depth 3) } else { 'N/A' }
+            $HasProtectedSet     = if ($data.protectedSettings) { 'Yes' } else { 'No' }
+            $InstanceViewTime    = if ($data.instanceView.status.time) { $data.instanceView.status.time } else { 'N/A' }
+
             foreach ($Tag in $Tags) {
                 $obj = @{
                     'ID'                     = $1.id;
@@ -83,6 +90,9 @@ If ($Task -eq 'Processing') {
                     'Enable Auto Upgrade'    = $data.enableAutomaticUpgrade;
                     'Status'                 = $data.instanceView.status.code;
                     'Status Message'         = $StatusMessage;
+                    'Instance View Time'     = $InstanceViewTime;
+                    'Settings'               = $SettingsJson;
+                    'Has Protected Settings' = $HasProtectedSet;
                     'Resource U'             = $ResUCount;
                     'Tag Name'               = [string]$Tag.Name;
                     'Tag Value'              = [string]$Tag.Value
@@ -123,6 +133,9 @@ Else {
         $Exc.Add('Enable Auto Upgrade')
         $Exc.Add('Status')
         $Exc.Add('Status Message')
+        $Exc.Add('Instance View Time')
+        $Exc.Add('Settings')
+        $Exc.Add('Has Protected Settings')
         if ($InTag) {
             $Exc.Add('Tag Name')
             $Exc.Add('Tag Value')

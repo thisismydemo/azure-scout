@@ -54,7 +54,9 @@ function Build-AZTIExcelChart {
             }
             Add-PivotTable @PTParams
         }
-    elseif ($Excel.Workbook.Worksheets | Where-Object { $_.Name -eq 'Reservation Advisor' }) {
+    elseif (($Excel.Workbook.Worksheets | Where-Object { $_.Name -eq 'Reservation Advisor' }) -and -not ($Excel.Workbook.Worksheets | Where-Object { $_.Name -eq 'Cost Management' })) {
+        # Only use Reservation Advisor pivot when there is no dedicated Cost Management tab.
+        # When the Cost Management tab exists, reservation data lives there — keep Overview lean.
         $PTParams = @{
             PivotTableName          = "P00"
             Address                 = $excel.Overview.cells["BA5"] # top-left corner of the table

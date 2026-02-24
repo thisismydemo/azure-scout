@@ -1,0 +1,184 @@
+= Category Filtering
+:description: How to use the -Category parameter to limit Azure Tenant Inventory scans
+:toc: left
+:toclevels: 3
+:icons: font
+
+== Overview
+
+The `-Category` parameter allows you to limit an AZTI inventory run to specific Azure resource categories.
+This is especially useful when you need a targeted scan rather than a full-tenant inventory.
+
+[TIP]
+====
+Category filtering can reduce run time by 70-90% for large tenants when you only need data from a specific service area.
+====
+
+== Supported Categories
+
+[%header,cols="1,2,3"]
+|===
+| `-Category` Value | Azure Portal Label | Key Resource Types
+
+| `AI`
+| AI + Machine Learning
+| Cognitive Services, OpenAI, ML Workspaces, Bot Services, AI Foundry
+
+| `Analytics`
+| Analytics
+| Synapse, Databricks, Data Factory, Event Hub, Purview
+
+| `Compute`
+| Compute
+| Virtual Machines, VMSS, Managed Disks, AVD, Cloud Services
+
+| `Containers`
+| Containers
+| AKS, ARO, Container Apps, Container Registry
+
+| `Databases`
+| Databases
+| SQL Server, PostgreSQL, MySQL, Cosmos DB, Redis Cache
+
+| `Hybrid`
+| Hybrid + multicloud
+| Arc Servers, Arc Kubernetes, Azure Local Clusters, Arc Gateways
+
+| `Identity`
+| Identity
+| Users, Groups, App Registrations, PIM, Conditional Access
+
+| `Integration`
+| Integration
+| API Management, Service Bus, Event Hubs, Logic Apps
+
+| `IoT`
+| Internet of Things
+| IoT Hub, IoT DPS
+
+| `Management`
+| Management and governance
+| Subscriptions, Policy, Backup, Automation, Recovery Vault
+
+| `Monitor`
+| Monitor
+| App Insights, DCRs, Action Groups, Alert Rules, Log Analytics
+
+| `Networking`
+| Networking
+| VNets, NSGs, Load Balancers, VPN Gateways, Azure Firewall, Front Door
+
+| `Security`
+| Security
+| Defender Assessments, Alerts, Secure Score, Key Vault
+
+| `Storage`
+| Storage
+| Storage Accounts, Azure NetApp Files
+
+| `Web`
+| Web & Mobile
+| App Service Plans, App Services, Function Apps
+|===
+
+== Alias Support
+
+Long-form names displayed in the Azure portal are automatically normalized to their short equivalents:
+
+[source,powershell]
+----
+# These are equivalent:
+Invoke-AzureTenantInventory -TenantID $tid -Category 'IoT'
+Invoke-AzureTenantInventory -TenantID $tid -Category 'Internet of Things'
+
+Invoke-AzureTenantInventory -TenantID $tid -Category 'Monitor'
+Invoke-AzureTenantInventory -TenantID $tid -Category 'Monitoring'
+
+Invoke-AzureTenantInventory -TenantID $tid -Category 'Management'
+Invoke-AzureTenantInventory -TenantID $tid -Category 'Management and governance'
+----
+
+== Usage Examples
+
+=== Single Category
+
+[source,powershell]
+----
+# Inventory only Virtual Machines and related Compute resources
+Invoke-AzureTenantInventory -TenantID <tenant-id> -Category Compute
+----
+
+=== Multiple Categories
+
+[source,powershell]
+----
+# Inventory Compute and Networking together (common combination for network topology reviews)
+Invoke-AzureTenantInventory -TenantID <tenant-id> -Category Compute,Networking
+
+# Security audit: inventory Security + Identity
+Invoke-AzureTenantInventory -TenantID <tenant-id> -Category Security,Identity
+
+# Data platform review
+Invoke-AzureTenantInventory -TenantID <tenant-id> -Category Databases,Analytics,AI
+----
+
+=== Combine with Output Format
+
+[source,powershell]
+----
+# Targeted scan with JSON output only (fastest)
+Invoke-AzureTenantInventory -TenantID <tenant-id> -Category Networking -OutputFormat Json
+
+# Generate Markdown report for Compute only
+Invoke-AzureTenantInventory -TenantID <tenant-id> -Category Compute -OutputFormat Markdown
+----
+
+=== Full Inventory (Default)
+
+[source,powershell]
+----
+# -Category defaults to 'All' — all categories included
+Invoke-AzureTenantInventory -TenantID <tenant-id>
+
+# Explicit equivalent
+Invoke-AzureTenantInventory -TenantID <tenant-id> -Category All
+----
+
+== How Category Filtering Works
+
+[NOTE]
+====
+Category filtering is applied at the module discovery stage, before any Azure API calls are made.
+Only the selected category folders are loaded, which means Resource Graph queries are also restricted to the resource types defined in those modules.
+====
+
+.Execution flow with `-Category Compute`
+[mermaid]
+....
+graph TD
+    A[Invoke-AzureTenantInventory] --> B{Category specified?}
+    B -- Yes --> C[Normalize aliases]
+    C --> D[Load only Compute/*.ps1 modules]
+    D --> E[Execute Processing blocks]
+    E --> F[Azure Resource Graph query - Compute types only]
+    F --> G[Execute Reporting blocks]
+    G --> H[Write Excel / JSON / Markdown]
+    B -- No / All --> I[Load ALL category modules]
+    I --> E
+....
+
+== Adding New Categories
+
+To add a new category to AZTI:
+
+. Create a folder under `Modules/Public/InventoryModules/<CategoryName>/`
+. Add the folder name to the `[ValidateSet]` for `-Category` in `Invoke-AzureTenantInventory.ps1`
+. Optionally add alias entries to `$_categoryAliasMap` for common name variants
+. Update link:../azure-category-structure.md[azure-category-structure.md] with the new mapping
+. Create one or more `.ps1` module files using the link:../../Modules/Public/InventoryModules/Module-template.tpl[Module-template.tpl]
+
+== See Also
+
+* link:../azure-category-structure.md[Azure Category Structure reference]
+* link:../azure-coverage-table.md[Full Coverage Table]
+* xref:ROOT:index.adoc[AZTI Documentation Home]

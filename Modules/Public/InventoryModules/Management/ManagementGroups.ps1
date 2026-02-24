@@ -10,7 +10,9 @@ Excel Sheet Name: Management Groups
 https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Management/ManagementGroups.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+
+.CATEGORY Management
 
 .NOTES
 Version: 1.0.0
@@ -21,64 +23,89 @@ Authors: Product Technology Team
 
 <######## Default Parameters. Don't modify this ########>
 
-param($SCPath, $Sub, $Intag, $Resources, $Retirements, $Task ,$File, $SmaResources, $TableStyle, $Unsupported)
+param($SCPath, $Sub, $Intag, $Resources, $Retirements, $Task, $File, $SmaResources, $TableStyle, $Unsupported)
 
 If ($Task -eq 'Processing')
 {
     <######### Insert the resource extraction here ########>
 
-        # Management Groups are tenant-level, not subscription-based
-        # Use Get-AzManagementGroup with -Expand and -Recurse to get full hierarchy
-        $mgmtGroups = Get-AzManagementGroup -Expand -Recurse -ErrorAction SilentlyContinue
+    # Retrieve the tenant root MG with full hierarchy in a single call
+    $tenantRootMG = $null
+    try {
+        $ctx = Get-AzContext -ErrorAction SilentlyContinue
+        if ($ctx -and $ctx.Tenant) {
+            $tenantRootMG = Get-AzManagementGroup -GroupId $ctx.Tenant.Id -Expand -Recurse -ErrorAction SilentlyContinue
+        }
+    } catch {}
+
+    # Fallback: enumerate all top-level MGs if root lookup fails
+    if (-not $tenantRootMG) {
+        $tenantRootMG = Get-AzManagementGroup -Expand -Recurse -ErrorAction SilentlyContinue
+    }
 
     <######### Insert the resource Process here ########>
 
-    if($mgmtGroups)
-        {
-            $tmp = foreach ($mg in $mgmtGroups) {
-                $ResUCount = 1
+    # Recursive helper: flatten the MG tree into a list with depth & path metadata
+    function Expand-MgHierarchy {
+        param($Node, [int]$Depth = 0, [string]$ParentPath = '')
 
-                # Parse hierarchy path
-                $parentPath = if ($mg.ParentName) { $mg.ParentName } else { 'Tenant Root' }
+        if (-not $Node) { return }
 
-                # Count direct children
-                $childMGCount = if ($mg.Children) { ($mg.Children | Where-Object {$_.Type -like '*managementGroups'}).Count } else { 0 }
-                $childSubCount = if ($mg.Children) { ($mg.Children | Where-Object {$_.Type -like '*subscriptions'}).Count } else { 0 }
+        $NodePath = if ($ParentPath) { "$ParentPath / $($Node.DisplayName)" } else { $Node.DisplayName }
+        $Indent   = ('    ' * $Depth)   # 4 spaces per level for visual hierarchy
 
-                # Get all subscriptions under this MG (recursively)
-                $allSubs = @()
-                function Get-AllSubs($node) {
-                    if ($node.Children) {
-                        foreach ($child in $node.Children) {
-                            if ($child.Type -like '*subscriptions') {
-                                $allSubs += $child
-                            } elseif ($child.Type -like '*managementGroups') {
-                                Get-AllSubs $child
-                            }
-                        }
-                    }
-                }
-                Get-AllSubs $mg
-                $totalSubsCount = $allSubs.Count
+        $directMGs   = @($Node.Children | Where-Object { $_.Type -like '*managementGroups' })
+        $directSubs  = @($Node.Children | Where-Object { $_.Type -like '*subscriptions' })
+        $directSubNames = ($directSubs | ForEach-Object { $_.DisplayName }) -join ', '
 
-                $obj = @{
-                    'ID'                        = $mg.Id;
-                    'Management Group ID'       = $mg.Name;
-                    'Display Name'              = $mg.DisplayName;
-                    'Parent Management Group'   = $parentPath;
-                    'Type'                      = $mg.Type;
-                    'Tenant ID'                 = $mg.TenantId;
-                    'Direct Child MGs'          = $childMGCount;
-                    'Direct Subscriptions'      = $childSubCount;
-                    'Total Subscriptions'       = $totalSubsCount;
-                    'Updated Time'              = if ($mg.UpdatedTime) { ([datetime]$mg.UpdatedTime).ToString("yyyy-MM-dd HH:mm") } else { $null };
-                    'Updated By'                = $mg.UpdatedBy;
-                    'Resource U'                = $ResUCount;
-                }
-                $obj
-            }
-            $tmp
+        [PSCustomObject]@{
+            'Management Group ID'          = $Node.Name
+            'Display Name'                 = "$Indent$($Node.DisplayName)"
+            'Display Name (Raw)'           = $Node.DisplayName
+            'Full Path'                    = $NodePath
+            'Hierarchy Depth'              = $Depth
+            'Parent Management Group'      = if ($Node.ParentName) { $Node.ParentDisplayName } else { 'Tenant Root' }
+            'Tenant ID'                    = $Node.TenantId
+            'Direct Child MGs'             = $directMGs.Count
+            'Direct Subscriptions'         = $directSubs.Count
+            'Direct Subscription Names'    = $directSubNames
         }
+
+        foreach ($child in $directMGs) {
+            Expand-MgHierarchy -Node $child -Depth ($Depth + 1) -ParentPath $NodePath
+        }
+    }
+
+    $flatHierarchy = @()
+    if ($tenantRootMG) {
+        if ($tenantRootMG -is [array]) {
+            foreach ($root in $tenantRootMG) {
+                $flatHierarchy += Expand-MgHierarchy -Node $root
+            }
+        } else {
+            $flatHierarchy = @(Expand-MgHierarchy -Node $tenantRootMG)
+        }
+    }
+
+    if ($flatHierarchy) {
+        $tmp = foreach ($1 in $flatHierarchy) {
+            $obj = @{
+                'Management Group ID'          = $1.'Management Group ID';
+                'Display Name'                 = $1.'Display Name';
+                'Display Name (Raw)'           = $1.'Display Name (Raw)';
+                'Full Path'                    = $1.'Full Path';
+                'Hierarchy Depth'              = $1.'Hierarchy Depth';
+                'Parent Management Group'      = $1.'Parent Management Group';
+                'Tenant ID'                    = $1.'Tenant ID';
+                'Direct Child MGs'             = $1.'Direct Child MGs';
+                'Direct Subscriptions'         = $1.'Direct Subscriptions';
+                'Direct Subscription Names'    = $1.'Direct Subscription Names';
+                'Resource U'                   = 1;
+            }
+            $obj
+        }
+        $tmp
+    }
 }
 
 <######## Resource Excel Reporting Begins Here ########>
@@ -87,28 +114,32 @@ Else
 {
     <######## $SmaResources.(RESOURCE FILE NAME) ##########>
 
-    if($SmaResources)
+    if ($SmaResources)
     {
-
-        $TableName = ('MgmtGroupsTable_'+(($SmaResources.'Resource U' | Measure-Object -Sum).Sum))
-        $Style = New-ExcelStyle -HorizontalAlignment Center -AutoSize -NumberFormat '0'
+        $TableName = ('MgmtGroupsTable_' + (($SmaResources.'Resource U' | Measure-Object -Sum).Sum))
+        $Style     = New-ExcelStyle -HorizontalAlignment Left -AutoSize -NumberFormat '0'
 
         $Exc = New-Object System.Collections.Generic.List[System.Object]
         $Exc.Add('Management Group ID')
         $Exc.Add('Display Name')
+        $Exc.Add('Display Name (Raw)')
+        $Exc.Add('Full Path')
+        $Exc.Add('Hierarchy Depth')
         $Exc.Add('Parent Management Group')
-        $Exc.Add('Type')
         $Exc.Add('Tenant ID')
         $Exc.Add('Direct Child MGs')
         $Exc.Add('Direct Subscriptions')
-        $Exc.Add('Total Subscriptions')
-        $Exc.Add('Updated Time')
-        $Exc.Add('Updated By')
+        $Exc.Add('Direct Subscription Names')
         $Exc.Add('Resource U')
 
         [PSCustomObject]$SmaResources |
         ForEach-Object { $_ } | Select-Object $Exc |
-        Export-Excel -Path $File -WorksheetName 'Management Groups' -AutoSize -MaxAutoSizeRows 100 -TableName $TableName -TableStyle $tableStyle -Style $Style
-
+        Export-Excel -Path $File `
+            -WorksheetName 'Management Groups' `
+            -AutoSize `
+            -MaxAutoSizeRows 100 `
+            -TableName $TableName `
+            -TableStyle $TableStyle `
+            -Style $Style
     }
 }

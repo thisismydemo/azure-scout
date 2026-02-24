@@ -3,6 +3,7 @@
 ** xref:authentication.adoc[Authentication]
 ** xref:usage.adoc[Usage Guide]
 ** xref:permissions.adoc[Permissions]
+** xref:category-filtering.adoc[Category Filtering]
 * Module Reference
 ** xref:arm-modules.adoc[ARM Modules (95)]
 ** xref:entra-modules.adoc[Entra ID Modules (15)]

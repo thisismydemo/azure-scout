@@ -11,7 +11,9 @@ Excel Sheet Name: Lighthouse Delegations
 https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Management/LighthouseDelegations.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+
+.CATEGORY Management
 
 .NOTES
 Version: 1.0.0

@@ -19,6 +19,22 @@ Authors: Claudio Merola
 function Invoke-AZTIInventoryLoop {
     param($GraphQuery, $FSubscri, $LoopName)
 
+    # Helper: emit a clear, actionable message for permission-related errors (19.7.4)
+    function Write-PermissionWarning {
+        param($ErrorRecord, $LoopName, $SubscriptionContext)
+        $msg = $ErrorRecord.Exception.Message
+        if ($msg -match 'AuthorizationFailed|Forbidden|does not have authorization|Access to.*subscription.*denied|403') {
+            $subHint = if ($SubscriptionContext) { " (subscription: $SubscriptionContext)" } else { '' }
+            Write-Warning (
+                "[AZTI] Permission error extracting '$LoopName'$subHint. " +
+                "The identity is missing the 'Reader' role (or equivalent). " +
+                "Remediation: New-AzRoleAssignment -ObjectId <principalId> -RoleDefinitionName 'Reader' -Scope '/subscriptions/<subId>'"
+            )
+        }
+        # Always surface to debug log
+        Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + " - InventoryLoop error [$LoopName]: $msg")
+    }
+
     Write-Progress -Id 1 -activity 'Azure Inventory' -Status "1% Complete." -PercentComplete 1 -CurrentOperation ('Extracting: ' + $LoopName)
     $ReportCounter = 1
     $LocalResults = @()
@@ -38,6 +54,7 @@ function Invoke-AZTIInventoryLoop {
                         }
                     catch
                         {
+                            Write-PermissionWarning -ErrorRecord $_ -LoopName $LoopName -SubscriptionContext ($Sub -join ',')
                             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Extracting First 200 ' + $LoopName)
                             $QueryResult = Search-AzGraph -Query $GraphQuery -first 200 -Subscription $Sub -Debug:$false
                         }
@@ -73,6 +90,7 @@ function Invoke-AZTIInventoryLoop {
                 }
             catch
                 {
+                    Write-PermissionWarning -ErrorRecord $_ -LoopName $LoopName
                     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Extracting First 200 ' + $LoopName)
                     $QueryResult = Search-AzGraph -Query $GraphQuery -first 200 -Subscription $FSubscri -Debug:$false
                 }

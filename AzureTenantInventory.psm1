@@ -17,6 +17,29 @@
 
 #>
 
+#region — Dependency bootstrap
+$_requiredModules = @(
+    'ImportExcel',
+    'Az.Accounts',
+    'Az.ResourceGraph',
+    'Az.Storage',
+    'Az.Compute',
+    'Az.Authorization',
+    'Az.Resources',
+    'Az.Authorization',
+    'Az.Resources'
+)
+foreach ($_mod in $_requiredModules) {
+    if (-not (Get-Module -Name $_mod -ListAvailable)) {
+        Write-Host "[AzureTenantInventory] Installing required module: $_mod" -ForegroundColor Cyan
+        Install-Module -Name $_mod -Scope CurrentUser -Force -AllowClobber -ErrorAction Stop
+    }
+    if (-not (Get-Module -Name $_mod)) {
+        Import-Module -Name $_mod -ErrorAction Stop
+    }
+}
+#endregion
+
 foreach ($directory in @('modules\Private', '.\modules\Public\PublicFunctions')) {
     Get-ChildItem -Path "$PSScriptRoot\$directory\*.ps1" -Recurse | ForEach-Object { . $_.FullName }
 }

@@ -10,7 +10,9 @@ Excel Sheet Name: Arc Resource Bridge
 https://github.com/thisismydemo/azure-inventory/Modules/Public/InventoryModules/Hybrid/ArcResourceBridge.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZTI)
+    This PowerShell Module is part of Azure Tenant Inventory (AZTI).
+
+.CATEGORY Hybrid
 
 .NOTES
 Version: 1.0.0
@@ -59,6 +61,10 @@ If ($Task -eq 'Processing') {
             # Identity
             $IdentityType = if ($1.identity) { $1.identity.type } else { $null }
 
+            # Enhanced config details
+            $KubeconfigPresent = if ($data.publicKeyInfo) { 'Yes' } else { 'No' }
+            $InfraSubType      = if ($data.infrastructureConfig.provisioningState) { $data.infrastructureConfig.provisioningState } else { 'N/A' }
+
             foreach ($Tag in $Tags) {
                 $obj = @{
                     'ID'                     = $1.id;
@@ -74,6 +80,7 @@ If ($Task -eq 'Processing') {
                     'Version'                = $data.version;
                     'Infrastructure Type'    = $data.infrastructureConfig.provider;
                     'Identity Type'          = $IdentityType;
+                    'Kubeconfig Present'     = $KubeconfigPresent;
                     'Resource U'             = $ResUCount;
                     'Tag Name'               = [string]$Tag.Name;
                     'Tag Value'              = [string]$Tag.Value
@@ -110,6 +117,7 @@ Else {
         $Exc.Add('Version')
         $Exc.Add('Infrastructure Type')
         $Exc.Add('Identity Type')
+        $Exc.Add('Kubeconfig Present')
         if ($InTag) {
             $Exc.Add('Tag Name')
             $Exc.Add('Tag Value')

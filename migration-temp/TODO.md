@@ -259,45 +259,45 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### 10.1 — Overview Tab Restructuring
 
-- [ ] **10.1.1** Scale down Overview tab to **important Azure tenant information only**
+- [x] **10.1.1** Scale down Overview tab to **important Azure tenant information only**
   - Tenant name, ID, domain
   - Total subscriptions, management groups
   - Total resource groups, resources
   - Authentication summary (user/SPN used)
   - Scan timestamp, duration
-- [ ] **10.1.2** Remove cost/reservation content from Overview (move to Cost Management tab)
-- [ ] **10.1.3** Remove security content from Overview (move to Security Overview tab)
-- [ ] **10.1.4** Remove monitoring/alerting content from Overview (move to Azure Monitor tab)
+- [x] **10.1.2** Remove cost/reservation content from Overview (move to Cost Management tab)
+- [x] **10.1.3** Remove security content from Overview (move to Security Overview tab)
+- [x] **10.1.4** Remove monitoring/alerting content from Overview (move to Azure Monitor tab)
 
 ### 10.2 — New Tab: Cost Management
 
-- [ ] **10.2.1** Create **Cost Management** tab positioned after Overview
-- [ ] **10.2.2** Move VM reservations from Overview → Cost Management tab
-- [ ] **10.2.3** Add cost analysis graphs
-- [ ] **10.2.4** Add reservation recommendations
-- [ ] **10.2.5** Add advisor cost recommendations
+- [x] **10.2.1** Create **Cost Management** tab positioned after Overview
+- [x] **10.2.2** Move VM reservations from Overview → Cost Management tab
+- [x] **10.2.3** Add cost analysis graphs
+- [x] **10.2.4** Add reservation recommendations
+- [x] **10.2.5** Add advisor cost recommendations
 
 ### 10.3 — New Tab: Security Overview
 
-- [ ] **10.3.1** Create **Security Overview** tab
-- [ ] **10.3.2** Add Defender secure score graphs
-- [ ] **10.3.3** Add security assessment summary
-- [ ] **10.3.4** Add Advisor security recommendations
-- [ ] **10.3.5** Add compliance state summary
-- [ ] **10.3.6** Add critical security alerts count
+- [x] **10.3.1** Create **Security Overview** tab
+- [x] **10.3.2** Add Defender secure score graphs
+- [x] **10.3.3** Add security assessment summary
+- [x] **10.3.4** Add Advisor security recommendations
+- [x] **10.3.5** Add compliance state summary
+- [x] **10.3.6** Add critical security alerts count
 
 ### 10.4 — New Tab: Azure Update Manager Overview
 
-- [ ] **10.4.1** Create **Azure Update Manager** tab
-- [ ] **10.4.2** List all Azure VMs with:
+- [x] **10.4.1** Create **Azure Update Manager** tab
+- [x] **10.4.2** List all Azure VMs with:
   - VM name, resource group, subscription
   - OS type, OS version
   - Maintenance schedule assigned (if any)
   - Patch status (compliant/non-compliant)
   - Last patch installation date
   - Pending patches count
-- [ ] **10.4.3** List all Azure Arc VMs with same fields as Azure VMs
-- [ ] **10.4.4** Add summary graphs:
+- [x] **10.4.3** List all Azure Arc VMs with same fields as Azure VMs
+- [x] **10.4.4** Add summary graphs:
   - VMs by maintenance schedule assignment
   - VMs by patch compliance status
   - VMs by OS type
@@ -305,13 +305,13 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### 10.5 — New Tab: Azure Monitor
 
-- [ ] **10.5.1** Create **Azure Monitor** tab
-- [ ] **10.5.2** Add action groups summary
-- [ ] **10.5.3** Add alert rules summary (metric + log)
-- [ ] **10.5.4** Add data collection rules summary
-- [ ] **10.5.5** Add Log Analytics workspace summary
-- [ ] **10.5.6** Add diagnostic settings coverage graphs
-- [ ] **10.5.7** Add Application Insights summary
+- [x] **10.5.1** Create **Azure Monitor** tab
+- [x] **10.5.2** Add action groups summary
+- [x] **10.5.3** Add alert rules summary (metric + log)
+- [x] **10.5.4** Add data collection rules summary
+- [x] **10.5.5** Add Log Analytics workspace summary
+- [x] **10.5.6** Add diagnostic settings coverage graphs
+- [x] **10.5.7** Add Application Insights summary
 
 ### 10.6 — Phase 10 Testing
 
@@ -320,7 +320,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 - [ ] **10.6.3** Test: Security Overview tab displays correctly
 - [ ] **10.6.4** Test: Azure Update Manager tab displays correctly
 - [ ] **10.6.5** Test: Azure Monitor tab displays correctly
-- [ ] **10.6.6** Update `CHANGELOG.md` with Phase 10 additions
+- [x] **10.6.6** Update `CHANGELOG.md` with Phase 10 additions
 - [ ] **10.6.7** Commit & push Phase 10
 
 ---
@@ -331,8 +331,8 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### 11.1 — Subscription Logging Enhancement
 
-- [ ] **11.1.1** Update extraction layer to capture **ALL subscriptions** in tenant (not just ones with resources)
-- [ ] **11.1.2** Create subscription properties object for ALL subscriptions:
+- [x] **11.1.1** Update extraction layer to capture **ALL subscriptions** in tenant (not just ones with resources)
+- [x] **11.1.2** Create subscription properties object for ALL subscriptions:
   - Subscription ID, name, state (Enabled/Disabled/Warned)
   - Tenant ID
   - Management group path/hierarchy
@@ -340,28 +340,28 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
   - Resource count (can be zero)
   - Spending limit status
   - Authorization source
-- [ ] **11.1.3** Add "All Subscriptions" worksheet to Excel report
-- [ ] **11.1.4** Flag empty subscriptions (0 resources) with conditional formatting
+- [x] **11.1.3** Add "All Subscriptions" worksheet to Excel report
+- [x] **11.1.4** Flag empty subscriptions (0 resources) with conditional formatting
 
 ### 11.2 — Management Group Logging Enhancement
 
-- [ ] **11.2.1** Capture **ALL management groups** in tenant hierarchy using `Get-AzManagementGroup -Expand -Recurse`
-- [ ] **11.2.2** Create management group properties object:
+- [x] **11.2.1** Capture **ALL management groups** in tenant hierarchy using `Get-AzManagementGroup -Expand -Recurse`
+- [x] **11.2.2** Create management group properties object:
   - Management group ID, display name
   - Parent management group ID
   - Children (child management groups + subscriptions)
   - Hierarchy level/depth
   - Policy assignments count
   - Role assignments count
-- [ ] **11.2.3** Add "Management Groups" worksheet to Excel report
-- [ ] **11.2.4** Include hierarchy visualization (indentation or tree structure)
+- [x] **11.2.3** Add "Management Groups" worksheet to Excel report
+- [x] **11.2.4** Include hierarchy visualization (indentation or tree structure)
 
 ### 11.3 — Phase 11 Testing
 
 - [ ] **11.3.1** Test: Excel report lists ALL subscriptions (including empty ones)
 - [ ] **11.3.2** Test: Excel report lists ALL management groups with hierarchy
 - [ ] **11.3.3** Test: Overview tab shows accurate counts (all subs/MGs, not just ones with resources)
-- [ ] **11.3.4** Update `CHANGELOG.md` with Phase 11 additions
+- [x] **11.3.4** Update `CHANGELOG.md` with Phase 11 additions
 - [ ] **11.3.5** Commit & push Phase 11
 
 ---
@@ -372,28 +372,28 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### 12.1 — Default Scope Change
 
-- [ ] **12.1.1** Update `Invoke-AzureTenantInventory` default `-Scope` parameter from `All` to `ArmOnly`
-- [ ] **12.1.2** Update help documentation to reflect new default
-- [ ] **12.1.3** Update `README.md` to clarify ARM-only default behavior
-- [ ] **12.1.4** Update examples to show explicit `-Scope All` for Entra ID inclusion
+- [x] **12.1.1** Update `Invoke-AzureTenantInventory` default `-Scope` parameter from `All` to `ArmOnly`
+- [x] **12.1.2** Update help documentation to reflect new default
+- [x] **12.1.3** Update `README.md` to clarify ARM-only default behavior
+- [x] **12.1.4** Update examples to show explicit `-Scope All` for Entra ID inclusion
 
 ### 12.2 — Permission Documentation
 
-- [ ] **12.2.1** Document **Entra ID scan permissions** in `README.md`:
+- [x] **12.2.1** Document **Entra ID scan permissions** in `README.md`:
   - Microsoft Graph API permissions required
   - Directory.Read.All (minimum)
   - Recommended: Directory.Read.All, User.Read.All, Group.Read.All, Application.Read.All, RoleManagement.Read.Directory, Policy.Read.All
   - For **User** (interactive auth): Requires Global Reader or Directory Readers role
   - For **SPN** (non-interactive): Requires application permissions + admin consent
-- [ ] **12.2.2** Document **ARM scan permissions** in `README.md`:
+- [x] **12.2.2** Document **ARM scan permissions** in `README.md`:
   - Reader role at Root Management Group (or subscription level)
   - Security Reader for Defender resources
   - Monitoring Reader for Azure Monitor resources
-- [ ] **12.2.3** Create troubleshooting section for permission errors
+- [x] **12.2.3** Create troubleshooting section for permission errors
 
 ### 12.3 — Resource Provider Registration Documentation
 
-- [ ] **12.3.1** Document **required resource providers** in `README.md`:
+- [x] **12.3.1** Document **required resource providers** in `README.md`:
   - `Microsoft.Security` — Required for Defender for Cloud assessments, alerts, secure score
   - `Microsoft.Insights` — Required for Azure Monitor resources (DCRs, action groups, alerts)
   - `Microsoft.Maintenance` — Required for Azure Update Manager maintenance configurations
@@ -401,8 +401,8 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
   - `Microsoft.HybridCompute` — Required for Arc-enabled servers
   - `Microsoft.Kubernetes` — Required for Arc-enabled Kubernetes
   - `Microsoft.AzureStackHCI` — Required for Azure Local resources
-- [ ] **12.3.2** Add pre-flight check for resource provider registration status
-- [ ] **12.3.3** Add warning messages for unregistered providers (with remediation instructions)
+- [x] **12.3.2** Add pre-flight check for resource provider registration status
+- [x] **12.3.3** Add warning messages for unregistered providers (with remediation instructions)
 
 ### 12.4 — Phase 12 Testing
 
@@ -410,7 +410,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 - [ ] **12.4.2** Test: `-Scope All` explicitly includes Entra ID
 - [ ] **12.4.3** Test: Permission pre-flight check warns about missing Graph permissions
 - [ ] **12.4.4** Test: Resource provider check warns about unregistered providers
-- [ ] **12.4.5** Update `CHANGELOG.md` with Phase 12 additions
+- [x] **12.4.5** Update `CHANGELOG.md` with Phase 12 additions
 - [ ] **12.4.6** Commit & push Phase 12
 
 ---
@@ -481,72 +481,72 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### 13.1 — Core Azure Monitor Resources (6 modules)
 
-- [ ] **13.1.1** Create `ResourceDiagnosticSettings.ps1` (Monitoring category)
+- [x] **13.1.1** Create `ResourceDiagnosticSettings.ps1` (Monitoring category)
   - **API**: `Get-AzDiagnosticSetting` (per-resource, not subscription-level)
   - **Excel**: "Resource Diagnostic Settings"
   - **Fields**: ResourceId, ResourceName, ResourceType, LogCategories (enabled/disabled), MetricCategories (enabled/disabled), Destinations (Log Analytics, Storage, Event Hub, Partner Solutions)
-- [ ] **13.1.2** Create `ActivityLogAlertRules.ps1` (Monitoring category)
+- [x] **13.1.2** Create `ActivityLogAlertRules.ps1` (Monitoring category)
   - **API**: `Get-AzActivityLogAlert`
   - **Excel**: "Activity Log Alerts"
   - **Fields**: Name, ResourceGroup, Enabled, Scopes, Condition (category, level, status), Actions (Action Group names)
-- [ ] **13.1.3** Create `SmartDetectorAlertRules.ps1` (Monitoring category)
+- [x] **13.1.3** Create `SmartDetectorAlertRules.ps1` (Monitoring category)
   - **API**: `Get-AzResource -ResourceType 'Microsoft.AlertsManagement/smartDetectorAlertRules'`
   - **Excel**: "Smart Detector Alerts"
   - **Fields**: Name, ResourceGroup, Severity, Frequency, Detector (type), Scope (Application Insights), ActionGroups
-- [ ] **13.1.4** Create `AutoscaleSettings.ps1` (Monitoring category)
+- [x] **13.1.4** Create `AutoscaleSettings.ps1` (Monitoring category)
   - **API**: `Get-AzAutoscaleSetting`
   - **Excel**: "Autoscale Settings"
   - **Fields**: Name, ResourceGroup, TargetResourceId, Enabled, Profiles (name, capacity min/max/default, rules count), Notifications (webhooks, email)
-- [ ] **13.1.5** Create `MonitorWorkbooks.ps1` (Monitoring category)
+- [x] **13.1.5** Create `MonitorWorkbooks.ps1` (Monitoring category)
   - **API**: `Get-AzResource -ResourceType 'Microsoft.Insights/workbooks'`
   - **Excel**: "Azure Monitor Workbooks"
   - **Fields**: Name, ResourceGroup, Category, Tags, Version, SourceId (linked resource), TimeModified
-- [ ] **13.1.6** Create `MonitorPrivateLinkScopes.ps1` (Monitoring category)
+- [x] **13.1.6** Create `MonitorPrivateLinkScopes.ps1` (Monitoring category)
   - **API**: `Get-AzResource -ResourceType 'Microsoft.Insights/privateLinkScopes'`
   - **Excel**: "Monitor Private Link Scopes"
   - **Fields**: Name, ResourceGroup, Location, PrivateEndpointConnections (count), ScopedResources (count, types)
 
 ### 13.2 — Log Analytics Enhancements (3 modules)
 
-- [ ] **13.2.1** Create `LAWorkspaceSavedSearches.ps1` (Monitoring category)
+- [x] **13.2.1** Create `LAWorkspaceSavedSearches.ps1` (Monitoring category)
   - **API**: `Get-AzOperationalInsightsSavedSearch -ResourceGroupName $RG -WorkspaceName $WS`
   - **Excel**: "LA Saved Searches"
   - **Fields**: WorkspaceName, DisplayName, Category, Query, Version, Tags
-- [ ] **13.2.2** Create `LAWorkspaceSolutions.ps1` (Monitoring category)
+- [x] **13.2.2** Create `LAWorkspaceSolutions.ps1` (Monitoring category)
   - **API**: `Get-AzResource -ResourceType 'Microsoft.OperationsManagement/solutions'`
   - **Excel**: "LA Solutions"
   - **Fields**: Name, WorkspaceResourceId, Plan (name, publisher, product), ProvisioningState
-- [ ] **13.2.3** Create `LAWorkspaceLinkedServices.ps1` (Monitoring category)
+- [x] **13.2.3** Create `LAWorkspaceLinkedServices.ps1` (Monitoring category)
   - **API**: `Get-AzOperationalInsightsLinkedService -ResourceGroupName $RG -WorkspaceName $WS`
   - **Excel**: "LA Linked Services"
   - **Fields**: WorkspaceName, ResourceId, WriteAccessResourceId (Automation Account)
 
 ### 13.3 — Application Insights Deep Data (5 modules)
 
-- [ ] **13.3.1** Create `AppInsightsAvailabilityTests.ps1` (Monitoring category)
+- [x] **13.3.1** Create `AppInsightsAvailabilityTests.ps1` (Monitoring category)
   - **API**: `Get-AzApplicationInsightsWebTest` (classic availability tests)
   - **Excel**: "App Insights Availability Tests"
   - **Fields**: Name, ResourceGroup, AppInsightsResourceId, WebTestKind, Enabled, Frequency, Timeout, Locations (count), Configuration
-- [ ] **13.3.2** Create `AppInsightsWebTests.ps1` (Monitoring category)
+- [x] **13.3.2** Create `AppInsightsWebTests.ps1` (Monitoring category)
   - **API**: `Get-AzResource -ResourceType 'Microsoft.Insights/webtests'`
   - **Excel**: "App Insights Web Tests"
   - **Fields**: Name, ResourceGroup, Kind (ping/multistep/standard), SyntheticMonitorId, Enabled, Frequency, Timeout, Locations
-- [ ] **13.3.3** Create `AppInsightsProactiveDetection.ps1` (Monitoring category)
+- [x] **13.3.3** Create `AppInsightsProactiveDetection.ps1` (Monitoring category)
   - **API**: `Get-AzApplicationInsightsProactiveDetectionConfiguration -ResourceGroupName $RG -Name $AI`
   - **Excel**: "App Insights Proactive Detection"
   - **Fields**: AppInsightsName, RuleDefinitions (name, enabled, sendEmailsToSubscriptionOwners, customEmails)
-- [ ] **13.3.4** Create `AppInsightsContinuousExport.ps1` (Monitoring category)
+- [x] **13.3.4** Create `AppInsightsContinuousExport.ps1` (Monitoring category)
   - **API**: `Get-AzApplicationInsightsContinuousExport -ResourceGroupName $RG -Name $AI`
   - **Excel**: "App Insights Continuous Export"
   - **Fields**: AppInsightsName, ExportId, DestinationStorageSubscriptionId, DestinationStorageLocationId, DestinationAccountId, IsEnabled, RecordTypes
-- [ ] **13.3.5** Create `AppInsightsWorkItems.ps1` (Monitoring category)
+- [x] **13.3.5** Create `AppInsightsWorkItems.ps1` (Monitoring category)
   - **API**: `Get-AzResource -ResourceType 'Microsoft.Insights/workitemconfigs'`
   - **Excel**: "App Insights Work Items"
   - **Fields**: AppInsightsName, ConfigDisplayName, ConnectorId (Azure DevOps, GitHub), IsValidated
 
 ### 13.4 — Metrics & Ingestion (1 module)
 
-- [ ] **13.4.1** Create `MonitorMetricsIngestion.ps1` (Monitoring category)
+- [x] **13.4.1** Create `MonitorMetricsIngestion.ps1` (Monitoring category)
   - **API**: Custom aggregation from Log Analytics workspace ingestion stats
   - **Excel**: "Metrics Ingestion Stats"
   - **Fields**: WorkspaceName, DailyIngestionGB, MonthlyIngestionGB, RetentionDays, CapGB (daily cap if configured)
@@ -557,7 +557,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 - [ ] **13.5.2** Test: Diagnostic settings capture resource-level configurations (not just subscription)
 - [ ] **13.5.3** Test: Application Insights deep data modules handle missing configurations gracefully
 - [ ] **13.5.4** Test: Excel report contains all 15 new monitoring worksheets
-- [ ] **13.5.5** Update `CHANGELOG.md` with Phase 13 additions
+- [x] **13.5.5** Update `CHANGELOG.md` with Phase 13 additions
 - [ ] **13.5.6** Commit & push Phase 13
 
 ---
@@ -569,75 +569,75 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### 14.1 — Azure OpenAI (2 modules)
 
-- [ ] **14.1.1** Create `OpenAIServices.ps1` (AI category)
+- [x] **14.1.1** Create `OpenAIServices.ps1` (AI category)
   - **API**: `Get-AzCognitiveServicesAccount | Where-Object {$_.Kind -eq 'OpenAI'}`
   - **Excel**: "Azure OpenAI Services"
   - **Fields**: Name, ResourceGroup, Location, SKU, Kind, Endpoints, CustomSubDomainName, Deployments (separate API call), NetworkAcls, PrivateEndpoints
-- [ ] **14.1.2** Create `OpenAIDeployments.ps1` (AI category)
+- [x] **14.1.2** Create `OpenAIDeployments.ps1` (AI category)
   - **API**: `Get-AzCognitiveServicesAccountDeployment -ResourceGroupName $RG -AccountName $Name`
   - **Excel**: "Azure OpenAI Deployments"
   - **Fields**: AccountName, DeploymentName, Model (name, version, format), SKU (name, capacity, tier), ScaleSettings, ProvisioningState
 
 ### 14.2 — Azure AI Foundry (2 modules)
 
-- [ ] **14.2.1** Create `AIFoundryProjects.ps1` (AI category)
+- [x] **14.2.1** Create `AIFoundryProjects.ps1` (AI category)
   - **API**: `Get-AzResource -ResourceType 'Microsoft.MachineLearningServices/workspaces' | Where-Object {$_.Kind -eq 'Project'}`
   - **Excel**: "AI Foundry Projects"
   - **Fields**: Name, ResourceGroup, Location, HubResourceId, PublicNetworkAccess, ManagedNetwork, SystemDataCreatedBy
-- [ ] **14.2.2** Create `AIFoundryHubs.ps1` (AI category)
+- [x] **14.2.2** Create `AIFoundryHubs.ps1` (AI category)
   - **API**: `Get-AzResource -ResourceType 'Microsoft.MachineLearningServices/workspaces' | Where-Object {$_.Kind -eq 'Hub'}`
   - **Excel**: "AI Foundry Hubs"
   - **Fields**: Name, ResourceGroup, Location, StorageAccount, KeyVault, ApplicationInsights, ContainerRegistry, Projects (count), PublicNetworkAccess
 
 ### 14.3 — Cognitive Services (2 modules)
 
-- [ ] **14.3.1** Create `CognitiveServicesAccounts.ps1` (AI category)
+- [x] **14.3.1** Create `CognitiveServicesAccounts.ps1` (AI category)
   - **API**: `Get-AzCognitiveServicesAccount | Where-Object {$_.Kind -ne 'OpenAI'}`
   - **Excel**: "Cognitive Services"
   - **Fields**: Name, ResourceGroup, Location, Kind (TextAnalytics, ComputerVision, Speech, FormRecognizer, etc.), SKU, Endpoint, CustomDomain, NetworkAcls, PrivateEndpoints
-- [ ] **14.3.2** Create `AppliedAIServices.ps1` (AI category)
+- [x] **14.3.2** Create `AppliedAIServices.ps1` (AI category)
   - **API**: `Get-AzResource -ResourceType 'Microsoft.CognitiveServices/accounts' | Where-Object {$_.Kind -in @('FormRecognizer','MetricsAdvisor','VideoAnalyzer','ImmersiveReader','Personalizer')}`
   - **Excel**: "Applied AI Services"
   - **Fields**: Name, ResourceGroup, Kind, Location, SKU, Endpoint, Features (kind-specific capabilities)
 
 ### 14.4 — Machine Learning (7 modules)
 
-- [ ] **14.4.1** Create `MachineLearningWorkspaces.ps1` (AI category)
+- [x] **14.4.1** Create `MachineLearningWorkspaces.ps1` (AI category)
   - **API**: `Get-AzMLWorkspace`
   - **Excel**: "ML Workspaces"
   - **Fields**: Name, ResourceGroup, Location, StorageAccount, KeyVault, ApplicationInsights, ContainerRegistry, PublicNetworkAccess, ManagedNetwork, HbiWorkspace
-- [ ] **14.4.2** Create `MLCompute.ps1` (AI category)
+- [x] **14.4.2** Create `MLCompute.ps1` (AI category)
   - **API**: `Get-AzMLWorkspaceCompute -ResourceGroupName $RG -WorkspaceName $WS`
   - **Excel**: "ML Compute"
   - **Fields**: WorkspaceName, ComputeName, ComputeType (AmlCompute, ComputeInstance, AKS, Databricks, etc.), VMSize, MinNodes, MaxNodes, IdleSecondsBeforeScaleDown, State
-- [ ] **14.4.3** Create `MLDatastores.ps1` (AI category)
+- [x] **14.4.3** Create `MLDatastores.ps1` (AI category)
   - **API**: `Get-AzMLWorkspaceDatastore -ResourceGroupName $RG -WorkspaceName $WS`
   - **Excel**: "ML Datastores"
   - **Fields**: WorkspaceName, Name, DatastoreType (AzureBlob, AzureDataLakeGen2, AzureFile), AccountName, ContainerName, IsDefault
-- [ ] **14.4.4** Create `MLDatasets.ps1` (AI category)
+- [x] **14.4.4** Create `MLDatasets.ps1` (AI category)
   - **API**: `Get-AzMLWorkspaceDataset -ResourceGroupName $RG -WorkspaceName $WS`
   - **Excel**: "ML Datasets"
   - **Fields**: WorkspaceName, DatasetName, DatasetType (Tabular, File), DataPath, Version, Tags, CreatedTime
-- [ ] **14.4.5** Create `MLModels.ps1` (AI category)
+- [x] **14.4.5** Create `MLModels.ps1` (AI category)
   - **API**: `Get-AzMLWorkspaceModel -ResourceGroupName $RG -WorkspaceName $WS`
   - **Excel**: "ML Models"
   - **Fields**: WorkspaceName, Name, Version, Framework (TensorFlow, PyTorch, ONNX, etc.), Tags, CreatedTime, ModifiedTime
-- [ ] **14.4.6** Create `MLEndpoints.ps1` (AI category)
+- [x] **14.4.6** Create `MLEndpoints.ps1` (AI category)
   - **API**: `Get-AzMLWorkspaceOnlineEndpoint -ResourceGroupName $RG -WorkspaceName $WS`
   - **Excel**: "ML Endpoints"
   - **Fields**: WorkspaceName, EndpointName, EndpointType (Online, Batch), ScoringUri, SwaggerUri, AuthMode (Key, AMLToken, AAD), Traffic (deployment allocations)
-- [ ] **14.4.7** Create `MLPipelines.ps1` (AI category)
+- [x] **14.4.7** Create `MLPipelines.ps1` (AI category)
   - **API**: `Get-AzResource -ResourceType 'Microsoft.MachineLearningServices/workspaces/pipelines'`
   - **Excel**: "ML Pipelines"
   - **Fields**: WorkspaceName, PipelineName, PipelineId, Status, CreatedTime, LastModified
 
 ### 14.5 — Bot Services & Search (2 modules)
 
-- [ ] **14.5.1** Create `BotServices.ps1` (AI category)
+- [x] **14.5.1** Create `BotServices.ps1` (AI category)
   - **API**: `Get-AzBotService`
   - **Excel**: "Bot Services"
   - **Fields**: Name, ResourceGroup, Location, Kind (Bot, Function, Designer), SKU, Endpoint, MsaAppId, Channels (count, types), DeveloperAppInsightKey
-- [ ] **14.5.2** Create `CognitiveSearchServices.ps1` (AI category)
+- [x] **14.5.2** Create `CognitiveSearchServices.ps1` (AI category)
   - **API**: `Get-AzSearchService`
   - **Excel**: "Cognitive Search Services"
   - **Fields**: Name, ResourceGroup, Location, SKU, ReplicaCount, PartitionCount, Indexes (count), Indexers (count), DataSources (count), HostingMode, NetworkRuleSet, PrivateEndpoints
@@ -648,7 +648,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 - [ ] **14.6.2** Test: OpenAI deployments capture model details (requires OpenAI service present)
 - [ ] **14.6.3** Test: AI Foundry hubs/projects detected correctly (new resourceType Kind filtering)
 - [ ] **14.6.4** Test: ML workspace child resources (compute, datastores, datasets, models, endpoints) enumerate correctly
-- [ ] **14.6.5** Update `CHANGELOG.md` with Phase 14 additions
+- [x] **14.6.5** Update `CHANGELOG.md` with Phase 14 additions
 - [ ] **14.6.6** Commit & push Phase 14
 
 ---
@@ -660,30 +660,30 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### 15.1 — AVD Core Resources — Azure Native (5 modules)
 
-- [ ] **15.1.1** Create `AVDHostPools.ps1` (VirtualDesktop category)
+- [x] **15.1.1** Create `AVDHostPools.ps1` (VirtualDesktop category)
   - **API**: `Get-AzWvdHostPool`
   - **Excel**: "AVD Host Pools"
   - **Fields**: Name, ResourceGroup, Location, HostPoolType (Pooled/Personal), LoadBalancerType, MaxSessionLimit, PreferredAppGroupType, RegistrationToken (status), ValidationEnvironment, StartVMOnConnect, CustomRdpProperty
-- [ ] **15.1.2** Create `AVDApplicationGroups.ps1` (VirtualDesktop category)
+- [x] **15.1.2** Create `AVDApplicationGroups.ps1` (VirtualDesktop category)
   - **API**: `Get-AzWvdApplicationGroup`
   - **Excel**: "AVD Application Groups"
   - **Fields**: Name, ResourceGroup, Location, ApplicationGroupType (RemoteApp/Desktop), HostPoolArmPath, WorkspaceArmPath, Applications (count), FriendlyName
-- [ ] **15.1.3** Create `AVDWorkspaces.ps1` (VirtualDesktop category)
+- [x] **15.1.3** Create `AVDWorkspaces.ps1` (VirtualDesktop category)
   - **API**: `Get-AzWvdWorkspace`
   - **Excel**: "AVD Workspaces"
   - **Fields**: Name, ResourceGroup, Location, ApplicationGroupReferences (count), FriendlyName, PublicNetworkAccess, PrivateEndpointConnections
-- [ ] **15.1.4** Create `AVDSessionHosts.ps1` (VirtualDesktop category)
+- [x] **15.1.4** Create `AVDSessionHosts.ps1` (VirtualDesktop category)
   - **API**: `Get-AzWvdSessionHost -HostPoolName $HP -ResourceGroupName $RG`
   - **Excel**: "AVD Session Hosts"
   - **Fields**: HostPoolName, SessionHostName, ResourceId (VM), Status, AllowNewSession, AssignedUser, Sessions (active), LastHeartBeat, AgentVersion, OSVersion, UpdateState
-- [ ] **15.1.5** Create `AVDScalingPlans.ps1` (VirtualDesktop category)
+- [x] **15.1.5** Create `AVDScalingPlans.ps1` (VirtualDesktop category)
   - **API**: `Get-AzWvdScalingPlan`
   - **Excel**: "AVD Scaling Plans"
   - **Fields**: Name, ResourceGroup, Location, HostPoolReferences (count), Schedules (count, days/hours), TimeZone, ExclusionTag
 
 ### 15.2 — AVD on Azure Local / Arc-Enabled (1 module)
 
-- [ ] **15.2.1** Create `AVDAzureLocal.ps1` (VirtualDesktop category)
+- [x] **15.2.1** Create `AVDAzureLocal.ps1` (VirtualDesktop category)
   - **API**: Hybrid approach:
     - Arc-enabled session hosts: `Get-AzConnectedMachine | Where-Object {$_.Tags.AvdSessionHost -eq 'true'}` (Arc VMs)
     - Azure Local AVD VMs: `Get-AzResource -ResourceType 'Microsoft.AzureStackHCI/virtualMachines' | Where-Object {$_.Tags.AvdSessionHost -eq 'true'}`
@@ -696,7 +696,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 - [ ] **15.3.2** Test: Session hosts capture accurate status and session counts
 - [ ] **15.3.3** Test: AVD on Azure Local/Arc module detects tagged Arc VMs and Azure Local VMs
 - [ ] **15.3.4** Test: Excel report contains all 6 AVD worksheets
-- [ ] **15.3.5** Update `CHANGELOG.md` with Phase 15 additions
+- [x] **15.3.5** Update `CHANGELOG.md` with Phase 15 additions
 - [ ] **15.3.6** Commit & push Phase 15
 
 ---
@@ -708,11 +708,11 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### 16.1 — Arc Site & Configuration (2 modules)
 
-- [ ] **16.1.1** Create `ArcSiteConfigurations.ps1` (Hybrid category)
+- [x] **16.1.1** Create `ArcSiteConfigurations.ps1` (Hybrid category)
   - **API**: `Get-AzResource -ResourceType 'Microsoft.HybridCompute/sites'` (if available; may need Azure Arc site manager API)
   - **Excel**: "Arc Site Configurations"
   - **Fields**: SiteName, ResourceGroup, Location, ConnectedMachines (count), Kubernetes clusters (count), Configuration (governance policies, update schedules)
-- [ ] **16.1.2** Enhance `ArcExtensions.ps1` (Hybrid category)
+- [x] **16.1.2** Enhance `ArcExtensions.ps1` (Hybrid category)
   - **Current**: Basic extension inventory
   - **Enhancement**: Add deep configuration data:
     - Extension settings (parsed JSON)
@@ -723,21 +723,21 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### 16.2 — Arc-Enabled SQL Server (1 module)
 
-- [ ] **16.2.1** Create `ArcEnabledSQLServer.ps1` (Hybrid category)
+- [x] **16.2.1** Create `ArcEnabledSQLServer.ps1` (Hybrid category)
   - **API**: `Get-AzResource -ResourceType 'Microsoft.AzureArcData/sqlServerInstances'`
   - **Excel**: "Arc-Enabled SQL Server"
   - **Fields**: ServerName, ResourceGroup, Location, ArcServerResourceId, SQLVersion, Edition, LicenseType, Cores, MemoryMB, Databases (count), ESU (enabled/disabled)
 
 ### 16.3 — Arc Data Services (1 module)
 
-- [ ] **16.3.1** Create `ArcDataServices.ps1` (Hybrid category)
+- [x] **16.3.1** Create `ArcDataServices.ps1` (Hybrid category)
   - **API**: `Get-AzResource -ResourceType 'Microsoft.AzureArcData/dataControllers'`
   - **Excel**: "Arc Data Services"
   - **Fields**: DataControllerName, ResourceGroup, Location, K8sNamespace, InfrastructureType (direct/indirect), K8sDistribution, SQLManagedInstances (count), PostgreSQLInstances (count), DataUploadState
 
 ### 16.4 — Arc Resource Bridge Enhancement (1 enhancement)
 
-- [ ] **16.4.1** Enhance `ArcResourceBridge.ps1` (Hybrid category)
+- [x] **16.4.1** Enhance `ArcResourceBridge.ps1` (Hybrid category)
   - **Current**: Basic resource bridge inventory
   - **Enhancement**: Add detailed configurations:
     - Appliance configuration (management IP, subnet)
@@ -751,7 +751,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 - [ ] **16.5.2** Test: Enhanced Arc extensions capture version, settings, auto-upgrade status
 - [ ] **16.5.3** Test: Arc-enabled SQL Server captures database count and ESU status
 - [ ] **16.5.4** Test: Arc Data Services module handles both direct/indirect connectivity modes
-- [ ] **16.5.5** Update `CHANGELOG.md` with Phase 16 additions
+- [x] **16.5.5** Update `CHANGELOG.md` with Phase 16 additions
 - [ ] **16.5.6** Commit & push Phase 16
 
 ---
@@ -763,96 +763,96 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### 17.1 — Enhance VirtualMachines.ps1 (10 enhancements)
 
-- [ ] **17.1.1** Add **Extensions** data:
+- [x] **17.1.1** Add **Extensions** data:
   - Extension name, version, publisher, type
   - Provisioning state, auto-upgrade minor version
   - Protected settings indicator (yes/no)
   - Last update timestamp
-- [ ] **17.1.2** Add **Boot Diagnostics** configuration:
+- [x] **17.1.2** Add **Boot Diagnostics** configuration:
   - Enabled (yes/no)
   - Storage account URI
   - Managed storage (yes/no)
-- [ ] **17.1.3** Add **Performance Metrics** (last 24h/7d):
+- [x] **17.1.3** Add **Performance Metrics** (last 24h/7d):
   - Avg CPU % (if Azure Monitor agent installed)
   - Avg Memory % (if available)
   - Disk IOPS, Disk throughput
   - Network in/out
-- [ ] **17.1.4** Add **Security Baseline Compliance**:
+- [x] **17.1.4** Add **Security Baseline Compliance**:
   - Azure Security Center compliance state (if Defender enabled)
   - Security recommendations count (high/medium/low)
-- [ ] **17.1.5** Add **Update Compliance**:
+- [x] **17.1.5** Add **Update Compliance**:
   - Pending patches count (critical/important/other)
   - Last assessment time
   - Maintenance configuration assignment (if configured)
-- [ ] **17.1.6** Add **Backup Status**:
+- [x] **17.1.6** Add **Backup Status**:
   - Protected (yes/no)
   - Recovery Services Vault name
   - Last backup time
   - Backup policy name
-- [ ] **17.1.7** Add **Disaster Recovery Status**:
+- [x] **17.1.7** Add **Disaster Recovery Status**:
   - Replicated (yes/no via Azure Site Recovery)
   - Target region
   - Replication health
-- [ ] **17.1.8** Add **Cost Estimate**:
+- [x] **17.1.8** Add **Cost Estimate**:
   - Monthly cost estimate (from Azure Cost Management API)
   - Savings recommendations (if Advisor has suggestions)
-- [ ] **17.1.9** Add **Advisor Recommendations**:
+- [x] **17.1.9** Add **Advisor Recommendations**:
   - High priority recommendations count
   - Categories (Cost, Performance, Reliability, Security)
-- [ ] **17.1.10** Add **Lifecycle Tags**:
+- [x] **17.1.10** Add **Lifecycle Tags**:
   - Environment tag (prod/dev/test)
   - Owner tag
   - Expiration tag (if exists)
 
 ### 17.2 — Enhance ARCServers.ps1 (10 enhancements — same depth as Azure VMs)
 
-- [ ] **17.2.1** Add **OS Details**:
+- [x] **17.2.1** Add **OS Details**:
   - OS type, OS version, patch level
   - Kernel version (Linux)
   - Build number (Windows)
-- [ ] **17.2.2** Add **Arc Agent Details**:
+- [x] **17.2.2** Add **Arc Agent Details**:
   - Arc agent version
   - Connected Machine Agent health status
   - Last heartbeat timestamp
-- [ ] **17.2.3** Add **Extensions** data (same as Azure VMs):
+- [x] **17.2.3** Add **Extensions** data (same as Azure VMs):
   - Extension name, version, publisher, type
   - Provisioning state
   - Auto-upgrade settings
-- [ ] **17.2.4** Add **Security Baseline Compliance** (same as Azure VMs):
+- [x] **17.2.4** Add **Security Baseline Compliance** (same as Azure VMs):
   - Defender for Cloud compliance state (if enabled)
   - Security recommendations count
-- [ ] **17.2.5** Add **Update Compliance** (same as Azure VMs):
+- [x] **17.2.5** Add **Update Compliance** (same as Azure VMs):
   - Pending patches count
   - Last assessment time
   - Maintenance configuration assignment
-- [ ] **17.2.6** Add **Policies Applied**:
+- [x] **17.2.6** Add **Policies Applied**:
   - Azure Policy assignments count
   - Compliance state (compliant/non-compliant/conflicting)
   - Policy categories (security, monitoring, tagging)
-- [ ] **17.2.7** Add **Performance Metrics** (if available):
+- [x] **17.2.7** Add **Performance Metrics** (if available):
   - Avg CPU % (if Azure Monitor agent installed)
   - Avg Memory %
   - Disk metrics
-- [ ] **17.2.8** Add **Lifecycle Metadata**:
+- [x] **17.2.8** Add **Lifecycle Metadata**:
   - Environment tag
   - Owner tag
   - OnPremLocation tag (datacenter/site)
-- [ ] **17.2.9** Add **Cost Tracking** (if available):
+- [x] **17.2.9** Add **Cost Tracking** (if available):
   - Arc license costs (if applicable)
   - Extended Security Updates costs (if ESU enabled)
-- [ ] **17.2.10** Add **Hybrid Connectivity**:
+- [x] **17.2.10** Add **Hybrid Connectivity**:
   - Network connectivity status
   - Proxy configuration (yes/no)
   - Private Link scope (if configured)
 
 ### 17.3 — New API Integrations
 
-- [ ] **17.3.1** Integrate **Azure Monitor Metrics API** for performance data
-- [ ] **17.3.2** Integrate **Azure Backup API** for backup status (`Get-AzRecoveryServicesBackupItem`)
-- [ ] **17.3.3** Integrate **Azure Site Recovery API** for DR status (`Get-AzRecoveryServicesAsrReplicationProtectedItem`)
-- [ ] **17.3.4** Integrate **Azure Advisor API** for recommendations (`Get-AzAdvisorRecommendation`)
-- [ ] **17.3.5** Integrate **Azure Cost Management API** for cost estimates (`Invoke-AzRestMethod -Path /subscriptions/{sub}/providers/Microsoft.CostManagement/query`)
-- [ ] **17.3.6** Integrate **Azure Update Manager API** for patch compliance (`Get-AzMaintenanceUpdate`)
+- [x] **17.3.1** Integrate **Azure Monitor Metrics API** for performance data
+- [x] **17.3.2** Integrate **Azure Backup API** for backup status (`Get-AzRecoveryServicesBackupItem`)
+- [x] **17.3.3** Integrate **Azure Site Recovery API** for DR status (`Get-AzRecoveryServicesAsrReplicationProtectedItem`)
+- [x] **17.3.4** Integrate **Azure Advisor API** for recommendations (`Get-AzAdvisorRecommendation`)
+- [x] **17.3.5** Integrate **Azure Cost Management API** for cost estimates (`Invoke-AzRestMethod -Path /subscriptions/{sub}/providers/Microsoft.CostManagement/query`)
+- [x] **17.3.6** Integrate **Azure Update Manager API** for patch compliance (`Get-AzMaintenanceUpdate`)
 
 ### 17.4 — Phase 17 Testing
 
@@ -862,7 +862,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 - [ ] **17.4.4** Test: Arc servers capture same depth of data as Azure VMs
 - [ ] **17.4.5** Test: Performance metrics populate when Monitor agent installed
 - [ ] **17.4.6** Test: Cost estimates appear for VMs (requires Cost Management API access)
-- [ ] **17.4.7** Update `CHANGELOG.md` with Phase 17 additions
+- [x] **17.4.7** Update `CHANGELOG.md` with Phase 17 additions
 - [ ] **17.4.8** Commit & push Phase 17
 
 ---
@@ -877,24 +877,24 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 > **GOAL:** Rename and reorganize module folders to perfectly match Microsoft's 18 official category names.
 
 **Folder Renames:**
-- [ ] **18.1.1** Rename `Modules/Public/InventoryModules/Container/` → `Containers/` (plural to match category)
-- [ ] **18.1.2** Rename `Modules/Public/InventoryModules/Database/` → `Databases/` (plural to match category)
-- [ ] **18.1.3** Rename `Modules/Public/InventoryModules/Monitoring/` → `Monitor/` (match official category name)
-- [ ] **18.1.4** Rename `Modules/Public/InventoryModules/Network/` → `Networking/` (match official category name)
+- [x] **18.1.1** Rename `Modules/Public/InventoryModules/Container/` → `Containers/` (plural to match category)
+- [x] **18.1.2** Rename `Modules/Public/InventoryModules/Database/` → `Databases/` (plural to match category)
+- [x] **18.1.3** Rename `Modules/Public/InventoryModules/Monitoring/` → `Monitor/` (match official category name)
+- [x] **18.1.4** Rename `Modules/Public/InventoryModules/Network/` → `Networking/` (match official category name)
 
 **Module Redistribution:**
-- [ ] **18.1.5** Move all `AzureLocal/*.ps1` (6 modules) → `Hybrid/` (Azure Local IS hybrid infrastructure)
+- [x] **18.1.5** Move all `AzureLocal/*.ps1` (6 modules) → `Hybrid/` (Azure Local IS hybrid infrastructure)
   - `Clusters.ps1`, `GalleryImages.ps1`, `LogicalNetworks.ps1`, `MarketplaceGalleryImages.ps1`, `StorageContainers.ps1`, `VirtualMachines.ps1`
-- [ ] **18.1.6** Delete `AzureLocal/` folder (now empty)
-- [ ] **18.1.7** Move `APIs/AdvisorScore.ps1` → `Management/`
-- [ ] **18.1.8** Move `APIs/ManagedIds.ps1` → `Identity/` (managed identities are identity resources)
-- [ ] **18.1.9** Move `APIs/Outages.ps1` → `Monitor/` (service health = monitoring)
-- [ ] **18.1.10** Move `APIs/ReservationRecom.ps1` → `Management/`
-- [ ] **18.1.11** Move `APIs/SupportTickets.ps1` → `Management/`
-- [ ] **18.1.12** Delete `APIs/` folder (now empty)
+- [x] **18.1.6** Delete `AzureLocal/` folder (now empty)
+- [x] **18.1.7** Move `APIs/AdvisorScore.ps1` → `Management/`
+- [x] **18.1.8** Move `APIs/ManagedIds.ps1` → `Identity/` (managed identities are identity resources)
+- [x] **18.1.9** Move `APIs/Outages.ps1` → `Monitor/` (service health = monitoring)
+- [x] **18.1.10** Move `APIs/ReservationRecom.ps1` → `Management/`
+- [x] **18.1.11** Move `APIs/SupportTickets.ps1` → `Management/`
+- [x] **18.1.12** Delete `APIs/` folder (now empty)
 
 **Result Verification:**
-- [ ] **18.1.13** Verify final folder structure matches Microsoft's 18 categories exactly:
+- [x] **18.1.13** Verify final folder structure matches Microsoft's 18 categories exactly:
   - ✅ `AI/` → "AI + machine learning"
   - ✅ `Analytics/` → "Analytics"
   - ✅ `Compute/` → "Compute"
@@ -910,66 +910,66 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
   - ✅ `Security/` → "Security"
   - ✅ `Storage/` → "Storage"
   - ✅ `Web/` → "Web & Mobile"
-- [ ] **18.1.14** Update all file references in module loader/importer scripts
+- [x] **18.1.14** Update all file references in module loader/importer scripts
 - [ ] **18.1.15** Test module auto-discovery still works after restructure
-- [ ] **18.1.16** Update `.vscode/settings.json` or workspace file references if needed
+- [x] **18.1.16** Update `.vscode/settings.json` or workspace file references if needed
 - [ ] **18.1.17** Commit restructure: `feat(phase18): align module folders with Microsoft's 18 Azure categories`
 
 ### 18.2 — Add `-Category` Parameter to Main Function
 
-- [ ] **18.2.1** Add parameter to `Invoke-AzureTenantInventory`:
+- [x] **18.2.1** Add parameter to `Invoke-AzureTenantInventory`:
   ```powershell
   [ValidateSet('All', 'AI + machine learning', 'Analytics', 'Compute', 'Containers', 'Databases', 'DevOps', 'General', 'Hybrid + multicloud', 'Identity', 'Integration', 'Internet of Things', 'Management and governance', 'Migration', 'Monitor', 'Networking', 'Security', 'Storage', 'Web & Mobile')]
   [string[]]$Category = 'All'
   ```
-- [ ] **18.2.2** Support multiple categories (array input): `-Category Security,Monitor`
-- [ ] **18.2.3** Default value: `All` (current behavior — execute everything)
-- [ ] **18.2.4** Update help documentation with category descriptions and examples
-- [ ] **18.2.5** Support aliases for common shortcuts: `AI` → `AI + machine learning`, `IoT` → `Internet of Things`, `Monitoring` → `Monitor`, `Management` → `Management and governance`, `Web` → `Web & Mobile`, `Hybrid` → `Hybrid + multicloud`
+- [x] **18.2.2** Support multiple categories (array input): `-Category Security,Monitor`
+- [x] **18.2.3** Default value: `All` (current behavior — execute everything)
+- [x] **18.2.4** Update help documentation with category descriptions and examples
+- [x] **18.2.5** Support aliases for common shortcuts: `AI` → `AI + machine learning`, `IoT` → `Internet of Things`, `Monitoring` → `Monitor`, `Management` → `Management and governance`, `Web` → `Web & Mobile`, `Hybrid` → `Hybrid + multicloud`
 
 ### 18.3 — Document Category Structure & Mapping
 
-- [ ] **18.3.1** Create **official category mapping document** (`docs/azure-category-structure.md`):
+- [x] **18.3.1** Create **official category mapping document** (`docs/azure-category-structure.md`):
   - List all 18 Microsoft Azure categories with official descriptions
   - Document which categories we currently cover (with module counts)
   - Document which categories we don't cover yet (planned vs not planned)
   - Link to Microsoft's official category page: https://portal.azure.com/#allservices/category/All
-- [ ] **18.3.2** Create **coverage comparison table** (`docs/azure-coverage-table.md`):
+- [x] **18.3.2** Create **coverage comparison table** (`docs/azure-coverage-table.md`):
   - Table: Microsoft Service | Category | Covered (Y/N) | Module Name | Planned Phase | Notes
   - Map ALL Microsoft Azure services to our module coverage
   - Highlight gaps (services Microsoft offers that we don't inventory)
   - Track future coverage plans (which phase will add missing services)
-- [ ] **18.3.3** Add `.CATEGORY` comment header to each module file:
+- [x] **18.3.3** Add `.CATEGORY` comment header to each module file:
   ```powershell
   .CATEGORY
       Compute
   ```
-- [ ] **18.3.4** Verify all modules have category assignment (automated validation script)
+- [x] **18.3.4** Verify all modules have category assignment (automated validation script)
 
 ### 18.4 — Implement Category Filtering Logic
 
-- [ ] **18.4.1** Update module auto-discovery to read category metadata:
+- [x] **18.4.1** Update module auto-discovery to read category metadata:
   - Parse comment header: `# Category: X, Y`
   - Store in module info object
-- [ ] **18.4.2** Filter module list based on `-Category` parameter:
+- [x] **18.4.2** Filter module list based on `-Category` parameter:
   - If `All`: Load all modules (current behavior)
   - If specific category: Load only modules matching category
   - If multiple categories: Load union of matching modules
-- [ ] **18.4.3** Add logging: `"Filtered to {count} modules based on category: {categories}"`
-- [ ] **18.4.4** Handle invalid category values with clear error message
-- [ ] **18.4.5** Ensure category filtering works with `-Scope All` and `-Scope ArmOnly`
+- [x] **18.4.3** Add logging: `"Filtered to {count} modules based on category: {categories}"`
+- [x] **18.4.4** Handle invalid category values with clear error message
+- [x] **18.4.5** Ensure category filtering works with `-Scope All` and `-Scope ArmOnly`
 
 ### 18.5 — Update Documentation
 
-- [ ] **18.5.1** Create `README.md` category section:
+- [x] **18.5.1** Create `README.md` category section:
   - Table of categories with descriptions and module counts
   - Examples: `-Category Security`, `-Category Monitoring,Security`, `-Category AI,Analytics`
   - Use cases: Security audits, Monitoring-only inventory, AI/ML governance
-- [ ] **18.5.2** Update help documentation in `Invoke-AzureTenantInventory`:
+- [x] **18.5.2** Update help documentation in `Invoke-AzureTenantInventory`:
   - `.PARAMETER Category` section with ValidateSet values
   - `.EXAMPLE` for each category usage pattern
-- [ ] **18.5.3** Update `CHANGELOG.md` with category filtering feature
-- [ ] **18.5.4** Create `docs/modules/ROOT/pages/category-filtering.adoc` (detailed guide)
+- [x] **18.5.3** Update `CHANGELOG.md` with category filtering feature
+- [x] **18.5.4** Create `docs/modules/ROOT/pages/category-filtering.adoc` (detailed guide)
 
 ### 18.6 — Category Mapping (Microsoft Azure Portal Taxonomy — 18 Official Categories)
 
@@ -1050,8 +1050,8 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 - [ ] **18.7.4** Test: Combined with scope `-Scope All -Category Security,Identity` (Defender + Entra only)
 - [ ] **18.7.5** Test: Category alias `-Category AI` resolves to `AI + machine learning`
 - [ ] **18.7.6** Verify Excel report contains only relevant worksheets for selected categories
-- [ ] **18.7.7** Verify Overview tab shows "Categories Selected" and "Modules Executed" count
-- [ ] **18.7.8** Update `CHANGELOG.md` with Phase 18 additions
+- [x] **18.7.7** Verify Overview tab shows "Categories Selected" and "Modules Executed" count
+- [x] **18.7.8** Update `CHANGELOG.md` with Phase 18 additions
 - [ ] **18.7.9** Commit & push Phase 18
 
 ---
@@ -1131,19 +1131,289 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ### 19.7 — Documentation & Usability
 
-- [ ] **19.7.1** `Get-Help Invoke-AzureTenantInventory -Full` shows complete help (synopsis, description, parameters, 10+ examples, inputs, outputs, notes, links)
-- [ ] **19.7.2** `README.md` accuracy: Quick Start reflects new defaults, Permissions section complete, Resource Providers listed, Examples cover all features
-- [ ] **19.7.3** `CHANGELOG.md` completeness: Documents all Phases 9-18 features with version numbers, breaking changes
-- [ ] **19.7.4** Error messages clarity: Permission denied errors clearly state missing permission + remediation steps
-- [ ] **19.7.5** Progress indicators: Execution shows current phase, module, resources collected count
+- [x] **19.7.1** `Get-Help Invoke-AzureTenantInventory -Full` shows complete help (synopsis, description, parameters, 10+ examples, inputs, outputs, notes, links)
+- [x] **19.7.2** `README.md` accuracy: Quick Start reflects new defaults, Permissions section complete, Resource Providers listed, Examples cover all features
+- [x] **19.7.3** `CHANGELOG.md` completeness: Documents all Phases 9-18 features with version numbers, breaking changes
+- [x] **19.7.4** Error messages clarity: Permission denied errors clearly state missing permission + remediation steps
+- [x] **19.7.5** Progress indicators: Execution shows current phase, module, resources collected count
 
 ### 19.8 — Final Validation
 
 - [ ] **19.8.1** All 53 acceptance tests from IMPLEMENTATION-PLAN.md Phase 19 pass ✅
-- [ ] **19.8.2** Update version to 2.0.0 (major version for breaking changes + category filtering)
-- [ ] **19.8.3** Update effort estimates in IMPLEMENTATION-PLAN.md
-- [ ] **19.8.4** Final `CHANGELOG.md` review and update
+- [x] **19.8.2** Update version to 2.0.0 (major version for breaking changes + category filtering)
+- [x] **19.8.3** Update effort estimates in IMPLEMENTATION-PLAN.md
+- [x] **19.8.4** Final `CHANGELOG.md` review and update
 - [ ] **19.8.5** Commit & push Phase 19
+
+---
+
+## Phase 20 — Dedicated Permission Audit Mode (`-PermissionAudit`)
+
+> **NEW REQUIREMENT:** "when a user runs `Invoke-AzureTenantInventory -PermissionAudit` it runs **only** a permissions check — no inventory, no Excel, no JSON — and outputs a formatted permissions report."
+>
+> Default scope: ARM/RBAC only. Add `-IncludeEntraPermissions` to also audit Microsoft Graph / Entra ID access.
+> Works with the currently logged-on user (interactive) **or** SPN credentials (`-TenantID`, `-AppId`, `-Secret`/`-CertificatePath`) — no new auth parameters needed, the existing auth params already cover this.
+
+### Parameter Names
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `-PermissionAudit` | `[switch]` | **New mode switch.** When present, the cmdlet skips all inventory collection and runs ONLY a permissions audit, then exits. Cannot be combined with `-Category`, `-Scope All`/`ArmOnly`/`EntraOnly` inventory logic. |
+| `-IncludeEntraPermissions` | `[switch]` | Used with `-PermissionAudit`. Also checks Microsoft Graph / Entra ID permissions (Directory.Read.All, User.Read.All, Group.Read.All, Application.Read.All, RoleManagement.Read.Directory, Policy.Read.All, IdentityRiskyUser.Read.All). Requires Graph token acquisition. |
+
+### 20.1 — Add `-PermissionAudit` Switch to `Invoke-AzureTenantInventory`
+
+- [x] **20.1.1** Add `[switch]$PermissionAudit` parameter with `.PARAMETER PermissionAudit` help block:
+  - "Runs a dedicated permissions audit only. No inventory is collected. Outputs a structured permissions report showing which ARM roles, RBAC assignments, and (optionally) Graph API permissions the current caller has. Use with `-IncludeEntraPermissions` to also audit Entra ID / MS Graph access."
+- [x] **20.1.2** Add `[switch]$IncludeEntraPermissions` parameter with `.PARAMETER IncludeEntraPermissions` help block:
+  - "Used with `-PermissionAudit`. Extends the audit to include Microsoft Graph permission checks (Entra ID access). Requires a Graph-capable token (interactive user or SPN with Graph API permissions)."
+- [x] **20.1.3** Add early-exit branch in main function body:
+  ```powershell
+  if ($PermissionAudit.IsPresent) {
+      Invoke-AZTIPermissionAudit -IncludeEntraPermissions:$IncludeEntraPermissions
+      return
+  }
+  ```
+- [x] **20.1.4** Add `.EXAMPLE` blocks:
+  - `Invoke-AzureTenantInventory -PermissionAudit` — ARM/RBAC audit for current user
+  - `Invoke-AzureTenantInventory -PermissionAudit -IncludeEntraPermissions` — ARM + Graph audit
+  - `Invoke-AzureTenantInventory -TenantID <id> -AppId <id> -Secret <secret> -PermissionAudit -IncludeEntraPermissions` — SPN full audit
+  - `Invoke-AzureTenantInventory -TenantID <id> -PermissionAudit` — check permissions before a full run
+
+### 20.2 — Create `Invoke-AZTIPermissionAudit` (Private Function)
+
+> File: `Modules/Private/Main/Invoke-AZTIPermissionAudit.ps1`
+> Builds on existing `Test-AZTIPermissions` function but runs as a standalone audit with richer output and no dependency on a prior subscription/resource collection pass.
+
+- [x] **20.2.1** Create `Invoke-AZTIPermissionAudit` private function with signature:
+  ```powershell
+  function Invoke-AZTIPermissionAudit {
+      Param([switch]$IncludeEntraPermissions)
+  }
+  ```
+- [x] **20.2.2** **ARM / RBAC audit section** (always runs):
+  - Get current Azure context (`Get-AzContext`) — display: Account, Tenant ID, Account type (User/ServicePrincipal/ManagedIdentity)
+  - Enumerate all accessible subscriptions (`Get-AzSubscription`)
+  - For each subscription, check effective role assignments on the subscription scope (`Get-AzRoleAssignment`)
+  - Identify key roles: `Reader`, `Contributor`, `Owner`, `Security Reader`, `Monitoring Reader`, `Cost Management Reader`
+  - Check Root Management Group access (`Get-AzRoleAssignment -Scope /providers/Microsoft.Management/managementGroups/{tenantId}`)
+  - Check if caller can read policy compliance states (`/policyStates`)
+  - Check if caller has Security Center read access (`Microsoft.Security/assessments/read`)
+  - Output: Table of subscriptions with role assignments and missing critical permissions
+  - Flag subscriptions where only partial access exists (e.g., Reader but not Security Reader)
+- [x] **20.2.3** **Graph / Entra ID audit section** (`-IncludeEntraPermissions` only):
+  - Attempt Graph token acquisition via `Get-AZTIGraphToken`
+  - Check token claims / scopes for: `Directory.Read.All`, `User.Read.All`, `Group.Read.All`, `Application.Read.All`, `RoleManagement.Read.Directory`, `Policy.Read.All`, `IdentityRiskyUser.Read.All`, `AuditLog.Read.All`
+  - For **service principals**: Parse `scp` (delegated) or `roles` (application) token claims
+  - For **users**: Parse `scp` (delegated) token claims AND call `/v1.0/me/transitiveMemberOf` to check directory roles (Global Reader, Directory Readers, etc.)
+  - Test actual Graph calls to verify real access (not just token claims — token can say allowed but AAD policy may still block):
+    - `GET /v1.0/organization` — basic tenant read
+    - `GET /v1.0/users?$top=1` — user read
+    - `GET /v1.0/groups?$top=1` — group read
+    - `GET /v1.0/applications?$top=1` — application read
+    - `GET /v1.0/policies/conditionalAccessPolicies?$top=1` — policy read
+  - Output: Table of required Graph permissions with: `Permission`, `Required For`, `Status (✅/⚠️/❌)`, `Notes`
+- [x] **20.2.4** **Resource Provider check section** (always runs, ARM scope):
+  - For each subscription, check registration status of key providers:
+    `Microsoft.Security`, `Microsoft.Insights`, `Microsoft.Maintenance`, `Microsoft.DesktopVirtualization`, `Microsoft.HybridCompute`, `Microsoft.AzureStackHCI`, `Microsoft.MachineLearningServices`, `Microsoft.CognitiveServices`, `Microsoft.Search`, `Microsoft.BotService`, `Microsoft.AlertsManagement`, `Microsoft.OperationalInsights`
+  - Output: Table of providers with `Registered/NotRegistered/Registering` status and which inventory modules depend on each
+- [x] **20.2.5** **Summary / recommendations section**:
+  - Overall readiness: `ARM Only Scan`, `ARM + Entra Scan`, `Partial (limitations noted)`
+  - List of specific missing permissions with remediation commands (`New-AzRoleAssignment`, Connect-MgGraph permissions grant)
+  - List of unregistered providers with remediation commands (`Register-AzResourceProvider`)
+  - Recommended command to run based on current permissions
+
+### 20.3 — Output Formatting for Permission Audit
+
+- [x] **20.3.1** Format ARM results as **colored console table** with ANSI/Write-Host formatting:
+  - Green = full access, Yellow = partial access, Red = missing critical access
+- [x] **20.3.2** Format Graph results as **colored console table** (same scheme)
+- [x] **20.3.3** Write plain-text summary at end with recommended next steps
+- [x] **20.3.4** Support `-OutputFormat` from main cmdlet context: if caller passes `-PermissionAudit -OutputFormat Json`, save permission report as `PermissionAudit_<timestamp>.json` alongside where the Excel report normally lands
+- [x] **20.3.5** Support `-OutputFormat Markdown` (Phase 21): save as `PermissionAudit_<timestamp>.md` if Markdown export is implemented
+
+### 20.4 — Integration with Existing `Test-AZTIPermissions`
+
+- [x] **20.4.1** Refactor `Test-AZTIPermissions` to call `Invoke-AZTIPermissionAudit` internally (avoid duplicate logic)
+- [x] **20.4.2** Keep `Test-AZTIPermissions` as a public function (for users who want to call it directly in their own scripts)
+- [x] **20.4.3** Pre-flight check in `Invoke-AzureTenantInventory` continues to use `Test-AZTIPermissions` (no change to normal inventory flow)
+
+### 20.5 — Phase 20 Testing
+
+- [ ] **20.5.1** Test: `-PermissionAudit` exits early — no resources extracted, no Excel/JSON created
+- [ ] **20.5.2** Test: ARM output shows correct subscription list and role assignments for current user
+- [ ] **20.5.3** Test: `-IncludeEntraPermissions` produces Graph permission table
+- [ ] **20.5.4** Test: SPN with limited permissions shows yellow/red warnings correctly
+- [ ] **20.5.5** Test: SPN with Reader + Security Reader + Monitoring Reader shows all green for ARM
+- [ ] **20.5.6** Test: User with Global Reader directory role shows all Graph permissions as green
+- [ ] **20.5.7** Test: Resource provider table shows Registered/NotRegistered correctly
+- [ ] **20.5.8** Test: `-PermissionAudit -OutputFormat Json` saves JSON permission report
+- [x] **20.5.9** Update `CHANGELOG.md` with Phase 20 additions
+- [ ] **20.5.10** Commit & push Phase 20
+
+---
+
+## Phase 21 — Markdown & AsciiDoc Export Formats
+
+> **NEW REQUIREMENT:** "export option to export to a markdown formatted report and/or an .adoc formatted file as well since .adoc can be exported to Word and PDF easier."
+>
+> AsciiDoc (`.adoc`) is the native format for the Antora documentation site already set up in this repo. Asciidoctor can convert `.adoc` → PDF, Word, HTML, DocBook natively. Markdown (`.md`) is the most universally readable plain-text format.
+
+### 21.1 — Extend `-OutputFormat` Parameter
+
+- [x] **21.1.1** Update `[ValidateSet]` for `-OutputFormat` in `Invoke-AzureTenantInventory`:
+  - Current: `'All', 'Excel', 'Json'`
+  - New: `'All', 'Excel', 'Json', 'Markdown', 'AsciiDoc'`
+  - `All` still means Excel + JSON (existing behavior); `Markdown` and `AsciiDoc` are additive or standalone
+- [x] **21.1.2** Add aliases: `'MD'` → `'Markdown'`, `'Adoc'` → `'AsciiDoc'`
+- [x] **21.1.3** Update `.PARAMETER OutputFormat` help block with new values and descriptions:
+  - `Markdown` — Generates a `<ReportName>_<timestamp>.md` file. Each resource category becomes a top-level `##` section. Each module's data becomes a table. Suitable for GitHub/GitLab wikis, Obsidian, Confluence.
+  - `AsciiDoc` — Generates a `<ReportName>_<timestamp>.adoc` file. Same structure but in AsciiDoc markup. Can be converted to PDF/Word using Asciidoctor: `asciidoctor-pdf report.adoc`. Compatible with Antora for documentation site integration.
+- [x] **21.1.4** Add `.EXAMPLE` blocks:
+  - `Invoke-AzureTenantInventory -OutputFormat Markdown` — Markdown report only
+  - `Invoke-AzureTenantInventory -OutputFormat AsciiDoc` — AsciiDoc report only
+  - `Invoke-AzureTenantInventory -OutputFormat Excel,Markdown` — Excel + Markdown
+  - `Invoke-AzureTenantInventory -OutputFormat Excel,AsciiDoc` — Excel + AsciiDoc (full suite)
+  - `Invoke-AzureTenantInventory -OutputFormat Json,Markdown,AsciiDoc` — All text formats, no Excel
+
+### 21.2 — Create `Export-AZTIMarkdownReport` (Private Function)
+
+> File: `Modules/Private/Reporting/Export-AZTIMarkdownReport.ps1`
+
+- [x] **21.2.1** Create function with signature:
+  ```powershell
+  function Export-AZTIMarkdownReport {
+      Param($SmaResources, $File, $Subscriptions, $TenantId, $ReportStartTime)
+  }
+  ```
+- [x] **21.2.2** **Report header section**:
+  ```markdown
+  # Azure Tenant Inventory Report
+  Generated: <timestamp>  Tenant: <tenantId>  Tool: AzureTenantInventory v<version>
+  Subscriptions: <count>  Total Resources: <count>
+  ```
+- [x] **21.2.3** **Table of Contents** — auto-generated from categories and modules that have data:
+  ```markdown
+  ## Table of Contents
+  - [Compute](#compute)
+    - [Virtual Machines](#virtual-machines)
+    - [VM Scale Sets](#vm-scale-sets)
+  - [Networking](#networking)
+  ...
+  ```
+- [x] **21.2.4** **Per-category sections** (`## <CategoryName>`) with per-module subsections (`### <Module Display Name>`):
+  - Each module's data rendered as a GitHub-Flavored Markdown table (pipe-delimited)
+  - Skip modules with zero rows
+  - Column widths auto-sized to content
+  - Example format:
+    ```markdown
+    ### Virtual Machines
+    | Name | Resource Group | Location | OS | SKU | Status |
+    |------|---------------|----------|----|-----|--------|
+    | vm01 | rg-prod        | eastus   | Windows | Standard_D4s_v3 | Running |
+    ```
+- [x] **21.2.5** **Summary section** at end:
+  - Total resources by category (table)
+  - Empty categories listed separately
+  - Report generation time elapsed
+- [x] **21.2.6** Write final `.md` file using `Out-File -Encoding UTF8` to `$File` path (replacing `.xlsx` extension with `.md`)
+- [x] **21.2.7** Support large datasets: use streaming/append (`Add-Content`) rather than building full string in memory for tenants with 10,000+ resources
+
+### 21.3 — Create `Export-AZTIAsciiDocReport` (Private Function)
+
+> File: `Modules/Private/Reporting/Export-AZTIAsciiDocReport.ps1`
+
+- [x] **21.3.1** Create function with signature (same as Markdown):
+  ```powershell
+  function Export-AZTIAsciiDocReport {
+      Param($SmaResources, $File, $Subscriptions, $TenantId, $ReportStartTime)
+  }
+  ```
+- [x] **21.3.2** **Document header** with AsciiDoc front matter:
+  ```asciidoc
+  = Azure Tenant Inventory Report
+  Product Technology Team <prodtech@example.com>
+  :doctype: book
+  :toc: left
+  :toclevels: 3
+  :sectnums:
+  :source-highlighter: highlight.js
+  Generated: {localdate}
+  ```
+- [x] **21.3.3** **Tenant summary preamble**:
+  ```asciidoc
+  == Tenant Summary
+  [cols="1,3"]
+  |===
+  | Tenant ID | <tenantId>
+  | Subscriptions | <count>
+  | Total Resources | <count>
+  | Report Date | <timestamp>
+  |===
+  ```
+- [x] **21.3.4** **Per-category sections** (`== <CategoryName>`) with per-module subsections (`=== <Module Display Name>`):
+  - AsciiDoc table syntax for each module's data:
+    ```asciidoc
+    === Virtual Machines
+    [cols="1,1,1,1,1,1",options="header"]
+    |===
+    | Name | Resource Group | Location | OS | SKU | Status
+    | vm01 | rg-prod | eastus | Windows | Standard_D4s_v3 | Running
+    |===
+    ```
+  - Skip modules with zero rows
+- [x] **21.3.5** **AsciiDoc-specific features**:
+  - Use `[WARNING]` admonition for resources with issues (e.g., VMs with no backup, expired certs)
+  - Use `[TIP]` admonition for Advisor recommendations
+  - Use `[IMPORTANT]` admonition for security findings (Defender alerts, non-compliant policies)
+  - Use `[NOTE]` for skipped/empty categories
+- [x] **21.3.6** Write final `.adoc` file to `$File` path (replacing `.xlsx` extension with `.adoc`)
+- [x] **21.3.7** Add `asciidoctor` conversion hint in report footer:
+  ```asciidoc
+  [NOTE]
+  ====
+  To convert this report to PDF: `asciidoctor-pdf AzureTenantInventory_2026-02-24.adoc`
+  To convert to Word (via Pandoc): `pandoc -f asciidoc -t docx AzureTenantInventory_2026-02-24.adoc -o report.docx`
+  ====
+  ```
+
+### 21.4 — Wire Into Reporting Orchestration
+
+> File: `Modules/Private/Main/Start-AZTIReporOrchestration.ps1` (note: existing file has typo "Repor")
+
+- [x] **21.4.1** Pass `$OutputFormat` through to `Start-AZTIReporOrchestration`
+- [x] **21.4.2** Add conditional blocks after Excel/JSON generation:
+  ```powershell
+  if ($OutputFormat -contains 'Markdown' -or $OutputFormat -contains 'All') {
+      Export-AZTIMarkdownReport -SmaResources $SmaResources -File $File ...
+  }
+  if ($OutputFormat -contains 'AsciiDoc' -or $OutputFormat -contains 'All') {
+      Export-AZTIAsciiDocReport -SmaResources $SmaResources -File $File ...
+  }
+  ```
+  > Note: `All` behavior — decide whether `All` should always include Markdown/AsciiDoc or only Excel+JSON. **Recommendation:** Keep `All` = Excel+JSON (existing behavior). Markdown and AsciiDoc are opt-in additions. Update `All` alias to mean "all currently selected formats."
+- [x] **21.4.3** Add both new functions to `AzureTenantInventory.psm1` auto-loader
+- [x] **21.4.4** Add both functions to `FunctionsToExport` in `AzureTenantInventory.psd1` (or keep as private — decide)
+
+### 21.5 — Permission Audit Markdown/AsciiDoc Output (Cross-phase)
+
+- [x] **21.5.1** When `-PermissionAudit -OutputFormat Markdown` — call `Export-AZTIMarkdownReport` with permission audit data (special permission audit mode generates a Markdown permissions report)
+- [x] **21.5.2** When `-PermissionAudit -OutputFormat AsciiDoc` — generate `.adoc` permissions report suitable for inclusion in team documentation or Antora site
+
+### 21.6 — Phase 21 Testing
+
+- [ ] **21.6.1** Test: `-OutputFormat Markdown` generates valid `.md` file with correct structure
+- [ ] **21.6.2** Test: `-OutputFormat AsciiDoc` generates valid `.adoc` file with AsciiDoc syntax
+- [ ] **21.6.3** Test: Markdown tables render correctly in GitHub (pipe-table format)
+- [ ] **21.6.4** Test: AsciiDoc can be converted to PDF without errors (`asciidoctor-pdf` command)
+- [ ] **21.6.5** Test: AsciiDoc can be converted to Word via Pandoc (`pandoc -f asciidoc -t docx`)
+- [ ] **21.6.6** Test: `-OutputFormat Excel,AsciiDoc` generates BOTH `.xlsx` and `.adoc` files
+- [ ] **21.6.7** Test: Modules with zero resources are skipped in Markdown/AsciiDoc output
+- [ ] **21.6.8** Test: Large tenant (1000+ VMs) Markdown output streams correctly without OOM error
+- [ ] **21.6.9** Test: AsciiDoc admonitions (`[WARNING]`, `[TIP]`) appear for security findings and recommendations
+- [ ] **21.6.10** Test: `-PermissionAudit -OutputFormat Markdown` generates a permissions `.md` report
+- [x] **21.6.11** Update `CHANGELOG.md` with Phase 21 additions
+- [ ] **21.6.12** Commit & push Phase 21
 
 ---
 
@@ -1160,6 +1430,6 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 - Created: 2026-02-22 by Product Technology Team
 - Last Edited: 2026-02-24 by Product Technology Team
 - Version: 3.0.0
-- Tags: todo, tracking, implementation, azure-local, arc, vpn, policy, defender, monitor, dcr, management-groups, subscriptions, scope, permissions, resource-providers, monitoring-coverage, ai-foundry, machine-learning, avd, category-filtering, vm-enhancement, ms-graph, final-testing
-- Keywords: azure-inventory, progress, checklist, feature-parity, excel-restructure, comprehensive-logging, authentication, documentation, comprehensive-coverage, microsoft-taxonomy, acceptance-testing
+- Tags: todo, tracking, implementation, azure-local, arc, vpn, policy, defender, monitor, dcr, management-groups, subscriptions, scope, permissions, resource-providers, monitoring-coverage, ai-foundry, machine-learning, avd, category-filtering, vm-enhancement, ms-graph, final-testing, permission-audit, markdown-export, asciidoc-export
+- Keywords: azure-inventory, progress, checklist, feature-parity, excel-restructure, comprehensive-logging, authentication, documentation, comprehensive-coverage, microsoft-taxonomy, acceptance-testing, permission-report, markdown, adoc, asciidoctor
 - Author: Product Technology Team

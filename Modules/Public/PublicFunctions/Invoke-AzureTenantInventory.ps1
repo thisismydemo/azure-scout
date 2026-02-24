@@ -56,7 +56,40 @@
     Specifies the password protecting the certificate file. Optional — only needed if the certificate is password-protected.
 
 .PARAMETER Scope
-    Controls which data sources are queried. Valid values: All, ArmOnly, EntraOnly. Default is All.
+    Controls which data sources are queried.
+    - ArmOnly (default): Scans Azure Resource Manager resources (subscriptions, VMs, networks, etc.). Requires subscription Reader role.
+    - EntraOnly: Scans Microsoft Entra ID only (users, groups, Conditional Access, PIM, etc.). Requires Microsoft Graph permissions.
+    - All: Scans both ARM and Entra ID. Requires both subscription Reader AND Graph permissions.
+
+    NOTE: By default, Entra ID is NOT scanned. Use -Scope All or -Scope EntraOnly to include Entra ID resources.
+
+.PARAMETER CheckResourceProviders
+    When specified, validates that required Azure resource providers are registered in each subscription
+    before running the inventory. Unregistered providers produce warnings but do not block execution;
+    modules that depend on unregistered providers are silently skipped for that subscription.
+
+.PARAMETER PermissionAudit
+    Runs a dedicated permissions audit only. No inventory is collected, no Excel or JSON report is
+    generated. Outputs a colour-coded console report showing ARM/RBAC access across all visible
+    subscriptions and resource provider registration status. Add -IncludeEntraPermissions to also
+    audit Microsoft Graph / Entra ID permissions.
+
+    Compatible with all existing authentication parameters (-TenantID, -AppId, -Secret,
+    -CertificatePath, -DeviceLogin) so you can audit a service principal before a scheduled run.
+
+.PARAMETER IncludeEntraPermissions
+    Used with -PermissionAudit. Extends the audit to include Microsoft Graph permission checks
+    required for Entra ID scanning (-Scope All or -Scope EntraOnly). Tests actual Graph API calls
+    to verify real access rather than relying solely on token claims.
+    Requires a Graph-capable token (interactive user with Directory Reader role, or SPN with Graph
+    API application permissions and admin consent).
+
+.PARAMETER Category
+    Limits inventory collection to one or more resource categories (folder names under InventoryModules).
+    Default is 'All', which processes every category. When one or more specific categories are provided,
+    only modules in those folders are executed — speeding up targeted runs.
+    Valid values: All, AI, Analytics, Compute, Containers, Databases, Hybrid, Identity, Integration,
+    IoT, Management, Monitor, Networking, Security, Storage, Web.
 
 .PARAMETER OutputFormat
     Controls which report formats are generated. Valid values:
@@ -116,6 +149,37 @@
 
     Define the Tenant ID and for a specific Subscription:
     PS C:\> Invoke-AzureTenantInventory -TenantID <your-Tenant-Id> -SubscriptionID <your-Subscription-Id>
+
+    Run a permission audit (ARM only) before a full inventory run:
+    PS C:\> Invoke-AzureTenantInventory -TenantID <your-Tenant-Id> -PermissionAudit
+
+    Run a full permission audit including Entra ID / Microsoft Graph:
+    PS C:\> Invoke-AzureTenantInventory -TenantID <your-Tenant-Id> -PermissionAudit -IncludeEntraPermissions
+
+    Audit permissions for a service principal (ARM + Entra):
+    PS C:\> Invoke-AzureTenantInventory -TenantID <your-Tenant-Id> -AppId <appId> -Secret <secret> -PermissionAudit -IncludeEntraPermissions
+
+    Save the permission audit as a JSON file:
+    PS C:\> Invoke-AzureTenantInventory -TenantID <your-Tenant-Id> -PermissionAudit -OutputFormat Json
+
+    Save the permission audit as a Markdown report:
+    PS C:\> Invoke-AzureTenantInventory -TenantID <your-Tenant-Id> -PermissionAudit -OutputFormat Markdown
+
+.EXAMPLE
+    ARM/RBAC audit for the current logged-in user:
+    PS C:\> Invoke-AzureTenantInventory -PermissionAudit
+
+.EXAMPLE
+    ARM + Microsoft Graph / Entra ID audit for the current user:
+    PS C:\> Invoke-AzureTenantInventory -PermissionAudit -IncludeEntraPermissions
+
+.EXAMPLE
+    Full ARM + Graph audit using a service principal (SPN):
+    PS C:\> Invoke-AzureTenantInventory -TenantID <id> -AppId <id> -Secret <secret> -PermissionAudit -IncludeEntraPermissions
+
+.EXAMPLE
+    Check permissions for a specific tenant before running a full inventory:
+    PS C:\> Invoke-AzureTenantInventory -TenantID <id> -PermissionAudit
 
 .NOTES
     AUTHORS: Claudio Merola and Renato Gregio | Azure Infrastucture/Automation/Devops/Governance
@@ -177,10 +241,17 @@ Function Invoke-AzureTenantInventory {
         [switch]$DeviceLogin,
         [switch]$DiagramFullEnvironment,
         [ValidateSet('All', 'ArmOnly', 'EntraOnly')]
-        [string]$Scope = 'All',
+        [string]$Scope = 'ArmOnly',
         [switch]$SkipPermissionCheck,
-        [ValidateSet('All', 'Excel', 'Json')]
-        [string]$OutputFormat = 'All'
+        [switch]$CheckResourceProviders,
+        [Alias('AuditPermissions','CheckPermissions')]
+        [switch]$PermissionAudit,
+        [Alias('EntraAudit','CheckEntraPermissions')]
+        [switch]$IncludeEntraPermissions,
+        [ValidateSet('All', 'Excel', 'Json', 'Markdown', 'AsciiDoc', 'MD', 'Adoc')]
+        [string]$OutputFormat = 'All',
+        [ValidateSet('All', 'AI', 'Analytics', 'Compute', 'Containers', 'Databases', 'Hybrid', 'Identity', 'Integration', 'IoT', 'Management', 'Monitor', 'Networking', 'Security', 'Storage', 'Web')]
+        [string[]]$Category = @('All')
         )
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Debugging Mode: On. ErrorActionPreference was set to "Continue", every error will be presented.')
@@ -196,6 +267,28 @@ Function Invoke-AzureTenantInventory {
         }
 
     if ($IncludeTags.IsPresent) { $InTag = $true } else { $InTag = $false }
+
+    # ── Category alias normalization (18.2.5) ────────────────────────────────────
+    # Map official long names AND alternate spellings → folder-name short values
+    $_categoryAliasMap = @{
+        'AI + machine learning'     = 'AI'
+        'AI+machine learning'       = 'AI'
+        'Machine Learning'          = 'AI'
+        'Internet of Things'        = 'IoT'
+        'Monitoring'                = 'Monitor'
+        'Management and governance' = 'Management'
+        'Management & governance'   = 'Management'
+        'Web & Mobile'              = 'Web'
+        'Hybrid + multicloud'       = 'Hybrid'
+        'Hybrid+multicloud'         = 'Hybrid'
+        'DevOps'                    = 'Management'   # DevOps lives under Management folder
+        'Migration'                 = 'Management'   # Migration lives under Management folder
+    }
+    $Category = $Category | ForEach-Object {
+        if ($_categoryAliasMap.ContainsKey($_)) { $_categoryAliasMap[$_] } else { $_ }
+    }
+    $Category = $Category | Select-Object -Unique
+    # ─────────────────────────────────────────────────────────────────────────────
 
     if ($Lite.IsPresent) { $RunLite = $true }else { $RunLite = $false }
     if ($DiagramFullEnvironment.IsPresent) {$FullEnv = $true}else{$FullEnv = $false}
@@ -238,7 +331,12 @@ Function Invoke-AzureTenantInventory {
         Write-Host " -AzureEnvironment        :  Change the Azure Cloud Environment. "
         Write-Host " -ReportName              :  Change the Default Name of the report. "
         Write-Host " -ReportDir               :  Change the Default Path of the report. "
-        Write-Host " -OutputFormat            :  Choose report format: All (default), Excel, Json. "
+        Write-Host " -OutputFormat            :  Choose report format: All (default), Excel, Json, Markdown, AsciiDoc. "
+        Write-Host " -Scope                   :  Data scope. ArmOnly (default), EntraOnly, All. Use -Scope All to include Entra ID. "
+        Write-Host " -CheckResourceProviders  :  Warn if required Azure resource providers are not registered. "
+        Write-Host " -SkipPermissionCheck     :  Skip pre-flight permission validation. "
+        Write-Host " -PermissionAudit         :  Run a standalone permission audit only (no inventory). Aliases: -AuditPermissions, -CheckPermissions. "
+        Write-Host " -IncludeEntraPermissions :  With -PermissionAudit, also audit Microsoft Graph / Entra ID access. Alias: -EntraAudit. "
         Write-Host ""
         Write-Host ""
         Write-Host ""
@@ -279,6 +377,35 @@ Function Invoke-AzureTenantInventory {
 
     $PlatOS = Test-AZTIPS
 
+    # ── Permission Audit mode (early exit — no inventory collected) ──────────
+    if ($PermissionAudit.IsPresent)
+        {
+            Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'PermissionAudit mode: connecting and running audit then exiting.')
+
+            if ($PlatOS -ne 'Azure CloudShell' -and !$Automation.IsPresent)
+                {
+                    $TenantID = Connect-AZTILoginSession -AzureEnvironment $AzureEnvironment -TenantID $TenantID -DeviceLogin:$DeviceLogin -AppId $AppId -Secret $Secret -CertificatePath $CertificatePath -CertificatePassword $CertificatePassword
+                }
+
+            $auditOutputFormat = switch ($OutputFormat) {
+                'Json'      { 'Json' }
+                'Markdown'  { 'Markdown' }
+                'MD'        { 'Markdown' }
+                'AsciiDoc'  { 'AsciiDoc' }
+                'Adoc'      { 'AsciiDoc' }
+                'All'       { 'All' }
+                default     { 'Console' }
+            }
+
+            $auditResult = Invoke-AZTIPermissionAudit `
+                -IncludeEntraPermissions:$IncludeEntraPermissions `
+                -TenantID $TenantID `
+                -OutputFormat $auditOutputFormat `
+                -ReportDir $ReportDir
+
+            return $auditResult
+        }
+
     if ($PlatOS -ne 'Azure CloudShell' -and !$Automation.IsPresent)
         {
             $TenantID = Connect-AZTILoginSession -AzureEnvironment $AzureEnvironment -TenantID $TenantID -DeviceLogin:$DeviceLogin -AppId $AppId -Secret $Secret -CertificatePath $CertificatePath -CertificatePassword $CertificatePassword
@@ -310,6 +437,33 @@ Function Invoke-AzureTenantInventory {
         }
 
     $Subscriptions = Get-AZTISubscriptions -TenantID $TenantID -SubscriptionID $SubscriptionID -PlatOS $PlatOS
+
+    # --- Resource provider pre-flight check ---
+    if ($CheckResourceProviders.IsPresent) {
+        Write-Host 'Checking resource provider registration...' -ForegroundColor Cyan
+        $criticalProviders = @(
+            'Microsoft.Security',
+            'Microsoft.Insights',
+            'Microsoft.Maintenance',
+            'Microsoft.DesktopVirtualization',
+            'Microsoft.HybridCompute',
+            'Microsoft.AzureStackHCI',
+            'Microsoft.MachineLearningServices',
+            'Microsoft.CognitiveServices',
+            'Microsoft.Search',
+            'Microsoft.BotService'
+        )
+        foreach ($sub in $Subscriptions) {
+            $ctx = Set-AzContext -SubscriptionId $sub.Id -ErrorAction SilentlyContinue
+            foreach ($provider in $criticalProviders) {
+                $reg = Get-AzResourceProvider -ProviderNamespace $provider -ErrorAction SilentlyContinue
+                if ($reg -and $reg.RegistrationState -ne 'Registered') {
+                    Write-Warning "[$($sub.Name)] $provider is NOT registered. Dependent modules will be skipped.`n          Remediation: Register-AzResourceProvider -ProviderNamespace '$provider'"
+                }
+            }
+        }
+        Write-Host ''
+    }
 
     # --- Pre-flight permission check ---
     if (-not $SkipPermissionCheck.IsPresent) {
@@ -394,7 +548,7 @@ Function Invoke-AzureTenantInventory {
 
         Start-AZTIExtraJobs -SkipDiagram $SkipDiagram -SkipAdvisory $SkipAdvisory -SkipPolicy $SkipPolicy -SecurityCenter $Security -Subscriptions $Subscriptions -Resources $Resources -Advisories $Advisories -DDFile $DDFile -DiagramCache $DiagramCache -FullEnv $FullEnv -ResourceContainers $ResourceContainers -Security $Security -PolicyAssign $PolicyAssign -PolicySetDef $PolicySetDef -PolicyDef $PolicyDef -IncludeCosts $IncludeCosts -CostData $CostData -Automation $Automation
 
-        Start-AZTIProcessOrchestration -Subscriptions $Subscriptions -Resources $Resources -Retirements $Retirements -DefaultPath $DefaultPath -Heavy $Heavy -File $File -InTag $InTag -Automation $Automation
+        Start-AZTIProcessOrchestration -Subscriptions $Subscriptions -Resources $Resources -Retirements $Retirements -DefaultPath $DefaultPath -Heavy $Heavy -File $File -InTag $InTag -Automation $Automation -Category $Category
 
     $ProcessingRunTime.Stop()
 
@@ -423,9 +577,9 @@ Function Invoke-AzureTenantInventory {
 
         Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Generating Overview sheet (Charts).')
 
-        $TotalRes = Start-AZTIExcelCustomization -File $File -TableStyle $TableStyle -PlatOS $PlatOS -Subscriptions $Subscriptions -ExtractionRunTime $ExtractionRuntime -ProcessingRunTime $ProcessingRunTime -ReportingRunTime $ReportingRunTime -IncludeCosts $IncludeCosts -RunLite $RunLite -Overview $Overview
+        $TotalRes = Start-AZTIExcelCustomization -File $File -TableStyle $TableStyle -PlatOS $PlatOS -Subscriptions $Subscriptions -ExtractionRunTime $ExtractionRuntime -ProcessingRunTime $ProcessingRunTime -ReportingRunTime $ReportingRunTime -IncludeCosts $IncludeCosts -RunLite $RunLite -Overview $Overview -Category $Category
 
-        Write-Progress -activity 'Azure Inventory' -Status "95% Complete." -PercentComplete 95 -CurrentOperation "Excel Customization Completed.."
+        Write-Progress -activity 'Azure Inventory' -Status "95% Complete." -PercentComplete 95 -CurrentOperation "Excel Customization Completed. Total resources inventoried: $TotalRes"
     }
     else
     {
@@ -437,6 +591,20 @@ Function Invoke-AzureTenantInventory {
     {
         Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting JSON report export.')
         $JsonFile = Export-AZTIJsonReport -ReportCache $ReportCache -File $File -TenantID $TenantID -Subscriptions $Subscriptions -Scope $Scope -Quotas $Quotas -SecurityCenter:$SecurityCenter -SkipAdvisory:$SkipAdvisory -SkipPolicy:$SkipPolicy -IncludeCosts:$IncludeCosts
+    }
+
+    # ── Markdown Report ──────────────────────────────────────────────────
+    if ($OutputFormat -in ('All', 'Markdown', 'MD'))
+    {
+        Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting Markdown report export.')
+        $MarkdownFile = Export-AZTIMarkdownReport -ReportCache $ReportCache -File $File -TenantID $TenantID -Subscriptions $Subscriptions -Scope $Scope
+    }
+
+    # ── AsciiDoc Report ──────────────────────────────────────────────────
+    if ($OutputFormat -in ('All', 'AsciiDoc', 'Adoc'))
+    {
+        Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting AsciiDoc report export.')
+        $AsciiDocFile = Export-AZTIAsciiDocReport -ReportCache $ReportCache -File $File -TenantID $TenantID -Subscriptions $Subscriptions -Scope $Scope
     }
 
     $ReportingRunTime.Stop()

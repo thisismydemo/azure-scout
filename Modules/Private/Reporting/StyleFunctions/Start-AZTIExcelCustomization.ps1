@@ -18,7 +18,7 @@ Authors: Claudio Merola
 
 #>
 function Start-AZTIExcelCustomization {
-    param($File, $TableStyle, $PlatOS, $Subscriptions, $ExtractionRunTime, $ProcessingRunTime, $ReportingRunTime, $IncludeCosts, $RunLite, $Overview)
+    param($File, $TableStyle, $PlatOS, $Subscriptions, $ExtractionRunTime, $ProcessingRunTime, $ReportingRunTime, $IncludeCosts, $RunLite, $Overview, $Category)
 
     Write-Progress -activity 'Azure Inventory' -Status "85% Complete." -PercentComplete 85 -CurrentOperation "Starting Excel Customization.."
 
@@ -54,9 +54,9 @@ function Start-AZTIExcelCustomization {
                 $tmp = @{
                     'Name' = $WorkS.name;
                     'Size' = [int]$Number[1];
-                    'Size2' = if ($WorkS.name -in ('Subscriptions', 'Quota Usage', 'AdvisorScore', 'Outages', 'SupportTickets', 'Reservation Advisor')) {0}else{[int]$Number[1]}
+                    'Size2' = if ($WorkS.name -in ('Subscriptions', 'Quota Usage', 'AdvisorScore', 'Outages', 'SupportTickets', 'Reservation Advisor', 'Cost Management', 'Security Overview', 'Azure Update Manager', 'Azure Monitor')) {0}else{[int]$Number[1]}
                 }
-                if ($WorkS.name -notin ('Subscriptions', 'Quota Usage', 'AdvisorScore', 'Outages', 'SupportTickets', 'Reservation Advisor', 'Managed Identity', 'Backup'))
+                if ($WorkS.name -notin ('Subscriptions', 'Quota Usage', 'AdvisorScore', 'Outages', 'SupportTickets', 'Reservation Advisor', 'Managed Identity', 'Backup', 'Cost Management', 'Security Overview', 'Azure Update Manager', 'Azure Monitor'))
                     {
                         $TotalRes = $TotalRes + ([int]$Number[1])
                     }
@@ -79,7 +79,7 @@ function Start-AZTIExcelCustomization {
 
     $Excel = Open-ExcelPackage -Path $File
 
-    Build-AZTIInitialBlock -Excel $Excel -ExtractionRunTime $ExtractionRunTime -ProcessingRunTime $ProcessingRunTime -ReportingRunTime $ReportingRunTime -PlatOS $PlatOS -TotalRes $TotalRes -ScriptVersion $ScriptVersion
+    Build-AZTIInitialBlock -Excel $Excel -ExtractionRunTime $ExtractionRunTime -ProcessingRunTime $ProcessingRunTime -ReportingRunTime $ReportingRunTime -PlatOS $PlatOS -TotalRes $TotalRes -ScriptVersion $ScriptVersion -Category $Category
 
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Creating Charts.')
 

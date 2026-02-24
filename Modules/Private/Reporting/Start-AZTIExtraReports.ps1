@@ -18,7 +18,7 @@ Authors: Claudio Merola
 #>
 
 function Start-AZTIExtraReports {
-    Param($File, $Quotas, $SecurityCenter, $SkipPolicy, $SkipAdvisory, $IncludeCosts, $TableStyle)
+    Param($File, $Quotas, $SecurityCenter, $SkipPolicy, $SkipAdvisory, $IncludeCosts, $TableStyle, $ReportCache)
 
     Write-Progress -activity 'Azure Inventory' -Status "70% Complete." -PercentComplete 70 -CurrentOperation "Reporting Extra Resources.."
 
@@ -126,4 +126,26 @@ function Start-AZTIExtraReports {
     Write-Progress -activity 'Azure Resource Inventory Subscriptions' -Status "100% Complete." -Completed
 
     Write-Progress -activity 'Azure Inventory' -Status "80% Complete." -PercentComplete 80 -CurrentOperation "Completed Extra Resources Reporting.."
+
+    <################################################ PHASE 10 — SPECIALIZED TABS #######################################################>
+
+    if ($ReportCache) {
+        Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Building Phase 10 specialized report tabs.')
+
+        Write-Progress -Id 1 -activity 'Building Cost Management tab' -Status "50% Complete." -PercentComplete 50
+        Build-AZTICostManagementReport -File $File -ReportCache $ReportCache -TableStyle $TableStyle
+        Write-Progress -Id 1 -activity 'Building Cost Management tab' -Completed
+
+        Write-Progress -Id 1 -activity 'Building Security Overview tab' -Status "50% Complete." -PercentComplete 50
+        Build-AZTISecurityOverviewReport -File $File -ReportCache $ReportCache -TableStyle $TableStyle
+        Write-Progress -Id 1 -activity 'Building Security Overview tab' -Completed
+
+        Write-Progress -Id 1 -activity 'Building Azure Update Manager tab' -Status "50% Complete." -PercentComplete 50
+        Build-AZTIUpdateManagerReport -File $File -ReportCache $ReportCache -TableStyle $TableStyle
+        Write-Progress -Id 1 -activity 'Building Azure Update Manager tab' -Completed
+
+        Write-Progress -Id 1 -activity 'Building Azure Monitor tab' -Status "50% Complete." -PercentComplete 50
+        Build-AZTIMonitorReport -File $File -ReportCache $ReportCache -TableStyle $TableStyle
+        Write-Progress -Id 1 -activity 'Building Azure Monitor tab' -Completed
+    }
 }
