@@ -2,49 +2,21 @@
 :description: Release history and version changelog for AzureScout.
 :keywords: changelog, releases, versions, history, azurescout
 
-== Overview
+The full changelog is maintained in the repository root and rendered on GitHub.
 
-This page summarizes release history for Azure Tenant Inventory.
-For the complete changelog with detailed entries, see the https://github.com/thisismydemo/azure-scout/blob/main/CHANGELOG.md[CHANGELOG.md] in the repository root.
+https://github.com/thisismydemo/azure-scout/blob/main/CHANGELOG.md[View CHANGELOG.md on GitHub, role="button primary"]
 
-== Version History
+== Summary
 
-=== v1.5.0 — Phase 7: Cleanup & Polish
+AzureScout follows https://keepachangelog.com/en/1.1.0/[Keep a Changelog] format and https://semver.org/spec/v2.0.0.html[Semantic Versioning].
 
-*Documentation & Testing*
+[cols="1,3", options="header"]
+|===
+| Version | Highlights
 
-* Rewrote README.md with comprehensive parameter reference, module catalog, and quick start guide
-* Created 5 Pester test files covering core functions (permissions, orchestrator, login, Graph requests, Entra extraction)
-* Built full Antora documentation site (authentication, usage, permissions, ARM/Entra module catalogs, contributing, credits)
-* Replaced MkDocs GitHub Actions workflow with Antora-based documentation pipeline
-* Created CREDITS.md with attribution to original ARI project
-* Updated Set-AZSCReportPath help text
+| *v2.0.0*
+| Full rename to AzureScout (AZSC prefix), 170+ ARM modules, 15 Entra ID modules, Excel + JSON + Markdown + AsciiDoc output, draw.io diagrams, permission pre-flight, category filtering, Antora docs site
 
-=== v1.4.0 — Phase 8: Module Manifest & Gallery Prep
-
-* Converted module manifest from ARI to AZSC branding
-* Updated FunctionsToExport, module metadata, and tags
-
-=== v1.3.0 — Phase 6: Entra ID Integration
-
-* Added Start-AZSCEntraExtraction with 15 Graph API modules
-* Implemented Invoke-AZSCGraphRequest with pagination, retry, and rate limiting
-* Added Identity module category (Users, Groups, Applications, ServicePrincipals, etc.)
-
-=== v1.2.0 — Phase 5: Permission Checker
-
-* Added Test-AZSCPermissions pre-flight validation
-* ARM and Graph permission checks with scope-based gating
-
-=== v1.1.0 — Phases 2-4: Core Rename & Restructure
-
-* Renamed all public functions from ARI to AZSC prefix
-* Restructured module folders
-* Added -Scope and -OutputFormat parameters
-* Implemented Connect-AZSCLoginSession with 5 auth methods
-
-=== v1.0.0 — Phase 0-1: Initial Fork
-
-* Forked from microsoft/ARI v3.6.11
-* Updated file paths from AzureResourceInventory to AzureScout
-* Initial module structure and manifest
+| *v1.0.0*
+| Initial fork from https://github.com/microsoft/ARI[microsoft/ARI] v3.6.11
+|===

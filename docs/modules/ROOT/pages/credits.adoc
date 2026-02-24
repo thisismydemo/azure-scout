@@ -2,40 +2,14 @@
 :description: Credits and attribution for the AzureScout project.
 :keywords: credits, attribution, ari, fork, license, azurescout
 
-== Overview
+The full credits file is maintained in the repository root and rendered on GitHub.
 
-**AzureScout** (AZSC) is a fork of the https://github.com/microsoft/ARI[Azure Resource Inventory (ARI)] project, version 3.6.11.
+https://github.com/thisismydemo/azure-scout/blob/main/CREDITS.md[View CREDITS.md on GitHub, role="button primary"]
 
-== Original Authors
+== Origin
 
-[cols="1,2",options="header"]
-|===
-| Contributor | Role
+AzureScout is forked from https://github.com/microsoft/ARI[microsoft/ARI] (Azure Resource Inventory) v3.6.11, originally created by Claudio Merola and RenatoGregio at Microsoft.
 
-| **Claudio Merola**
-| Original ARI author and primary developer
+Excel generation uses https://github.com/dfinke/ImportExcel[ImportExcel] by Doug Finke, licensed MIT.
 
-| **RenatoGregio**
-| Original copyright holder
-|===
-
-== Source Project
-
-* *Repository*: https://github.com/microsoft/ARI[microsoft/ARI]
-* *License*: MIT
-* *Forked Version*: v3.6.11
-
-== Additional Acknowledgments
-
-* **Doug Finke** — Author of the https://github.com/dfinke/ImportExcel[ImportExcel] PowerShell module used for Excel report generation.
-* **Microsoft** — Azure PowerShell SDK (`Az.*` modules), Azure Resource Graph, and Microsoft Graph REST API.
-
-== License
-
-Both the original ARI project and this fork are licensed under the MIT License.
-See the link:../../../../LICENSE[LICENSE] file for full details.
-
-----
-Copyright (c) 2020 RenatoGregio (original AzureResourceInventory)
-Copyright (c) 2026 thisismydemo (AzureScout fork)
-----
+AzureScout is an independent community project and is not affiliated with or endorsed by Microsoft.
