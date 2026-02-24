@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Required Permissions :: Azure Tenant Inventory Documentation</title>
-    <link rel="canonical" href="https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/permissions.html">
+    <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/azure-tenant-inventory/permissions.html">
     <meta name="description" content="ARM RBAC and Microsoft Graph permissions required by Azure Tenant Inventory.">
     <meta name="keywords" content="permissions, rbac, graph, api, roles">
     <meta name="generator" content="Antora 3.1.14">
@@ -14,7 +14,7 @@
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://thisismydemo.github.io/azure-inventory">Azure Tenant Inventory Documentation</a>
+      <a class="navbar-item" href="https://thisismydemo.github.io/azure-scout">Azure Tenant Inventory Documentation</a>
       <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
         <span></span>
         <span></span>
@@ -141,7 +141,7 @@
     <li><a href="permissions.html">Permissions</a></li>
   </ul>
 </nav>
-<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-inventory/edit/main/docs/modules/ROOT/pages/permissions.adoc">Edit this Page</a></div>
+<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-scout/edit/main/docs/modules/ROOT/pages/permissions.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -284,7 +284,7 @@
 <h2 id="_pre_flight_validation"><a class="anchor" href="#_pre_flight_validation"></a>Pre-flight Validation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <code>Test-AZTIPermissions</code> function runs automatically before extraction (unless <code>-SkipPermissionCheck</code> is set):</p>
+<p>The <code>Test-AZSCPermissions</code> function runs automatically before extraction (unless <code>-SkipPermissionCheck</code> is set):</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -372,8 +372,8 @@
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Check permissions without running a full inventory
-Import-Module ./AzureTenantInventory.psd1
-Test-AZTIPermissions -TenantID '00000000-...' -Scope All</code></pre>
+Import-Module ./AzureScout.psd1
+Test-AZSCPermissions -TenantID '00000000-...' -Scope All</code></pre>
 </div>
 </div>
 </div>

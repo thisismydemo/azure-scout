@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Usage Guide :: Azure Tenant Inventory Documentation</title>
-    <link rel="canonical" href="https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/usage.html">
+    <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/azure-tenant-inventory/usage.html">
     <meta name="description" content="How to use Azure Tenant Inventory — scopes, output formats, and content toggles.">
     <meta name="keywords" content="usage, scope, output, format, json, excel">
     <meta name="generator" content="Antora 3.1.14">
@@ -14,7 +14,7 @@
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://thisismydemo.github.io/azure-inventory">Azure Tenant Inventory Documentation</a>
+      <a class="navbar-item" href="https://thisismydemo.github.io/azure-scout">Azure Tenant Inventory Documentation</a>
       <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
         <span></span>
         <span></span>
@@ -141,7 +141,7 @@
     <li><a href="usage.html">Usage Guide</a></li>
   </ul>
 </nav>
-<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-inventory/edit/main/docs/modules/ROOT/pages/usage.adoc">Edit this Page</a></div>
+<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-scout/edit/main/docs/modules/ROOT/pages/usage.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -154,12 +154,12 @@
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Import-Module ./AzureTenantInventory.psd1
-Invoke-AzureTenantInventory</code></pre>
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Import-Module ./AzureScout.psd1
+Invoke-AzureScout</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>With no parameters, AZTI runs a full inventory (ARM + Entra) using your current Azure context and generates both Excel and JSON reports.</p>
+<p>With no parameters, AZSC runs a full inventory (ARM + Entra) using your current Azure context and generates both Excel and JSON reports.</p>
 </div>
 </div>
 </div>
@@ -198,10 +198,10 @@ Invoke-AzureTenantInventory</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># ARM only — skip Entra ID
-Invoke-AzureTenantInventory -Scope ArmOnly
+Invoke-AzureScout -Scope ArmOnly
 
 # Entra ID only — skip ARM resources
-Invoke-AzureTenantInventory -Scope EntraOnly</code></pre>
+Invoke-AzureScout -Scope EntraOnly</code></pre>
 </div>
 </div>
 </div>
@@ -241,10 +241,10 @@ Invoke-AzureTenantInventory -Scope EntraOnly</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># JSON only output
-Invoke-AzureTenantInventory -OutputFormat Json
+Invoke-AzureScout -OutputFormat Json
 
 # Excel only output
-Invoke-AzureTenantInventory -OutputFormat Excel</code></pre>
+Invoke-AzureScout -OutputFormat Excel</code></pre>
 </div>
 </div>
 </div>
@@ -258,10 +258,10 @@ Invoke-AzureTenantInventory -OutputFormat Excel</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Windows</strong>: <code>C:\AzureTenantInventory\&lt;timestamp&gt;\</code></p>
+<p><strong>Windows</strong>: <code>C:\AzureScout\&lt;timestamp&gt;\</code></p>
 </li>
 <li>
-<p><strong>Linux/macOS</strong>: <code>$HOME/AzureTenantInventory/&lt;timestamp&gt;/</code></p>
+<p><strong>Linux/macOS</strong>: <code>$HOME/AzureScout/&lt;timestamp&gt;/</code></p>
 </li>
 </ul>
 </div>
@@ -270,7 +270,7 @@ Invoke-AzureTenantInventory -OutputFormat Excel</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureTenantInventory -ReportDir 'D:\Reports'</code></pre>
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureScout -ReportDir 'D:\Reports'</code></pre>
 </div>
 </div>
 </div>
@@ -323,10 +323,10 @@ Invoke-AzureTenantInventory -OutputFormat Excel</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Specific subscriptions only
-Invoke-AzureTenantInventory -SubscriptionID 'sub-001','sub-002'
+Invoke-AzureScout -SubscriptionID 'sub-001','sub-002'
 
 # Management group scoped
-Invoke-AzureTenantInventory -ManagementGroup 'mg-prod'</code></pre>
+Invoke-AzureScout -ManagementGroup 'mg-prod'</code></pre>
 </div>
 </div>
 </div>
@@ -336,7 +336,7 @@ Invoke-AzureTenantInventory -ManagementGroup 'mg-prod'</code></pre>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureTenantInventory -ReportName 'Q4-2025-Audit'</code></pre>
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureScout -ReportName 'Q4-2025-Audit'</code></pre>
 </div>
 </div>
 </div>
@@ -376,7 +376,7 @@ Invoke-AzureTenantInventory -ManagementGroup 'mg-prod'</code></pre>
 <h2 id="_pre_flight_permission_checker"><a class="anchor" href="#_pre_flight_permission_checker"></a>Pre-flight Permission Checker</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Before extracting data, AZTI validates that your identity has the required permissions.
+<p>Before extracting data, AZSC validates that your identity has the required permissions.
 Skip it with <code>-SkipPermissionCheck</code> if you&#8217;re confident about your access.</p>
 </div>
 <div class="paragraph">

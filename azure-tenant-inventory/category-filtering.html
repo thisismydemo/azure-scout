@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Category Filtering :: Azure Tenant Inventory Documentation</title>
-    <link rel="canonical" href="https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/category-filtering.html">
+    <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/azure-tenant-inventory/category-filtering.html">
     <meta name="description" content="How to use the -Category parameter to limit Azure Tenant Inventory scans">
     <meta name="generator" content="Antora 3.1.14">
     <link rel="stylesheet" href="../_/css/site.css">
@@ -13,7 +13,7 @@
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://thisismydemo.github.io/azure-inventory">Azure Tenant Inventory Documentation</a>
+      <a class="navbar-item" href="https://thisismydemo.github.io/azure-scout">Azure Tenant Inventory Documentation</a>
       <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
         <span></span>
         <span></span>
@@ -140,7 +140,7 @@
     <li><a href="category-filtering.html">Category Filtering</a></li>
   </ul>
 </nav>
-<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-inventory/edit/main/docs/modules/ROOT/pages/category-filtering.adoc">Edit this Page</a></div>
+<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-scout/edit/main/docs/modules/ROOT/pages/category-filtering.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -171,7 +171,7 @@
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <code>-Category</code> parameter allows you to limit an AZTI inventory run to specific Azure resource categories.
+<p>The <code>-Category</code> parameter allows you to limit an AZSC inventory run to specific Azure resource categories.
 This is especially useful when you need a targeted scan rather than a full-tenant inventory.</p>
 </div>
 <div class="admonitionblock tip">
@@ -295,14 +295,14 @@ This is especially useful when you need a targeted scan rather than a full-tenan
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># These are equivalent:
-Invoke-AzureTenantInventory -TenantID $tid -Category 'IoT'
-Invoke-AzureTenantInventory -TenantID $tid -Category 'Internet of Things'
+Invoke-AzureScout -TenantID $tid -Category 'IoT'
+Invoke-AzureScout -TenantID $tid -Category 'Internet of Things'
 
-Invoke-AzureTenantInventory -TenantID $tid -Category 'Monitor'
-Invoke-AzureTenantInventory -TenantID $tid -Category 'Monitoring'
+Invoke-AzureScout -TenantID $tid -Category 'Monitor'
+Invoke-AzureScout -TenantID $tid -Category 'Monitoring'
 
-Invoke-AzureTenantInventory -TenantID $tid -Category 'Management'
-Invoke-AzureTenantInventory -TenantID $tid -Category 'Management and governance'</code></pre>
+Invoke-AzureScout -TenantID $tid -Category 'Management'
+Invoke-AzureScout -TenantID $tid -Category 'Management and governance'</code></pre>
 </div>
 </div>
 </div>
@@ -315,7 +315,7 @@ Invoke-AzureTenantInventory -TenantID $tid -Category 'Management and governance'
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Inventory only Virtual Machines and related Compute resources
-Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category Compute</code></pre>
+Invoke-AzureScout -TenantID &lt;tenant-id&gt; -Category Compute</code></pre>
 </div>
 </div>
 </div>
@@ -324,13 +324,13 @@ Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category Compute</code>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Inventory Compute and Networking together (common combination for network topology reviews)
-Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category Compute,Networking
+Invoke-AzureScout -TenantID &lt;tenant-id&gt; -Category Compute,Networking
 
 # Security audit: inventory Security + Identity
-Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category Security,Identity
+Invoke-AzureScout -TenantID &lt;tenant-id&gt; -Category Security,Identity
 
 # Data platform review
-Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category Databases,Analytics,AI</code></pre>
+Invoke-AzureScout -TenantID &lt;tenant-id&gt; -Category Databases,Analytics,AI</code></pre>
 </div>
 </div>
 </div>
@@ -339,10 +339,10 @@ Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category Databases,Anal
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Targeted scan with JSON output only (fastest)
-Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category Networking -OutputFormat Json
+Invoke-AzureScout -TenantID &lt;tenant-id&gt; -Category Networking -OutputFormat Json
 
 # Generate Markdown report for Compute only
-Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category Compute -OutputFormat Markdown</code></pre>
+Invoke-AzureScout -TenantID &lt;tenant-id&gt; -Category Compute -OutputFormat Markdown</code></pre>
 </div>
 </div>
 </div>
@@ -351,10 +351,10 @@ Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category Compute -Outpu
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># -Category defaults to 'All' — all categories included
-Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt;
+Invoke-AzureScout -TenantID &lt;tenant-id&gt;
 
 # Explicit equivalent
-Invoke-AzureTenantInventory -TenantID &lt;tenant-id&gt; -Category All</code></pre>
+Invoke-AzureScout -TenantID &lt;tenant-id&gt; -Category All</code></pre>
 </div>
 </div>
 </div>
@@ -382,7 +382,7 @@ Only the selected category folders are loaded, which means Resource Graph querie
 <div class="title">Execution flow with <code>-Category Compute</code></div>
 <div class="content">
 <pre>graph TD
-    A[Invoke-AzureTenantInventory] --&gt; B{Category specified?}
+    A[Invoke-AzureScout] --&gt; B{Category specified?}
     B -- Yes --&gt; C[Normalize aliases]
     C --&gt; D[Load only Compute/*.ps1 modules]
     D --&gt; E[Execute Processing blocks]
@@ -399,7 +399,7 @@ Only the selected category folders are loaded, which means Resource Graph querie
 <h2 id="_adding_new_categories"><a class="anchor" href="#_adding_new_categories"></a>Adding New Categories</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To add a new category to AZTI:</p>
+<p>To add a new category to AZSC:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -407,7 +407,7 @@ Only the selected category folders are loaded, which means Resource Graph querie
 <p>Create a folder under <code>Modules/Public/InventoryModules/&lt;CategoryName&gt;/</code></p>
 </li>
 <li>
-<p>Add the folder name to the <code>[ValidateSet]</code> for <code>-Category</code> in <code>Invoke-AzureTenantInventory.ps1</code></p>
+<p>Add the folder name to the <code>[ValidateSet]</code> for <code>-Category</code> in <code>Invoke-AzureScout.ps1</code></p>
 </li>
 <li>
 <p>Optionally add alias entries to <code>$_categoryAliasMap</code> for common name variants</p>
@@ -434,7 +434,7 @@ Only the selected category folders are loaded, which means Resource Graph querie
 <p><a href="../azure-coverage-table.md">Full Coverage Table</a></p>
 </li>
 <li>
-<p><a href="index.html" class="xref page">AZTI Documentation Home</a></p>
+<p><a href="index.html" class="xref page">AZSC Documentation Home</a></p>
 </li>
 </ul>
 </div>

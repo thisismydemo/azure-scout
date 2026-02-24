@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Entra ID Inventory Modules :: Azure Tenant Inventory Documentation</title>
-    <link rel="canonical" href="https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/entra-modules.html">
+    <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/azure-tenant-inventory/entra-modules.html">
     <meta name="description" content="Complete catalog of 15 Microsoft Entra ID inventory modules.">
     <meta name="keywords" content="entra, identity, modules, graph, azure-ad">
     <meta name="generator" content="Antora 3.1.14">
@@ -14,7 +14,7 @@
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://thisismydemo.github.io/azure-inventory">Azure Tenant Inventory Documentation</a>
+      <a class="navbar-item" href="https://thisismydemo.github.io/azure-scout">Azure Tenant Inventory Documentation</a>
       <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
         <span></span>
         <span></span>
@@ -141,7 +141,7 @@
     <li><a href="entra-modules.html">Entra ID Modules (15)</a></li>
   </ul>
 </nav>
-<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-inventory/edit/main/docs/modules/ROOT/pages/entra-modules.adoc">Edit this Page</a></div>
+<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-scout/edit/main/docs/modules/ROOT/pages/entra-modules.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -160,7 +160,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureTenantInventory -Scope EntraOnly</code></pre>
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureScout -Scope EntraOnly</code></pre>
 </div>
 </div>
 </div>
@@ -169,7 +169,7 @@
 <h2 id="_how_entra_extraction_works"><a class="anchor" href="#_how_entra_extraction_works"></a>How Entra Extraction Works</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <code>Start-AZTIEntraExtraction</code> function calls <code>Invoke-AZTIGraphRequest</code> for each Entra module, which:</p>
+<p>The <code>Start-AZSCEntraExtraction</code> function calls <code>Invoke-AZSCGraphRequest</code> for each Entra module, which:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">

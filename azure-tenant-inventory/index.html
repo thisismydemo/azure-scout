@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Azure Tenant Inventory :: Azure Tenant Inventory Documentation</title>
-    <link rel="canonical" href="https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/index.html">
+    <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/azure-tenant-inventory/index.html">
     <meta name="description" content="A PowerShell module for comprehensive Azure + Entra ID tenant inventory.">
     <meta name="keywords" content="azure, inventory, entra, powershell">
     <meta name="generator" content="Antora 3.1.14">
@@ -14,7 +14,7 @@
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://thisismydemo.github.io/azure-inventory">Azure Tenant Inventory Documentation</a>
+      <a class="navbar-item" href="https://thisismydemo.github.io/azure-scout">Azure Tenant Inventory Documentation</a>
       <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
         <span></span>
         <span></span>
@@ -140,7 +140,7 @@
     <li><a href="index.html">Home</a></li>
   </ul>
 </nav>
-<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-inventory/edit/main/docs/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-scout/edit/main/docs/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -152,7 +152,7 @@
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Azure Tenant Inventory (AZTI) is a PowerShell module that generates comprehensive inventory reports for a single Azure tenant — covering both ARM resources and Entra ID (Azure AD) objects.</p>
+<p>Azure Tenant Inventory (AZSC) is a PowerShell module that generates comprehensive inventory reports for a single Azure tenant — covering both ARM resources and Entra ID (Azure AD) objects.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -197,16 +197,16 @@
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Import from local clone
-Import-Module ./AzureTenantInventory.psd1
+Import-Module ./AzureScout.psd1
 
 # Run full inventory (uses current Azure context)
-Invoke-AzureTenantInventory
+Invoke-AzureScout
 
 # ARM-only scan with JSON output
-Invoke-AzureTenantInventory -Scope ArmOnly -OutputFormat Json
+Invoke-AzureScout -Scope ArmOnly -OutputFormat Json
 
 # Entra ID only
-Invoke-AzureTenantInventory -Scope EntraOnly</code></pre>
+Invoke-AzureScout -Scope EntraOnly</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -216,7 +216,7 @@ Invoke-AzureTenantInventory -Scope EntraOnly</code></pre>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-If you&#8217;re already logged in via <code>Connect-AzAccount</code>, AZTI uses your existing session — no additional flags needed.
+If you&#8217;re already logged in via <code>Connect-AzAccount</code>, AZSC uses your existing session — no additional flags needed.
 </td>
 </tr>
 </table>

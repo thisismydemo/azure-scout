@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Authentication :: Azure Tenant Inventory Documentation</title>
-    <link rel="canonical" href="https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/authentication.html">
+    <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/azure-tenant-inventory/authentication.html">
     <meta name="description" content="Five authentication methods supported by Azure Tenant Inventory.">
     <meta name="keywords" content="authentication, login, spn, certificate, device-code, managed-identity">
     <meta name="generator" content="Antora 3.1.14">
@@ -14,7 +14,7 @@
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://thisismydemo.github.io/azure-inventory">Azure Tenant Inventory Documentation</a>
+      <a class="navbar-item" href="https://thisismydemo.github.io/azure-scout">Azure Tenant Inventory Documentation</a>
       <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
         <span></span>
         <span></span>
@@ -141,7 +141,7 @@
     <li><a href="authentication.html">Authentication</a></li>
   </ul>
 </nav>
-<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-inventory/edit/main/docs/modules/ROOT/pages/authentication.adoc">Edit this Page</a></div>
+<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-scout/edit/main/docs/modules/ROOT/pages/authentication.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -154,7 +154,7 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>Azure Tenant Inventory supports five authentication methods.
-The module uses <code>Connect-AZTILoginSession</code> internally, which selects the auth path based on the parameters you provide.</p>
+The module uses <code>Connect-AZSCLoginSession</code> internally, which selects the auth path based on the parameters you provide.</p>
 </div>
 </div>
 </div>
@@ -191,12 +191,12 @@ The module uses <code>Connect-AZTILoginSession</code> internally, which selects 
 <div class="sect2">
 <h3 id="_1_current_user_interactive"><a class="anchor" href="#_1_current_user_interactive"></a>1. Current User (Interactive)</h3>
 <div class="paragraph">
-<p>The default. If you&#8217;ve already run <code>Connect-AzAccount</code>, AZTI reuses your session.</p>
+<p>The default. If you&#8217;ve already run <code>Connect-AzAccount</code>, AZSC reuses your session.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Connect-AzAccount
-Invoke-AzureTenantInventory</code></pre>
+Invoke-AzureScout</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -210,7 +210,7 @@ Invoke-AzureTenantInventory</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureTenantInventory -TenantID '00000000-...' -DeviceLogin</code></pre>
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureScout -TenantID '00000000-...' -DeviceLogin</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -224,7 +224,7 @@ Invoke-AzureTenantInventory</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureTenantInventory `
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureScout `
     -TenantID  '00000000-...' `
     -AppId     '11111111-...' `
     -Secret    $env:CLIENT_SECRET</code></pre>
@@ -250,10 +250,10 @@ Store the secret in a Key Vault or pipeline secret — never hardcode it.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureTenantInventory `
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureScout `
     -TenantID         '00000000-...' `
     -AppId            '11111111-...' `
-    -CertificatePath  'C:\certs\azti-spn.pfx' `
+    -CertificatePath  'C:\certs\AZSC-spn.pfx' `
     -CertificatePassword $certPwd</code></pre>
 </div>
 </div>
@@ -267,7 +267,7 @@ The module detects managed identity automatically — no parameters required.</p
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Inside an Azure VM/Function/Automation Account
-Invoke-AzureTenantInventory -TenantID '00000000-...'</code></pre>
+Invoke-AzureScout -TenantID '00000000-...'</code></pre>
 </div>
 </div>
 </div>
@@ -281,7 +281,7 @@ Invoke-AzureTenantInventory -TenantID '00000000-...'</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureTenantInventory -AzureEnvironment AzureUSGovernment</code></pre>
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureScout -AzureEnvironment AzureUSGovernment</code></pre>
 </div>
 </div>
 <div class="paragraph">
