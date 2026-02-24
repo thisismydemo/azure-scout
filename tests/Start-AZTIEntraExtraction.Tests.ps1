@@ -19,11 +19,10 @@
     Created: 2026-02-23
 #>
 
-BeforeAll {
-    $ModuleRoot = Split-Path -Parent $PSScriptRoot
-    Import-Module (Join-Path $ModuleRoot 'AzureTenantInventory.psd1') -Force -ErrorAction Stop
-}
+$ModuleRoot = Split-Path -Parent $PSScriptRoot
+Import-Module (Join-Path $ModuleRoot 'AzureTenantInventory.psd1') -Force -ErrorAction Stop
 
+InModuleScope 'AzureTenantInventory' {
 Describe 'Start-AZTIEntraExtraction' {
 
     # ── Return Structure ──────────────────────────────────────────────
@@ -34,7 +33,7 @@ Describe 'Start-AZTIEntraExtraction' {
                 return @(
                     [PSCustomObject]@{ id = '1'; displayName = 'Test User'; userPrincipalName = 'user@test.com' }
                 )
-            } -ModuleName AzureTenantInventory
+            }
         }
 
         It 'Returns an object with EntraResources property' {
@@ -68,7 +67,7 @@ Describe 'Start-AZTIEntraExtraction' {
                 return @(
                     [PSCustomObject]@{ id = 'obj-001'; displayName = 'Generic Object' }
                 )
-            } -ModuleName AzureTenantInventory
+            }
         }
 
         It 'Each resource has an id property' {
@@ -119,7 +118,7 @@ Describe 'Start-AZTIEntraExtraction' {
                 return @(
                     [PSCustomObject]@{ id = 'obj-1'; displayName = 'Test Object' }
                 )
-            } -ModuleName AzureTenantInventory
+            }
         }
 
         AfterAll {
@@ -128,7 +127,7 @@ Describe 'Start-AZTIEntraExtraction' {
 
         It 'Calls Invoke-AZTIGraphRequest for at least 15 entra queries' {
             $result = Start-AZTIEntraExtraction -TenantID 'test-tenant'
-            Should -Invoke Invoke-AZTIGraphRequest -ModuleName AzureTenantInventory -Times 15 -Scope It
+            Should -Invoke Invoke-AZTIGraphRequest -Times 15 -Scope It
         }
     }
 
@@ -147,7 +146,7 @@ Describe 'Start-AZTIEntraExtraction' {
                 return @(
                     [PSCustomObject]@{ id = "obj-$($script:failCallCount)"; displayName = 'Item' }
                 )
-            } -ModuleName AzureTenantInventory
+            }
         }
 
         AfterAll {
@@ -168,7 +167,7 @@ Describe 'Start-AZTIEntraExtraction' {
     Context 'All Queries Fail' {
 
         BeforeAll {
-            Mock Invoke-AZTIGraphRequest { throw 'Service unavailable' } -ModuleName AzureTenantInventory
+            Mock Invoke-AZTIGraphRequest { throw 'Service unavailable' }
         }
 
         It 'Does not throw even when all queries fail' {
@@ -195,7 +194,7 @@ Describe 'Start-AZTIEntraExtraction' {
                 return @(
                     [PSCustomObject]@{ id = 'item-1'; displayName = 'Item' }
                 )
-            } -ModuleName AzureTenantInventory
+            }
         }
 
         It 'Handles single-object responses without error' {
@@ -220,3 +219,4 @@ Describe 'Start-AZTIEntraExtraction' {
         }
     }
 }
+} # end InModuleScope

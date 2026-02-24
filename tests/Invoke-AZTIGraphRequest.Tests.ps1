@@ -20,10 +20,8 @@
     Created: 2026-02-23
 #>
 
-BeforeAll {
-    $ModuleRoot = Split-Path -Parent $PSScriptRoot
-    Import-Module (Join-Path $ModuleRoot 'AzureTenantInventory.psd1') -Force -ErrorAction Stop
-}
+$ModuleRoot = Split-Path -Parent $PSScriptRoot
+Import-Module (Join-Path $ModuleRoot 'AzureTenantInventory.psd1') -Force -ErrorAction Stop
 
 Describe 'Invoke-AZTIGraphRequest' {
 
@@ -31,21 +29,27 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'URI Normalization' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken { return 'mock-token' } -ModuleName AzureTenantInventory
+            Mock Get-AZTIGraphToken {
+                return @{ 'Authorization' = 'Bearer mock-token'; 'Content-Type' = 'application/json' }
+            } -ModuleName AzureTenantInventory
             Mock Invoke-RestMethod {
                 return [PSCustomObject]@{ value = @([PSCustomObject]@{ id = '1'; displayName = 'Test' }) }
             } -ModuleName AzureTenantInventory
         }
 
         It 'Prepends https://graph.microsoft.com for relative URIs' {
-            Invoke-AZTIGraphRequest -Uri '/v1.0/organization'
+            InModuleScope 'AzureTenantInventory' {
+                Invoke-AZTIGraphRequest -Uri '/v1.0/organization'
+            }
             Should -Invoke Invoke-RestMethod -ModuleName AzureTenantInventory -ParameterFilter {
                 $Uri -like 'https://graph.microsoft.com/v1.0/organization*'
             }
         }
 
         It 'Passes absolute URIs through unchanged' {
-            Invoke-AZTIGraphRequest -Uri 'https://graph.microsoft.com/v1.0/users'
+            InModuleScope 'AzureTenantInventory' {
+                Invoke-AZTIGraphRequest -Uri 'https://graph.microsoft.com/v1.0/users'
+            }
             Should -Invoke Invoke-RestMethod -ModuleName AzureTenantInventory -ParameterFilter {
                 $Uri -eq 'https://graph.microsoft.com/v1.0/users'
             }
@@ -56,7 +60,9 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'Single Successful Request' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken { return 'mock-token' } -ModuleName AzureTenantInventory
+            Mock Get-AZTIGraphToken {
+                return @{ 'Authorization' = 'Bearer mock-token'; 'Content-Type' = 'application/json' }
+            } -ModuleName AzureTenantInventory
             Mock Invoke-RestMethod {
                 return [PSCustomObject]@{
                     value = @(
@@ -68,7 +74,9 @@ Describe 'Invoke-AZTIGraphRequest' {
         }
 
         It 'Returns objects from the .value collection' {
-            $result = Invoke-AZTIGraphRequest -Uri '/v1.0/users'
+            $result = InModuleScope 'AzureTenantInventory' {
+                Invoke-AZTIGraphRequest -Uri '/v1.0/users'
+            }
             $result.Count | Should -Be 2
             $result[0].displayName | Should -Be 'User A'
         }
@@ -78,14 +86,18 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'Single-Object Endpoint (no .value)' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken { return 'mock-token' } -ModuleName AzureTenantInventory
+            Mock Get-AZTIGraphToken {
+                return @{ 'Authorization' = 'Bearer mock-token'; 'Content-Type' = 'application/json' }
+            } -ModuleName AzureTenantInventory
             Mock Invoke-RestMethod {
                 return [PSCustomObject]@{ id = 'org-1'; displayName = 'Contoso' }
             } -ModuleName AzureTenantInventory
         }
 
         It 'Returns the raw response when no .value property exists' {
-            $result = Invoke-AZTIGraphRequest -Uri '/v1.0/organization'
+            $result = InModuleScope 'AzureTenantInventory' {
+                Invoke-AZTIGraphRequest -Uri '/v1.0/organization'
+            }
             $result.displayName | Should -Be 'Contoso'
         }
     }
@@ -94,7 +106,9 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'Pagination via @odata.nextLink' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken { return 'mock-token' } -ModuleName AzureTenantInventory
+            Mock Get-AZTIGraphToken {
+                return @{ 'Authorization' = 'Bearer mock-token'; 'Content-Type' = 'application/json' }
+            } -ModuleName AzureTenantInventory
 
             $script:callCount = 0
             Mock Invoke-RestMethod {
@@ -118,7 +132,9 @@ Describe 'Invoke-AZTIGraphRequest' {
         }
 
         It 'Follows @odata.nextLink and aggregates results' {
-            $result = Invoke-AZTIGraphRequest -Uri '/v1.0/users'
+            $result = InModuleScope 'AzureTenantInventory' {
+                Invoke-AZTIGraphRequest -Uri '/v1.0/users'
+            }
             $result.Count | Should -Be 2
         }
 
@@ -131,7 +147,9 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'SinglePage Switch' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken { return 'mock-token' } -ModuleName AzureTenantInventory
+            Mock Get-AZTIGraphToken {
+                return @{ 'Authorization' = 'Bearer mock-token'; 'Content-Type' = 'application/json' }
+            } -ModuleName AzureTenantInventory
             Mock Invoke-RestMethod {
                 return [PSCustomObject]@{
                     value             = @([PSCustomObject]@{ id = '1' })
@@ -141,7 +159,9 @@ Describe 'Invoke-AZTIGraphRequest' {
         }
 
         It 'Does not follow nextLink when SinglePage is set' {
-            $result = Invoke-AZTIGraphRequest -Uri '/v1.0/users' -SinglePage
+            InModuleScope 'AzureTenantInventory' {
+                Invoke-AZTIGraphRequest -Uri '/v1.0/users' -SinglePage
+            }
             Should -Invoke Invoke-RestMethod -ModuleName AzureTenantInventory -Times 1 -Scope It
         }
     }
@@ -150,17 +170,17 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'Retry on 429 Throttle' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken { return 'mock-token' } -ModuleName AzureTenantInventory
+            Mock Get-AZTIGraphToken {
+                return @{ 'Authorization' = 'Bearer mock-token'; 'Content-Type' = 'application/json' }
+            } -ModuleName AzureTenantInventory
             Mock Start-Sleep { } -ModuleName AzureTenantInventory
 
             $script:retryCallCount = 0
             Mock Invoke-RestMethod {
                 $script:retryCallCount++
                 if ($script:retryCallCount -eq 1) {
-                    $ex = [System.Net.WebException]::new('Too Many Requests')
-                    $errorRecord = [System.Management.Automation.ErrorRecord]::new($ex, '429', 'InvalidOperation', $null)
-                    # Simulate 429 with Retry-After header via exception
-                    throw $errorRecord
+                    $mockResponse = [System.Net.Http.HttpResponseMessage]::new([System.Net.HttpStatusCode]429)
+                    throw [Microsoft.PowerShell.Commands.HttpResponseException]::new('Too Many Requests', $mockResponse)
                 }
                 return [PSCustomObject]@{ value = @([PSCustomObject]@{ id = '1' }) }
             } -ModuleName AzureTenantInventory
@@ -171,7 +191,9 @@ Describe 'Invoke-AZTIGraphRequest' {
         }
 
         It 'Retries after a 429 error' {
-            $result = Invoke-AZTIGraphRequest -Uri '/v1.0/users' -MaxRetries 3
+            InModuleScope 'AzureTenantInventory' {
+                Invoke-AZTIGraphRequest -Uri '/v1.0/users' -MaxRetries 3
+            }
             Should -Invoke Invoke-RestMethod -ModuleName AzureTenantInventory -Times 2 -Scope It
         }
 
@@ -184,15 +206,17 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'Retry on 5xx Server Error' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken { return 'mock-token' } -ModuleName AzureTenantInventory
+            Mock Get-AZTIGraphToken {
+                return @{ 'Authorization' = 'Bearer mock-token'; 'Content-Type' = 'application/json' }
+            } -ModuleName AzureTenantInventory
             Mock Start-Sleep { } -ModuleName AzureTenantInventory
 
             $script:serverErrorCount = 0
             Mock Invoke-RestMethod {
                 $script:serverErrorCount++
                 if ($script:serverErrorCount -le 2) {
-                    $ex = [System.Net.WebException]::new('Internal Server Error')
-                    throw $ex
+                    $mockResponse = [System.Net.Http.HttpResponseMessage]::new([System.Net.HttpStatusCode]::InternalServerError)
+                    throw [Microsoft.PowerShell.Commands.HttpResponseException]::new('Internal Server Error', $mockResponse)
                 }
                 return [PSCustomObject]@{ value = @([PSCustomObject]@{ id = '1' }) }
             } -ModuleName AzureTenantInventory
@@ -203,7 +227,9 @@ Describe 'Invoke-AZTIGraphRequest' {
         }
 
         It 'Retries multiple times on server errors' {
-            $result = Invoke-AZTIGraphRequest -Uri '/v1.0/users' -MaxRetries 5
+            $result = InModuleScope 'AzureTenantInventory' {
+                Invoke-AZTIGraphRequest -Uri '/v1.0/users' -MaxRetries 5
+            }
             $result | Should -Not -BeNullOrEmpty
         }
     }
@@ -212,13 +238,20 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'Max Retries Exceeded' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken { return 'mock-token' } -ModuleName AzureTenantInventory
+            Mock Get-AZTIGraphToken {
+                return @{ 'Authorization' = 'Bearer mock-token'; 'Content-Type' = 'application/json' }
+            } -ModuleName AzureTenantInventory
             Mock Start-Sleep { } -ModuleName AzureTenantInventory
-            Mock Invoke-RestMethod { throw [System.Net.WebException]::new('Service Unavailable') } -ModuleName AzureTenantInventory
+            Mock Invoke-RestMethod {
+                $mockResponse = [System.Net.Http.HttpResponseMessage]::new([System.Net.HttpStatusCode]::ServiceUnavailable)
+                throw [Microsoft.PowerShell.Commands.HttpResponseException]::new('Service Unavailable', $mockResponse)
+            } -ModuleName AzureTenantInventory
         }
 
         It 'Throws after exhausting all retries' {
-            { Invoke-AZTIGraphRequest -Uri '/v1.0/users' -MaxRetries 2 } | Should -Throw
+            { InModuleScope 'AzureTenantInventory' {
+                Invoke-AZTIGraphRequest -Uri '/v1.0/users' -MaxRetries 2
+            } } | Should -Throw
         }
     }
 
@@ -226,14 +259,18 @@ Describe 'Invoke-AZTIGraphRequest' {
     Context 'Token Handling' {
 
         BeforeAll {
-            Mock Get-AZTIGraphToken { return 'mock-token-refreshed' } -ModuleName AzureTenantInventory
+            Mock Get-AZTIGraphToken {
+                return @{ 'Authorization' = 'Bearer mock-token-refreshed'; 'Content-Type' = 'application/json' }
+            } -ModuleName AzureTenantInventory
             Mock Invoke-RestMethod {
                 return [PSCustomObject]@{ value = @([PSCustomObject]@{ id = '1' }) }
             } -ModuleName AzureTenantInventory
         }
 
         It 'Fetches a token via Get-AZTIGraphToken' {
-            Invoke-AZTIGraphRequest -Uri '/v1.0/users'
+            InModuleScope 'AzureTenantInventory' {
+                Invoke-AZTIGraphRequest -Uri '/v1.0/users'
+            }
             Should -Invoke Get-AZTIGraphToken -ModuleName AzureTenantInventory
         }
     }
