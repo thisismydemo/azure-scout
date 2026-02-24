@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ARM Inventory Modules :: Azure Tenant Inventory Documentation</title>
+    <link rel="canonical" href="https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/arm-modules.html">
+    <meta name="description" content="Complete catalog of 95 Azure Resource Manager inventory modules across 16 categories.">
+    <meta name="keywords" content="arm, modules, categories, resources, inventory">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://thisismydemo.github.io/azure-inventory">Azure Tenant Inventory Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="azure-tenant-inventory" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Azure Tenant Inventory</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Home</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="authentication.html">Authentication</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="usage.html">Usage Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="permissions.html">Permissions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Module Reference</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="arm-modules.html">ARM Modules (95)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="entra-modules.html">Entra ID Modules (15)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Project</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="folder-structure.html">Repository Structure</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributing.html">Contributing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="credits.html">Credits &amp; Attribution</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="changelog.html">Changelog</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Azure Tenant Inventory</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="index.html">Azure Tenant Inventory</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Azure Tenant Inventory</a></li>
+    <li>Module Reference</li>
+    <li><a href="arm-modules.html">ARM Modules (95)</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-inventory/edit/main/docs/modules/ROOT/pages/arm-modules.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">ARM Inventory Modules</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Azure Tenant Inventory includes <strong>95 ARM inventory modules</strong> organized into <strong>16 categories</strong>.
+Each module extracts data for a specific Azure resource type using the Azure Resource Manager APIs.</p>
+</div>
+<div class="paragraph">
+<p>Run ARM-only extraction with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureTenantInventory -Scope ArmOnly</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_module_catalog"><a class="anchor" href="#_module_catalog"></a>Module Catalog</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_ai_14_modules"><a class="anchor" href="#_ai_14_modules"></a>AI (14 modules)</h3>
+<div class="paragraph">
+<p>Cognitive Services, Machine Learning, and AI platform resources.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AzureAI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Azure AI Services (multi-service)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ComputerVision</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Computer Vision accounts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ContentModerator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content Moderator accounts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ContentSafety</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content Safety accounts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CustomVision</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Custom Vision training &amp; prediction</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FaceAPI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Face API accounts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FormRecognizer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Form Recognizer / Document Intelligence</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HealthInsights</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Health Insights accounts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ImmersiveReader</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Immersive Reader resources</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MachineLearning</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Machine Learning workspaces</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SearchServices</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Azure AI Search (Cognitive Search)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SpeechService</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Speech Services accounts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TextAnalytics</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Text Analytics / Language Service</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Translator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Translator resources</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_analytics_6_modules"><a class="anchor" href="#_analytics_6_modules"></a>Analytics (6 modules)</h3>
+<div class="paragraph">
+<p>Big data, streaming, and data governance resources.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Databricks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Azure Databricks workspaces</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DataExplorerCluster</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Azure Data Explorer (Kusto) clusters</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EvtHub</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Event Hubs namespaces</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Purview</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Microsoft Purview accounts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Streamanalytics</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stream Analytics jobs</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Synapse</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Synapse Analytics workspaces</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_apis_5_modules"><a class="anchor" href="#_apis_5_modules"></a>APIs (5 modules)</h3>
+<div class="paragraph">
+<p>Azure platform advisory and management APIs.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AdvisorScore</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Azure Advisor score summaries</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ManagedIds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Managed Identity assignments</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Outages</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Service health / outage records</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ReservationRecom</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reservation purchase recommendations</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SupportTickets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Azure Support tickets</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_azure_local_6_modules"><a class="anchor" href="#_azure_local_6_modules"></a>Azure Local (6 modules)</h3>
+<div class="paragraph">
+<p>Azure Local (formerly Azure Stack HCI) resources.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clusters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Azure Local clusters</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GalleryImages</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VM gallery images</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LogicalNetworks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Logical networks</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MarketplaceGalleryImages</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Marketplace gallery images</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StorageContainers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage containers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VirtualMachines</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arc-enabled virtual machines</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_compute_7_modules"><a class="anchor" href="#_compute_7_modules"></a>Compute (7 modules)</h3>
+<div class="paragraph">
+<p>Virtual machines, scale sets, and compute infrastructure.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AvailabilitySets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VM availability sets</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AVD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Azure Virtual Desktop host pools</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CloudServices</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cloud Services (classic &amp; extended)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VirtualMachine</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Virtual machines</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VirtualMachineScaleSet</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VM scale sets (VMSS)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VMDisk</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Managed disks</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VMWare</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Azure VMware Solution</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_container_6_modules"><a class="anchor" href="#_container_6_modules"></a>Container (6 modules)</h3>
+<div class="paragraph">
+<p>Kubernetes, container apps, and container registries.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AKS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Azure Kubernetes Service clusters</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ARO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Azure Red Hat OpenShift clusters</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ContainerApp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container Apps</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ContainerAppEnv</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container App Environments</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ContainerGroups</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container Instances (groups)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ContainerRegistries</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Azure Container Registry</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_database_13_modules"><a class="anchor" href="#_database_13_modules"></a>Database (13 modules)</h3>
+<div class="paragraph">
+<p>Relational, NoSQL, and cache database services.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CosmosDB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cosmos DB accounts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MariaDB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MariaDB servers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MySQL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MySQL single servers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MySQLflexible</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MySQL flexible servers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POSTGRE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL single servers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POSTGREFlexible</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL flexible servers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RedisCache</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Azure Cache for Redis</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQLDB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL databases</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQLMI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL Managed Instances</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQLMIDB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL MI databases</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQLPOOL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Synapse SQL pools</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQLSERVER</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL servers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQLVM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL virtual machines</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_hybrid_5_modules"><a class="anchor" href="#_hybrid_5_modules"></a>Hybrid (5 modules)</h3>
+<div class="paragraph">
+<p>Azure Arc and hybrid resource management.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ArcExtensions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arc machine extensions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ArcGateways</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arc gateways</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ArcKubernetes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arc-enabled Kubernetes clusters</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ArcResourceBridge</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arc resource bridges</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ARCServers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arc-enabled servers</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_integration_2_modules"><a class="anchor" href="#_integration_2_modules"></a>Integration (2 modules)</h3>
+<div class="paragraph">
+<p>API management and messaging services.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APIM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">API Management instances</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ServiceBUS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Service Bus namespaces</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_iot_1_module"><a class="anchor" href="#_iot_1_module"></a>IoT (1 module)</h3>
+<div class="paragraph">
+<p>Internet of Things platform resources.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IOTHubs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IoT Hub instances</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_management_3_modules"><a class="anchor" href="#_management_3_modules"></a>Management (3 modules)</h3>
+<div class="paragraph">
+<p>Automation, backup, and recovery services.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AutomationAccounts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Automation accounts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Backup</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Backup items and policies</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RecoveryVault</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Recovery Services vaults</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_monitoring_2_modules"><a class="anchor" href="#_monitoring_2_modules"></a>Monitoring (2 modules)</h3>
+<div class="paragraph">
+<p>Observability and logging resources.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AppInsights</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application Insights components</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Workspaces</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Log Analytics workspaces</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_network_20_modules"><a class="anchor" href="#_network_20_modules"></a>Network (20 modules)</h3>
+<div class="paragraph">
+<p>Virtual networking, firewalls, load balancers, and DNS.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ApplicationGateways</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application Gateways</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AzureFirewall</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Azure Firewalls</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BastionHosts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bastion hosts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Connections</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VPN / VNet connections</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ExpressRoute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ExpressRoute circuits</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Frontdoor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Front Door profiles</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LoadBalancer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Load balancers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NATGateway</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NAT gateways</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NetworkInterface</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Network interfaces (NICs)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NetworkSecurityGroup</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Network Security Groups (NSGs)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PrivateDNS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Private DNS zones</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PrivateEndpoint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Private endpoints</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PublicDNS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public DNS zones</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PublicIP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public IP addresses</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RouteTables</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Route tables / UDRs</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TrafficManager</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Traffic Manager profiles</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VirtualNetwork</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Virtual networks</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VirtualNetworkGateways</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VPN / ExpressRoute gateways</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VirtualWAN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Virtual WAN hubs</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">vNETPeering</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VNet peering connections</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_security_1_module"><a class="anchor" href="#_security_1_module"></a>Security (1 module)</h3>
+<div class="paragraph">
+<p>Security and secrets management.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vault</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Key Vault instances</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_storage_2_modules"><a class="anchor" href="#_storage_2_modules"></a>Storage (2 modules)</h3>
+<div class="paragraph">
+<p>Block, file, and object storage services.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NetApp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Azure NetApp Files accounts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StorageAccounts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage accounts</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_web_2_modules"><a class="anchor" href="#_web_2_modules"></a>Web (2 modules)</h3>
+<div class="paragraph">
+<p>App Service hosting and web applications.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APPServicePlan</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">App Service plans</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APPServices</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">App Services (web apps, APIs)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../_/js/site.js" data-ui-root-path="../_"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

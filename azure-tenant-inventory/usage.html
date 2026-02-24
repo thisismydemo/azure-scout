@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Usage Guide :: Azure Tenant Inventory Documentation</title>
+    <link rel="canonical" href="https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/usage.html">
+    <meta name="description" content="How to use Azure Tenant Inventory — scopes, output formats, and content toggles.">
+    <meta name="keywords" content="usage, scope, output, format, json, excel">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://thisismydemo.github.io/azure-inventory">Azure Tenant Inventory Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="azure-tenant-inventory" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Azure Tenant Inventory</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Home</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="authentication.html">Authentication</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="usage.html">Usage Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="permissions.html">Permissions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Module Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="arm-modules.html">ARM Modules (95)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="entra-modules.html">Entra ID Modules (15)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Project</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="folder-structure.html">Repository Structure</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributing.html">Contributing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="credits.html">Credits &amp; Attribution</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="changelog.html">Changelog</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Azure Tenant Inventory</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="index.html">Azure Tenant Inventory</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Azure Tenant Inventory</a></li>
+    <li>Getting Started</li>
+    <li><a href="usage.html">Usage Guide</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-inventory/edit/main/docs/modules/ROOT/pages/usage.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Usage Guide</h1>
+<div class="sect1">
+<h2 id="_basic_usage"><a class="anchor" href="#_basic_usage"></a>Basic Usage</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Import-Module ./AzureTenantInventory.psd1
+Invoke-AzureTenantInventory</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With no parameters, AZTI runs a full inventory (ARM + Entra) using your current Azure context and generates both Excel and JSON reports.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scope"><a class="anchor" href="#_scope"></a>Scope</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>-Scope</code> parameter controls which data domains are inventoried:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>All</code> (default)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inventories both ARM resources and Entra ID objects</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ArmOnly</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Skips all Entra ID extraction — ARM resources only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EntraOnly</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Skips all ARM extraction — Entra ID objects only</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># ARM only — skip Entra ID
+Invoke-AzureTenantInventory -Scope ArmOnly
+
+# Entra ID only — skip ARM resources
+Invoke-AzureTenantInventory -Scope EntraOnly</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_output_format"><a class="anchor" href="#_output_format"></a>Output Format</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>-OutputFormat</code> parameter controls report file types:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Produces</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>All</code> (default)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Both Excel (.xlsx) and JSON (.json)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Excel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Excel only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Json</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON only</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># JSON only output
+Invoke-AzureTenantInventory -OutputFormat Json
+
+# Excel only output
+Invoke-AzureTenantInventory -OutputFormat Excel</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_report_location"><a class="anchor" href="#_report_location"></a>Report Location</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Reports are saved to a timestamped folder:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Windows</strong>: <code>C:\AzureTenantInventory\&lt;timestamp&gt;\</code></p>
+</li>
+<li>
+<p><strong>Linux/macOS</strong>: <code>$HOME/AzureTenantInventory/&lt;timestamp&gt;/</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Override with <code>-ReportDir</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureTenantInventory -ReportDir 'D:\Reports'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_content_toggles"><a class="anchor" href="#_content_toggles"></a>Content Toggles</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Switch parameters to include/exclude specific content:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-SecurityCenter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Include Microsoft Defender for Cloud findings</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-IncludeTags</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Include resource tags in Excel worksheets</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-SkipAdvisory</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Skip Azure Advisor recommendations</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-SkipPolicy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Skip Azure Policy compliance data</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-SkipPermissionCheck</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Skip the pre-flight permission validation</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_subscription_management_group_filters"><a class="anchor" href="#_subscription_management_group_filters"></a>Subscription &amp; Management Group Filters</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Specific subscriptions only
+Invoke-AzureTenantInventory -SubscriptionID 'sub-001','sub-002'
+
+# Management group scoped
+Invoke-AzureTenantInventory -ManagementGroup 'mg-prod'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_naming_the_report"><a class="anchor" href="#_naming_the_report"></a>Naming the Report</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureTenantInventory -ReportName 'Q4-2025-Audit'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_json_output_structure"><a class="anchor" href="#_json_output_structure"></a>JSON Output Structure</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The JSON report uses a normalized, flat resource schema:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "metadata": {
+    "tenantId": "...",
+    "generatedAt": "2026-01-15T10:30:00Z",
+    "scope": "All",
+    "moduleVersion": "1.5.0"
+  },
+  "resources": [
+    {
+      "id": "/subscriptions/.../resourceGroups/.../providers/...",
+      "name": "my-vm",
+      "TYPE": "microsoft.compute/virtualmachines",
+      "resourceGroup": "rg-prod",
+      "subscriptionId": "...",
+      "location": "eastus",
+      "properties": { }
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pre_flight_permission_checker"><a class="anchor" href="#_pre_flight_permission_checker"></a>Pre-flight Permission Checker</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before extracting data, AZTI validates that your identity has the required permissions.
+Skip it with <code>-SkipPermissionCheck</code> if you&#8217;re confident about your access.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="permissions.html" class="xref page">Permissions</a> for the full list of required roles and API permissions.</p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../_/js/site.js" data-ui-root-path="../_"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

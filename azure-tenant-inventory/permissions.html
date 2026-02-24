@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Required Permissions :: Azure Tenant Inventory Documentation</title>
+    <link rel="canonical" href="https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/permissions.html">
+    <meta name="description" content="ARM RBAC and Microsoft Graph permissions required by Azure Tenant Inventory.">
+    <meta name="keywords" content="permissions, rbac, graph, api, roles">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://thisismydemo.github.io/azure-inventory">Azure Tenant Inventory Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="azure-tenant-inventory" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Azure Tenant Inventory</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Home</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="authentication.html">Authentication</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="usage.html">Usage Guide</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="permissions.html">Permissions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Module Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="arm-modules.html">ARM Modules (95)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="entra-modules.html">Entra ID Modules (15)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Project</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="folder-structure.html">Repository Structure</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributing.html">Contributing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="credits.html">Credits &amp; Attribution</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="changelog.html">Changelog</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Azure Tenant Inventory</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="index.html">Azure Tenant Inventory</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Azure Tenant Inventory</a></li>
+    <li>Getting Started</li>
+    <li><a href="permissions.html">Permissions</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-inventory/edit/main/docs/modules/ROOT/pages/permissions.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Required Permissions</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Azure Tenant Inventory requires two categories of permissions:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>ARM (Azure Resource Manager)</strong> — RBAC role assignments on subscriptions</p>
+</li>
+<li>
+<p><strong>Microsoft Graph API</strong> — Application or delegated permissions for Entra ID data</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_arm_permissions"><a class="anchor" href="#_arm_permissions"></a>ARM Permissions</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Permission</th>
+<th class="tableblock halign-left valign-top">Scope</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Reader</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Subscription(s)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enumerate resources, read properties</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Reader</code> on role assignments</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Subscription(s)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read RBAC role assignments (optional — Warn if missing)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The pre-flight checker validates:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Subscription Enumeration</strong> — Can <code>Get-AzSubscription</code> return at least one subscription? (Fail if not)</p>
+</li>
+<li>
+<p><strong>Role Assignment Read</strong> — Can <code>Get-AzRoleAssignment</code> read roles on the first subscription? (Warn if not — non-blocking)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_microsoft_graph_permissions"><a class="anchor" href="#_microsoft_graph_permissions"></a>Microsoft Graph Permissions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following Microsoft Graph API permissions are required for Entra ID inventory:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Permission</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Organization.Read.All</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application or Delegated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read tenant organization details</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>User.Read.All</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application or Delegated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read all user profiles</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Group.Read.All</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application or Delegated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read all groups and memberships</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Application.Read.All</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application or Delegated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read all app registrations and service principals</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Directory.Read.All</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application or Delegated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read directory roles, administrative units, domains</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Policy.Read.All</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application or Delegated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read conditional access policies, named locations</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RoleManagement.Read.All</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application or Delegated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read PIM role assignments and eligible assignments</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IdentityProvider.Read.All</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application or Delegated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read authentication methods and identity providers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Policy.Read.ConditionalAccess</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application or Delegated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read conditional access policies (optional — Warn only)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pre_flight_validation"><a class="anchor" href="#_pre_flight_validation"></a>Pre-flight Validation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>Test-AZTIPermissions</code> function runs automatically before extraction (unless <code>-SkipPermissionCheck</code> is set):</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Check</th>
+<th class="tableblock halign-left valign-top">Severity</th>
+<th class="tableblock halign-left valign-top">Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ARM: Subscription Enumeration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Fail</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stops ARM extraction if no subscriptions accessible</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ARM: Role Assignment Read</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Warn</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Continues — some RBAC data may be missing</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Graph: Organization Read</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Fail</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stops Entra extraction if organization endpoint is inaccessible</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Graph: User Read</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Fail</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stops Entra extraction if user endpoint is inaccessible</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Graph: Conditional Access Policies</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Warn</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Continues — CA policy data may be missing</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scope_based_gating"><a class="anchor" href="#_scope_based_gating"></a>Scope-Based Gating</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Permission checks respect the <code>-Scope</code> parameter:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ArmOnly</code> — Only ARM checks run (Graph checks are skipped entirely)</p>
+</li>
+<li>
+<p><code>EntraOnly</code> — Only Graph checks run (ARM checks are skipped entirely)</p>
+</li>
+<li>
+<p><code>All</code> — Both ARM and Graph checks run</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_remediation"><a class="anchor" href="#_remediation"></a>Remediation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If the permission checker reports failures:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>For ARM: Ensure <code>Reader</code> role is assigned on target subscriptions</p>
+</li>
+<li>
+<p>For Graph: Grant the required Microsoft Graph API permissions to your app registration or user account</p>
+</li>
+<li>
+<p>Re-run with the appropriate credentials</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Check permissions without running a full inventory
+Import-Module ./AzureTenantInventory.psd1
+Test-AZTIPermissions -TenantID '00000000-...' -Scope All</code></pre>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../_/js/site.js" data-ui-root-path="../_"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

@@ -1,113 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/about/authors/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/about/changelog/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/about/license/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/advanced/automation/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/advanced/azure-devops/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/advanced/github-actions/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/advanced/local-testing/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/advanced/resource-types/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/development/contributing/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/development/module-structure/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/features/azure-advisor/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/features/excel-reports/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/features/network-diagrams/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/features/security-center/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/getting-started/installation/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/getting-started/quick-start/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/user-guide/basic-usage/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/user-guide/common-scenarios/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/user-guide/faq/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/user-guide/parameters/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://thisismydemo.github.io/azure-inventory/user-guide/troubleshooting/</loc>
-         <lastmod>2026-02-23</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
+<url>
+<loc>https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/arm-modules.html</loc>
+<lastmod>2026-02-24T15:36:33.193Z</lastmod>
+</url>
+<url>
+<loc>https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/authentication.html</loc>
+<lastmod>2026-02-24T15:36:33.193Z</lastmod>
+</url>
+<url>
+<loc>https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/changelog.html</loc>
+<lastmod>2026-02-24T15:36:33.193Z</lastmod>
+</url>
+<url>
+<loc>https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/contributing.html</loc>
+<lastmod>2026-02-24T15:36:33.193Z</lastmod>
+</url>
+<url>
+<loc>https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/credits.html</loc>
+<lastmod>2026-02-24T15:36:33.193Z</lastmod>
+</url>
+<url>
+<loc>https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/entra-modules.html</loc>
+<lastmod>2026-02-24T15:36:33.193Z</lastmod>
+</url>
+<url>
+<loc>https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/folder-structure.html</loc>
+<lastmod>2026-02-24T15:36:33.193Z</lastmod>
+</url>
+<url>
+<loc>https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/index.html</loc>
+<lastmod>2026-02-24T15:36:33.193Z</lastmod>
+</url>
+<url>
+<loc>https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/permissions.html</loc>
+<lastmod>2026-02-24T15:36:33.193Z</lastmod>
+</url>
+<url>
+<loc>https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/usage.html</loc>
+<lastmod>2026-02-24T15:36:33.193Z</lastmod>
+</url>
 </urlset>

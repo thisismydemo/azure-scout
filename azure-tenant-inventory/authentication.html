@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Authentication :: Azure Tenant Inventory Documentation</title>
+    <link rel="canonical" href="https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/authentication.html">
+    <meta name="description" content="Five authentication methods supported by Azure Tenant Inventory.">
+    <meta name="keywords" content="authentication, login, spn, certificate, device-code, managed-identity">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://thisismydemo.github.io/azure-inventory">Azure Tenant Inventory Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="azure-tenant-inventory" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Azure Tenant Inventory</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Home</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="authentication.html">Authentication</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="usage.html">Usage Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="permissions.html">Permissions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Module Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="arm-modules.html">ARM Modules (95)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="entra-modules.html">Entra ID Modules (15)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Project</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="folder-structure.html">Repository Structure</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributing.html">Contributing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="credits.html">Credits &amp; Attribution</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="changelog.html">Changelog</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Azure Tenant Inventory</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="index.html">Azure Tenant Inventory</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Azure Tenant Inventory</a></li>
+    <li>Getting Started</li>
+    <li><a href="authentication.html">Authentication</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-inventory/edit/main/docs/modules/ROOT/pages/authentication.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Authentication</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Azure Tenant Inventory supports five authentication methods.
+The module uses <code>Connect-AZTILoginSession</code> internally, which selects the auth path based on the parameters you provide.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_priority_order"><a class="anchor" href="#_priority_order"></a>Priority Order</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When multiple auth parameters are supplied, the module selects the <em>first</em> matching path:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>SPN + Certificate</strong> — <code>AppId</code> + <code>CertificatePath</code> (+ optional <code>CertificatePassword</code>)</p>
+</li>
+<li>
+<p><strong>SPN + Client Secret</strong> — <code>AppId</code> + <code>Secret</code></p>
+</li>
+<li>
+<p><strong>Device Code</strong> — <code>-DeviceLogin</code> switch</p>
+</li>
+<li>
+<p><strong>Managed Identity</strong> — Automatic when running in Azure (no parameters needed)</p>
+</li>
+<li>
+<p><strong>Current User / Interactive</strong> — Default fallback, reuses existing <code>Get-AzContext</code></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_method_details"><a class="anchor" href="#_method_details"></a>Method Details</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_1_current_user_interactive"><a class="anchor" href="#_1_current_user_interactive"></a>1. Current User (Interactive)</h3>
+<div class="paragraph">
+<p>The default. If you&#8217;ve already run <code>Connect-AzAccount</code>, AZTI reuses your session.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Connect-AzAccount
+Invoke-AzureTenantInventory</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If no existing context matches the target tenant, the module calls <code>Connect-AzAccount</code> interactively.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_device_code"><a class="anchor" href="#_2_device_code"></a>2. Device Code</h3>
+<div class="paragraph">
+<p>For headless or remote sessions (SSH, containers).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureTenantInventory -TenantID '00000000-...' -DeviceLogin</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The module displays a URL and code. Open the link in any browser, enter the code, and authenticate.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_service_principal_client_secret"><a class="anchor" href="#_3_service_principal_client_secret"></a>3. Service Principal + Client Secret</h3>
+<div class="paragraph">
+<p>For CI/CD pipelines and unattended automation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureTenantInventory `
+    -TenantID  '00000000-...' `
+    -AppId     '11111111-...' `
+    -Secret    $env:CLIENT_SECRET</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Store the secret in a Key Vault or pipeline secret — never hardcode it.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_4_service_principal_certificate"><a class="anchor" href="#_4_service_principal_certificate"></a>4. Service Principal + Certificate</h3>
+<div class="paragraph">
+<p>The most secure SPN method — no secret string to rotate.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureTenantInventory `
+    -TenantID         '00000000-...' `
+    -AppId            '11111111-...' `
+    -CertificatePath  'C:\certs\azti-spn.pfx' `
+    -CertificatePassword $certPwd</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_5_managed_identity"><a class="anchor" href="#_5_managed_identity"></a>5. Managed Identity</h3>
+<div class="paragraph">
+<p>When running inside Azure (VMs, Azure Functions, Azure Automation).
+The module detects managed identity automatically — no parameters required.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Inside an Azure VM/Function/Automation Account
+Invoke-AzureTenantInventory -TenantID '00000000-...'</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_azure_environment"><a class="anchor" href="#_azure_environment"></a>Azure Environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>All methods accept <code>-AzureEnvironment</code> to target sovereign clouds:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-AzureTenantInventory -AzureEnvironment AzureUSGovernment</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Valid values: <code>AzureCloud</code> (default), <code>AzureUSGovernment</code>, <code>AzureChinaCloud</code>, <code>AzureGermanCloud</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_loginexperiencev2"><a class="anchor" href="#_loginexperiencev2"></a>LoginExperienceV2</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The module checks for the <code>LoginExperienceV2</code> Az config setting.
+If enabled, it temporarily disables it to ensure compatibility, then restores the original value after login.</p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../_/js/site.js" data-ui-root-path="../_"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

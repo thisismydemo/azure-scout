@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Contributing :: Azure Tenant Inventory Documentation</title>
+    <link rel="canonical" href="https://thisismydemo.github.io/azure-inventory/azure-tenant-inventory/contributing.html">
+    <meta name="description" content="How to contribute new inventory modules and improvements to Azure Tenant Inventory.">
+    <meta name="keywords" content="contributing, development, modules, pull-request">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://thisismydemo.github.io/azure-inventory">Azure Tenant Inventory Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="azure-tenant-inventory" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Azure Tenant Inventory</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Home</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="authentication.html">Authentication</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="usage.html">Usage Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="permissions.html">Permissions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Module Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="arm-modules.html">ARM Modules (95)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="entra-modules.html">Entra ID Modules (15)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Project</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="folder-structure.html">Repository Structure</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="contributing.html">Contributing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="credits.html">Credits &amp; Attribution</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="changelog.html">Changelog</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Azure Tenant Inventory</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="index.html">Azure Tenant Inventory</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Azure Tenant Inventory</a></li>
+    <li>Project</li>
+    <li><a href="contributing.html">Contributing</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-inventory/edit/main/docs/modules/ROOT/pages/contributing.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Contributing</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Contributions are welcome! This guide covers adding new inventory modules, writing tests, and submitting pull requests.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_adding_a_new_arm_inventory_module"><a class="anchor" href="#_adding_a_new_arm_inventory_module"></a>Adding a New ARM Inventory Module</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a new <code>.ps1</code> file in the appropriate category folder under <code>Modules/Public/InventoryModules/&lt;Category&gt;/</code>.</p>
+<div class="paragraph">
+<p>If the category doesn&#8217;t exist, create a new folder.</p>
+</div>
+</li>
+<li>
+<p>Use an existing module as a template. Each ARM module should:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Accept the standard pipeline parameters (subscription data, resource list)</p>
+</li>
+<li>
+<p>Use <code>Get-AzResource</code> or Azure Resource Graph queries</p>
+</li>
+<li>
+<p>Return objects with the normalized resource schema (<code>id</code>, <code>name</code>, <code>TYPE</code>, <code>resourceGroup</code>, <code>subscriptionId</code>, <code>location</code>, <code>properties</code>)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Example skeleton:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">function Get-AZTINewResource {
+    param(
+        [Parameter(Mandatory)]
+        [object]$Resources,
+
+        [Parameter(Mandatory)]
+        [string]$SubscriptionId
+    )
+
+    foreach ($res in $Resources) {
+        [PSCustomObject]@{
+            id             = $res.Id
+            name           = $res.Name
+            TYPE           = $res.Type.ToLower()
+            resourceGroup  = $res.ResourceGroupName
+            subscriptionId = $SubscriptionId
+            location       = $res.Location
+            properties     = $res.Properties
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Register the module in the orchestrator so it gets called during extraction.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_adding_a_new_entra_id_module"><a class="anchor" href="#_adding_a_new_entra_id_module"></a>Adding a New Entra ID Module</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add a new <code>.ps1</code> file in <code>Modules/Public/InventoryModules/Identity/</code>.</p>
+</li>
+<li>
+<p>Use <code>Invoke-AZTIGraphRequest</code> for the Graph API call:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">function Get-AZTINewEntraObject {
+    param(
+        [Parameter(Mandatory)]
+        [string]$TenantID
+    )
+
+    $results = Invoke-AZTIGraphRequest -Uri '/newEndpoint' -Method GET
+    foreach ($item in $results) {
+        [PSCustomObject]@{
+            id         = $item.id
+            name       = $item.displayName
+            TYPE       = 'microsoft.graph/newobject'
+            tenantId   = $TenantID
+            properties = $item
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Register the Graph query in <code>Start-AZTIEntraExtraction</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_writing_pester_tests"><a class="anchor" href="#_writing_pester_tests"></a>Writing Pester Tests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>All tests use Pester v5+ and live in the <code>tests/</code> directory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">BeforeAll {
+    $ModuleRoot = Split-Path -Parent $PSScriptRoot
+    Import-Module "$ModuleRoot/AzureTenantInventory.psd1" -Force
+}
+
+Describe 'Get-AZTINewResource' {
+    It 'returns normalized objects' {
+        Mock Invoke-AZTIGraphRequest { return @(@{ id = '1'; displayName = 'Test' }) }
+        $result = Get-AZTINewEntraObject -TenantID '00000000-...'
+        $result | Should -Not -BeNullOrEmpty
+        $result[0].TYPE | Should -Be 'microsoft.graph/newobject'
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run tests:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Invoke-Pester ./tests/ -Output Detailed</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pull_request_guidelines"><a class="anchor" href="#_pull_request_guidelines"></a>Pull Request Guidelines</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Branch</strong>: Create a feature branch from <code>main</code> (<code>feature/add-xyz-module</code>)</p>
+</li>
+<li>
+<p><strong>Scope</strong>: One logical change per PR</p>
+</li>
+<li>
+<p><strong>Tests</strong>: Include or update Pester tests for any new functionality</p>
+</li>
+<li>
+<p><strong>Documentation</strong>: Update the module catalog in the README and/or Antora docs</p>
+</li>
+<li>
+<p><strong>Commit messages</strong>: Use conventional commits (<code>feat:</code>, <code>fix:</code>, <code>docs:</code>, <code>test:</code>)</p>
+</li>
+<li>
+<p><strong>CI</strong>: All Pester tests must pass before merge</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_code_style"><a class="anchor" href="#_code_style"></a>Code Style</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>PowerShell scripts use <strong>PascalCase</strong> file names</p>
+</li>
+<li>
+<p>Functions use the <code>Get-AZTI</code> / <code>Invoke-AZTI</code> / <code>Set-AZTI</code> / <code>Start-AZTI</code> / <code>Test-AZTI</code> prefix</p>
+</li>
+<li>
+<p>Full comment-based help on all exported functions</p>
+</li>
+<li>
+<p><code>try</code>/<code>catch</code>/<code>finally</code> error handling</p>
+</li>
+<li>
+<p>No hardcoded secrets — use environment variables or Key Vault</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reporting_issues"><a class="anchor" href="#_reporting_issues"></a>Reporting Issues</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Open a GitHub issue with:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Steps to reproduce</p>
+</li>
+<li>
+<p>Expected vs. actual behavior</p>
+</li>
+<li>
+<p>Module version (<code>(Get-Module AzureTenantInventory).Version</code>)</p>
+</li>
+<li>
+<p>PowerShell version (<code>$PSVersionTable.PSVersion</code>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../_/js/site.js" data-ui-root-path="../_"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
