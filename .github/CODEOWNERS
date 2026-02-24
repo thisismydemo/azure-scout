@@ -1,0 +1,6 @@
+# CODEOWNERS
+# Owners are automatically requested for review on PRs that modify their files.
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global owner — all files
+* @kristopherjturner
