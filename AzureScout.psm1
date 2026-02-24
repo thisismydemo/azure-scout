@@ -25,17 +25,20 @@ $_requiredModules = @(
     'Az.Storage',
     'Az.Compute',
     'Az.Authorization',
-    'Az.Resources',
-    'Az.Authorization',
     'Az.Resources'
 )
 foreach ($_mod in $_requiredModules) {
     if (-not (Get-Module -Name $_mod -ListAvailable)) {
         Write-Host "[AzureScout] Installing required module: $_mod" -ForegroundColor Cyan
-        Install-Module -Name $_mod -Scope CurrentUser -Force -AllowClobber -ErrorAction Stop
+        try {
+            Install-Module -Name $_mod -Scope CurrentUser -Force -AllowClobber -ErrorAction Stop
+        } catch {
+            Write-Warning "[AzureScout] Could not install $_mod`: $_. Some functionality may be unavailable."
+            continue
+        }
     }
     if (-not (Get-Module -Name $_mod)) {
-        Import-Module -Name $_mod -ErrorAction Stop
+        Import-Module -Name $_mod -ErrorAction SilentlyContinue
     }
 }
 #endregion
