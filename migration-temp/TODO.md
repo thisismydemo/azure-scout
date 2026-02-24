@@ -1419,10 +1419,25 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 
 ## Post-Implementation
 
-- [ ] Push to GitHub (`thisismydemo/azure-scout`)
-- [ ] Tag release `v2.0.0` (major version for breaking changes + category filtering)
+- [x] Push to GitHub (`thisismydemo/azure-scout`)
+- [x] Tag release `v2.0.0` (major version for breaking changes + category filtering)
+- [x] Rename module/repo to AzureScout, update all AZTI→AZSC references
+- [x] Update thisismydemo references to point to new repo
 - [ ] Publish to PSGallery
-- [ ] Update thisismydemo references to point to new repo
+- [ ] **GitHub: Enable branch protection on `main`**
+  - Require pull request reviews before merging (at least 1 approval)
+  - Require status checks to pass before merging
+  - Require branches to be up to date before merging
+  - Do not allow force pushes
+  - Do not allow deletions
+  - Settings → Branches → Add branch protection rule → `main`
+- [ ] **GitHub Pages: Configure and validate**
+  - Settings → Pages → Source: Deploy from branch → `gh-pages` → `/ (root)` ← **NOT `/docs` on main**
+  - The `documentation.yml` workflow builds Antora and pushes to `gh-pages` branch automatically on push to `main`
+  - Trigger first build: push any change to `docs/` or `antora-playbook.yml` (or use workflow_dispatch)
+  - Validate published URL: `https://thisismydemo.github.io/azure-scout/`
+  - ✅ `antora-playbook.yml` title/start_page updated to `azure-scout`
+  - ✅ `docs/antora.yml` component name/title updated to `azure-scout` / `AzureScout`
 
 ---
 

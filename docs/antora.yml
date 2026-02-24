@@ -1,5 +1,5 @@
-name: azure-tenant-inventory
-title: Azure Tenant Inventory
+name: azure-scout
+title: AzureScout
 version: ~
 nav:
   - modules/ROOT/nav.adoc

@@ -1,7 +1,7 @@
 site:
-  title: Azure Tenant Inventory Documentation
+  title: AzureScout Documentation
   url: https://thisismydemo.github.io/azure-scout
-  start_page: azure-tenant-inventory::index.adoc
+  start_page: azure-scout::index.adoc
 content:
   sources:
     - url: .
