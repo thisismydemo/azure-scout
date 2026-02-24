@@ -75,11 +75,11 @@ Function Start-AZTIGraphExtraction {
 
                     $TagQueryExtension = "| where isnotempty(tags) | mvexpand tags | extend tagKey = tostring(bag_keys(tags)[0]) | extend tagValue = tostring(tags[tagKey]) "
 
-                    if (![string]::IsNullOrEmpty($TagKey)){ 
+                    if (![string]::IsNullOrEmpty($TagKey)){
                         $TagQueryExtension = $TagQueryExtension + "| where tagKey =~ '$TagKey'"
                     }
 
-                    if (![string]::IsNullOrEmpty($TagValue)){ 
+                    if (![string]::IsNullOrEmpty($TagValue)){
                         $TagQueryExtension = $TagQueryExtension + " and tagValue =~ '$TagValue'"
                     }
 
@@ -155,7 +155,7 @@ Function Start-AZTIGraphExtraction {
 
     $RootPath = (get-item $PSScriptRoot).parent
 
-    $RetirementPath = Join-Path $RootPath '3.ReportingFunctions' 'StyleFunctions' 'Retirement.kql'
+    $RetirementPath = Join-Path $RootPath 'Reporting' 'StyleFunctions' 'Retirement.kql'
 
     $RetirementQuery = Get-Content -Path $RetirementPath | Out-String
 

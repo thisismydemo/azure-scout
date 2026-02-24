@@ -145,7 +145,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 - [x] **6.4** Wire into `Start-AZTIReportOrchestration`
 - [ ] **6.5** Test: JSON-only output
 - [ ] **6.6** Test: Dual output (Excel + JSON)
-- [ ] **6.7** Commit Phase 6
+- [x] **6.7** Commit Phase 6 — included in commit `2650e32`
 
 ---
 
@@ -198,7 +198,7 @@ All decisions finalized. See [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) Ph
 ### 8.4 — Phase 8 Finalize
 
 - [x] **8.4.1** Update `CHANGELOG.md` with Phase 8 additions
-- [ ] **8.4.2** Commit & push Phase 8
+- [x] **8.4.2** Commit & push Phase 8 — included in commit `2650e32`
 
 ---
 

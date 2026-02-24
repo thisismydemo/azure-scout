@@ -20,7 +20,7 @@ Authors: Claudio Merola
 function Get-AZTIUnsupportedData {
 
     $SupportedDataPath = (get-item $PSScriptRoot).parent
-    $SupportFile = Join-Path $SupportedDataPath '3.ReportingFunctions' 'StyleFunctions' 'Support.json'
+    $SupportFile = Join-Path $SupportedDataPath 'Reporting' 'StyleFunctions' 'Support.json'
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Validating file: '+$SupportFile)
 
     $Unsupported = Get-Content -Path $SupportFile | ConvertFrom-Json
