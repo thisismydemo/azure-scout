@@ -1,6 +1,6 @@
 site:
   title: AzureScout Documentation
-  url: https://thisismydemo.github.io/azure-scout
+  url: https://thisismydemo.cloud/azure-scout
   start_page: azure-scout::index.adoc
 content:
   sources:

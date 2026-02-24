@@ -1,6 +1,6 @@
 = Required Permissions
-:description: ARM RBAC and Microsoft Graph permissions required by Azure Tenant Inventory.
-:keywords: permissions, rbac, graph, api, roles
+:description: ARM RBAC and Microsoft Graph permissions required by AzureScout.
+:keywords: permissions, rbac, graph, api, roles, azurescout
 
 == Overview
 

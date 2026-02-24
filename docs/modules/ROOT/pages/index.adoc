@@ -1,62 +1,81 @@
-= Azure Tenant Inventory
-:description: A PowerShell module for comprehensive Azure + Entra ID tenant inventory.
-:keywords: azure, inventory, entra, powershell
+= AzureScout
+:description: See everything. Own your cloud. A PowerShell module for comprehensive Azure + Entra ID discovery and inventory.
+:keywords: azure, azurescout, discovery, inventory, entra, powershell
 :page-layout: home
+
+[.lead]
+_See everything. Own your cloud._
 
 == Overview
 
-Azure Tenant Inventory (AZSC) is a PowerShell module that generates comprehensive inventory reports for a single Azure tenant — covering both ARM resources and Entra ID (Azure AD) objects.
+*AzureScout* (AZSC) is a PowerShell module that discovers and inventories everything in your Azure environment — ARM resources, Entra ID objects, costs, security posture, policies, and more. Reports are generated as Excel workbooks, JSON, Markdown, or AsciiDoc.
 
 [cols="1,3",options="header"]
 |===
 | Feature | Description
 
-| *ARM Resource Inventory*
-| 95 resource modules across 17 categories (AI, Analytics, APIs, AzureLocal, Compute, Container, Database, Hybrid, Identity, Integration, IoT, Management, Monitoring, Network, Security, Storage, Web)
+| *ARM Resource Discovery*
+| 170+ resource modules across 18 Microsoft Azure categories (AI + machine learning, Analytics, Compute, Containers, Databases, Hybrid + multicloud, Identity, Integration, IoT, Management and governance, Monitor, Networking, Security, Storage, Web, and more)
 
 | *Entra ID Inventory*
 | 15 identity modules — Users, Groups, Applications, Service Principals, Conditional Access, PIM, Administrative Units, Named Locations, Domains, Authentication Methods, and more
 
 | *Excel Reports*
-| Rich multi-worksheet spreadsheets with charts and conditional formatting
+| Rich multi-worksheet workbooks with charts, pivot tables, and conditional formatting
 
 | *JSON Output*
 | Machine-readable normalized output for automation pipelines
 
+| *Markdown & AsciiDoc*
+| Export reports as `.md` or `.adoc` for documentation pipelines and PDF generation
+
 | *Network Diagrams*
 | Auto-generated draw.io topology diagrams
 
-| *Pre-flight Permission Checker*
-| Validates ARM + Graph access before running
+| *Category Filtering*
+| Run only the categories you need: `-Category Compute,Security,Networking`
+
+| *Permission Audit*
+| Pre-flight ARM + Graph access checker with role remediation guidance
 |===
 
 === Quick Start
 
 [source,powershell]
 ----
+# Install from PSGallery
+Install-Module -Name AzureScout
+
 # Import from local clone
 Import-Module ./AzureScout.psd1
 
-# Run full inventory (uses current Azure context)
+# Full discovery (ARM only, uses current Azure context)
 Invoke-AzureScout
+
+# ARM + Entra ID
+Invoke-AzureScout -Scope All
 
 # ARM-only scan with JSON output
 Invoke-AzureScout -Scope ArmOnly -OutputFormat Json
 
-# Entra ID only
-Invoke-AzureScout -Scope EntraOnly
+# Specific categories only
+Invoke-AzureScout -Category Compute,Security,Networking
+
+# Permission pre-flight check
+Invoke-AzureScout -PermissionAudit
 ----
 
-TIP: If you're already logged in via `Connect-AzAccount`, AZSC uses your existing session — no additional flags needed.
+TIP: If you're already logged in via `Connect-AzAccount`, AzureScout uses your existing session — no additional flags needed.
 
 == Documentation
 
 [cols="1,2"]
 |===
 | xref:authentication.adoc[Authentication] | Five authentication methods (interactive, device-code, SPN+secret, SPN+cert, managed identity)
-| xref:usage.adoc[Usage Guide] | Scope, OutputFormat, content toggles, and examples
+| xref:usage.adoc[Usage Guide] | Scope, OutputFormat, Category filtering, and examples
 | xref:permissions.adoc[Permissions] | Required ARM RBAC roles and Microsoft Graph API permissions
-| xref:arm-modules.adoc[ARM Modules] | 95 resource modules across 17 categories
+| xref:category-filtering.adoc[Category Filtering] | Run targeted scans using Microsoft's 18 Azure categories
+| xref:arm-modules.adoc[ARM Modules] | 170+ resource modules across 18 categories
 | xref:entra-modules.adoc[Entra Modules] | 15 Entra ID identity modules
 | xref:folder-structure.adoc[Repository Structure] | Directory layout and module loading
 | xref:contributing.adoc[Contributing] | How to add new inventory modules

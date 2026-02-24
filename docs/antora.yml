@@ -3,3 +3,11 @@ title: AzureScout
 version: ~
 nav:
   - modules/ROOT/nav.adoc
+asciidoc:
+  attributes:
+    source-highlighter: highlight.js
+    icons: font
+    page-pagination: true
+    sectanchors: true
+    idprefix: ''
+    idseparator: '-'

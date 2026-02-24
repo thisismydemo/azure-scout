@@ -1,5 +1,5 @@
 = Authentication
-:description: Five authentication methods supported by Azure Tenant Inventory.
+:description: Five authentication methods supported by AzureScout.
 :keywords: authentication, login, spn, certificate, device-code, managed-identity
 
 == Overview

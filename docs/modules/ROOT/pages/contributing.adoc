@@ -1,6 +1,6 @@
 = Contributing
-:description: How to contribute new inventory modules and improvements to Azure Tenant Inventory.
-:keywords: contributing, development, modules, pull-request
+:description: How to contribute new inventory modules and improvements to AzureScout.
+:keywords: contributing, development, modules, pull-request, azurescout
 
 == Overview
 

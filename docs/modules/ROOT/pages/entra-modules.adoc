@@ -1,6 +1,6 @@
 = Entra ID Inventory Modules
-:description: Complete catalog of 15 Microsoft Entra ID inventory modules.
-:keywords: entra, identity, modules, graph, azure-ad
+:description: Complete catalog of AzureScout Microsoft Entra ID inventory modules.
+:keywords: entra, identity, modules, graph, azure-ad, azurescout
 
 == Overview
 

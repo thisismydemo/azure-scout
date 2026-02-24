@@ -1,6 +1,6 @@
 = Usage Guide
-:description: How to use Azure Tenant Inventory — scopes, output formats, and content toggles.
-:keywords: usage, scope, output, format, json, excel
+:description: How to use AzureScout — scopes, output formats, category filtering, and examples.
+:keywords: usage, scope, output, format, json, excel, category, azurescout
 
 == Basic Usage
 

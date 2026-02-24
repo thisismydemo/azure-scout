@@ -1,6 +1,6 @@
 = ARM Inventory Modules
-:description: Complete catalog of 95 Azure Resource Manager inventory modules across 16 categories.
-:keywords: arm, modules, categories, resources, inventory
+:description: Complete catalog of AzureScout Azure Resource Manager inventory modules across 18 categories.
+:keywords: arm, modules, categories, resources, inventory, azurescout
 
 == Overview
 

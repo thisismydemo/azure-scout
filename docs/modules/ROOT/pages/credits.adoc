@@ -1,6 +1,6 @@
 = Credits & Attribution
-:description: Credits and attribution for the Azure Tenant Inventory project.
-:keywords: credits, attribution, ari, fork, license
+:description: Credits and attribution for the AzureScout project.
+:keywords: credits, attribution, ari, fork, license, azurescout
 
 == Overview
 

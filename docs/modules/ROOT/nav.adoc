@@ -5,9 +5,12 @@
 ** xref:permissions.adoc[Permissions]
 ** xref:category-filtering.adoc[Category Filtering]
 * Module Reference
-** xref:arm-modules.adoc[ARM Modules (95)]
-** xref:entra-modules.adoc[Entra ID Modules (15)]
+** xref:arm-modules.adoc[ARM Modules]
+** xref:entra-modules.adoc[Entra ID Modules]
+** xref:coverage-table.adoc[Coverage Table]
+** xref:category-structure.adoc[Category Structure]
 * Project
+** xref:roadmap.adoc[Roadmap]
 ** xref:folder-structure.adoc[Repository Structure]
 ** xref:contributing.adoc[Contributing]
 ** xref:credits.adoc[Credits & Attribution]

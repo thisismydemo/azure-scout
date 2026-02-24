@@ -1,0 +1,194 @@
+= Roadmap
+:description: Planned features, future enhancements, and the long-term vision for AzureScout.
+:keywords: roadmap, planned, features, versions, milestones
+
+_See everything. Own your cloud._
+
+This page outlines what's planned, what's in progress, and what's been delivered.
+Community contributions are welcome — see xref:contributing.adoc[Contributing] to get involved.
+
+== Current Release — v2.0.0
+
+Released February 2026.
+
+[cols="1,3", options="header"]
+|===
+| Area | What's included
+
+| Excel Reports
+| 170+ worksheets covering all 18 Azure resource categories
+
+| Category Filtering
+| `-Category` parameter to scope runs to specific resource types
+
+| AI / ML Coverage
+| 15 modules: OpenAI, AI Foundry, Azure ML, Cognitive Services, Bot Services, Search
+
+| AVD Coverage
+| 6 modules: Host Pools, App Groups, Workspaces, Session Hosts, Scaling Plans, Applications
+
+| Arc Coverage
+| Sites, SQL Servers, Data Controllers, SQL Managed Instances, Arc-enabled Kubernetes enhancements
+
+| VM & Arc Enrichment
+| Backup status, Site Recovery, Update Manager, Advisor score, Monitor metrics, Cost estimates
+
+| Monitor Coverage
+| 22 modules: Diagnostic settings, alert rules, DCRs, App Insights deep data, autoscale, workbooks
+
+| Markdown / AsciiDoc Export
+| `-OutputFormat Markdown\|AsciiDoc` generates portable reports alongside Excel/JSON
+
+| Permission Audit
+| `Invoke-AZSCPermissionAudit` with ARM + Graph checks, color output, Markdown/AsciiDoc export
+
+| Subscription & MG Completeness
+| Captures ALL subscriptions (including empty/disabled) and full MG hierarchy
+
+| Module Naming
+| Renamed from _AzureTenantInventory_ to _AzureScout_ (prefix: `AZSC`)
+|===
+
+== Near-term — v2.1.0
+
+Focus: quality, reliability, and community onboarding.
+
+[cols="1,3,1", options="header"]
+|===
+| Feature | Description | Status
+
+| Pester test suite
+| Full unit + integration tests for all public functions and key private functions
+| 🔵 Planned
+
+| PSGallery publish
+| Publish `AzureScout` module to PowerShell Gallery
+| 🔵 Planned
+
+| GitHub Actions CI
+| Run Pester tests on PR + push; block merge on failure
+| 🔵 Planned
+
+| Category alias documentation
+| Comprehensive table of all accepted `-Category` aliases and their canonical names
+| 🔵 Planned
+
+| Resource provider pre-flight
+| Warn before scan when required providers are not registered in a subscription
+| 🔵 Planned
+
+| Throttling / retry improvements
+| Exponential backoff on ARM 429 responses; configurable `-ThrottleDelay`
+| 🔵 Planned
+
+| `Invoke-AzureScout -WhatIf`
+| Show which modules would run without actually executing
+| 🔵 Planned
+|===
+
+== Medium-term — v2.2.0
+
+Focus: depth, breadth, and multi-tenant scenarios.
+
+[cols="1,3,1", options="header"]
+|===
+| Feature | Description | Status
+
+| Multi-tenant support
+| `-TenantId` to cross-tenant scan with delegated credentials (Lighthouse)
+| 💡 Idea
+
+| Cost anomaly detection
+| Surface Azure Cost Management anomalies in the Cost Management tab
+| 💡 Idea
+
+| Bicep / IaC gap detection
+| Compare discovered resources against known IaC templates; flag unmanaged resources
+| 💡 Idea
+
+| Resource drift reporting
+| Compare two inventory runs and report what was added, removed, or changed
+| 💡 Idea
+
+| Azure DevOps integration
+| Inventory Azure DevOps organizations, projects, pipelines alongside Azure resources
+| 💡 Idea
+
+| GitHub Actions module
+| Publish as a GitHub Action so pipelines can generate inventory reports without local setup
+| 💡 Idea
+
+| Fabric / Power BI export
+| Export normalized inventory data to a Power BI-ready dataset
+| 💡 Idea
+
+| IoT deep coverage
+| IoT Hub device registry, Device Provisioning Service, Digital Twins topology
+| 💡 Idea
+|===
+
+== Long-term Vision
+
+AzureScout aims to be the definitive open-source Azure visibility tool for:
+
+* **Architects** — understand the full shape of a tenant before designing changes
+* **Security teams** — identify misconfigured, unmonitored, or over-privileged resources
+* **FinOps practitioners** — surface cost waste, reservation opportunities, and untagged resources
+* **Managed service providers** — generate client-ready reports across multiple tenants
+
+The tool will remain **open-source, PowerShell-native, and Excel-friendly** — no agents, no portals, no licensing fees.
+
+== Completed Phases
+
+All implementation phases from the original migration plan are complete.
+See the xref:changelog.adoc[Changelog] for the full history.
+
+[cols="1,3", options="header"]
+|===
+| Phase | Summary
+
+| Phase 1-9
+| Core engine, module loading, Excel generation, JSON output, Draw.io diagrams, auth methods, connection handling, permission pre-flight
+
+| Phase 10
+| Specialized Excel tabs: Cost Management, Security Overview, Azure Update Manager, Azure Monitor
+
+| Phase 11
+| All-subscriptions + full MG hierarchy enumeration
+
+| Phase 12
+| ARM-only default scope, permission documentation, README overhaul
+
+| Phase 13
+| 15 new Azure Monitor/Insights modules
+
+| Phase 14
+| 15 new AI/ML modules
+
+| Phase 15
+| 6 AVD modules + AVD on Azure Local/Arc detection
+
+| Phase 16
+| Arc site configs, Arc SQL Server, Arc Data Services enhancements
+
+| Phase 17
+| VM + Arc deep enrichment (metrics, backup, DR, cost, advisor)
+
+| Phase 18
+| Category folder alignment + `.CATEGORY` metadata parsing
+
+| Phase 19
+| Version bump to 2.0.0, richer progress indicators, clear permission error messages
+
+| Phase 20
+| `Invoke-AZSCPermissionAudit` + `Test-AZSCPermissions` refactor
+
+| Phase 21
+| Markdown + AsciiDoc export, `Export-AZSCMarkdownReport`, `Export-AZSCAsciiDocReport`
+|===
+
+== Suggest a Feature
+
+Open an issue at https://github.com/thisismydemo/azure-scout/issues with the label `enhancement`.
+
+Pull requests are welcome — see xref:contributing.adoc[Contributing] for guidelines.

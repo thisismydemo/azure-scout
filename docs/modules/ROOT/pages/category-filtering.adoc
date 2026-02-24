@@ -1,8 +1,6 @@
 = Category Filtering
-:description: How to use the -Category parameter to limit Azure Tenant Inventory scans
-:toc: left
-:toclevels: 3
-:icons: font
+:description: How to use the -Category parameter to scope AzureScout scans to specific Azure resource categories.
+:keywords: category, filtering, scope, compute, networking, security
 
 == Overview
 

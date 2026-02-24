@@ -1,6 +1,6 @@
 = Repository Structure
-:description: Post Phase 1B folder layout for Azure Tenant Inventory.
-:keywords: structure, layout, organization
+:description: Folder layout and module organization for the AzureScout repository.
+:keywords: structure, layout, organization, folders, azurescout
 
 == Overview
 

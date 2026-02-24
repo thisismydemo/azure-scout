@@ -1,6 +1,6 @@
 = Changelog
-:description: Release history and version changelog for Azure Tenant Inventory.
-:keywords: changelog, releases, versions, history
+:description: Release history and version changelog for AzureScout.
+:keywords: changelog, releases, versions, history, azurescout
 
 == Overview
 
