@@ -18,27 +18,32 @@ Authors: Claudio Merola
 #>
 
 function Start-AZTIExtraJobs {
-    Param ($SkipDiagram, 
-            $SkipAdvisory, 
-            $SkipPolicy, 
-            $SecurityCenter, 
-            $Subscriptions, 
-            $Resources, 
-            $Advisories, 
-            $DDFile, 
-            $DiagramCache, 
-            $FullEnv, 
-            $ResourceContainers, 
-            $Security, 
-            $PolicyDef, 
-            $PolicySetDef, 
-            $PolicyAssign, 
+    Param ($SkipDiagram,
+            $SkipAdvisory,
+            $SkipPolicy,
+            $SecurityCenter,
+            $Subscriptions,
+            $Resources,
+            $Advisories,
+            $DDFile,
+            $DiagramCache,
+            $FullEnv,
+            $ResourceContainers,
+            $Security,
+            $PolicyDef,
+            $PolicySetDef,
+            $PolicyAssign,
             $Automation,
             $IncludeCosts,
             $CostData)
 
-    $AZTIModule = 'AzureTenantInventory'
-    #$AZTIModule = 'C:\usr\src\PSModules\AzureTenantInventory\AzureTenantInventory'
+    # Resolve the full module path so background jobs can import it even when not in PSModulePath
+    $LoadedModule = Get-Module -Name AzureTenantInventory
+    if ($LoadedModule) {
+        $AZTIModule = $LoadedModule.Path
+    } else {
+        $AZTIModule = 'AzureTenantInventory'
+    }
 
     <######################################################### DRAW IO DIAGRAM JOB ######################################################################>
 

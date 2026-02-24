@@ -183,7 +183,9 @@ function Build-AZTIExcelChart {
             ChartRowOffSetPixels    = 5
             ChartColumnOffSetPixels = 5
         }
-        Add-PivotTable @PTParams -NoLegend
+        if ($PTParams.SourceWorkSheet) {
+            Add-PivotTable @PTParams -NoLegend
+        }
     }
 
     $DrawP0 = $WS.Drawings | Where-Object { $_.Name -eq 'TP0' }
@@ -317,7 +319,9 @@ function Build-AZTIExcelChart {
             ChartRowOffSetPixels    = 5
             ChartColumnOffSetPixels = 5
         }
-        Add-PivotTable @PTParams
+        if ($PTParams.SourceWorkSheet) {
+            Add-PivotTable @PTParams
+        }
     }
     $DrawP1 = $WS.Drawings | Where-Object { $_.Name -eq 'TP1' }
     $DrawP1.RichText.Add($P1Name) | Out-Null
@@ -393,7 +397,9 @@ function Build-AZTIExcelChart {
             ChartRowOffSetPixels    = 5
             ChartColumnOffSetPixels = 5
         }
-        Add-PivotTable @PTParams -NoLegend
+        if ($PTParams.SourceWorkSheet) {
+            Add-PivotTable @PTParams -NoLegend
+        }
     }
 
     $DrawP2 = $WS.Drawings | Where-Object { $_.Name -eq 'TP2' }
@@ -469,7 +475,9 @@ function Build-AZTIExcelChart {
             ChartRowOffSetPixels    = 5
             ChartColumnOffSetPixels = 5
         }
-        Add-PivotTable @PTParams
+        if ($PTParams.SourceWorkSheet) {
+            Add-PivotTable @PTParams
+        }
     }
     $DrawP3 = $WS.Drawings | Where-Object { $_.Name -eq 'TP3' }
     $DrawP3.RichText.Add($P3Name) | Out-Null
@@ -544,7 +552,9 @@ function Build-AZTIExcelChart {
             ChartRowOffSetPixels    = 5
             ChartColumnOffSetPixels = 5
         }
-        Add-PivotTable @PTParams -NoLegend
+        if ($PTParams.SourceWorkSheet) {
+            Add-PivotTable @PTParams -NoLegend
+        }
     }
 
     $DrawP4 = $WS.Drawings | Where-Object { $_.Name -eq 'TP4' }
@@ -597,7 +607,9 @@ function Build-AZTIExcelChart {
             ChartRowOffSetPixels    = 5
             ChartColumnOffSetPixels = 5
         }
-        Add-PivotTable @PTParams
+        if ($PTParams.SourceWorkSheet) {
+            Add-PivotTable @PTParams
+        }
     }
 
     $DrawP5 = $WS.Drawings | Where-Object { $_.Name -eq 'TP5' }
