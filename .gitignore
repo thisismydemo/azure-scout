@@ -218,3 +218,6 @@ $RECYCLE.BIN/
 # Dependency directories
 vendor/
 additions.md
+
+# Test output (generated reports)
+tests/test-output/
