@@ -28,18 +28,18 @@ $EntraFolders = @('Identity')
 
 # ── Fake data pools ──────────────────────────────────────────────────────
 $Subscriptions = @(
-    @{ id = '00000000-1111-2222-3333-444444444444'; name = 'Contoso-Prod-001' },
-    @{ id = '11111111-2222-3333-4444-555555555555'; name = 'Contoso-Dev-001' },
-    @{ id = '22222222-3333-4444-5555-666666666666'; name = 'Contoso-Staging-001' }
+    @{ id = '00000000-1111-2222-3333-444444444444'; name = 'scout-prod-001' },
+    @{ id = '11111111-2222-3333-4444-555555555555'; name = 'scout-dev-001' },
+    @{ id = '22222222-3333-4444-5555-666666666666'; name = 'scout-staging-001' }
 )
 
 $Locations = @('eastus', 'westus2', 'westeurope', 'northeurope', 'centralus')
-$ResourceGroups = @('rg-contoso-prod-eus', 'rg-contoso-dev-wus2', 'rg-contoso-shared-weu', 'rg-contoso-data-eus', 'rg-contoso-network-eus')
+$ResourceGroups = @('rg-scout-prod-eus', 'rg-scout-dev-wus2', 'rg-scout-shared-weu', 'rg-scout-data-eus', 'rg-scout-network-eus')
 $TagNames = @('Environment', 'CostCenter', 'Owner')
-$TagValues = @('Production', 'CC-12345', 'platform-team@contoso.com')
+$TagValues = @('Production', 'CC-42', 'platform-team@intergalactic.fish')
 $SKUs = @('Standard', 'Premium', 'Basic', 'Free', 'Standard_D2s_v3', 'Standard_B2ms')
 $States = @('Succeeded', 'Running', 'Ready', 'Active', 'Enabled')
-$VNets = @('vnet-contoso-hub-eus', 'vnet-contoso-spoke-wus2', 'vnet-contoso-prod-weu')
+$VNets = @('vnet-scout-hub-eus', 'vnet-scout-spoke-wus2', 'vnet-scout-prod-weu')
 $Subnets = @('snet-default', 'snet-workload', 'snet-data', 'snet-web')
 $Zones = @('1', '2', '3', 'Not Configured')
 
@@ -64,16 +64,16 @@ function Get-FakeValue {
         '*Status'               { return $States[$RowIndex % $States.Count] }
         'Provisioning State'    { return 'Succeeded' }
         'Public Network Access' { return 'Enabled' }
-        '*FQDN'                 { return "resource-$RowIndex.contoso.com" }
-        '*Endpoint*'            { return "https://resource-$RowIndex.contoso.com" }
-        '*URI*'                 { return "https://resource-$RowIndex.contoso.com" }
-        '*Url*'                 { return "https://resource-$RowIndex.contoso.com" }
+        '*FQDN'                 { return "resource-$RowIndex.intergalactic.fish" }
+        '*Endpoint*'            { return "https://resource-$RowIndex.intergalactic.fish" }
+        '*URI*'                 { return "https://resource-$RowIndex.intergalactic.fish" }
+        '*Url*'                 { return "https://resource-$RowIndex.intergalactic.fish" }
         'Virtual Network'       { return $VNets[$RowIndex % $VNets.Count] }
         'Subnet'                { return $Subnets[$RowIndex % $Subnets.Count] }
         '*IP Address*'          { return "10.$($RowIndex + 1).0.$($RowIndex + 10)" }
         '*IP*'                  { return "10.$($RowIndex + 1).0.$($RowIndex + 10)" }
-        'Admin Login'           { return 'contosoadmin' }
-        'Admin Username'        { return 'contosoadmin' }
+        'Admin Login'           { return 'scoutadmin' }
+        'Admin Username'        { return 'scoutadmin' }
         '*Time*'                { return '2026-01-15T10:30:00Z' }
         '*Date*'                { return '2026-01-15' }
         '*DateTime*'            { return '2026-01-15T10:30:00Z' }
@@ -184,7 +184,7 @@ foreach ($folder in $ModuleFolders) {
             }
             # Override Name field with something descriptive
             if ($row.Contains('Name')) {
-                $row['Name'] = "$($modName.ToLower())-contoso-$($i + 1)"
+                $row['Name'] = "scout-$(@('prod','dev','staging')[$i % 3])-$($modName.ToLower())-$($i + 1)"
             }
             $rows += $row
         }
@@ -214,9 +214,9 @@ $Report = [ordered]@{
         version       = '1.0.0'
         tenantId      = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
         subscriptions = @(
-            [ordered]@{ id = '00000000-1111-2222-3333-444444444444'; name = 'Contoso-Prod-001' },
-            [ordered]@{ id = '11111111-2222-3333-4444-555555555555'; name = 'Contoso-Dev-001' },
-            [ordered]@{ id = '22222222-3333-4444-5555-666666666666'; name = 'Contoso-Staging-001' }
+            [ordered]@{ id = '00000000-1111-2222-3333-444444444444'; name = 'scout-prod-001' },
+            [ordered]@{ id = '11111111-2222-3333-4444-555555555555'; name = 'scout-dev-001' },
+            [ordered]@{ id = '22222222-3333-4444-5555-666666666666'; name = 'scout-staging-001' }
         )
         generatedAt   = '2026-02-25T12:00:00Z'
         scope         = 'All'
