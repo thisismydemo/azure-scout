@@ -9,7 +9,7 @@ This module creates and manages automated thread jobs to process Azure Resources
 https://github.com/thisismydemo/azure-scout/Modules/Private/2.ProcessingFunctions/Start-AZSCAutProcessJob.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+This PowerShell Module is part of Azure Scout (AZSC).
 
 .NOTES
 Version: 3.6.9

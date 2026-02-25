@@ -1,4 +1,4 @@
-name: Azure Tenant Inventory
+name: Azure Scout
 
 on:
   workflow_dispatch:
@@ -72,7 +72,7 @@ jobs:
       #     server_port: 465
       #     username: ${{ secrets.EMAIL_USERNAME }}
       #     password: ${{ secrets.EMAIL_PASSWORD }}
-      #     subject: Azure Tenant Inventory Report
-      #     body: Azure Tenant Inventory has completed. Reports are attached.
+      #     subject: Azure Scout Report
+      #     body: Azure Scout has completed. Reports are attached.
       #     to: recipient@example.com
       #     from: Azure Inventory <sender@example.com> 

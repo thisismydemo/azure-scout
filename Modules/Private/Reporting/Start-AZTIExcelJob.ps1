@@ -9,7 +9,7 @@ This script processes inventory modules and builds the Excel report.
 https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/Start-AZSCExcelJob.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -34,6 +34,10 @@ function Start-AZSCExcelJob {
 
     $Lops = $ModulesCount
     $ReportCounter = 0
+
+    # Dedicated tabs (Cost Management, Security Overview, Azure Update Manager,
+    # Azure Monitor) are created by Build-AZSC*Report functions called from
+    # Start-AZSCExtraReports later in the pipeline. No placeholder creation needed here.
 
     Foreach ($ModuleFolder in $ModuleFolders)
         {

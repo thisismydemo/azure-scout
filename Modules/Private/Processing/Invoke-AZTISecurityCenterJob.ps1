@@ -9,7 +9,7 @@ This module starts jobs to process Azure Security Center data for subscriptions 
 https://github.com/thisismydemo/azure-scout/Modules/Private/2.ProcessingFunctions/Invoke-AZSCSecurityCenterJob.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+This PowerShell Module is part of Azure Scout (AZSC).
 
 .NOTES
 Version: 3.6.5

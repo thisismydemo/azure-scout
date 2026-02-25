@@ -11,7 +11,7 @@ Excel Sheet Name: Arc Sites
 https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Hybrid/ArcSites.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+    This PowerShell Module is part of Azure Scout (AZSC).
 
 .CATEGORY Hybrid
 

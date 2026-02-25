@@ -1,6 +1,6 @@
 <#
 .Synopsis
-    Azure Login Session Module for Azure Tenant Inventory
+    Azure Login Session Module for Azure Scout
 
 .DESCRIPTION
     Authenticates to Azure using one of five methods (in priority order):
@@ -38,7 +38,7 @@
     https://github.com/thisismydemo/azure-scout
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+    This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
     Version: 2.0.0

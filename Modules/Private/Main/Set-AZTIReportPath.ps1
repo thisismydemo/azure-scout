@@ -1,9 +1,9 @@
 <#
 .Synopsis
-Set the report path for Azure Tenant Inventory
+Set the report path for Azure Scout
 
 .DESCRIPTION
-This module sets the default paths for report generation in Azure Tenant Inventory (AZSC).
+This module sets the default paths for report generation in Azure Scout (AZSC).
 Windows default: C:\AzureScout
 Linux/Mac default: $HOME/AzureScout
 
@@ -11,7 +11,7 @@ Linux/Mac default: $HOME/AzureScout
 https://github.com/thisismydemo/azure-scout/Modules/Private/Main/Set-AZSCReportPath.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 1.5.0

@@ -12,7 +12,7 @@ for GitHub/GitLab wikis, Obsidian, and Confluence.
 https://github.com/thisismydemo/azure-scout/Modules/Private/Reporting/Export-AZSCMarkdownReport.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 1.0.0
@@ -49,7 +49,7 @@ function Export-AZSCMarkdownReport {
     $lines = [System.Collections.Generic.List[string]]::new()
 
     # ── Header ───────────────────────────────────────────────────────────
-    $lines.Add('# Azure Tenant Inventory Report')
+    $lines.Add('# Azure Scout Report')
     $lines.Add('')
     $lines.Add("| Field | Value |")
     $lines.Add("|-------|-------|")

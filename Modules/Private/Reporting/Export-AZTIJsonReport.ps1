@@ -12,7 +12,7 @@ written alongside (or instead of) the Excel report depending on the
 https://github.com/thisismydemo/azure-scout/Modules/Private/Reporting/Export-AZSCJsonReport.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 1.5.0

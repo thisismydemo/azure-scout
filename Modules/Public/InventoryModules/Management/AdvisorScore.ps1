@@ -9,7 +9,7 @@ Excel Sheet Name: AdvisorScore
 https://github.com/thisismydemo/azure-scout/Modules/public/InventoryModules/APIs/AdvisorScore.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+    This PowerShell Module is part of Azure Scout (AZSC).
 
 .CATEGORY Management
 

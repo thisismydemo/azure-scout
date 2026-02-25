@@ -9,7 +9,7 @@ This script processes and creates the Advisory sheet in the Excel report.
 https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/Build-AZSCAdvisoryReport.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 3.6.9

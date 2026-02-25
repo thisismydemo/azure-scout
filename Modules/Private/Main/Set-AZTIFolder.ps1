@@ -9,7 +9,7 @@ This module creates and validates the necessary folders for Azure Resource Inven
 https://github.com/thisismydemo/azure-scout/Modules/Private/0.MainFunctions/Set-AZSCFolder.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 3.6.0

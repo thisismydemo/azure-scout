@@ -9,7 +9,7 @@ This module is used to test and validate the Powershell environment.
 https://github.com/thisismydemo/azure-scout/Modules/Private/0.MainFunctions/Test-AZSCPS.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 3.6.0

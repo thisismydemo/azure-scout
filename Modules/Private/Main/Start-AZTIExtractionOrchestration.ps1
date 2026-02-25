@@ -9,7 +9,7 @@ This module orchestrates the extraction of resources for Azure Resource Inventor
 https://github.com/thisismydemo/azure-scout/Modules/Private/0.MainFunctions/Start-AZSCExtractionOrchestration.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 3.6.11

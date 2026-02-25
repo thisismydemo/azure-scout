@@ -9,7 +9,7 @@ This module receives the job names for the Azure Resources that were processed p
 https://github.com/thisismydemo/azure-scout/Modules/Private/2.ProcessingFunctions/Build-AZSCCacheFiles.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+This PowerShell Module is part of Azure Scout (AZSC).
 
 .NOTES
 Version: 3.6.0

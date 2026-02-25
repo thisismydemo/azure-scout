@@ -9,7 +9,7 @@ This script outputs the results of the Azure Resource Inventory report generatio
 https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/StyleFunctions/Out-AZSCReportResults.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 3.6.0

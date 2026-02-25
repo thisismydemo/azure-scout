@@ -10,7 +10,7 @@ Excel Sheet Name: Virtual Machines
 https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Compute/VirtualMachine.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+    This PowerShell Module is part of Azure Scout (AZSC).
 
 .CATEGORY Compute
 

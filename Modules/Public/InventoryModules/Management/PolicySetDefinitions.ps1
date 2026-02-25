@@ -10,7 +10,7 @@ Excel Sheet Name: Policy Initiatives
 https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Management/PolicySetDefinitions.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZSC)
+This powershell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 1.0.0

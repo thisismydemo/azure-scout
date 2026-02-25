@@ -8,7 +8,7 @@ collected during Phase 17 VM/Arc enrichment, reservation recommendations,
 and any cost data from the Subscriptions worksheet.
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 1.0.0

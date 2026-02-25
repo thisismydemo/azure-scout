@@ -4,7 +4,7 @@
 
 == Overview
 
-Azure Tenant Inventory includes *15 Entra ID (Identity) inventory modules* that extract tenant-wide identity and access management data via the Microsoft Graph API.
+Azure Scout includes *15 Entra ID (Identity) inventory modules* that extract tenant-wide identity and access management data via the Microsoft Graph API.
 
 Run Entra-only extraction with:
 

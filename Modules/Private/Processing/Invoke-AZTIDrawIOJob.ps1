@@ -9,7 +9,7 @@ This module starts jobs to generate Draw.IO diagrams for Azure Resources, includ
 https://github.com/thisismydemo/azure-scout/Modules/Private/2.ProcessingFunctions/Invoke-AZSCDrawIOJob.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+This PowerShell Module is part of Azure Scout (AZSC).
 
 .NOTES
 Version: 3.6.0

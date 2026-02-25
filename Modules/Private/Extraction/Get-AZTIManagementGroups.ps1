@@ -9,7 +9,7 @@ This module retrieves Azure Management Groups and their associated subscriptions
 https://github.com/thisismydemo/azure-scout/Modules/Private/1.ExtractionFunctions/Get-AZSCManagementGroups.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+This PowerShell Module is part of Azure Scout (AZSC).
 
 .NOTES
 Version: 3.6.11

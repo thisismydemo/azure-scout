@@ -9,7 +9,7 @@ This module is the main module for building the Excel Report.
 https://github.com/thisismydemo/azure-scout/Modules/Private/0.MainFunctions/Start-AZSCReporOrchestration.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 3.6.0

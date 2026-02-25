@@ -8,7 +8,7 @@ maintenance schedule assignments and patch compliance status, sourced from the
 Management/MaintenanceConfigurations and Compute/VirtualMachine cache data.
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 1.0.0

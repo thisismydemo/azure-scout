@@ -9,7 +9,7 @@ This script creates charts in the Overview sheet of the Excel report.
 https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/StyleFunctions/Build-AZSCExcelChart.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 3.6.0

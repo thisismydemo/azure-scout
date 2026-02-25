@@ -12,7 +12,7 @@ Excel Sheet Name: AVD on Azure Local/Arc
 https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Compute/AVDAzureLocal.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+    This PowerShell Module is part of Azure Scout (AZSC).
 
 .CATEGORY Compute
 

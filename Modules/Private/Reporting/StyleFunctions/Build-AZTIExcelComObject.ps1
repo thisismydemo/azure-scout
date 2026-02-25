@@ -6,10 +6,10 @@ Module for Excel COM Object Customizations
 This script applies additional customizations to the Excel report using the Excel COM object.
 
 .Link
-https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/StyleFunctions/Build-AZSCExcelComObject.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/Reporting/StyleFunctions/Build-AZTIExcelComObject.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AzureScout)
 
 .NOTES
 Version: 3.6.0
@@ -41,6 +41,7 @@ function Build-AZSCExcelComObject {
                     {
                         Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Error Opening Excel File.')
                         Write-Error $_
+                        Get-Process excel -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
                         return
                     }
 
@@ -119,6 +120,7 @@ function Build-AZSCExcelComObject {
                 $ExApp.Save()
                 $ExApp.Close()
                 $application.Quit()
+                Get-Process excel -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
 
                 Start-Sleep -Seconds 2
 
@@ -151,6 +153,7 @@ function Build-AZSCExcelComObject {
         {
             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Error Interacting with Excel COM Object.')
             Write-Error $_
+            Get-Process excel -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
             return
         }
 }

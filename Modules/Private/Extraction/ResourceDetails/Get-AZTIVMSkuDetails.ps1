@@ -9,7 +9,7 @@ This module retrieves details about Azure VM SKUs available in specific location
 https://github.com/thisismydemo/azure-scout/Modules/Private/1.ExtractionFunctions/ResourceDetails/Get-AZSCVMSkuDetails.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+This PowerShell Module is part of Azure Scout (AZSC).
 
 .NOTES
 Version: 3.6.0

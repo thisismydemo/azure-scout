@@ -9,7 +9,7 @@ This module is the main module for the Azure Resource Graphs that will be run ag
 https://github.com/thisismydemo/azure-scout/Modules/Private/1.ExtractionFunctions/Start-AZSCGraphExtraction.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZSC)
+This powershell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 3.6.11

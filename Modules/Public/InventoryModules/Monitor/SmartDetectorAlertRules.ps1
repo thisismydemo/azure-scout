@@ -11,7 +11,7 @@ Excel Sheet Name: Smart Detector Alerts
 https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Monitoring/SmartDetectorAlertRules.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+    This PowerShell Module is part of Azure Scout (AZSC).
 
 .CATEGORY Monitor
 

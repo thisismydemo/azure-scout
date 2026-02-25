@@ -11,7 +11,7 @@ Excel Sheet Name: Monitor Metrics Ingestion
 https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Monitoring/MonitorMetricsIngestion.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+    This PowerShell Module is part of Azure Scout (AZSC).
 
 .CATEGORY Monitor
 

@@ -9,7 +9,7 @@ This script processes and creates the Security Center sheet in the Excel report.
 https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/Build-AZSCSecCenterReport.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 3.6.0

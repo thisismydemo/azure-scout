@@ -4,7 +4,7 @@
 
 == Overview
 
-Azure Tenant Inventory includes *95 ARM inventory modules* organized into *16 categories*.
+Azure Scout includes *95 ARM inventory modules* organized into *16 categories*.
 Each module extracts data for a specific Azure resource type using the Azure Resource Manager APIs.
 
 Run ARM-only extraction with:

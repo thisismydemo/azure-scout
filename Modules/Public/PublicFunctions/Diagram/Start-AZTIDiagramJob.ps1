@@ -9,7 +9,7 @@ This module is used for managing jobs in the Draw.io Diagram.
 https://github.com/thisismydemo/azure-scout/Modules/Public/PublicFunctions/Diagram/Start-AZSCDiagramJob.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 3.6.5

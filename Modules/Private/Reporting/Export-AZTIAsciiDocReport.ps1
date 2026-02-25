@@ -13,7 +13,7 @@ Confluence, and any AsciiDoc-capable documentation system.
 https://github.com/thisismydemo/azure-scout/Modules/Private/Reporting/Export-AZSCAsciiDocReport.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 1.0.0
@@ -50,7 +50,7 @@ function Export-AZSCAsciiDocReport {
     $lines = [System.Collections.Generic.List[string]]::new()
 
     # ── Document header ──────────────────────────────────────────────────
-    $lines.Add('= Azure Tenant Inventory Report')
+    $lines.Add('= Azure Scout Report')
     $lines.Add('AzureScout')
     $lines.Add(":toc: left")
     $lines.Add(":toc-title: Contents")

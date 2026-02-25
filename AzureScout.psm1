@@ -24,7 +24,6 @@ $_requiredModules = @(
     'Az.ResourceGraph',
     'Az.Storage',
     'Az.Compute',
-    'Az.Authorization',
     'Az.Resources'
 )
 foreach ($_mod in $_requiredModules) {

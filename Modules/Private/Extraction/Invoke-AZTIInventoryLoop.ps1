@@ -9,7 +9,7 @@ This module is used to loop through Azure Resource Graph queries and retrieve re
 https://github.com/thisismydemo/azure-scout/Modules/Private/1.ExtractionFunctions/Invoke-AZSCInventoryLoop.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+This PowerShell Module is part of Azure Scout (AZSC).
 
 .NOTES
 Version: 3.6.0

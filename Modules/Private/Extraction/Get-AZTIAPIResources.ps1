@@ -9,7 +9,7 @@ This module retrieves Azure API resources, including Resource Health, Managed Id
 https://github.com/thisismydemo/azure-scout/Modules/Private/1.ExtractionFunctions/Get-AZSCAPIResources.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+This PowerShell Module is part of Azure Scout (AZSC).
 
 .NOTES
 Version: 3.6.0

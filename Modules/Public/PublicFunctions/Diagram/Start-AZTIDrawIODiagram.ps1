@@ -9,7 +9,7 @@ This script processes and creates a Draw.io Diagram based on resources present i
 https://github.com/thisismydemo/azure-scout/Modules/Public/PublicFunctions/Diagram/Start-AZSCDrawIODiagram.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 3.6.5

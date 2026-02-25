@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Pre-flight permission checker for Azure Tenant Inventory.
+    Pre-flight permission checker for Azure Scout.
 
 .DESCRIPTION
     Validates that the current identity has sufficient ARM and/or Microsoft Graph
@@ -39,7 +39,7 @@
     https://github.com/thisismydemo/azure-scout
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+    This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
     Version: 2.0.0

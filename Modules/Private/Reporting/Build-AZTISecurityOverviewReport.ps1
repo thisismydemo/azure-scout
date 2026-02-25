@@ -8,7 +8,7 @@ secure score, high-severity assessments, active security alerts, and Defender pr
 tier data collected by the Security category modules.
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 1.0.0

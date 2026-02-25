@@ -11,7 +11,7 @@ Excel Sheet Name: Arc SQL Managed Instances
 https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Hybrid/ArcSQLManagedInstances.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+    This PowerShell Module is part of Azure Scout (AZSC).
 
 .CATEGORY Hybrid
 

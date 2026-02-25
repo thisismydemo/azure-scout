@@ -12,7 +12,7 @@ Excel Sheet Name: Resource Diagnostic Settings
 https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Monitoring/ResourceDiagnosticSettings.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZSC)
+This powershell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 1.0.0

@@ -9,7 +9,7 @@ Excel Sheet Name: Reservation Advisor
 https://github.com/thisismydemo/azure-scout/Modules/APIs/ReservationRecom.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+    This PowerShell Module is part of Azure Scout (AZSC).
 
 .CATEGORY Management
 

@@ -9,7 +9,7 @@ This module retrieves unsupported data from a predefined JSON file for Azure Res
 https://github.com/thisismydemo/azure-scout/Modules/Private/0.MainFunctions/Get-AZSCUnsupportedData.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 3.6.0

@@ -11,7 +11,7 @@ Excel Sheet Name: LA Saved Searches
 https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Monitoring/LAWorkspaceSavedSearches.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZSC)
+This powershell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 1.0.0

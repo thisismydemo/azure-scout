@@ -1,9 +1,13 @@
 * xref:index.adoc[Home]
 * Getting Started
+** xref:prerequisites.adoc[Prerequisites & Required Modules]
 ** xref:authentication.adoc[Authentication]
 ** xref:usage.adoc[Usage Guide]
 ** xref:permissions.adoc[Permissions]
+** xref:parameters.adoc[Parameters Reference]
 ** xref:category-filtering.adoc[Category Filtering]
+** xref:output.adoc[Output Files & Formats]
+** xref:troubleshooting.adoc[Troubleshooting]
 ** xref:testing.adoc[Testing]
 * Module Reference
 ** xref:arm-modules.adoc[ARM Modules]

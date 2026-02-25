@@ -6,10 +6,10 @@ Module for Excel Sheet Ordering
 This script organizes the order of sheets in the Excel report.
 
 .Link
-https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/StyleFunctions/Start-AZSCExcelOrdening.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/Reporting/StyleFunctions/Start-AZTIExcelOrdening.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AzureScout)
 
 .NOTES
 Version: 3.6.0
@@ -23,7 +23,7 @@ function Start-AZSCExcelOrdening {
     $Excel = Open-ExcelPackage -Path $File
     $Worksheets = $Excel.Workbook.Worksheets
 
-    $Order = $Worksheets | Where-Object { $_.Name -notin 'Overview','Policy', 'Advisor', 'Security Center', 'Subscriptions', 'Quota Usage', 'AdvisorScore', 'Outages', 'Support Tickets', 'Reservation Advisor' } | Select-Object -Property Index, name, @{N = "Dimension"; E = { $_.dimension.Rows - 1 } } | Sort-Object -Property Dimension -Descending
+    $Order = $Worksheets | Where-Object { $_.Name -notin 'Overview','Policy', 'Advisor', 'Security Center', 'Subscriptions', 'All Subscriptions', 'Quota Usage', 'AdvisorScore', 'Outages', 'Support Tickets', 'Reservation Advisor' } | Select-Object -Property Index, name, @{N = "Dimension"; E = { $_.dimension.Rows - 1 } } | Sort-Object -Property Dimension -Descending
 
     $Order0 = $Order | Where-Object { $_.Name -ne $Order[0].name -and $_.Name -ne ($Order | select-object -Last 1).Name }
 
@@ -71,6 +71,10 @@ function Start-AZSCExcelOrdening {
             $Worksheets.MoveAfter('Reservation Advisor', 'Overview')
         }
     $Worksheets.MoveAfter('Subscriptions','Overview')
+    if (($Worksheets | Where-Object {$_.Name -eq 'All Subscriptions'}))
+        {
+            $Worksheets.MoveAfter('All Subscriptions', 'Subscriptions')
+        }
 
     $WS = $Excel.Workbook.Worksheets | Where-Object { $_.Name -eq 'Overview' }
 

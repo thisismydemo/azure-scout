@@ -9,7 +9,7 @@ This script creates the initial block with metadata and summary information in t
 https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/StyleFunctions/Build-AZSCExcelinitialBlock.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -100,7 +100,7 @@ function Build-AZSCInitialBlock {
     $Draw.SetSize(445, 240)
     $Draw.SetPosition(1, 0, 2, 5)
 
-    $txt = $Draw.RichText.Add('Azure Tenant Inventory ' + $ScriptVersion + "`n")
+    $txt = $Draw.RichText.Add('Azure Scout ' + $ScriptVersion + "`n")
     $txt.Size = 14
     $txt.ComplexFont = $Font
     $txt.LatinFont = $Font

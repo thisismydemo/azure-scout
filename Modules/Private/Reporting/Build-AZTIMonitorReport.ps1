@@ -8,7 +8,7 @@ action groups, alert rules, data collection rules, Log Analytics workspaces,
 Application Insights, and autoscale settings — sourced from the Monitor category cache.
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 1.0.0

@@ -11,7 +11,7 @@ Excel Sheet Name: Data Collection Endpoints
 https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Monitoring/DataCollectionEndpoints.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+    This PowerShell Module is part of Azure Scout (AZSC).
 
 .CATEGORY Monitor
 

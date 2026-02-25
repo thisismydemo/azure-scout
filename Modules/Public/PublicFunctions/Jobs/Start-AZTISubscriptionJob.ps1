@@ -9,7 +9,7 @@ This script processes and creates the Subscriptions sheet based on resources and
 https://github.com/thisismydemo/azure-scout/Modules/Public/PublicFunctions/Jobs/Start-AZSCSubscriptionJob.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZSC)
+This powershell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 3.6.0
@@ -31,10 +31,15 @@ function Start-AZSCSubscriptionJob {
             $resTable2 = $ResTable | Select-Object id, Type, location, resourcegroup, subscriptionid
             $ResTable3 = $ResTable2 | Group-Object -Property type, location, resourcegroup, subscriptionid
 
+            $subsWithResources = @{}
+
             $FormattedTable = foreach ($ResourcesSUB in $ResTable3) 
                 {
                     $ResourceDetails = $ResourcesSUB.name -split ", "
                     $SubName = $Subscriptions | Where-Object { $_.Id -eq $ResourceDetails[3] }
+                    if ($ResourceDetails[3]) {
+                        $subsWithResources[$ResourceDetails[3]] = $true
+                    }
                     $obj = [PSCustomObject]@{
                         'Subscription'      = $SubName.Name
                         'SubscriptionId'    = $ResourceDetails[3]
@@ -45,6 +50,24 @@ function Start-AZSCSubscriptionJob {
                     }
                     $obj
                 }
+
+            # Include ALL subscriptions — empty ones get a single summary row
+            $EmptySubRows = foreach ($sub in $Subscriptions) {
+                if (-not $subsWithResources.ContainsKey($sub.Id)) {
+                    [PSCustomObject]@{
+                        'Subscription'      = $sub.Name
+                        'SubscriptionId'    = $sub.Id
+                        'Resource Group'    = '(none)'
+                        'Location'          = '(none)'
+                        'Resource Type'     = '(no resources)'
+                        'Resources Count'   = 0
+                    }
+                }
+            }
+
+            if ($EmptySubRows) {
+                $FormattedTable = @($FormattedTable) + @($EmptySubRows)
+            }
         }
     else
         {

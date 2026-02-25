@@ -12,7 +12,7 @@ Excel Sheet Name: Applied AI Services
 https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/AI/AppliedAIServices.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+    This PowerShell Module is part of Azure Scout (AZSC).
 
 .CATEGORY AI
 

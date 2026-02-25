@@ -10,7 +10,7 @@ Excel Sheet Name: Managed Identities
 https://github.com/thisismydemo/azure-scout/Modules/Public/InventoryModules/Identity/ManagedIdentities.ps1
 
 .COMPONENT
-This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 1.0.0

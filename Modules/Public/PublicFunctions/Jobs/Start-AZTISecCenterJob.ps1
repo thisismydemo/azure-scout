@@ -9,7 +9,7 @@ This script processes and creates the Security Center sheet based on security re
 https://github.com/thisismydemo/azure-scout/Modules/Public/PublicFunctions/Jobs/Start-AZSCSecCenterJob.ps1
 
 .COMPONENT
-    This powershell Module is part of Azure Tenant Inventory (AZSC)
+    This powershell Module is part of Azure Scout (AZSC)
 
 .NOTES
 Version: 3.6.0

@@ -6,10 +6,10 @@ Module for Main Dashboard
 This script process and creates the Overview sheet.
 
 .Link
-https://github.com/thisismydemo/azure-scout/Modules/Private/3.ReportingFunctions/StyleFunctions/Start-AZSCExcelCustomization.ps1
+https://github.com/thisismydemo/azure-scout/Modules/Private/Reporting/StyleFunctions/Start-AZTIExcelCustomization.ps1
 
 .COMPONENT
-This powershell Module is part of Azure Tenant Inventory (AZSC)
+This powershell Module is part of Azure Scout (AzureScout)
 
 .NOTES
 Version: 3.6.0
@@ -33,9 +33,19 @@ function Start-AZSCExcelCustomization {
     else
         {
             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Running in Full Mode.')
-            $AZSCMod = Get-InstalledModule -Name AzureScout
-
-            $ScriptVersion = [string]$AZSCMod.Version
+            try {
+                $AZSCMod = Get-InstalledModule -Name AzureScout -ErrorAction Stop
+                $ScriptVersion = [string]$AZSCMod.Version
+            }
+            catch {
+                $ManifestPath = Join-Path $PSScriptRoot '..\..\..\..\AzureScout.psd1'
+                if (Test-Path $ManifestPath) {
+                    $Manifest = Import-PowerShellDataFile $ManifestPath
+                    $ScriptVersion = [string]$Manifest.ModuleVersion
+                } else {
+                    $ScriptVersion = "3.6"
+                }
+            }
         }
 
 
@@ -54,9 +64,9 @@ function Start-AZSCExcelCustomization {
                 $tmp = @{
                     'Name' = $WorkS.name;
                     'Size' = [int]$Number[1];
-                    'Size2' = if ($WorkS.name -in ('Subscriptions', 'Quota Usage', 'AdvisorScore', 'Outages', 'SupportTickets', 'Reservation Advisor', 'Cost Management', 'Security Overview', 'Azure Update Manager', 'Azure Monitor')) {0}else{[int]$Number[1]}
+                    'Size2' = if ($WorkS.name -in ('Subscriptions', 'Quota Usage', 'AdvisorScore', 'Outages', 'SupportTickets', 'Reservation Advisor')) {0}else{[int]$Number[1]}
                 }
-                if ($WorkS.name -notin ('Subscriptions', 'Quota Usage', 'AdvisorScore', 'Outages', 'SupportTickets', 'Reservation Advisor', 'Managed Identity', 'Backup', 'Cost Management', 'Security Overview', 'Azure Update Manager', 'Azure Monitor'))
+                if ($WorkS.name -notin ('Subscriptions', 'Quota Usage', 'AdvisorScore', 'Outages', 'SupportTickets', 'Reservation Advisor', 'Managed Identity', 'Backup'))
                     {
                         $TotalRes = $TotalRes + ([int]$Number[1])
                     }

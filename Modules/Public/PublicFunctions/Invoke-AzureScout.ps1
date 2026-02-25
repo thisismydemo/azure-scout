@@ -458,7 +458,7 @@ Function Invoke-AzureScout {
             foreach ($provider in $criticalProviders) {
                 $reg = Get-AzResourceProvider -ProviderNamespace $provider -ErrorAction SilentlyContinue
                 if ($reg -and $reg.RegistrationState -ne 'Registered') {
-                    Write-Warning "[$($sub.Name)] $provider is NOT registered. Dependent modules will be skipped.`n          Remediation: Register-AzResourceProvider -ProviderNamespace '$provider'"
+                    Write-Host "  [INFO] [$($sub.Name)] $provider is not registered — modules for this service will be skipped (this is expected if you don't use this service)." -ForegroundColor DarkGray
                 }
             }
         }
@@ -474,6 +474,7 @@ Function Invoke-AzureScout {
                 'Pass' { Write-Host "  [PASS] $($detail.Check): $($detail.Message)" -ForegroundColor Green }
                 'Warn' { Write-Warning "[WARN] $($detail.Check): $($detail.Message). $($detail.Remediation)" }
                 'Fail' { Write-Warning "[FAIL] $($detail.Check): $($detail.Message). $($detail.Remediation)" }
+                'Info' { Write-Host "  [INFO] $($detail.Check): $($detail.Message)" -ForegroundColor DarkGray }
             }
         }
         Write-Host ''

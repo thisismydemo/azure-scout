@@ -1,6 +1,6 @@
 <#
 .Synopsis
-    Dedicated permission audit for Azure Tenant Inventory.
+    Dedicated permission audit for Azure Scout.
 
 .DESCRIPTION
     Runs a standalone permission audit without performing any inventory collection.
@@ -44,7 +44,7 @@
     https://github.com/thisismydemo/azure-scout
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+    This PowerShell Module is part of Azure Scout (AZSC)
 
 .CATEGORY Management
 
@@ -88,7 +88,7 @@ function Invoke-AZSCPermissionAudit {
     # ── Banner ────────────────────────────────────────────────────────────────
     Write-Host ''
     Write-Host '╔══════════════════════════════════════════════════════════════╗' -ForegroundColor Cyan
-    Write-Host '║        Azure Tenant Inventory — Permission Audit             ║' -ForegroundColor Cyan
+    Write-Host '║        Azure Scout — Permission Audit                      ║' -ForegroundColor Cyan
     Write-Host '╚══════════════════════════════════════════════════════════════╝' -ForegroundColor Cyan
     Write-Host "  $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
     if ($IncludeEntraPermissions.IsPresent) {
@@ -254,6 +254,9 @@ function Invoke-AZSCPermissionAudit {
         $checkSub = $targetSubs[0]
         Set-AzContext -SubscriptionId $checkSub.Id -ErrorAction SilentlyContinue | Out-Null
         Write-Host "  Checking against subscription: $($checkSub.Name)" -ForegroundColor Gray
+        Write-Host "  NOTE: Not all providers need to be registered. Unregistered providers are" -ForegroundColor DarkGray
+        Write-Host "        expected — they simply mean that service is not deployed here." -ForegroundColor DarkGray
+        Write-Host "        The scan will complete successfully; those modules will be skipped." -ForegroundColor DarkGray
         Write-Host ''
 
         foreach ($kvp in $criticalProviders.GetEnumerator()) {
@@ -262,8 +265,9 @@ function Invoke-AZSCPermissionAudit {
             try {
                 $reg = Get-AzResourceProvider -ProviderNamespace $provider -ErrorAction Stop
                 $state = ($reg | Select-Object -ExpandProperty RegistrationState -First 1)
-                $status = if ($state -eq 'Registered') { 'Pass' } elseif ($state -in 'Registering','Unregistering') { 'Warn' } else { 'Fail' }
-                Write-AuditLine -Status $status -Text "$provider  [$state]  — $purpose"
+                $status = if ($state -eq 'Registered') { 'Pass' } elseif ($state -in 'Registering','Unregistering') { 'Warn' } else { 'Info' }
+                $skipText = if ($status -eq 'Info') { " (modules for this service will be skipped)" } else { '' }
+                Write-AuditLine -Status $status -Text "$provider  [$state]  — $purpose$skipText"
 
                 if ($status -ne 'Pass') {
                     $recommendations.Add("Register provider: Register-AzResourceProvider -ProviderNamespace '$provider'")
@@ -438,7 +442,7 @@ function Invoke-AZSCPermissionAudit {
         $mdFile = Join-Path $reportPath ("PermissionAudit_" + (Get-Date -Format 'yyyy-MM-dd_HH_mm') + ".md")
 
         $mdLines = [System.Collections.Generic.List[string]]::new()
-        $mdLines.Add('# Azure Tenant Inventory - Permission Audit Report')
+        $mdLines.Add('# Azure Scout - Permission Audit Report')
         $mdLines.Add("")
         $mdLines.Add("| Field | Value |")
         $mdLines.Add("|-------|-------|")
@@ -495,7 +499,7 @@ function Invoke-AZSCPermissionAudit {
         $adocFile = Join-Path $reportPath ("PermissionAudit_" + (Get-Date -Format 'yyyy-MM-dd_HH_mm') + ".adoc")
 
         $adocLines = [System.Collections.Generic.List[string]]::new()
-        $adocLines.Add('= Azure Tenant Inventory — Permission Audit Report')
+        $adocLines.Add('= Azure Scout — Permission Audit Report')
         $adocLines.Add(':toc: left')
         $adocLines.Add(':toclevels: 2')
         $adocLines.Add(':icons: font')

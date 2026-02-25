@@ -9,7 +9,7 @@ Excel Sheet Name: Outages
 https://github.com/thisismydemo/azure-scout/Modules/APIs/Outages.ps1
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZSC).
+    This PowerShell Module is part of Azure Scout (AZSC).
 
 .CATEGORY Monitor
 

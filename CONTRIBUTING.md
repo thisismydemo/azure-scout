@@ -1,4 +1,4 @@
-# Contributing to Azure Tenant Inventory
+# Contributing to Azure Scout
 
 <div align="center">
   <img src="images/AZSC_Logo.png" width="250">
@@ -32,7 +32,7 @@
 
 ## Getting Started
 
-Thank you for considering contributing to Azure Tenant Inventory (AZSC)! We welcome contributions from the community and are excited to see what you can bring to the project.
+Thank you for considering contributing to Azure Scout (AZSC)! We welcome contributions from the community and are excited to see what you can bring to the project.
 
 Before you begin, please familiarize yourself with the [README.md](README.md) file to understand the purpose and functionality of AZSC.
 
@@ -197,7 +197,7 @@ This modules will be loaded and the functions will be exposed to the user sessio
 
 | Script File         | Description                                                                 |
 |---------------------|-----------------------------------------------------------------------------|
-| `Invoke-AzureScout.ps1`    | Entry point script to invoke Azure Tenant Inventory operations.          |
+| `Invoke-AzureScout.ps1`    | Entry point script to invoke Azure Scout operations.          |
 
 
 #### Diagram
@@ -315,7 +315,7 @@ Each module is designed to handle specific tasks, ensuring a clean and modular a
 
 #### Resource Type Modules
 
-The supported resource types by Azure Tenant Inventory are defined by the "Resource Type Modules", we made sure to create this structure to be as simple as possible. 
+The supported resource types by Azure Scout are defined by the "Resource Type Modules", we made sure to create this structure to be as simple as possible. 
 
 So anyone could contribute by creating new modules for new resource types.
 
@@ -358,4 +358,4 @@ If you have questions or need help with your contribution:
 
 ---
 
-Thank you for contributing to Azure Tenant Inventory! Your efforts help make cloud administration easier for the entire Azure community.
+Thank you for contributing to Azure Scout! Your efforts help make cloud administration easier for the entire Azure community.

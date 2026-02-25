@@ -177,10 +177,10 @@ Describe 'Export-AZSCMarkdownReport — Output File Generation' {
         $mdOutput | Should -Exist
     }
 
-    It 'Markdown file starts with "# Azure Tenant Inventory Report"' {
+    It 'Markdown file starts with "# Azure Scout Report"' {
         $mdOutput = [System.IO.Path]::ChangeExtension($script:MdFile, '.md')
         $first = Get-Content -Path $mdOutput | Select-Object -First 1
-        $first | Should -Be '# Azure Tenant Inventory Report'
+        $first | Should -Be '# Azure Scout Report'
     }
 
     It 'Markdown file contains Tenant ID entry' {
@@ -223,7 +223,7 @@ Describe 'Export-AZSCAsciiDocReport — Output File Generation' {
     It 'AsciiDoc file contains document title marker (= )' {
         $adocOutput = [System.IO.Path]::ChangeExtension($script:AdocFile, '.adoc')
         $content = Get-Content -Path $adocOutput -Raw
-        $content | Should -Match '= Azure Tenant Inventory'
+        $content | Should -Match '= Azure Scout'
     }
 }
 

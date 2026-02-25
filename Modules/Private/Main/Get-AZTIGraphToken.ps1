@@ -18,7 +18,7 @@
     https://github.com/thisismydemo/azure-scout
 
 .COMPONENT
-    This PowerShell Module is part of Azure Tenant Inventory (AZSC)
+    This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
     Version: 2.0.0
