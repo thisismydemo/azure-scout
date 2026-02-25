@@ -25,6 +25,12 @@ Tags: PowerShell, Azure, Inventory, Entra ID, Excel Report, JSON
 
 **AzureScout** (AZSC) is a PowerShell module that generates detailed Excel and JSON reports of an Azure tenant, covering both ARM resources and Entra ID (Azure AD) objects. It is designed for Cloud Administrators and technical professionals who need a consolidated view of their Azure environment.
 
+> **Built on [Azure Resource Inventory (ARI)](https://github.com/microsoft/ARI)**
+>
+> AzureScout is a fork of Microsoft's [Azure Resource Inventory](https://github.com/microsoft/ARI) (ARI) v3.6.11, created by **[Claudio Merola](https://github.com/Claudio-Merola)** and **[Renato Gregio](https://github.com/RenatoGregio)**. The ARI project provided the entire foundation — 171 ARM inventory modules, draw.io diagram engine, Excel reporting pipeline, and Azure Automation support — that AzureScout builds upon. We are deeply grateful for their work.
+>
+> See [CREDITS.md](CREDITS.md) for full attribution and [Differences from ARI](docs/modules/ROOT/pages/ari-differences.adoc) for what AzureScout has changed.
+
 ## Key Features
 - ARM and Entra ID inventory
 - Excel and JSON output

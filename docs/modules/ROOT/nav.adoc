@@ -19,4 +19,5 @@
 ** xref:folder-structure.adoc[Repository Structure]
 ** xref:contributing.adoc[Contributing]
 ** xref:credits.adoc[Credits & Attribution]
+** xref:ari-differences.adoc[Differences from ARI]
 ** xref:changelog.adoc[Changelog]
