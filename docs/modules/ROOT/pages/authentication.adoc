@@ -4,7 +4,7 @@
 
 == Overview
 
-Azure Scout supports five authentication methods.
+AzureScout supports five authentication methods.
 The module uses `Connect-AZSCLoginSession` internally, which selects the auth path based on the parameters you provide.
 
 == Priority Order

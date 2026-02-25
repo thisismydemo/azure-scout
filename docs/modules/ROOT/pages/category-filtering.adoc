@@ -172,11 +172,11 @@ To add a new category to AZSC:
 . Create a folder under `Modules/Public/InventoryModules/<CategoryName>/`
 . Add the folder name to the `[ValidateSet]` for `-Category` in `Invoke-AzureScout.ps1`
 . Optionally add alias entries to `$_categoryAliasMap` for common name variants
-. Update link:../azure-category-structure.md[azure-category-structure.md] with the new mapping
-. Create one or more `.ps1` module files using the link:../../Modules/Public/InventoryModules/Module-template.tpl[Module-template.tpl]
+. Update xref:category-structure.adoc[Category Structure] with the new mapping
+. Create one or more `.ps1` module files using the module template in `Modules/Public/InventoryModules/`
 
 == See Also
 
-* link:../azure-category-structure.md[Azure Category Structure reference]
-* link:../azure-coverage-table.md[Full Coverage Table]
-* xref:ROOT:index.adoc[AZSC Documentation Home]
+* xref:category-structure.adoc[Category Structure reference]
+* xref:coverage-table.adoc[Full Coverage Table]
+* xref:ROOT:index.adoc[AzureScout Documentation Home]

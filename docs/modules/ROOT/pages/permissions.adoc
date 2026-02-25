@@ -4,7 +4,7 @@
 
 == Overview
 
-Azure Scout requires two categories of permissions:
+AzureScout requires two categories of permissions:
 
 . *ARM (Azure Resource Manager)* — RBAC role assignments on subscriptions
 . *Microsoft Graph API* — Application or delegated permissions for Entra ID data
