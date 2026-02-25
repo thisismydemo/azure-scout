@@ -84,6 +84,10 @@ Focus: quality, reliability, and community onboarding.
 | `Invoke-AzureScout -WhatIf`
 | Show which modules would run without actually executing
 | 🔵 Planned
+
+| Non-destructive cache
+| Prevent `ReportCache` and `DiagramCache` from being overwritten on subsequent runs. Each invocation writes to a timestamped (or `-RunName` named) subfolder. Previous scan data is never lost unless `-Force` is specified. `Clear-AZSCCacheFolder -OlderThan <days>` for cleanup.
+| 🔵 Planned
 |===
 
 === Visual Dashboard Tabs (DarkBlue "overview-style" worksheets)
@@ -126,9 +130,9 @@ Focus: depth, breadth, and multi-tenant scenarios.
 |===
 | Feature | Description | Status
 
-| Multi-tenant support
-| `-TenantId` to cross-tenant scan with delegated credentials (Lighthouse)
-| 💡 Idea
+| Multi-tenant scanning
+| `-TenantID` accepts multiple tenant IDs. Authenticates to each tenant sequentially, runs the full extraction → processing → reporting pipeline per tenant. Supports combined workbook (with Tenant column) or separate per-tenant workbooks via `-MergeOutput` switch. Auth failure on one tenant does not block others. Builds on non-destructive cache (v1.1.0) for run isolation.
+| 🔵 Planned
 
 | Cost anomaly detection
 | Surface Azure Cost Management anomalies in the Cost Management tab
