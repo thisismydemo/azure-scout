@@ -134,6 +134,14 @@ Focus: depth, breadth, and multi-tenant scenarios.
 | `-TenantID` accepts multiple tenant IDs. Authenticates to each tenant sequentially, runs the full extraction → processing → reporting pipeline per tenant. Supports combined workbook (with Tenant column) or separate per-tenant workbooks via `-MergeOutput` switch. Auth failure on one tenant does not block others. Builds on non-destructive cache (v1.1.0) for run isolation.
 | 🔵 Planned
 
+| Word document export (#22)
+| `-OutputFormat Word` generates a `.docx` report with cover page, table of contents, per-category sections with summary tables, resource counts, and key metrics. Suitable for client deliverables, executive summaries, and formal documentation.
+| 🔵 Planned
+
+| PDF report export (#23)
+| `-OutputFormat PDF` generates a `.pdf` report with cover page, table of contents, paginated resource tables, and headers/footers. Ideal for archival, compliance evidence, and stakeholder distribution.
+| 🔵 Planned
+
 | Cost anomaly detection
 | Surface Azure Cost Management anomalies in the Cost Management tab
 | 💡 Idea
