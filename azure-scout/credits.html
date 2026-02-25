@@ -6,7 +6,7 @@
     <title>Credits &amp; Attribution :: AzureScout Documentation</title>
     <link rel="canonical" href="https://thisismydemo.cloud/azure-scout/azure-scout/credits.html">
     <link rel="prev" href="contributing.html">
-    <link rel="next" href="changelog.html">
+    <link rel="next" href="ari-differences.html">
     <meta name="description" content="Credits and attribution for the AzureScout project.">
     <meta name="keywords" content="credits, attribution, ari, fork, license, azurescout">
     <meta name="generator" content="Antora 3.1.14">
@@ -113,6 +113,9 @@
     <a class="nav-link" href="credits.html">Credits &amp; Attribution</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="ari-differences.html">Differences from ARI</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="changelog.html">Changelog</a>
   </li>
 </ul>
@@ -157,6 +160,21 @@
 <h1 class="page">Credits &amp; Attribution</h1>
 <div id="preamble">
 <div class="sectionbody">
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>AzureScout exists because of <a href="https://github.com/microsoft/ARI">Azure Resource Inventory (ARI)</a>.</strong><br>
+Without the foundation built by the ARI team at Microsoft, this project would not exist.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>The full credits file is maintained in the repository root and rendered on GitHub.</p>
 </div>
@@ -166,22 +184,77 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="origin"><a class="anchor" href="#origin"></a>Origin</h2>
+<h2 id="fork-origin"><a class="anchor" href="#fork-origin"></a>Fork Origin</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>AzureScout is forked from <a href="https://github.com/microsoft/ARI">microsoft/ARI</a> (Azure Resource Inventory) v3.6.11, originally created by Claudio Merola and RenatoGregio at Microsoft.</p>
+<p>AzureScout was forked from <a href="https://github.com/microsoft/ARI">microsoft/ARI</a> (Azure Resource Inventory) at version <strong>3.6.11</strong> in October 2024. The original project provided the entire extraction, processing, and reporting pipeline — including 171 ARM inventory modules, the draw.io diagram engine, Excel/ImportExcel integration, and Azure Automation Account support.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="original-authors"><a class="anchor" href="#original-authors"></a>Original Authors</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/Claudio-Merola"><strong>Claudio Merola</strong></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Original ARI creator and primary developer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/RenatoGregio"><strong>Renato Gregio</strong></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Original ARI co-author and copyright holder</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>We are deeply grateful for their work. The ARI project remains actively maintained at <a href="https://github.com/microsoft/ARI">github.com/microsoft/ARI</a> and we encourage users to check it out.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-has-changed"><a class="anchor" href="#what-has-changed"></a>What Has Changed</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For a detailed breakdown of what AzureScout has added, changed, and diverged from the original ARI codebase, see <a href="ari-differences.html" class="xref page">Differences from ARI</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-acknowledgments"><a class="anchor" href="#additional-acknowledgments"></a>Additional Acknowledgments</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong><a href="https://github.com/dfinke">Doug Finke</a></strong> — Author of <a href="https://github.com/dfinke/ImportExcel">ImportExcel</a>, the PowerShell module used for Excel report generation (MIT license).</p>
+</li>
+<li>
+<p><strong>Microsoft</strong> — Azure PowerShell SDK (<code>Az.*</code> modules), Azure Resource Graph, and Microsoft Graph REST API.</p>
+</li>
+<li>
+<p><strong>All ARI contributors</strong> — The <a href="https://github.com/microsoft/ARI/graphs/contributors">29 contributors</a> who built and refined ARI over six years.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="license-disclaimer"><a class="anchor" href="#license-disclaimer"></a>License &amp; Disclaimer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Both the original ARI project and AzureScout are licensed under the MIT License. See <a href="https://github.com/thisismydemo/azure-scout/blob/main/LICENSE">LICENSE</a> for full details.</p>
 </div>
 <div class="paragraph">
-<p>Excel generation uses <a href="https://github.com/dfinke/ImportExcel">ImportExcel</a> by Doug Finke, licensed MIT.</p>
-</div>
-<div class="paragraph">
-<p>AzureScout is an independent community project and is not affiliated with or endorsed by Microsoft.</p>
+<p>AzureScout is an independent community project and is <strong>not affiliated with or endorsed by Microsoft</strong>.</p>
 </div>
 </div>
 </div>
 <nav class="pagination">
   <span class="prev"><a href="contributing.html">Contributing</a></span>
-  <span class="next"><a href="changelog.html">Changelog</a></span>
+  <span class="next"><a href="ari-differences.html">Differences from ARI</a></span>
 </nav>
 </article>
   </div>
