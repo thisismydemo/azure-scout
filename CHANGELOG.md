@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-02-25
+
 ### Added
 
 - Initial fork from [microsoft/ARI](https://github.com/microsoft/ARI) v3.6.11
@@ -151,6 +153,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Invoke-AzureRAMPInventory` public function
 - Auto-update logic (`Update-Module` call)
 - `Remove-ARIExcelProcess` (aggressive Excel process killer)
+
+### Fixed
+
+- **Permission audit subscription scoping** (#19) — `Invoke-AZSCPermissionAudit` now accepts `-SubscriptionID` and scopes RBAC/provider checks to only targeted subscriptions instead of auditing all accessible subscriptions in the tenant. Passed through from `Invoke-AzureScout` and `Test-AZSCPermissions`
 
 ### Changed
 
