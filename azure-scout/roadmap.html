@@ -287,6 +287,11 @@ Community contributions are welcome — see <a href="contributing.html" class="x
 <td class="tableblock halign-left valign-top"><p class="tableblock">Show which modules would run without actually executing</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">🔵 Planned</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Non-destructive cache</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prevent <code>ReportCache</code> and <code>DiagramCache</code> from being overwritten on subsequent runs. Each invocation writes to a timestamped (or <code>-RunName</code> named) subfolder. Previous scan data is never lost unless <code>-Force</code> is specified. <code>Clear-AZSCCacheFolder -OlderThan &lt;days&gt;</code> for cleanup.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">🔵 Planned</p></td>
+</tr>
 </tbody>
 </table>
 <div class="sect2">
@@ -373,9 +378,9 @@ Community contributions are welcome — see <a href="contributing.html" class="x
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Multi-tenant support</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-TenantId</code> to cross-tenant scan with delegated credentials (Lighthouse)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">💡 Idea</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multi-tenant scanning</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-TenantID</code> accepts multiple tenant IDs. Authenticates to each tenant sequentially, runs the full extraction → processing → reporting pipeline per tenant. Supports combined workbook (with Tenant column) or separate per-tenant workbooks via <code>-MergeOutput</code> switch. Auth failure on one tenant does not block others. Builds on non-destructive cache (v1.1.0) for run isolation.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">🔵 Planned</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Cost anomaly detection</p></td>
