@@ -1,7 +1,7 @@
 # Support for Azure Scout
 
 <div align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/512px-Microsoft_logo.svg.png" alt="Microsoft Logo" width="200">
+  <img src="https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/modules/ROOT/images/azurescout-banner.svg" width="400">
   <br><br>
   <p>
     <a href="https://github.com/thisismydemo/azure-scout/issues"><img src="https://img.shields.io/github/issues/thisismydemo/azure-scout" alt="GitHub Issues"></a>
@@ -32,11 +32,11 @@ This project uses GitHub Issues to track bugs, feature requests, and questions. 
 | Documentation | Report issues with documentation | Documentation |
 | Question | Ask a question about usage | Question |
 
-## 🛡️ Microsoft Support Policy
+## 🛡️ Support Policy
 
-Official support for this project is limited to the GitHub issues system as described above.
+Azure Scout is an open-source project created and maintained by [Kristopher Turner](https://github.com/yourfriendkris) at [Hybrid Cloud Solutions](https://hybridsolutions.cloud). Community support is provided through GitHub Issues on a best-effort basis.
 
-> **Note**: Azure Scout is an open-source project maintained by the community. While we strive to address issues in a timely manner, response times may vary based on priority and maintainer availability. Microsoft offers no official support for this project.
+> **Note**: Response times may vary based on priority and maintainer availability. For urgent production issues, please email [support@hybridsolutions.cloud](mailto:support@hybridsolutions.cloud).
 
 ## 🔄 Issue Lifecycle
 

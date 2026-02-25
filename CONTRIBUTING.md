@@ -1,7 +1,7 @@
 # Contributing to Azure Scout
 
 <div align="center">
-  <img src="images/AZSC_Logo.png" width="250">
+  <img src="https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/modules/ROOT/images/azurescout-banner.svg" width="400">
   <h3>Guidelines for Community Contributions</h3>
   
   [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/thisismydemo/azure-scout/pulls)
@@ -53,8 +53,8 @@ Follow these steps to contribute to AZSC:
 2. **Clone Your Fork**
    
    ```bash
-   git clone https://github.com/your-username/AZSC.git
-   cd AZSC
+   git clone https://github.com/your-username/azure-scout.git
+   cd azure-scout
    ```
 
 3. **Create a Branch**
