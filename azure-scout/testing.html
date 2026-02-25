@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Testing :: AzureScout Documentation</title>
+    <link rel="canonical" href="https://thisismydemo.cloud/azure-scout/azure-scout/testing.html">
+    <link rel="prev" href="category-filtering.html">
+    <link rel="next" href="arm-modules.html">
+    <meta name="description" content="How to run and write Pester tests for AzureScout.">
+    <meta name="keywords" content="testing, pester, unit-tests, coverage, azurescout">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://thisismydemo.cloud/azure-scout">AzureScout Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/thisismydemo/azure-scout" target="_blank" rel="noopener">GitHub</a>
+        <a class="navbar-item" href="https://www.powershellgallery.com/packages/AzureScout" target="_blank" rel="noopener">PSGallery</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="azure-scout" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">AzureScout</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Home</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="authentication.html">Authentication</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="usage.html">Usage Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="permissions.html">Permissions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="category-filtering.html">Category Filtering</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Module Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="arm-modules.html">ARM Modules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="entra-modules.html">Entra ID Modules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="coverage-table.html">Coverage Table</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="category-structure.html">Category Structure</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Project</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="roadmap.html">Roadmap</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="folder-structure.html">Repository Structure</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributing.html">Contributing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="credits.html">Credits &amp; Attribution</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="changelog.html">Changelog</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">AzureScout</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="index.html">AzureScout</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">AzureScout</a></li>
+    <li>Getting Started</li>
+    <li><a href="testing.html">Testing</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/thisismydemo/azure-scout/edit/main/docs/modules/ROOT/pages/testing.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Testing</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>AzureScout maintains <strong>100 % test coverage</strong> across all 237 PowerShell scripts.
+The test suite uses <a href="https://pester.dev">Pester 5</a> and runs entirely offline — no Azure credentials or live API calls required.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="prerequisites"><a class="anchor" href="#prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Requirement</th>
+<th class="tableblock halign-left valign-top">Install Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PowerShell 7+</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Built-in on modern Windows; <code>brew install --cask powershell</code> on macOS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pester 5.3.2+</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Install-Module Pester -MinimumVersion 5.3.2 -Force</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ImportExcel</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Install-Module ImportExcel -Force</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running-the-full-suite"><a class="anchor" href="#running-the-full-suite"></a>Running the Full Suite</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell">Import-Module Pester -RequiredVersion 5.3.2 -Force
+Invoke-Pester -Path .\tests\ -Output Detailed</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This runs all 29 test files (~1,240 tests) and typically completes in under 60 seconds.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running-a-single-test-file"><a class="anchor" href="#running-a-single-test-file"></a>Running a Single Test File</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Run only the Compute module tests
+Invoke-Pester -Path .\tests\Compute.Module.Tests.ps1 -Output Detailed
+
+# Run only the private main-function tests
+Invoke-Pester -Path .\tests\Private.Main.Tests.ps1 -Output Detailed</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="test-file-overview"><a class="anchor" href="#test-file-overview"></a>Test File Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>tests/</code> directory contains 29 Pester files organized by area:</p>
+</div>
+<div class="sect2">
+<h3 id="inventory-module-tests-15-files"><a class="anchor" href="#inventory-module-tests-15-files"></a>Inventory Module Tests (15 files)</h3>
+<div class="paragraph">
+<p>Each category of Azure resource modules has a dedicated test file that validates both the <strong>Processing</strong> phase (data extraction/transformation) and the <strong>Reporting</strong> phase (Excel output).</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 20%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Test File</th>
+<th class="tableblock halign-left valign-top">Modules</th>
+<th class="tableblock halign-left valign-top">Category</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AI.Module.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AI &amp; Machine Learning</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Analytics.Module.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Analytics</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Compute.Module.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compute &amp; AVD</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Containers.Module.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Containers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Databases.Module.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">13</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Databases</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Hybrid.Module.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">16</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hybrid &amp; Arc</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Identity.Module.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">18</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identity &amp; Entra ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Integration.Module.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integration</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IoT.Module.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IoT</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Management.Module.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Management &amp; Governance</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Monitor.Module.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">24</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Monitoring</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Networking.Module.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">21</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Networking</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Security.Module.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Security</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Storage.Module.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Web.Module.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Web</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="private-module-tests-4-files"><a class="anchor" href="#private-module-tests-4-files"></a>Private Module Tests (4 files)</h3>
+<div class="paragraph">
+<p>These validate internal helper scripts — file existence, syntax (via <code>Parser::ParseFile</code>), and function definitions.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 66.6666%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Test File</th>
+<th class="tableblock halign-left valign-top">Scripts Covered</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Private.Main.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">13 (orchestration, auth, caching)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Private.Extraction.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9 (API, Graph, subscriptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Private.Processing.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9 (cache, advisory, policy jobs)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Private.Reporting.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">21 (Excel, JSON, Markdown, AsciiDoc)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="public-function-integration-tests-10-files"><a class="anchor" href="#public-function-integration-tests-10-files"></a>Public Function &amp; Integration Tests (10 files)</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Test File</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Public.Functions.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14 public utility scripts (Diagram, Jobs)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AzureScout.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Module manifest &amp; import validation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Invoke-AzureScout.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Main entry-point parameter handling</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Connect-AZSCLoginSession.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authentication flows</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Invoke-AZSCGraphRequest.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Graph API request handling</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Test-AZSCPermissions.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Permission checker logic</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Start-AZSCEntraExtraction.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Entra ID extraction</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PermissionAudit.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Permission audit pipeline</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OutputFormat.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output format routing</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CategoryFiltering.Tests.ps1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Category filter validation</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="how-inventory-module-tests-work"><a class="anchor" href="#how-inventory-module-tests-work"></a>How Inventory Module Tests Work</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each inventory module test follows this pattern:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Discovery</strong> — A <code>$ResourceModules</code> array lists every module with its file path, Azure resource type, and Excel worksheet name.</p>
+</li>
+<li>
+<p><strong>Mock Resources</strong> — <code>BeforeAll</code> creates in-memory mock Azure resources (hashtables) that match the shapes each module expects.</p>
+</li>
+<li>
+<p><strong>Processing Phase</strong> — The module script is loaded as a <code>ScriptBlock</code> and invoked with <code>Task = 'Processing'</code>, mock resources, and a temp directory. The test asserts the function returns non-null data.</p>
+</li>
+<li>
+<p><strong>Reporting Phase</strong> — The same script is invoked with <code>Task = 'Reporting'</code> and the processed data. The test asserts the call completes without throwing.</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-powershell hljs" data-lang="powershell"># Simplified example from Compute.Module.Tests.ps1
+$content = Get-Content -Path $module.File -Raw
+$sb = [ScriptBlock]::Create($content)
+
+# Processing phase
+$result = Invoke-Command -ScriptBlock $sb -ArgumentList @(
+    $TempDir, $null, $null, $MockResources, $null,
+    'Processing', $null, $null, 'Medium', $null
+)
+$result | Should -Not -BeNullOrEmpty
+
+# Reporting phase
+{ Invoke-Command -ScriptBlock $sb -ArgumentList @(
+    $TempDir, $null, $null, $MockResources, $null,
+    'Reporting', $ExcelFile, $result, 'Medium', $null
+) } | Should -Not -Throw</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="how-private-module-tests-work"><a class="anchor" href="#how-private-module-tests-work"></a>How Private Module Tests Work</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Private module tests validate scripts that are not directly invoked by users:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>File existence</strong> — Confirms every expected <code>.ps1</code> file is present.</p>
+</li>
+<li>
+<p><strong>Syntax validation</strong> — Uses <code>[System.Management.Automation.Language.Parser]::ParseFile()</code> to catch parse errors without executing any code.</p>
+</li>
+<li>
+<p><strong>Function definitions</strong> — Verifies each script defines the expected function name via regex search of the file content.</p>
+</li>
+<li>
+<p><strong>Unit tests</strong> — For simple utilities (e.g., <code>Clear-AZSCMemory</code>, <code>Set-AZSCFolder</code>), the function is dot-sourced and invoked with mocked dependencies.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="writing-tests-for-a-new-module"><a class="anchor" href="#writing-tests-for-a-new-module"></a>Writing Tests for a New Module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When you add a new inventory module:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Identify which category test file it belongs to (e.g., <code>Compute.Module.Tests.ps1</code>).</p>
+</li>
+<li>
+<p>Add an entry to the <code>$ResourceModules</code> array with <code>Name</code>, <code>File</code>, <code>Type</code>, and <code>Worksheet</code>.</p>
+</li>
+<li>
+<p>Add a mock resource hashtable to the <code>$MockResources</code> array that matches the module&#8217;s expected resource type.</p>
+</li>
+<li>
+<p>Run the test file and verify both Processing and Reporting phases pass.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Use the <code>Module-template.tpl</code> in <code>Modules/Public/InventoryModules/</code> as the starting point for both the module and its corresponding test entry.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="common-pitfalls"><a class="anchor" href="#common-pitfalls"></a>Common Pitfalls</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Case-sensitive hashtable keys</strong> — PowerShell hashtable keys are case-insensitive; avoid duplicate keys like <code>SKU</code> and <code>sku</code> in mock data.</p>
+</li>
+<li>
+<p><strong>ARM ID format</strong> — Some modules call <code>.split('/')[8]</code> on resource IDs. Always use full ARM paths (e.g., <code>/subscriptions/&#8230;&#8203;/resourceGroups/&#8230;&#8203;/providers/&#8230;&#8203;/name</code>) in mocks.</p>
+</li>
+<li>
+<p><strong>DateTime values</strong> — Modules that cast properties to <code>[datetime]</code> will fail if mock values aren&#8217;t valid date strings.</p>
+</li>
+<li>
+<p><strong>Cross-resource lookups</strong> — Some modules (e.g., Backup) join data across multiple resource types. Include mock resources for all related types.</p>
+</li>
+<li>
+<p><strong>Export-Excel -PassThru</strong> — This pattern does not save the file to disk. Test the Reporting phase with <code>Should -Not -Throw</code> rather than checking for file existence.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ci-cd-integration"><a class="anchor" href="#ci-cd-integration"></a>CI / CD Integration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To run the test suite in a CI pipeline (GitHub Actions, Azure DevOps, etc.):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># GitHub Actions example
+- name: Run Pester Tests
+  shell: pwsh
+  run: |
+    Install-Module Pester -RequiredVersion 5.3.2 -Force -Scope CurrentUser
+    Install-Module ImportExcel -Force -Scope CurrentUser
+    Import-Module Pester -RequiredVersion 5.3.2 -Force
+    $result = Invoke-Pester -Path ./tests/ -Output Detailed -PassThru
+    if ($result.FailedCount -gt 0) { exit 1 }</code></pre>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="category-filtering.html">Category Filtering</a></span>
+  <span class="next"><a href="arm-modules.html">ARM Modules</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../_/js/site.js" data-ui-root-path="../_"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
