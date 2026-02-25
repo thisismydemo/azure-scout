@@ -14,6 +14,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New module manifest with fresh GUID, v1.0.0
 - Repository scaffolding (CHANGELOG, README, tests/)
 
+#### Visual Dashboard Tabs
+
+- **`Build-AZTIDashboardTabs.ps1`** (`Modules/Private/Reporting/StyleFunctions/`) — New 725-line function generating 4 visual dashboard worksheets with EPPlus pivot charts and DarkBlue tab coloring:
+  - **Cost Dashboard** — Cost by Resource Type (bar), Cost by Subscription (pie), Cost by Region (column), Cost by SKU (bar)
+  - **Security Dashboard** — Assessments by Severity (pie), Findings by Subscription (bar), Defender Plans (column), Active Alerts by Severity (bar)
+  - **Update Manager Dashboard** — Machines by Platform (pie), Machines by OS Type (pie), Machines by Region (column), Machines by Power State (bar), Machines by Subscription (bar)
+  - **Monitor Dashboard** — Alert Rules by Subscription (bar), Action Groups by Subscription (pie), DCRs by Subscription (column), App Insights by Subscription (bar)
+  - Each dashboard only appears when its corresponding raw data tab has data (no empty dashboards)
+
+#### Excel StyleFunctions Recreation
+
+- **`Build-AZTIExcelComObject.ps1`** — Recreated from ARI original with AZSC namespace (COM-based chart generation for Windows environments)
+- **`Start-AZTIExcelCustomization.ps1`** — Recreated from ARI original with AZSC namespace (Excel chart customization, version resolution from module manifest, Overview sheet assembly)
+- **`Start-AZTIExcelOrdening.ps1`** — Recreated from ARI original with AZSC namespace (worksheet tab ordering and color assignment — Overview/Subscriptions/Advisor tabs pinned as DarkBlue)
+
+#### Full Rebranding
+
+- Replaced all remaining "Azure Tenant Inventory" references with "Azure Scout" across 239 files (`.ps1`, `.psm1`, `.psd1`, `.md`, `.yml`, `.adoc`)
+- Updated permission audit banner, report titles, module metadata, comment blocks, and documentation
+
+#### Version Alignment
+
+- Reset `ModuleVersion` from `2.0.0` to `1.0.0` — module has not been published to PSGallery yet
+- Updated version in module manifest, `.NOTES` blocks (3 source files), test assertions (2 test files), and all documentation (roadmap, changelog, output docs)
+- Aligned report output versions: Excel fallback `3.6` → `1.0.0`, JSON `_metadata.version` `1.5.0` → `1.0.0`
+- Roadmap future versions updated: `v2.1.0` → `v1.1.0`, `v2.2.0` → `v1.2.0`
+
 #### Phase 7 — Cleanup & Polish
 
 **Documentation**
@@ -264,6 +291,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Version Control**
 - Created: 2026-02-22 by thisismydemo
-- Last Edited: 2026-02-24 by thisismydemo
-- Version: 1.6.0
-- Tags: changelog, AzureScout, json-output, phase-7, antora, pester
+- Last Edited: 2026-02-25 by thisismydemo
+- Version: 1.0.0
+- Tags: changelog, AzureScout, dashboard-tabs, rebranding, version-reset, json-output, phase-7, antora, pester
