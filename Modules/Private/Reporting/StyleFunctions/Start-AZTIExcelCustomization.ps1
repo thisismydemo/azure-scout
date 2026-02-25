@@ -28,7 +28,7 @@ function Start-AZSCExcelCustomization {
         {
             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Running in Lite Mode.')
 
-            $ScriptVersion = "3.6"
+            $ScriptVersion = "1.0.0"
         }
     else
         {
@@ -43,7 +43,7 @@ function Start-AZSCExcelCustomization {
                     $Manifest = Import-PowerShellDataFile $ManifestPath
                     $ScriptVersion = [string]$Manifest.ModuleVersion
                 } else {
-                    $ScriptVersion = "3.6"
+                    $ScriptVersion = "1.0.0"
                 }
             }
         }

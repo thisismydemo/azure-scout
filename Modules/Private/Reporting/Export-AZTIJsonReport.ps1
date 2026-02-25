@@ -15,7 +15,7 @@ https://github.com/thisismydemo/azure-scout/Modules/Private/Reporting/Export-AZS
 This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
-Version: 1.5.0
+Version: 1.0.0
 First Release Date: 15th Oct, 2024
 Authors: Claudio Merola
 #>
@@ -76,7 +76,7 @@ function Export-AZSCJsonReport {
 
     $Metadata = [ordered]@{
         tool          = 'AzureScout'
-        version       = '1.5.0'
+        version       = '1.0.0'
         tenantId      = $TenantID
         subscriptions = $SubscriptionList
         generatedAt   = (Get-Date -Format 'yyyy-MM-ddTHH:mm:ssZ')
