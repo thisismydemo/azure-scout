@@ -400,6 +400,7 @@ Function Invoke-AzureScout {
             $auditResult = Invoke-AZSCPermissionAudit `
                 -IncludeEntraPermissions:$IncludeEntraPermissions `
                 -TenantID $TenantID `
+                -SubscriptionID $SubscriptionID `
                 -OutputFormat $auditOutputFormat `
                 -ReportDir $ReportDir
 

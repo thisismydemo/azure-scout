@@ -51,8 +51,7 @@ function Test-AZSCPermissions {
     param(
         [string]$TenantID,
 
-        # SubscriptionID is retained for backward API compatibility but is not consumed by the
-        # delegated Invoke-AZSCPermissionAudit call (which auto-enumerates all accessible subs).
+        # SubscriptionID scopes the audit to specific subscriptions instead of checking all.
         [string[]]$SubscriptionID,
 
         [ValidateSet('All', 'ArmOnly', 'EntraOnly')]
@@ -67,8 +66,9 @@ function Test-AZSCPermissions {
     $auditParams = @{
         OutputFormat = 'Console'
     }
-    if ($TenantID)     { $auditParams['TenantID']                = $TenantID }
-    if ($includeEntra) { $auditParams['IncludeEntraPermissions'] = $true }
+    if ($TenantID)        { $auditParams['TenantID']                = $TenantID }
+    if ($SubscriptionID)  { $auditParams['SubscriptionID']          = $SubscriptionID }
+    if ($includeEntra)    { $auditParams['IncludeEntraPermissions'] = $true }
 
     $auditResult = Invoke-AZSCPermissionAudit @auditParams
 

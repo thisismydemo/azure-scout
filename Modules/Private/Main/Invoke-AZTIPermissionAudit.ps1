@@ -19,6 +19,11 @@
 .PARAMETER TenantID
     Optional tenant ID override.  Used when connecting to a specific tenant.
 
+.PARAMETER SubscriptionID
+    One or more subscription IDs (or names) to scope the audit to.  When provided,
+    only these subscriptions are checked for RBAC roles and resource-provider
+    registration instead of all accessible subscriptions in the tenant.
+
 .PARAMETER OutputFormat
     If 'Json' or 'Markdown', saves the audit result as a file alongside where the
     Excel report would normally land (the user's AZSC report directory).
@@ -58,6 +63,7 @@ function Invoke-AZSCPermissionAudit {
     param(
         [switch]$IncludeEntraPermissions,
         [string]$TenantID,
+        [string[]]$SubscriptionID,
         [ValidateSet('Console', 'Json', 'Markdown', 'AsciiDoc', 'All')]
         [string]$OutputFormat = 'Console',
         [string]$ReportDir
@@ -132,9 +138,30 @@ function Invoke-AZSCPermissionAudit {
     try {
         $subParams = @{ ErrorAction = 'Stop' }
         if ($TenantID) { $subParams['TenantId'] = $TenantID }
-        $subs = @(Get-AzSubscription @subParams)
-        $r = New-CheckResult 'ARM: Subscription Enumeration' 'Pass' "Found $($subs.Count) subscription(s) accessible to this identity"
-        Write-AuditLine -Status Pass -Text $r.Message
+        $allSubs = @(Get-AzSubscription @subParams)
+
+        # When -SubscriptionID is specified, scope the audit to only those subscriptions
+        if ($SubscriptionID -and $SubscriptionID.Count -gt 0) {
+            $subs = @($allSubs | Where-Object { $_.Id -in $SubscriptionID -or $_.Name -in $SubscriptionID })
+            if ($subs.Count -eq 0) {
+                $r = New-CheckResult 'ARM: Subscription Enumeration' 'Fail' `
+                    "None of the specified subscription(s) ($($SubscriptionID -join ', ')) were found in the $($allSubs.Count) accessible subscription(s)" `
+                    'Verify the -SubscriptionID value matches an accessible subscription ID or name.'
+                Write-AuditLine -Status Fail -Text $r.Message
+                $armAccess = $false
+                $recommendations.Add('Verify -SubscriptionID matches an accessible subscription ID or name.')
+            }
+            else {
+                $r = New-CheckResult 'ARM: Subscription Enumeration' 'Pass' `
+                    "Scoped to $($subs.Count) of $($allSubs.Count) accessible subscription(s)"
+                Write-AuditLine -Status Pass -Text $r.Message
+            }
+        }
+        else {
+            $subs = $allSubs
+            $r = New-CheckResult 'ARM: Subscription Enumeration' 'Pass' "Found $($subs.Count) subscription(s) accessible to this identity"
+            Write-AuditLine -Status Pass -Text $r.Message
+        }
     }
     catch {
         $armAccess = $false

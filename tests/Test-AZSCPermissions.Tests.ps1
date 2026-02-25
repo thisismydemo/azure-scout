@@ -356,6 +356,34 @@ Describe 'Test-AZSCPermissions' {
         }
     }
 
+    # ── Subscription Scoping ─────────────────────────────────────────
+    Context 'Subscription Scoping' {
+
+        BeforeAll {
+            Mock Invoke-AZSCPermissionAudit {
+                New-MockAuditResult -ArmAccess $true -GraphAccess $null `
+                    -ArmDetails @(
+                        New-CheckDetail 'ARM: Subscription Enumeration' 'Pass' 'Scoped to 1 of 5 accessible subscription(s)'
+                    )
+            } -ModuleName AzureScout
+        }
+
+        It 'Passes SubscriptionID through to Invoke-AZSCPermissionAudit' {
+            $result = Test-AZSCPermissions -TenantID 'test-tenant' -SubscriptionID 'sub-123' -Scope ArmOnly
+            Should -InvokeVerifiable
+            Assert-MockCalled Invoke-AZSCPermissionAudit -ModuleName AzureScout -ParameterFilter {
+                $SubscriptionID -contains 'sub-123'
+            }
+        }
+
+        It 'Omits SubscriptionID when not specified' {
+            $result = Test-AZSCPermissions -TenantID 'test-tenant' -Scope ArmOnly
+            Assert-MockCalled Invoke-AZSCPermissionAudit -ModuleName AzureScout -ParameterFilter {
+                -not $SubscriptionID
+            }
+        }
+    }
+
     # ── No Auth Context (Invoke-AZSCPermissionAudit returns null) ─────
     Context 'Never Throws' {
 

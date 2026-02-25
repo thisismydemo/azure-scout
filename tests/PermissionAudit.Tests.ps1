@@ -142,6 +142,14 @@ Describe 'Invoke-AZSCPermissionAudit — Function Signature' {
     It 'ReportDir parameter exists' {
         $script:AuditCmd.Parameters.ContainsKey('ReportDir') | Should -BeTrue
     }
+
+    It 'SubscriptionID parameter exists' {
+        $script:AuditCmd.Parameters.ContainsKey('SubscriptionID') | Should -BeTrue
+    }
+
+    It 'SubscriptionID accepts an array of strings' {
+        $script:AuditCmd.Parameters['SubscriptionID'].ParameterType | Should -Be ([string[]])
+    }
 }
 
 # ===================================================================
@@ -237,6 +245,10 @@ Describe 'PermissionAudit routing in Invoke-AzureScout source' {
 
     It 'Source passes IncludeEntraPermissions to the audit function' {
         $script:InvokeSource | Should -Match 'IncludeEntraPermissions'
+    }
+
+    It 'Source passes SubscriptionID to the audit function' {
+        $script:InvokeSource | Should -Match 'Invoke-AZSCPermissionAudit[\s\S]*-SubscriptionID'
     }
 
     It 'Source has early-return or conditional block that skips inventory when PermissionAudit is used' {
