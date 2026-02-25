@@ -37,6 +37,7 @@ $HybridModules = @(
     @{ Name = 'StorageContainers';     File = 'StorageContainers.ps1';     Type = 'microsoft.azurestackhci/storagecontainers';           Worksheet = 'Azure Local Storage Paths' }
     @{ Name = 'GalleryImages';         File = 'GalleryImages.ps1';         Type = 'microsoft.azurestackhci/galleryimages';               Worksheet = 'Azure Local Gallery Images' }
     @{ Name = 'MarketplaceGalleryImages'; File = 'MarketplaceGalleryImages.ps1'; Type = 'microsoft.azurestackhci/marketplacegalleryimages'; Worksheet = 'Azure Local Marketplace Images' }
+    @{ Name = 'ArcServerOperationalData'; File = 'ArcServerOperationalData.ps1'; Type = 'microsoft.hybridcompute/machines'; Worksheet = 'Arc Server Ops' }
 )
 
 # ===================================================================
@@ -188,6 +189,13 @@ BeforeAll {
         identifier = [PSCustomObject]@{ publisher = 'MicrosoftWindowsServer'; offer = 'WindowsServer'; sku = '2022-Datacenter' }
         version    = [PSCustomObject]@{ name = '20348.2340.240303' }
     })
+
+    # Mock Invoke-AzRestMethod for ArcServerOperationalData
+    function Invoke-AzRestMethod {
+        param([string]$Path, [string]$Method = 'GET')
+        $mockResponse = @{ value = @(); properties = @{ startDateTime = '2025-06-01T00:00:00Z'; availablePatchCountByClassification = @{ critical = 0; security = 1 }; lastModifiedDateTime = '2025-06-01T12:00:00Z' } }
+        [PSCustomObject]@{ Content = ($mockResponse | ConvertTo-Json -Depth 10); StatusCode = 200 }
+    }
 }
 
 AfterAll {

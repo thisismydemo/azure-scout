@@ -31,6 +31,10 @@ $ComputeModules = @(
     @{ Name = 'AVDWorkspaces';           File = 'AVDWorkspaces.ps1';           Type = 'microsoft.desktopvirtualization/workspaces';              Worksheet = 'AVD Workspaces' }
     @{ Name = 'AVDSessionHosts';         File = 'AVDSessionHosts.ps1';         Type = 'microsoft.desktopvirtualization/hostpools/sessionhosts';  Worksheet = 'AVD Session Hosts' }
     @{ Name = 'AVDScalingPlans';         File = 'AVDScalingPlans.ps1';         Type = 'microsoft.desktopvirtualization/scalingplans';            Worksheet = 'AVD Scaling Plans' }
+    @{ Name = 'AVDApplications';        File = 'AVDApplications.ps1';        Type = 'microsoft.desktopvirtualization/applicationgroups';      Worksheet = 'AVD Applications' }
+    @{ Name = 'VMWare';                  File = 'VMWare.ps1';                  Type = 'Microsoft.AVS/privateClouds';                            Worksheet = 'VMWare' }
+    @{ Name = 'VMOperationalData';       File = 'VMOperationalData.ps1';       Type = 'microsoft.compute/virtualmachines';                      Worksheet = 'VM Operational' }
+    @{ Name = 'AVDAzureLocal';           File = 'AVDAzureLocal.ps1';           Type = 'microsoft.hybridcompute/machines';                    Worksheet = 'AVD Azure Local' }
 )
 
 # AVD Host Pools needs its own spec (Worksheet name differs from plan)
@@ -160,6 +164,14 @@ BeforeAll {
         workspaceArmPath = '/ws/ws01'; friendlyName = 'Desktop Apps'
     })
 
+    # AVD Application Group (RemoteApp) — needed by AVDApplications module
+    $script:MockResources += New-MockResource `
+        -Id '/subscriptions/sub-00000001/resourceGroups/rg-avd/providers/Microsoft.DesktopVirtualization/applicationGroups/ag-remoteapp' `
+        -Name 'ag-remoteapp' -Type 'microsoft.desktopvirtualization/applicationgroups' -Props ([PSCustomObject]@{
+        applicationGroupType = 'RemoteApp'; hostPoolArmPath = '/hp/hp01'
+        workspaceArmPath = '/ws/ws01'; friendlyName = 'Remote Apps'
+    })
+
     # AVD Workspace
     $script:MockResources += New-MockResource -Id '/sub/sub-00000001/avdws/avdws01' -Name 'avdws-prod' -Type 'microsoft.desktopvirtualization/workspaces' -Props ([PSCustomObject]@{
         applicationGroupReferences = @('/ag/ag01'); friendlyName = 'Production Workspace'
@@ -174,6 +186,35 @@ BeforeAll {
         resourceId = '/sub/sub-00000001/vm/vm01'
     })
 
+    # AVD Session Host (Azure Local / hybridCompute) — needed by AVDAzureLocal module
+    $script:MockResources += New-MockResource `
+        -Id '/subscriptions/sub-00000001/resourceGroups/rg-avd/providers/Microsoft.DesktopVirtualization/hostPools/hp01/sessionHosts/arcvm01' `
+        -Name 'hp01/arcvm01.corp.com' -Type 'microsoft.desktopvirtualization/hostpools/sessionhosts' -Props ([PSCustomObject]@{
+        status = 'Available'; agentVersion = '1.0.5780'; osVersion = 'Windows Server 2022'
+        sessions = 1; allowNewSession = $true; assignedUser = 'testuser@corp.com'
+        lastHeartBeat = '2026-02-24T10:00:00Z'; updateState = 'Succeeded'
+        resourceId = '/subscriptions/sub-00000001/resourceGroups/rg-avd/providers/Microsoft.hybridCompute/machines/arcvm01'
+    })
+
+    # Arc machine tagged as AVD session host — needed by AVDAzureLocal module
+    $script:MockResources += [PSCustomObject]@{
+        id             = '/subscriptions/sub-00000001/resourceGroups/rg-avd/providers/Microsoft.HybridCompute/machines/arcvm01'
+        NAME           = 'arcvm01'
+        TYPE           = 'microsoft.hybridcompute/machines'
+        LOCATION       = 'eastus'
+        RESOURCEGROUP  = 'rg-avd'
+        subscriptionId = 'sub-00000001'
+        KIND           = ''
+        tags           = [PSCustomObject]@{ AvdSessionHost = 'true' }
+        PROPERTIES     = [PSCustomObject]@{
+            status           = 'Connected'
+            agentversion     = '1.0.5780'
+            osVersion        = 'Windows Server 2022'
+            lastStatusChange = '2026-02-24T10:00:00Z'
+        }
+        MANAGEDBY      = ''
+    }
+
     # AVD Scaling Plan
     $script:MockResources += New-MockResource -Id '/sub/sub-00000001/sp/sp01' -Name 'sp-weekday' -Type 'microsoft.desktopvirtualization/scalingplans' -Props ([PSCustomObject]@{
         hostPoolReferences = @(@{ hostPoolArmPath = '/hp/hp01'; scalingPlanEnabled = $true })
@@ -181,6 +222,35 @@ BeforeAll {
         timeZone = 'Eastern Standard Time'
         exclusionTag = 'ExcludeScaling'
     })
+
+    # VMWare Private Cloud
+    $script:MockResources += New-MockResource -Id '/subscriptions/sub-00000001/resourceGroups/rg-avs/providers/Microsoft.AVS/privateClouds/avs-prod' -Name 'avs-prod' -Type 'Microsoft.AVS/privateClouds' -Props ([PSCustomObject]@{
+        sku = [PSCustomObject]@{ name = 'AV36' }
+        availability = [PSCustomObject]@{ strategy = 'SingleZone'; zone = 1 }
+        circuit = [PSCustomObject]@{ expressRouteID = '/subscriptions/sub-00000001/resourceGroups/rg-net/providers/Microsoft.Network/expressRouteCircuits/er-avs' }
+        encryption = [PSCustomObject]@{ status = 'Enabled' }
+        externalCloudLinks = @()
+        identitySources = @()
+        internet = 'Disabled'
+        managementCluster = [PSCustomObject]@{ clusterSize = 3 }
+        managementNetwork = '10.0.0.0/22'
+        networkBlock = '10.0.0.0/22'
+        provisioningNetwork = '10.0.4.0/24'
+        vmotionNetwork = '10.0.8.0/24'
+        endpoints = [PSCustomObject]@{ hcxCloudManager = 'https://hcx.avs-prod.azure.com'; nsxtManager = 'https://nsx.avs-prod.azure.com'; vcsa = 'https://vcsa.avs-prod.azure.com' }
+    })
+
+    # Mock Invoke-AzRestMethod for AVDApplications and VMOperationalData
+    function Invoke-AzRestMethod {
+        param([string]$Path, [string]$Method = 'GET')
+        $mockResponse = @{ value = @() }
+        if ($Path -match '/applicationgroups/.+/applications\?') {
+            $mockResponse = @{ value = @(@{ name = 'Calculator'; properties = @{ friendlyName = 'Calculator'; description = 'Windows Calculator'; applicationType = 'InBuilt'; filePath = 'C:\Windows\system32\calc.exe'; commandLineSetting = 'DoNotAllow'; commandLineArguments = ''; iconPath = 'C:\Windows\system32\calc.exe'; showInPortal = $true } }) }
+        } elseif ($Path -match 'patchAssessmentResults') {
+            $mockResponse = @{ value = @(); properties = @{ startDateTime = '2025-06-01T00:00:00Z'; availablePatchCountByClassification = @{ critical = 0; security = 1; updateRollUp = 2 }; lastModifiedDateTime = '2025-06-01T12:00:00Z' } }
+        }
+        [PSCustomObject]@{ Content = ($mockResponse | ConvertTo-Json -Depth 10); StatusCode = 200 }
+    }
 }
 
 AfterAll {

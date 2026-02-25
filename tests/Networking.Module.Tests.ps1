@@ -42,6 +42,7 @@ $NetworkingModules = @(
     @{ Name = 'ExpressRoute';           File = 'ExpressRoute.ps1';          Type = 'microsoft.network/expressroutecircuits';       Worksheet = 'ExpressRoute Circuits' }
     @{ Name = 'NetworkWatchers';        File = 'NetworkWatchers.ps1';       Type = 'microsoft.network/networkwatchers';            Worksheet = 'Network Watchers' }
     @{ Name = 'Frontdoor';              File = 'Frontdoor.ps1';             Type = 'microsoft.network/frontdoors';                 Worksheet = 'Front Doors' }
+    @{ Name = 'PublicDNS';              File = 'PublicDNS.ps1';             Type = 'microsoft.network/dnszones';                   Worksheet = 'Public DNS Zones' }
 )
 
 # ===================================================================
@@ -309,6 +310,13 @@ BeforeAll {
         routingRules = @(@{name='rr-default';properties=[PSCustomObject]@{enabledState='Enabled';patternsToMatch=@('/*')}})
         backendPools = @(@{name='pool1'})
         provisioningState = 'Succeeded'; resourceState = 'Enabled'
+    })
+
+    # Public DNS Zone
+    $script:MockResources += New-MockNetResource -Id '/net/dns1' -Name 'contoso.com' `
+        -Type 'microsoft.network/dnszones' -Props ([PSCustomObject]@{
+        zoneType = 'Public'; numberOfRecordSets = 15; maxNumberofRecordSets = 10000
+        nameServers = @('ns1-01.azure-dns.com','ns2-01.azure-dns.net')
     })
 }
 

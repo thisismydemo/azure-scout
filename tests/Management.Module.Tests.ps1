@@ -32,6 +32,8 @@ $MgmtResourceModules = @(
     @{ Name = 'AdvisorScore';              File = 'AdvisorScore.ps1';              Type = 'Microsoft.Advisor/advisorScore';                  Worksheet = 'Advisor Score' }
     @{ Name = 'SupportTickets';            File = 'SupportTickets.ps1';            Type = 'Microsoft.Support/supportTickets';                Worksheet = 'Support Tickets' }
     @{ Name = 'ReservationRecom';          File = 'ReservationRecom.ps1';          Type = 'Microsoft.Consumption/reservationRecommendations'; Worksheet = 'Reservation Recommendations' }
+    @{ Name = 'AutomationAccounts';        File = 'AutomationAccounts.ps1';        Type = 'microsoft.automation/automationaccounts';          Worksheet = 'Runbooks' }
+    @{ Name = 'Backup';                    File = 'Backup.ps1';                    Type = 'microsoft.recoveryservices/vaults/backuppolicies'; Worksheet = 'Backup' }
 )
 
 # ===================================================================
@@ -61,6 +63,11 @@ BeforeAll {
             PROPERTIES     = $Props
         }
     }
+
+    # Mock subscription array for modules that use $SUB
+    $script:MockSubs = @(
+        [PSCustomObject]@{ Id = 'sub-00000001'; Name = 'Test Subscription' }
+    )
 
     $script:MockResources = @()
 
@@ -139,6 +146,64 @@ BeforeAll {
         firstUsageDate = '2025-12-01T00:00:00Z'; totalCostWithReservedInstances = 12000
         netSavings = 3000; lookBackPeriod = 'Last7Days'
     })
+
+    # Automation Account
+    $script:MockResources += New-MockMgmtResource `
+        -Id '/subscriptions/sub-00000001/resourceGroups/rg-mgmt/providers/microsoft.automation/automationaccounts/auto-account-1' `
+        -Name 'auto-account-1' -RG 'rg-mgmt' -Location 'eastus' -SubscriptionId 'sub-00000001' `
+        -Type 'microsoft.automation/automationaccounts' -Props ([PSCustomObject]@{
+        State        = 'Ok'
+        sku          = [PSCustomObject]@{ name = 'Free' }
+        creationTime = '2025-06-15T10:30:00Z'
+    })
+
+    # Runbook (belongs to auto-account-1 via id split)
+    $script:MockResources += New-MockMgmtResource `
+        -Id '/subscriptions/sub-00000001/resourceGroups/rg-mgmt/providers/microsoft.automation/automationaccounts/auto-account-1/runbooks/test-runbook' `
+        -Name 'test-runbook' -RG 'rg-mgmt' -Location 'eastus' -SubscriptionId 'sub-00000001' `
+        -Type 'microsoft.automation/automationaccounts/runbooks' -Props ([PSCustomObject]@{
+        lastModifiedTime = '2025-07-20T14:00:00Z'
+        state            = 'Published'
+        runbookType      = 'PowerShell'
+        description      = 'Test runbook for automation'
+    })
+
+    # Backup Policy
+    $script:MockResources += New-MockMgmtResource `
+        -Id '/subscriptions/sub-00000001/resourceGroups/rg-mgmt/providers/microsoft.recoveryservices/vaults/backup-vault/backuppolicies/daily-policy' `
+        -Name 'daily-policy' -RG 'rg-mgmt' -Location 'eastus' -SubscriptionId 'sub-00000001' `
+        -Type 'microsoft.recoveryservices/vaults/backuppolicies' -Props ([PSCustomObject]@{
+        workloadtype        = 'AzureIaasVM'
+        protecteditemscount = 2
+        settings = [PSCustomObject]@{
+            iscompression    = $true
+            issqlcompression = $false
+        }
+        subprotectionpolicy = @([PSCustomObject]@{ policytype = 'Full' })
+    })
+
+    # Protected Item (linked to daily-policy via policyid)
+    $script:MockResources += New-MockMgmtResource `
+        -Id '/subscriptions/sub-00000001/resourceGroups/rg-mgmt/providers/microsoft.recoveryservices/vaults/backup-vault/backupFabrics/Azure/protectionContainers/container1/protectedItems/item1' `
+        -Name 'test-protected-item' -RG 'rg-mgmt' -Location 'eastus' -SubscriptionId 'sub-00000001' `
+        -Type 'microsoft.recoveryservices/vaults/backupfabrics/protectioncontainers/protecteditems' -Props ([PSCustomObject]@{
+        policyid                             = '/subscriptions/sub-00000001/resourceGroups/rg-mgmt/providers/microsoft.recoveryservices/vaults/backup-vault/backuppolicies/daily-policy'
+        vaultid                              = '/subscriptions/sub-00000001/resourceGroups/rg-mgmt/providers/microsoft.recoveryservices/vaults/backup-vault'
+        lastbackuptime                       = '2025-08-01T03:00:00Z'
+        lastrecoverypoint                    = '2025-08-01T03:00:00Z'
+        latestrecoverypointinsecondaryregion = $null
+        backupmanagementtype                 = 'AzureIaasVM'
+        friendlyname                         = 'test-vm'
+        configuredmaximumretention           = 'P30D'
+        configuredrpgenerationfrequency      = 'Daily'
+        healthstatus                         = 'Healthy'
+        protectionstatus                     = 'Healthy'
+        isarchiveenabled                     = $false
+        lastbackupstatus                     = 'Completed'
+        protectionstate                      = 'Protected'
+        protectionstateinsecondaryregion     = $null
+        softdeleteretentionperiod            = 14
+    })
 }
 
 AfterAll {
@@ -193,7 +258,7 @@ Describe 'Management Module Processing Phase — <Name>' -ForEach $MgmtResourceM
         if ($matchedResources) {
             $content = Get-Content -Path $script:ModFile -Raw
             $sb = [ScriptBlock]::Create($content)
-            $result = Invoke-Command -ScriptBlock $sb -ArgumentList $null, $null, $null, $script:MockResources, $null, 'Processing', $null, $null, 'Light20', $null
+            $result = Invoke-Command -ScriptBlock $sb -ArgumentList $null, $script:MockSubs, $null, $script:MockResources, $null, 'Processing', $null, $null, 'Light20', $null
             $result | Should -Not -BeNullOrEmpty
         } else {
             Set-ItResult -Skipped -Because "No mock resource of type '$script:ResType'"
@@ -203,7 +268,7 @@ Describe 'Management Module Processing Phase — <Name>' -ForEach $MgmtResourceM
     It 'Processing does not throw when given an empty resource list' {
         $content = Get-Content -Path $script:ModFile -Raw
         $sb = [ScriptBlock]::Create($content)
-        { Invoke-Command -ScriptBlock $sb -ArgumentList $null, $null, $null, @(), $null, 'Processing', $null, $null, 'Light20', $null } | Should -Not -Throw
+        { Invoke-Command -ScriptBlock $sb -ArgumentList $null, $script:MockSubs, $null, @(), $null, 'Processing', $null, $null, 'Light20', $null } | Should -Not -Throw
     }
 }
 
@@ -218,7 +283,7 @@ Describe 'Management Module Reporting Phase — <Name>' -ForEach $MgmtResourceMo
         if ($matchedResources) {
             $content = Get-Content -Path $script:ModFile -Raw
             $sb = [ScriptBlock]::Create($content)
-            $script:ProcessedData = Invoke-Command -ScriptBlock $sb -ArgumentList $null, $null, $null, $script:MockResources, $null, 'Processing', $null, $null, 'Light20', $null
+            $script:ProcessedData = Invoke-Command -ScriptBlock $sb -ArgumentList $null, $script:MockSubs, $null, $script:MockResources, $null, 'Processing', $null, $null, 'Light20', $null
         } else {
             $script:ProcessedData = $null
         }

@@ -3,12 +3,16 @@
 
 <#
 .SYNOPSIS
-    Pester tests for all 15 Entra ID Identity inventory modules.
+    Pester tests for all 18 Identity inventory modules.
 
 .DESCRIPTION
     Tests both Processing and Reporting phases for each Identity module
     using synthetic mock data that mirrors the normalized PSCustomObject shape
     produced by Start-AZSCEntraExtraction.ps1.
+
+    Includes special test infrastructure for Register-AZSCInventoryModule
+    pattern modules (IdentityProviders, SecurityDefaults) and ARM-based
+    modules (ManagedIds).
 
     Processing phase: Verifies each module correctly filters and transforms
     resources into flat hashtable arrays.
@@ -550,5 +554,305 @@ Describe 'Identity Module Edge Cases' -Tag 'EdgeCases' {
         $moduleFile = Join-Path $script:IdentityPath 'Users.ps1'
         $tempFile = Join-Path $script:TestOutputDir 'edge_empty.xlsx'
         { Invoke-IdentityModule -ModuleFile $moduleFile -Task 'Reporting' -SmaResources $null -File $tempFile } | Should -Not -Throw
+    }
+}
+
+# =====================================================================
+# MANAGEDIDS MODULE TESTS (ARM-based, different from Entra pattern)
+# =====================================================================
+Describe 'ManagedIds Module (ARM-based)' -Tag 'ManagedIds' {
+
+    BeforeAll {
+        $script:ManagedIdsFile = Join-Path $script:IdentityPath 'ManagedIds.ps1'
+
+        # ARM-style mock resources (different from Entra format)
+        $script:ManagedIdResources = @(
+            [PSCustomObject]@{
+                id         = '/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/rg-test/providers/Microsoft.ManagedIdentity/userAssignedIdentities/test-identity-1'
+                Name       = 'test-identity-1'
+                TYPE       = 'Microsoft.ManagedIdentity/userAssignedIdentities'
+                location   = 'eastus'
+                tags       = [PSCustomObject]@{ env = 'production'; team = 'platform' }
+                PROPERTIES = [PSCustomObject]@{
+                    principalId = 'pid-001-aaaa-bbbb-cccc'
+                    clientId    = 'cid-001-dddd-eeee-ffff'
+                }
+            },
+            [PSCustomObject]@{
+                id         = '/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/rg-dev/providers/Microsoft.ManagedIdentity/userAssignedIdentities/test-identity-2'
+                Name       = 'test-identity-2'
+                TYPE       = 'Microsoft.ManagedIdentity/userAssignedIdentities'
+                location   = 'westus2'
+                tags       = [PSCustomObject]@{ env = 'dev' }
+                PROPERTIES = [PSCustomObject]@{
+                    principalId = 'pid-002-aaaa-bbbb-cccc'
+                    clientId    = 'cid-002-dddd-eeee-ffff'
+                }
+            }
+        )
+
+        # Mock subscription array for $Sub lookup
+        $script:MockSubs = @(
+            [PSCustomObject]@{
+                id   = '00000000-0000-0000-0000-000000000001'
+                Name = 'Test Subscription'
+            }
+        )
+
+        # Run processing once
+        $content = Get-Content -Path $script:ManagedIdsFile -Raw
+        $sb = [ScriptBlock]::Create($content)
+        $script:ManagedIdProcResult = Invoke-Command -ScriptBlock $sb -ArgumentList `
+            $null, $script:MockSubs, $null, $script:ManagedIdResources, $null, 'Processing', $null, $null, 'Light20', $null
+    }
+
+    It 'Module file exists' {
+        $script:ManagedIdsFile | Should -Exist
+    }
+
+    It 'Processing returns non-null output' {
+        $script:ManagedIdProcResult | Should -Not -BeNullOrEmpty
+    }
+
+    It 'Processing returns records with expected keys' {
+        $first = @($script:ManagedIdProcResult)[0]
+        $first.Keys | Should -Contain 'ID'
+        $first.Keys | Should -Contain 'Subscription'
+        $first.Keys | Should -Contain 'Name'
+        $first.Keys | Should -Contain 'Location'
+        $first.Keys | Should -Contain 'Principal ID'
+        $first.Keys | Should -Contain 'Client ID'
+        $first.Keys | Should -Contain 'Resource U'
+    }
+
+    It 'Processing explodes tags into separate records' {
+        # First resource has 2 tags, second has 1 = 3 records total
+        @($script:ManagedIdProcResult).Count | Should -Be 3
+    }
+
+    It 'Reporting produces Excel worksheet' {
+        $excelFile = Join-Path $script:TestOutputDir 'ManagedIds_Test.xlsx'
+        $content = Get-Content -Path $script:ManagedIdsFile -Raw
+        $sb = [ScriptBlock]::Create($content)
+        Invoke-Command -ScriptBlock $sb -ArgumentList `
+            $null, $null, $null, $null, $null, 'Reporting', $excelFile, $script:ManagedIdProcResult, 'Light20', $null
+        $excelFile | Should -Exist
+        $worksheets = (Get-ExcelSheetInfo -Path $excelFile).Name
+        $worksheets | Should -Contain 'Managed Identity'
+    }
+}
+
+# =====================================================================
+# IDENTITYPROVIDERS MODULE (Register-AZSCInventoryModule pattern)
+# =====================================================================
+Describe 'IdentityProviders Module (Register-AZSCInventoryModule)' -Tag 'IdentityProviders' {
+
+    BeforeAll {
+        $script:IdentityProvidersFile = Join-Path $script:IdentityPath 'IdentityProviders.ps1'
+
+        # Framework mock functions
+        $script:RegisteredModules = @{}
+        $script:ProcessedDataStore = @{}
+
+        function Register-AZSCInventoryModule {
+            param([string]$ModuleId, [string]$PhaseId, [scriptblock]$ScriptBlock)
+            if (-not $script:RegisteredModules[$ModuleId]) {
+                $script:RegisteredModules[$ModuleId] = @{}
+            }
+            $script:RegisteredModules[$ModuleId][$PhaseId] = $ScriptBlock
+        }
+
+        function Write-AZSCLog {
+            param([string]$Message, [string]$Level)
+        }
+
+        function Add-AZSCProcessedData {
+            param([string]$Type, $Data)
+            if (-not $script:ProcessedDataStore[$Type]) {
+                $script:ProcessedDataStore[$Type] = [System.Collections.Generic.List[object]]::new()
+            }
+            $script:ProcessedDataStore[$Type].Add($Data)
+        }
+
+        function Get-AZSCProcessedData {
+            param([string]$Type)
+            return $script:ProcessedDataStore[$Type]
+        }
+
+        # Dot-source the module to register scriptblocks
+        . $script:IdentityProvidersFile
+
+        # Mock identity provider data
+        $script:IPContext = @{
+            EntraData = @{
+                'entra/identityproviders' = @(
+                    [PSCustomObject]@{
+                        id                             = 'provider-001'
+                        displayName                    = 'Google'
+                        '@odata.type'                  = '#microsoft.graph.socialIdentityProvider'
+                        identityProviderType           = 'Google'
+                        clientId                       = 'google-client-id-001'
+                        clientSecret                   = 'secret123'
+                        issuerUri                      = $null
+                        metadataUrl                    = $null
+                        openIdConnectDiscoveryEndpoint = $null
+                        domainsHint                    = @('gmail.com', 'googlemail.com')
+                        responseMode                   = $null
+                        responseType                   = $null
+                        scope                          = $null
+                        isEnabled                      = $true
+                    },
+                    [PSCustomObject]@{
+                        id                             = 'provider-002'
+                        displayName                    = 'Corporate SAML'
+                        name                           = 'Corporate SAML'
+                        '@odata.type'                  = '#microsoft.graph.samlOrWsFedProvider'
+                        identityProviderType           = 'SAML'
+                        clientId                       = $null
+                        appId                          = 'saml-app-id-002'
+                        clientSecret                   = $null
+                        issuerUri                      = 'https://idp.contoso.com'
+                        metadataUrl                    = $null
+                        openIdConnectDiscoveryEndpoint = $null
+                        domainsHint                    = $null
+                        responseMode                   = 'form_post'
+                        responseType                   = 'id_token'
+                        scope                          = 'openid'
+                        isEnabled                      = $false
+                    }
+                )
+            }
+            TenantId  = '00000000-0000-0000-0000-000000000001'
+            ExcelPath = (Join-Path $script:TestOutputDir 'IdentityProviders_Test.xlsx')
+        }
+
+        # Run processing in BeforeAll
+        $processingBlock = $script:RegisteredModules['entra/identityproviders']['Processing']
+        & $processingBlock -Context $script:IPContext
+    }
+
+    It 'Module file exists' {
+        $script:IdentityProvidersFile | Should -Exist
+    }
+
+    It 'Registered Processing and Reporting scriptblocks' {
+        $script:RegisteredModules['entra/identityproviders'] | Should -Not -BeNullOrEmpty
+        $script:RegisteredModules['entra/identityproviders']['Processing'] | Should -Not -BeNullOrEmpty
+        $script:RegisteredModules['entra/identityproviders']['Reporting'] | Should -Not -BeNullOrEmpty
+    }
+
+    It 'Processing creates 2 processed data records' {
+        $data = Get-AZSCProcessedData -Type 'entra/identityproviders'
+        $data | Should -Not -BeNullOrEmpty
+        @($data).Count | Should -Be 2
+    }
+
+    It 'Processed records have expected properties' {
+        $data = Get-AZSCProcessedData -Type 'entra/identityproviders'
+        $first = @($data)[0]
+        $first.Name | Should -Not -BeNullOrEmpty
+        $first.Id | Should -Not -BeNullOrEmpty
+        $first.Type | Should -Not -BeNullOrEmpty
+        $first.IdentityProviderType | Should -Not -BeNullOrEmpty
+        $first.ClientId | Should -Not -BeNullOrEmpty
+    }
+
+    It 'Reporting does not throw' {
+        $reportingBlock = $script:RegisteredModules['entra/identityproviders']['Reporting']
+        { & $reportingBlock -Context $script:IPContext } | Should -Not -Throw
+    }
+}
+
+# =====================================================================
+# SECURITYDEFAULTS MODULE (Register-AZSCInventoryModule pattern)
+# =====================================================================
+Describe 'SecurityDefaults Module (Register-AZSCInventoryModule)' -Tag 'SecurityDefaults' {
+
+    BeforeAll {
+        $script:SecurityDefaultsFile = Join-Path $script:IdentityPath 'SecurityDefaults.ps1'
+
+        # Framework mock functions (re-define in this scope)
+        $script:RegisteredModules = @{}
+        $script:ProcessedDataStore = @{}
+
+        function Register-AZSCInventoryModule {
+            param([string]$ModuleId, [string]$PhaseId, [scriptblock]$ScriptBlock)
+            if (-not $script:RegisteredModules[$ModuleId]) {
+                $script:RegisteredModules[$ModuleId] = @{}
+            }
+            $script:RegisteredModules[$ModuleId][$PhaseId] = $ScriptBlock
+        }
+
+        function Write-AZSCLog {
+            param([string]$Message, [string]$Level)
+        }
+
+        function Add-AZSCProcessedData {
+            param([string]$Type, $Data)
+            if (-not $script:ProcessedDataStore[$Type]) {
+                $script:ProcessedDataStore[$Type] = [System.Collections.Generic.List[object]]::new()
+            }
+            $script:ProcessedDataStore[$Type].Add($Data)
+        }
+
+        function Get-AZSCProcessedData {
+            param([string]$Type)
+            return $script:ProcessedDataStore[$Type]
+        }
+
+        # Dot-source the module to register scriptblocks
+        . $script:SecurityDefaultsFile
+
+        # Mock security defaults data
+        $script:SDContext = @{
+            EntraData = @{
+                'entra/securitydefaults' = @(
+                    [PSCustomObject]@{
+                        id                   = 'secdef-001'
+                        displayName          = 'Security Defaults Enforcement Policy'
+                        isEnabled            = $true
+                        description          = 'Preset security policies for the tenant'
+                        lastModifiedDateTime = '2025-03-15T10:30:00Z'
+                    }
+                )
+            }
+            TenantId  = '00000000-0000-0000-0000-000000000001'
+            ExcelPath = (Join-Path $script:TestOutputDir 'SecurityDefaults_Test.xlsx')
+        }
+
+        # Run processing in BeforeAll
+        $processingBlock = $script:RegisteredModules['entra/securitydefaults']['Processing']
+        & $processingBlock -Context $script:SDContext
+    }
+
+    It 'Module file exists' {
+        $script:SecurityDefaultsFile | Should -Exist
+    }
+
+    It 'Registered Processing and Reporting scriptblocks' {
+        $script:RegisteredModules['entra/securitydefaults'] | Should -Not -BeNullOrEmpty
+        $script:RegisteredModules['entra/securitydefaults']['Processing'] | Should -Not -BeNullOrEmpty
+        $script:RegisteredModules['entra/securitydefaults']['Reporting'] | Should -Not -BeNullOrEmpty
+    }
+
+    It 'Processing creates 1 processed data record' {
+        $data = Get-AZSCProcessedData -Type 'entra/securitydefaults'
+        $data | Should -Not -BeNullOrEmpty
+        @($data).Count | Should -Be 1
+    }
+
+    It 'Processed record has expected properties' {
+        $data = Get-AZSCProcessedData -Type 'entra/securitydefaults'
+        $first = @($data)[0]
+        $first.TenantId | Should -Not -BeNullOrEmpty
+        $first.PolicyName | Should -Not -BeNullOrEmpty
+        $first.Enabled | Should -Be 'Yes'
+        $first.ProtectionsProvided | Should -Not -BeNullOrEmpty
+        $first.RecommendationStatus | Should -Not -BeNullOrEmpty
+    }
+
+    It 'Reporting does not throw' {
+        $reportingBlock = $script:RegisteredModules['entra/securitydefaults']['Reporting']
+        { & $reportingBlock -Context $script:SDContext } | Should -Not -Throw
     }
 }

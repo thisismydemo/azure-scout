@@ -33,6 +33,23 @@ $AIModules = @(
     @{ Name = 'BotServices';            File = 'BotServices.ps1';            Type = 'microsoft.botservice/botservices';     Kind = '';                   Worksheet = 'Bot Services' }
     @{ Name = 'AIFoundryHubs';          File = 'AIFoundryHubs.ps1';          Type = 'microsoft.machinelearningservices/workspaces'; Kind = 'Hub';         Worksheet = 'AI Foundry Hubs' }
     @{ Name = 'AIFoundryProjects';      File = 'AIFoundryProjects.ps1';      Type = 'microsoft.machinelearningservices/workspaces'; Kind = 'Project';     Worksheet = 'AI Foundry Projects' }
+    # --- New modules ---
+    @{ Name = 'AppliedAIServices';      File = 'AppliedAIServices.ps1';      Type = 'microsoft.cognitiveservices/accounts'; Kind = 'FormRecognizer';     Worksheet = 'Applied AI' }
+    @{ Name = 'AzureAI';                File = 'AzureAI.ps1';                Type = 'microsoft.cognitiveservices/accounts'; Kind = 'AIServices';         Worksheet = 'Azure AI' }
+    @{ Name = 'ContentModerator';       File = 'ContentModerator.ps1';       Type = 'microsoft.cognitiveservices/accounts'; Kind = 'ContentModerator';   Worksheet = 'Content Moderator' }
+    @{ Name = 'CustomVision';           File = 'CustomVision.ps1';           Type = 'microsoft.cognitiveservices/accounts'; Kind = 'CustomVision.Training'; Worksheet = 'Custom Vision' }
+    @{ Name = 'FaceAPI';                File = 'FaceAPI.ps1';                Type = 'microsoft.cognitiveservices/accounts'; Kind = 'Face';               Worksheet = 'Face API' }
+    @{ Name = 'HealthInsights';         File = 'HealthInsights.ps1';         Type = 'microsoft.cognitiveservices/accounts'; Kind = 'HealthInsights';     Worksheet = 'Health Insights' }
+    @{ Name = 'ImmersiveReader';        File = 'ImmersiveReader.ps1';        Type = 'microsoft.cognitiveservices/accounts'; Kind = 'ImmersiveReader';    Worksheet = 'Immersive Reader' }
+    @{ Name = 'Translator';             File = 'Translator.ps1';             Type = 'microsoft.cognitiveservices/accounts'; Kind = 'TextTranslation';    Worksheet = 'Translator' }
+    @{ Name = 'MLComputes';             File = 'MLComputes.ps1';             Type = 'microsoft.machinelearningservices/workspaces'; Kind = '';            Worksheet = 'ML Computes' }
+    @{ Name = 'MLDatasets';             File = 'MLDatasets.ps1';             Type = 'microsoft.machinelearningservices/workspaces'; Kind = '';            Worksheet = 'ML Datasets' }
+    @{ Name = 'MLDatastores';           File = 'MLDatastores.ps1';           Type = 'microsoft.machinelearningservices/workspaces'; Kind = '';            Worksheet = 'ML Datastores' }
+    @{ Name = 'MLEndpoints';            File = 'MLEndpoints.ps1';            Type = 'microsoft.machinelearningservices/workspaces'; Kind = '';            Worksheet = 'ML Endpoints' }
+    @{ Name = 'MLModels';               File = 'MLModels.ps1';               Type = 'microsoft.machinelearningservices/workspaces'; Kind = '';            Worksheet = 'ML Models' }
+    @{ Name = 'MLPipelines';            File = 'MLPipelines.ps1';            Type = 'microsoft.machinelearningservices/workspaces'; Kind = '';            Worksheet = 'ML Pipelines' }
+    @{ Name = 'OpenAIDeployments';      File = 'OpenAIDeployments.ps1';      Type = 'microsoft.cognitiveservices/accounts'; Kind = 'OpenAI';             Worksheet = 'OpenAI Deployments' }
+    @{ Name = 'SearchIndexes';          File = 'SearchIndexes.ps1';          Type = 'microsoft.search/searchservices';      Kind = '';                   Worksheet = 'Search Indexes' }
 )
 
 # ===================================================================
@@ -158,12 +175,110 @@ BeforeAll {
     })
 
     # Bot Service
-    $script:MockResources += New-MockAIResource -Id '/sub/sub-00000001/bot/bot1' -Name 'bot-support' `
+    $script:MockResources += New-MockAIResource -Id '/subscriptions/sub-00000001/resourceGroups/rg-ai/providers/microsoft.botservice/botservices/bot-support' -Name 'bot-support' `
         -Type 'microsoft.botservice/botservices' -Kind 'Bot' -Props ([PSCustomObject]@{
         endpoint = 'https://bot-support.azurewebsites.net/api/messages'; msaAppId = 'app-id-001'
         provisioningState = 'Succeeded'
         sku = [PSCustomObject]@{ name = 'S1' }
     })
+
+    # --- New Cognitive Services mock resources ---
+    $cogSvcBase = '/subscriptions/sub-00000001/resourceGroups/rg-ai/providers/microsoft.cognitiveservices/accounts'
+    $peMock     = @([PSCustomObject]@{ id = '/subscriptions/sub-00000001/resourceGroups/rg-ai/providers/Microsoft.Network/privateEndpoints/pe-cog' })
+    $cogProps   = { param($kind)
+        [PSCustomObject]@{
+            datecreated = '2025-06-15T10:00:00Z'
+            endpoint = "https://$kind-prod.cognitiveservices.azure.com/"
+            customsubdomainname = "$kind-prod"
+            publicnetworkaccess = 'Enabled'
+            ismigrated = $false
+            networkacls = [PSCustomObject]@{ defaultaction = 'Allow'; iprules = @(); virtualnetworkrules = @() }
+            privateendpointconnections = $peMock
+            provisioningState = 'Succeeded'
+            disableLocalAuth = $false
+            apiProperties = [PSCustomObject]@{
+                TA4HResourceId = '/subscriptions/sub-00000001/resourceGroups/rg-ai/providers/microsoft.cognitiveservices/accounts/lang-prod'
+            }
+        }
+    }
+
+    # AppliedAIServices (uses KIND in appliedAIKinds array, including 'FormRecognizer')
+    $aaiRes = New-MockAIResource -Id "$cogSvcBase/aai-prod" -Name 'aai-prod' `
+        -Type 'microsoft.cognitiveservices/accounts' -Kind 'FormRecognizer' -Props (& $cogProps 'aai')
+    $aaiRes | Add-Member -NotePropertyName 'sku' -NotePropertyValue ([PSCustomObject]@{ name = 'S0' }) -Force
+    $script:MockResources += $aaiRes
+
+    # AzureAI (Kind = AIServices)
+    $aisvRes = New-MockAIResource -Id "$cogSvcBase/aisvc-prod" -Name 'aisvc-prod' `
+        -Type 'microsoft.cognitiveservices/accounts' -Kind 'AIServices' -Props (& $cogProps 'aisvc')
+    $aisvRes | Add-Member -NotePropertyName 'sku' -NotePropertyValue ([PSCustomObject]@{ name = 'S0' }) -Force
+    $script:MockResources += $aisvRes
+
+    # ContentModerator
+    $cmRes = New-MockAIResource -Id "$cogSvcBase/cm-prod" -Name 'cm-prod' `
+        -Type 'microsoft.cognitiveservices/accounts' -Kind 'ContentModerator' -Props (& $cogProps 'cm')
+    $cmRes | Add-Member -NotePropertyName 'sku' -NotePropertyValue ([PSCustomObject]@{ name = 'S0' }) -Force
+    $script:MockResources += $cmRes
+
+    # CustomVision (Kind like 'CustomVision.*')
+    $cvtRes = New-MockAIResource -Id "$cogSvcBase/cvtrain-prod" -Name 'cvtrain-prod' `
+        -Type 'microsoft.cognitiveservices/accounts' -Kind 'CustomVision.Training' -Props (& $cogProps 'cvtrain')
+    $cvtRes | Add-Member -NotePropertyName 'sku' -NotePropertyValue ([PSCustomObject]@{ name = 'S0' }) -Force
+    $script:MockResources += $cvtRes
+
+    # FaceAPI (Kind = Face)
+    $faceRes = New-MockAIResource -Id "$cogSvcBase/face-prod" -Name 'face-prod' `
+        -Type 'microsoft.cognitiveservices/accounts' -Kind 'Face' -Props (& $cogProps 'face')
+    $faceRes | Add-Member -NotePropertyName 'sku' -NotePropertyValue ([PSCustomObject]@{ name = 'S0' }) -Force
+    $script:MockResources += $faceRes
+
+    # HealthInsights
+    $hiRes = New-MockAIResource -Id "$cogSvcBase/hi-prod" -Name 'hi-prod' `
+        -Type 'microsoft.cognitiveservices/accounts' -Kind 'HealthInsights' -Props (& $cogProps 'hi')
+    $hiRes | Add-Member -NotePropertyName 'sku' -NotePropertyValue ([PSCustomObject]@{ name = 'S0' }) -Force
+    $script:MockResources += $hiRes
+
+    # ImmersiveReader
+    $irRes = New-MockAIResource -Id "$cogSvcBase/ir-prod" -Name 'ir-prod' `
+        -Type 'microsoft.cognitiveservices/accounts' -Kind 'ImmersiveReader' -Props (& $cogProps 'ir')
+    $irRes | Add-Member -NotePropertyName 'sku' -NotePropertyValue ([PSCustomObject]@{ name = 'S0' }) -Force
+    $script:MockResources += $irRes
+
+    # Translator (Kind = TextTranslation)
+    $trRes = New-MockAIResource -Id "$cogSvcBase/tr-prod" -Name 'tr-prod' `
+        -Type 'microsoft.cognitiveservices/accounts' -Kind 'TextTranslation' -Props (& $cogProps 'tr')
+    $trRes | Add-Member -NotePropertyName 'sku' -NotePropertyValue ([PSCustomObject]@{ name = 'S0' }) -Force
+    $script:MockResources += $trRes
+
+    # --- Mock Invoke-AzRestMethod for ML/OpenAI/Search child modules ---
+    function Invoke-AzRestMethod {
+        param([string]$Path, [string]$Method = 'GET')
+        $mockResponse = @{ value = @() }
+        if ($Path -match '/computes\?') {
+            $mockResponse = @{ value = @(@{ name = 'gpu-cluster'; properties = @{ computeType = 'AmlCompute'; vmSize = 'Standard_NC6'; scaleSettings = @{ minNodeCount = 0; maxNodeCount = 4 }; vmPriority = 'Dedicated'; provisioningState = 'Succeeded' } }) }
+        } elseif ($Path -match '/data\?') {
+            $mockResponse = @{ value = @(@{ name = 'train-data'; properties = @{ dataType = 'uri_file'; dataUri = 'azureml://datastores/default/data.csv'; description = 'Training data' }; systemData = @{ createdAt = '2025-06-01T10:00:00Z' } }) }
+        } elseif ($Path -match '/data/[^/]+/versions') {
+            $mockResponse = @{ value = @(@{ name = '1'; properties = @{ dataType = 'uri_file'; dataUri = 'azureml://datastores/default/data.csv'; description = 'v1' }; systemData = @{ createdAt = '2025-06-01T10:00:00Z' } }) }
+        } elseif ($Path -match '/datastores\?') {
+            $mockResponse = @{ value = @(@{ name = 'default'; properties = @{ datastoreType = 'AzureBlob'; accountName = 'saml01'; containerName = 'mldata'; isDefault = $true; credentials = @{ credentialsType = 'AccountKey' } } }) }
+        } elseif ($Path -match '/onlineEndpoints\?|/batchEndpoints\?') {
+            $mockResponse = @{ value = @(@{ name = 'ep-online'; properties = @{ authMode = 'Key'; scoringUri = 'https://ep-online.eastus.inference.ml.azure.com/score'; provisioningState = 'Succeeded' } }) }
+        } elseif ($Path -match '/deployments\?') {
+            $mockResponse = @{ value = @(@{ name = 'deploy1' }) }
+        } elseif ($Path -match '/models\?') {
+            $mockResponse = @{ value = @(@{ name = 'my-model'; properties = @{ flavors = @{ sklearn = @{}; python_function = @{} } }; systemData = @{ createdAt = '2025-06-01T10:00:00Z' } }) }
+        } elseif ($Path -match '/models/[^/]+/versions') {
+            $mockResponse = @{ value = @(@{ name = '1'; properties = @{ flavors = [PSCustomObject]@{ sklearn = @{} } }; systemData = @{ createdAt = '2025-06-01T10:00:00Z' } }) }
+        } elseif ($Path -match '/jobs\?') {
+            $mockResponse = @{ value = @(@{ name = 'pipeline-run-1'; properties = @{ displayName = 'training-pipeline'; status = 'Completed'; experimentName = 'exp1'; creationContext = @{ createdAt = '2025-06-01T10:00:00Z'; lastModifiedAt = '2025-06-01T12:00:00Z' }; settings = @{ defaultCompute = 'gpu-cluster' } } }) }
+        } elseif ($Path -match 'cognitiveservices/accounts/.+/deployments\?') {
+            $mockResponse = @{ value = @(@{ name = 'gpt-4'; properties = @{ model = @{ name = 'gpt-4'; version = '0613'; format = 'OpenAI' }; scaleSettings = @{ scaleType = 'Standard'; capacity = 10 }; dynamicThrottlingEnabled = $false; provisioningState = 'Succeeded' } }) }
+        } elseif ($Path -match 'searchservices/.+/indexes\?') {
+            $mockResponse = @{ value = @(@{ name = 'idx-main'; fields = @(@{name='id'},@{name='content'}); analyzers = @(); scoringProfiles = @(); suggesters = @(); corsOptions = @{ allowedOrigins = @('*') }; defaultScoringProfile = $null; '@odata.etag' = '"0x123"' }) }
+        }
+        [PSCustomObject]@{ Content = ($mockResponse | ConvertTo-Json -Depth 10); StatusCode = 200 }
+    }
 }
 
 AfterAll {
