@@ -60,14 +60,13 @@ BeforeAll {
             KIND           = ''
             tags           = [PSCustomObject]@{}
             PROPERTIES     = $Props
-            properties     = $Props
         }
     }
 
     function New-MockResource {
         param([string]$Id, [string]$Name, [string]$Type, [string]$Location = 'eastus',
               [string]$SubscriptionId = 'sub-00000001', [string]$RG = 'rg-test',
-              [object]$Props, [string]$Kind = '')
+              [object]$Props, [string]$Kind = '', [string]$ManagedBy = '')
         [PSCustomObject]@{
             id             = $Id
             NAME           = $Name
@@ -78,7 +77,7 @@ BeforeAll {
             KIND           = $Kind
             tags           = [PSCustomObject]@{}
             PROPERTIES     = $Props
-            properties     = $Props
+            MANAGEDBY      = $ManagedBy
         }
     }
 
@@ -106,10 +105,11 @@ BeforeAll {
         networkProfile   = [PSCustomObject]@{ networkInterfaces = @(@{ id = '/sub/sub-00000001/nic/nic01' }) }
         provisioningState = 'Succeeded'
         powerState       = 'PowerState/running'
+        timeCreated      = '2025-06-15T08:30:00Z'
     })
 
     # VM Disk
-    $script:MockResources += New-MockResource -Id '/sub/sub-00000001/disk/disk01' -Name 'disk-os-01' -Type 'microsoft.compute/disks' -Props ([PSCustomObject]@{
+    $script:MockResources += New-MockResource -Id '/subscriptions/sub-00000001/resourceGroups/rg-test/providers/microsoft.compute/disks/disk-os-01' -Name 'disk-os-01' -Type 'microsoft.compute/disks' -ManagedBy '/subscriptions/sub-00000001/resourceGroups/rg-test/providers/Microsoft.Compute/virtualMachines/vm-prod-01' -Props ([PSCustomObject]@{
         diskSizeGB = 128; osType = 'Windows'; diskState = 'Attached'; hyperVGeneration = 'V2'
         provisioningState = 'Succeeded'; timeCreated = '2026-01-01T00:00:00Z'
         creationData = [PSCustomObject]@{ createOption = 'FromImage' }
@@ -131,6 +131,7 @@ BeforeAll {
         provisioningState = 'Succeeded'
         singlePlacementGroup = $true
         orchestrationMode = 'Uniform'
+        timeCreated = '2025-07-01T12:00:00Z'
     })
 
     # Availability Set

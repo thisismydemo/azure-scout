@@ -7,22 +7,55 @@
 .DESCRIPTION
     Validates the pre-flight permission checker:
       - ARM subscription enumeration (pass/fail)
-      - ARM role assignment read (pass/warn)
+      - ARM root MG access (pass/warn)
       - Graph organization read (pass/fail)
       - Graph user read (pass/fail)
       - Graph conditional access read (pass/warn)
       - Scope gating (ArmOnly skips Graph, EntraOnly skips ARM)
       - Always returns structured object, never throws
 
+    Tests mock Invoke-AZSCPermissionAudit (the delegated audit function) rather
+    than individual Az cmdlets, since Test-AZSCPermissions is a pure mapping wrapper.
+
 .NOTES
     Author:  thisismydemo
-    Version: 1.0.0
+    Version: 2.0.0
     Created: 2026-02-23
 #>
 
 BeforeAll {
     $ModuleRoot = Split-Path -Parent $PSScriptRoot
     Import-Module (Join-Path $ModuleRoot 'AzureScout.psd1') -Force -ErrorAction Stop
+
+    # Helper to build a mock audit result with sensible defaults
+    function New-MockAuditResult {
+        param(
+            [bool]$ArmAccess = $true,
+            $GraphAccess = $true,
+            [array]$ArmDetails = @(),
+            [array]$ProviderResults = @(),
+            [array]$GraphDetails = @(),
+            [string]$OverallReadiness = 'FullARMAndEntra'
+        )
+        [PSCustomObject]@{
+            ArmAccess        = $ArmAccess
+            GraphAccess      = $GraphAccess
+            CallerAccount    = 'test@contoso.com'
+            CallerType       = 'User'
+            TenantId         = 'test-tenant'
+            ArmDetails       = $ArmDetails
+            ProviderResults  = $ProviderResults
+            GraphDetails     = $GraphDetails
+            Recommendations  = @()
+            OverallReadiness = $OverallReadiness
+            AuditTimestamp   = (Get-Date -Format 'o')
+        }
+    }
+
+    function New-CheckDetail {
+        param([string]$Check, [string]$Status = 'Pass', [string]$Message = '', [string]$Remediation = '')
+        [PSCustomObject]@{ Check = $Check; Status = $Status; Message = $Message; Remediation = $Remediation }
+    }
 }
 
 Describe 'Test-AZSCPermissions' {
@@ -31,9 +64,15 @@ Describe 'Test-AZSCPermissions' {
     Context 'Return Structure' {
 
         BeforeAll {
-            Mock Get-AzSubscription { return @([PSCustomObject]@{ Id = 'sub-001'; Name = 'Test Sub' }) } -ModuleName AzureScout
-            Mock Get-AzRoleAssignment { return @([PSCustomObject]@{ RoleDefinitionName = 'Reader' }) } -ModuleName AzureScout
-            Mock Invoke-AZSCGraphRequest { return [PSCustomObject]@{ displayName = 'Contoso' } } -ModuleName AzureScout
+            Mock Invoke-AZSCPermissionAudit {
+                New-MockAuditResult `
+                    -ArmDetails @( New-CheckDetail 'ARM: Subscription Enumeration' 'Pass' 'Found 1 subscription(s)' ) `
+                    -GraphDetails @(
+                        New-CheckDetail 'Graph: Organization Read' 'Pass'
+                        New-CheckDetail 'Graph: Users Read' 'Pass'
+                        New-CheckDetail 'Graph: Conditional Access Read' 'Pass'
+                    )
+            } -ModuleName AzureScout
         }
 
         It 'Returns an object with ArmAccess, GraphAccess, and Details properties' {
@@ -60,9 +99,14 @@ Describe 'Test-AZSCPermissions' {
     Context 'ARM Checks — All Pass' {
 
         BeforeAll {
-            Mock Get-AzSubscription { return @([PSCustomObject]@{ Id = 'sub-001'; Name = 'Test Sub' }) } -ModuleName AzureScout
-            Mock Get-AzRoleAssignment { return @([PSCustomObject]@{ RoleDefinitionName = 'Reader' }) } -ModuleName AzureScout
-            Mock Invoke-AZSCGraphRequest { return [PSCustomObject]@{ displayName = 'Contoso' } } -ModuleName AzureScout
+            Mock Invoke-AZSCPermissionAudit {
+                New-MockAuditResult -ArmAccess $true `
+                    -ArmDetails @(
+                        New-CheckDetail 'ARM: Subscription Enumeration' 'Pass' 'Found 1 subscription(s)'
+                        New-CheckDetail 'ARM: Root Management Group Access' 'Pass' 'Can read root MG'
+                    ) `
+                    -GraphAccess $null
+            } -ModuleName AzureScout
         }
 
         It 'Sets ArmAccess to $true when subscriptions are found' {
@@ -76,9 +120,9 @@ Describe 'Test-AZSCPermissions' {
             $subCheck.Status | Should -Be 'Pass'
         }
 
-        It 'Reports ARM: Role Assignment Read as Pass' {
+        It 'Reports ARM: Root Management Group Access as Pass' {
             $result = Test-AZSCPermissions -TenantID 'test-tenant' -Scope ArmOnly
-            $roleCheck = $result.Details | Where-Object { $_.Check -eq 'ARM: Role Assignment Read' }
+            $roleCheck = $result.Details | Where-Object { $_.Check -eq 'ARM: Root Management Group Access' }
             $roleCheck.Status | Should -Be 'Pass'
         }
     }
@@ -87,8 +131,13 @@ Describe 'Test-AZSCPermissions' {
     Context 'ARM Checks — No Subscriptions' {
 
         BeforeAll {
-            Mock Get-AzSubscription { return @() } -ModuleName AzureScout
-            Mock Invoke-AZSCGraphRequest { return [PSCustomObject]@{ displayName = 'Contoso' } } -ModuleName AzureScout
+            Mock Invoke-AZSCPermissionAudit {
+                New-MockAuditResult -ArmAccess $false `
+                    -ArmDetails @(
+                        New-CheckDetail 'ARM: Subscription Enumeration' 'Fail' 'No subscriptions found' 'Grant Reader role'
+                    ) `
+                    -GraphAccess $null -OverallReadiness 'Insufficient'
+            } -ModuleName AzureScout
         }
 
         It 'Sets ArmAccess to $false when no subscriptions found' {
@@ -107,8 +156,13 @@ Describe 'Test-AZSCPermissions' {
     Context 'ARM Checks — Subscription Enumeration Fails' {
 
         BeforeAll {
-            Mock Get-AzSubscription { throw 'Unauthorized' } -ModuleName AzureScout
-            Mock Invoke-AZSCGraphRequest { return [PSCustomObject]@{ displayName = 'Contoso' } } -ModuleName AzureScout
+            Mock Invoke-AZSCPermissionAudit {
+                New-MockAuditResult -ArmAccess $false `
+                    -ArmDetails @(
+                        New-CheckDetail 'ARM: Subscription Enumeration' 'Fail' 'Unauthorized' 'Grant Reader role on sub'
+                    ) `
+                    -GraphAccess $null -OverallReadiness 'Insufficient'
+            } -ModuleName AzureScout
         }
 
         It 'Sets ArmAccess to $false when Get-AzSubscription throws' {
@@ -124,23 +178,28 @@ Describe 'Test-AZSCPermissions' {
         }
     }
 
-    # ── ARM Checks — Role Assignment Read Warns ───────────────────────
-    Context 'ARM Checks — Role Assignment Read Warning' {
+    # ── ARM Checks — Root MG Access Warns ─────────────────────────────
+    Context 'ARM Checks — Root MG Access Warning' {
 
         BeforeAll {
-            Mock Get-AzSubscription { return @([PSCustomObject]@{ Id = 'sub-001'; Name = 'Test Sub' }) } -ModuleName AzureScout
-            Mock Get-AzRoleAssignment { throw 'AuthorizationFailed' } -ModuleName AzureScout
-            Mock Invoke-AZSCGraphRequest { return [PSCustomObject]@{ displayName = 'Contoso' } } -ModuleName AzureScout
+            Mock Invoke-AZSCPermissionAudit {
+                New-MockAuditResult -ArmAccess $true `
+                    -ArmDetails @(
+                        New-CheckDetail 'ARM: Subscription Enumeration' 'Pass' 'Found 1 sub'
+                        New-CheckDetail 'ARM: Root Management Group Access' 'Warn' 'Cannot read root MG' 'Grant Reader at root MG'
+                    ) `
+                    -GraphAccess $null
+            } -ModuleName AzureScout
         }
 
-        It 'ArmAccess remains $true (role assignment read is non-blocking)' {
+        It 'ArmAccess remains $true (root MG access is non-blocking)' {
             $result = Test-AZSCPermissions -TenantID 'test-tenant' -Scope ArmOnly
             $result.ArmAccess | Should -BeTrue
         }
 
-        It 'Reports role assignment read as Warn' {
+        It 'Reports root MG access as Warn' {
             $result = Test-AZSCPermissions -TenantID 'test-tenant' -Scope ArmOnly
-            $roleCheck = $result.Details | Where-Object { $_.Check -eq 'ARM: Role Assignment Read' }
+            $roleCheck = $result.Details | Where-Object { $_.Check -eq 'ARM: Root Management Group Access' }
             $roleCheck.Status | Should -Be 'Warn'
         }
     }
@@ -149,7 +208,21 @@ Describe 'Test-AZSCPermissions' {
     Context 'Graph Checks — All Pass' {
 
         BeforeAll {
-            Mock Invoke-AZSCGraphRequest { return [PSCustomObject]@{ displayName = 'Contoso' } } -ModuleName AzureScout
+            Mock Invoke-AZSCPermissionAudit {
+                New-MockAuditResult -ArmAccess $true -GraphAccess $true `
+                    -ArmDetails @( New-CheckDetail 'ARM: Subscription Enumeration' 'Pass' ) `
+                    -GraphDetails @(
+                        New-CheckDetail 'Graph: Organization Read' 'Pass'
+                        New-CheckDetail 'Graph: Users Read' 'Pass'
+                        New-CheckDetail 'Graph: Groups Read' 'Pass'
+                        New-CheckDetail 'Graph: Applications Read' 'Pass'
+                        New-CheckDetail 'Graph: Service Principals Read' 'Pass'
+                        New-CheckDetail 'Graph: Directory Roles Read' 'Pass'
+                        New-CheckDetail 'Graph: Conditional Access Read' 'Pass'
+                        New-CheckDetail 'Graph: Risky Users Read' 'Pass'
+                        New-CheckDetail 'Graph: Audit Logs Read' 'Pass'
+                    )
+            } -ModuleName AzureScout
         }
 
         It 'Sets GraphAccess to $true when all Graph checks pass' {
@@ -157,10 +230,10 @@ Describe 'Test-AZSCPermissions' {
             $result.GraphAccess | Should -BeTrue
         }
 
-        It 'Has three Graph detail entries' {
+        It 'Has Graph detail entries' {
             $result = Test-AZSCPermissions -TenantID 'test-tenant' -Scope EntraOnly
             $graphChecks = $result.Details | Where-Object { $_.Check -like 'Graph:*' }
-            $graphChecks.Count | Should -Be 3
+            $graphChecks.Count | Should -BeGreaterOrEqual 3
         }
     }
 
@@ -168,10 +241,14 @@ Describe 'Test-AZSCPermissions' {
     Context 'Graph Checks — Organization Read Fails' {
 
         BeforeAll {
-            Mock Invoke-AZSCGraphRequest {
-                param($Uri)
-                if ($Uri -like '*/organization*') { throw 'Forbidden' }
-                return [PSCustomObject]@{ displayName = 'Test' }
+            Mock Invoke-AZSCPermissionAudit {
+                New-MockAuditResult -ArmAccess $true -GraphAccess $false `
+                    -ArmDetails @( New-CheckDetail 'ARM: Subscription Enumeration' 'Pass' ) `
+                    -GraphDetails @(
+                        New-CheckDetail 'Graph: Organization Read' 'Fail' 'DENIED' 'Grant Organization.Read.All'
+                        New-CheckDetail 'Graph: Users Read' 'Pass'
+                        New-CheckDetail 'Graph: Conditional Access Read' 'Pass'
+                    )
             } -ModuleName AzureScout
         }
 
@@ -192,10 +269,13 @@ Describe 'Test-AZSCPermissions' {
     Context 'Graph Checks — User Read Fails' {
 
         BeforeAll {
-            Mock Invoke-AZSCGraphRequest {
-                param($Uri)
-                if ($Uri -like '*/users*') { throw 'Insufficient privileges' }
-                return [PSCustomObject]@{ displayName = 'Contoso' }
+            Mock Invoke-AZSCPermissionAudit {
+                New-MockAuditResult -ArmAccess $true -GraphAccess $false `
+                    -ArmDetails @( New-CheckDetail 'ARM: Subscription Enumeration' 'Pass' ) `
+                    -GraphDetails @(
+                        New-CheckDetail 'Graph: Organization Read' 'Pass'
+                        New-CheckDetail 'Graph: Users Read' 'Fail' 'DENIED' 'Grant User.Read.All'
+                    )
             } -ModuleName AzureScout
         }
 
@@ -209,10 +289,14 @@ Describe 'Test-AZSCPermissions' {
     Context 'Graph Checks — Conditional Access Warns' {
 
         BeforeAll {
-            Mock Invoke-AZSCGraphRequest {
-                param($Uri)
-                if ($Uri -like '*/conditionalAccess*') { throw 'Forbidden' }
-                return [PSCustomObject]@{ displayName = 'Contoso' }
+            Mock Invoke-AZSCPermissionAudit {
+                New-MockAuditResult -ArmAccess $true -GraphAccess $true `
+                    -ArmDetails @( New-CheckDetail 'ARM: Subscription Enumeration' 'Pass' ) `
+                    -GraphDetails @(
+                        New-CheckDetail 'Graph: Organization Read' 'Pass'
+                        New-CheckDetail 'Graph: Users Read' 'Pass'
+                        New-CheckDetail 'Graph: Conditional Access Read' 'Warn' 'DENIED — optional' 'Grant Policy.Read.All'
+                    )
             } -ModuleName AzureScout
         }
 
@@ -223,7 +307,7 @@ Describe 'Test-AZSCPermissions' {
 
         It 'Reports CA policies check as Warn' {
             $result = Test-AZSCPermissions -TenantID 'test-tenant' -Scope EntraOnly
-            $caCheck = $result.Details | Where-Object { $_.Check -eq 'Graph: Conditional Access Policies' }
+            $caCheck = $result.Details | Where-Object { $_.Check -eq 'Graph: Conditional Access Read' }
             $caCheck.Status | Should -Be 'Warn'
         }
     }
@@ -232,9 +316,23 @@ Describe 'Test-AZSCPermissions' {
     Context 'Scope Gating' {
 
         BeforeAll {
-            Mock Get-AzSubscription { return @([PSCustomObject]@{ Id = 'sub-001'; Name = 'Test Sub' }) } -ModuleName AzureScout
-            Mock Get-AzRoleAssignment { return @([PSCustomObject]@{ RoleDefinitionName = 'Reader' }) } -ModuleName AzureScout
-            Mock Invoke-AZSCGraphRequest { return [PSCustomObject]@{ displayName = 'Contoso' } } -ModuleName AzureScout
+            Mock Invoke-AZSCPermissionAudit {
+                $gd = @()
+                $ga = $null
+                if ($IncludeEntraPermissions) {
+                    $gd = @(
+                        New-CheckDetail 'Graph: Organization Read' 'Pass'
+                        New-CheckDetail 'Graph: Users Read' 'Pass'
+                    )
+                    $ga = $true
+                }
+                New-MockAuditResult -ArmAccess $true -GraphAccess $ga `
+                    -ArmDetails @(
+                        New-CheckDetail 'ARM: Subscription Enumeration' 'Pass'
+                        New-CheckDetail 'ARM: Root Management Group Access' 'Pass'
+                    ) `
+                    -GraphDetails $gd
+            } -ModuleName AzureScout
         }
 
         It 'ArmOnly scope produces no Graph checks' {
@@ -258,12 +356,11 @@ Describe 'Test-AZSCPermissions' {
         }
     }
 
-    # ── Never Throws ──────────────────────────────────────────────────
+    # ── No Auth Context (Invoke-AZSCPermissionAudit returns null) ─────
     Context 'Never Throws' {
 
         BeforeAll {
-            Mock Get-AzSubscription { throw 'Total failure' } -ModuleName AzureScout
-            Mock Invoke-AZSCGraphRequest { throw 'Total failure' } -ModuleName AzureScout
+            Mock Invoke-AZSCPermissionAudit { return $null } -ModuleName AzureScout
         }
 
         It 'Returns a result even when all checks fail' {

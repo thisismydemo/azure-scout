@@ -97,22 +97,39 @@ BeforeAll {
         )
     })
 
-    # Advisor Score
-    $script:MockResources += New-MockMgmtResource -Id '/sub/advisorscore1' -Name 'default' `
+    # Advisor Score — module filters for name in (Cost, Security, etc.) and reads timeSeries/scoreHistory
+    $script:MockResources += New-MockMgmtResource `
+        -Id '/subscriptions/sub-00000001/providers/Microsoft.Advisor/advisorScore/Cost' `
+        -Name 'Cost' `
         -Type 'Microsoft.Advisor/advisorScore' -Props ([PSCustomObject]@{
-        score = [PSCustomObject]@{ current = 72.5; consumptionUnits = 1200 }
-        categoryScores = @(
-            [PSCustomObject]@{ id = 'Cost'; score = [PSCustomObject]@{ current = 85.0 } }
-            [PSCustomObject]@{ id = 'Security'; score = [PSCustomObject]@{ current = 60.0 } }
+        lastRefreshedScore = [PSCustomObject]@{ date = '2026-02-20T00:00:00Z'; score = 85.0 }
+        timeSeries = @(
+            [PSCustomObject]@{
+                aggregationLevel = 'Monthly'
+                scoreHistory = @(
+                    [PSCustomObject]@{ date = '2026-01-01T00:00:00Z'; score = 80.0; impactedResourceCount = 5; consumptionUnits = 1200; potentialScoreIncrease = 3.5 }
+                )
+            }
         )
     })
 
-    # Support Tickets
+    # Support Tickets — module casts createdDate, problemStartTime, modifiedDate to [datetime]
     $script:MockResources += New-MockMgmtResource -Id '/sub/st1' -Name 'ST000001' `
         -Type 'Microsoft.Support/supportTickets' -Props ([PSCustomObject]@{
         severity = 'B'; status = 'open'; problemClassificationDisplayName = 'Azure Virtual Machines'
         createdDate = '2026-02-01T10:00:00Z'; title = 'VM performance degradation'
         serviceDisplayName = 'Virtual Machine running Windows'
+        problemStartTime = '2026-01-31T22:00:00Z'
+        modifiedDate = '2026-02-05T14:30:00Z'
+        supportTicketId = 'ST000001'
+        supportPlanType = 'Premier'
+        require24X7Response = $false
+        serviceLevelAgreement = [PSCustomObject]@{ slaMinutes = 60 }
+        supportEngineer = [PSCustomObject]@{ emailAddress = 'support@microsoft.com' }
+        contactDetails = [PSCustomObject]@{
+            firstName = 'John'; lastName = 'Doe'
+            primaryEmailAddress = 'john.doe@contoso.com'; country = 'United States'
+        }
     })
 
     # Reservation Recommendations
@@ -251,11 +268,15 @@ Describe 'ManagementGroups — Processing with mocked Get-AzManagementGroup + Ge
         $modFile = Join-Path $script:ManagementPath 'ManagementGroups.ps1'
         $content = Get-Content -Path $modFile -Raw
 
-        # Inline mock by redefining in the scriptblock's scope won't work directly,
-        # so we verify the file calls Get-AzManagementGroup and test graceful empty behavior
+        # Inject stub functions after the param() line so the module never calls live Az cmdlets.
+        $stubs = @'
+
+function Get-AzContext { [PSCustomObject]@{ Tenant = [PSCustomObject]@{ Id = 'tenant-root-mg-001' } } }
+function Get-AzManagementGroup { param($GroupId, [switch]$Expand, [switch]$Recurse, $ErrorAction) $null }
+
+'@
+        $content = $content -replace '(param\([^)]*\))', "`$1`n$stubs"
         $sb = [ScriptBlock]::Create($content)
-        # Supply empty resources — the module calls Get-AzManagementGroup in Processing
-        # which may fail with no auth; verify it doesn't hard-throw
         { Invoke-Command -ScriptBlock $sb -ArgumentList $null, $null, $null, @(), $null, 'Processing', $null, $null, 'Light20', $null } | Should -Not -Throw
     }
 
@@ -272,6 +293,8 @@ Describe 'CustomRoleDefinitions — Processing with mocked Get-AzRoleDefinition'
     It 'Processing does not throw when Get-AzRoleDefinition fails (no auth)' {
         $modFile = Join-Path $script:ManagementPath 'CustomRoleDefinitions.ps1'
         $content = Get-Content -Path $modFile -Raw
+        $stub = "`nfunction Get-AzRoleDefinition { param(`$Name, `$Id, `$Scope, [switch]`$Custom, `$ErrorAction) @() }`n"
+        $content = $content -replace '(param\([^)]*\))', "`$1$stub"
         $sb = [ScriptBlock]::Create($content)
         { Invoke-Command -ScriptBlock $sb -ArgumentList $null, $null, $null, @(), $null, 'Processing', $null, $null, 'Light20', $null } | Should -Not -Throw
     }
@@ -280,6 +303,8 @@ Describe 'CustomRoleDefinitions — Processing with mocked Get-AzRoleDefinition'
         $modFile  = Join-Path $script:ManagementPath 'CustomRoleDefinitions.ps1'
         $content  = Get-Content -Path $modFile -Raw
         $xlsxFile = Join-Path $script:TempDir "CustomRoles_empty.xlsx"
+        $stub = "`nfunction Get-AzRoleDefinition { param(`$Name, `$Id, `$Scope, [switch]`$Custom, `$ErrorAction) @() }`n"
+        $content = $content -replace '(param\([^)]*\))', "`$1$stub"
         $sb = [ScriptBlock]::Create($content)
         { Invoke-Command -ScriptBlock $sb -ArgumentList $null, $null, $null, $null, $null, 'Reporting', $xlsxFile, $null, 'Light20', $null } | Should -Not -Throw
     }

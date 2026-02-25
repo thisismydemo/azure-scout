@@ -90,7 +90,7 @@ Else
         $Cond  = New-ConditionalText -ConditionalType ContainsText 'Available'     -ConditionalTextColor ([System.Drawing.Color]::FromArgb(0,176,80))  -BackgroundColor ([System.Drawing.Color]::White)
         $Cond2 = New-ConditionalText -ConditionalType ContainsText 'Unavailable'   -ConditionalTextColor ([System.Drawing.Color]::White) -BackgroundColor ([System.Drawing.Color]::Red)
         $Cond3 = New-ConditionalText -ConditionalType ContainsText 'Disconnected'  -ConditionalTextColor ([System.Drawing.Color]::White) -BackgroundColor ([System.Drawing.Color]::FromArgb(255,165,0))
-        $Cond4 = New-ConditionalText -ConditionalType ContainsText 'Yes' -Style $([OfficeOpenXml.Style.ExcelFillStyle]::Solid) -ConditionalTextColor ([System.Drawing.Color]::FromArgb(0,112,192)) -BackgroundColor ([System.Drawing.Color]::White)
+        $Cond4 = New-ConditionalText -ConditionalType ContainsText 'Yes' -PatternType $([OfficeOpenXml.Style.ExcelFillStyle]::Solid) -ConditionalTextColor ([System.Drawing.Color]::FromArgb(0,112,192)) -BackgroundColor ([System.Drawing.Color]::White)
 
         $Exc = New-Object System.Collections.Generic.List[System.Object]
         $Exc.Add('Subscription')

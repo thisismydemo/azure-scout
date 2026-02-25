@@ -24,9 +24,7 @@ Authors: Claudio Merola and Renato Gregio
 param($SCPath, $Sub, $Intag, $Resources, $Retirements, $Task ,$File, $SmaResources, $TableStyle, $Unsupported)
 If ($Task -eq 'Processing') {
 
-    $VNET = $Resources | Where-Object { $_.TYPE -eq 'microsoft.network/virtualnetworks' }        
-    $VNETProperties = $VNET.PROPERTIES
-    $VNETPeering = $Resources | Where-Object { $_.TYPE -eq 'microsoft.network/virtualnetworks' -and $null -ne $VNETProperties.Peering -and $VNETProperties.Peering -ne '' }
+    $VNETPeering = $Resources | Where-Object { $_.TYPE -eq 'microsoft.network/virtualnetworks' -and $_.PROPERTIES.virtualNetworkPeerings.Count -gt 0 }
 
     if($VNETPeering)
         {

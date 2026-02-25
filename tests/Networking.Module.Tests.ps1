@@ -95,7 +95,8 @@ BeforeAll {
             [PSCustomObject]@{
                 name = 'peer-to-hub'
                 properties = [PSCustomObject]@{
-                    remoteVirtualNetwork = [PSCustomObject]@{ id = '/net/vnet1' }
+                    remoteVirtualNetwork = [PSCustomObject]@{ id = '/subscriptions/sub-00000001/resourceGroups/rg-net/providers/Microsoft.Network/virtualNetworks/vnet-hub' }
+                    remoteAddressSpace = [PSCustomObject]@{ addressPrefixes = @('10.0.0.0/16') }
                     peeringState = 'Connected'; allowVirtualNetworkAccess = $true
                     allowForwardedTraffic = $true; allowGatewayTransit = $false; useRemoteGateways = $true
                     provisioningState = 'Succeeded'
@@ -110,15 +111,19 @@ BeforeAll {
     $script:MockResources += New-MockNetResource -Id '/net/vpngw1' -Name 'vpngw-prod' `
         -Type 'microsoft.network/virtualnetworkgateways' -Props ([PSCustomObject]@{
         gatewayType = 'Vpn'; vpnType = 'RouteBased'; sku = [PSCustomObject]@{ name = 'VpnGw1'; tier = 'VpnGw1' }
-        provisioningState = 'Succeeded'; enableBgp = $false
-        ipConfigurations = @(@{name='ipconf1';properties=[PSCustomObject]@{publicIPAddress=[PSCustomObject]@{id='/pip/pip1'}}})
+        provisioningState = 'Succeeded'; enableBgp = $false; activeActive = $false; enablePrivateIpAddress = $false
+        ipConfigurations = @([PSCustomObject]@{name='ipconf1';properties=[PSCustomObject]@{
+            publicIPAddress=[PSCustomObject]@{id='/subscriptions/sub-00000001/resourceGroups/rg-net/providers/Microsoft.Network/publicIPAddresses/pip-vpngw'}
+            subnet=[PSCustomObject]@{id='/subscriptions/sub-00000001/resourceGroups/rg-net/providers/Microsoft.Network/virtualNetworks/vnet-prod/subnets/GatewaySubnet'}
+        }})
         vpnClientConfiguration = [PSCustomObject]@{
             vpnClientAddressPool = [PSCustomObject]@{ addressPrefixes = @('172.16.0.0/24') }
             vpnClientProtocols = @('IkeV2','SSTP'); vpnAuthenticationTypes = @('Certificate')
             vpnClientRootCertificates = @(@{name='root1'}); vpnClientRevokedCertificates = @()
             radiusServers = $null; aadTenant = $null
         }
-        natRules = @(); customDns = @('10.0.0.10'); vpnGatewayGeneration = 'Generation1'
+        bgpSettings = [PSCustomObject]@{ asn = 65515; bgpPeeringAddress = '10.0.0.30'; peerWeight = 0 }
+        natRules = @(); customDnsServers = @('10.0.0.10'); vpnGatewayGeneration = 'Generation1'
     })
 
     # VPN Connection
@@ -256,7 +261,29 @@ BeforeAll {
     $script:MockResources += New-MockNetResource -Id '/net/vwan1' -Name 'vwan-prod' `
         -Type 'microsoft.network/virtualwans' -Props ([PSCustomObject]@{
         type = 'Standard'; allowVnetToVnetTraffic = $true; allowBranchToBranchTraffic = $true
+        disableVpnEncryption = $false
         virtualHubs = @([PSCustomObject]@{id='/net/vhub1'})
+        vpnSites = @([PSCustomObject]@{id='/net/vpnsite1'})
+        provisioningState = 'Succeeded'
+    })
+
+    # Virtual Hub (needed by VirtualWAN module)
+    $script:MockResources += New-MockNetResource -Id '/net/vhub1' -Name 'vhub-eastus' `
+        -Type 'microsoft.network/virtualhubs' -Props ([PSCustomObject]@{
+        addressPrefix = '10.10.0.0/24'; preferredRoutingGateway = 'ExpressRoute'
+        virtualRouterAsn = 65515; virtualRouterIps = @('10.10.0.1','10.10.0.2')
+        provisioningState = 'Succeeded'
+    })
+
+    # VPN Site (needed by VirtualWAN module)
+    $script:MockResources += New-MockNetResource -Id '/net/vpnsite1' -Name 'vpnsite-branch1' `
+        -Type 'microsoft.network/vpnsites' -Props ([PSCustomObject]@{
+        deviceProperties = [PSCustomObject]@{ deviceVendor = 'Cisco'; deviceModel = 'ISR 4451'; linkSpeedInMbps = 500 }
+        vpnSiteLinks = @([PSCustomObject]@{ properties = [PSCustomObject]@{
+            ipAddress = '203.0.113.1'
+            linkProperties = [PSCustomObject]@{ linkProviderName = 'Contoso ISP'; linkSpeedInMbps = 500 }
+        }})
+        addressSpace = [PSCustomObject]@{ addressPrefixes = @('192.168.1.0/24') }
         provisioningState = 'Succeeded'
     })
 
@@ -386,7 +413,7 @@ Describe 'VPN Connections — Enhanced IPsec fields present' {
         $result  = Invoke-Command -ScriptBlock $sb -ArgumentList $null, $null, $null, $script:MockResources, $null, 'Processing', $null, $null, 'Light20', $null
         $result | Should -Not -BeNullOrEmpty
         $row = $result | Select-Object -First 1
-        $row.Keys | Should -Contain 'Connection Type'
-        $row.Keys | Should -Contain 'Connection Status'
+        $row.Keys | Should -Contain 'Type'
+        $row.Keys | Should -Contain 'Status'
     }
 }

@@ -78,6 +78,7 @@ BeforeAll {
     $script:MockResources += New-MockAIResource -Id '/sub/sub-00000001/speech/speech1' -Name 'speech-prod' `
         -Type 'microsoft.cognitiveservices/accounts' -Kind 'SpeechServices' -Props ([PSCustomObject]@{
         endpoint = 'https://eastus.api.cognitive.microsoft.com/'; provisioningState = 'Succeeded'
+        datecreated = '2025-08-15T10:30:00Z'
         sku = [PSCustomObject]@{ name = 'S0' }
     })
 
@@ -85,6 +86,7 @@ BeforeAll {
     $script:MockResources += New-MockAIResource -Id '/sub/sub-00000001/ta/ta1' -Name 'lang-prod' `
         -Type 'microsoft.cognitiveservices/accounts' -Kind 'TextAnalytics' -Props ([PSCustomObject]@{
         endpoint = 'https://lang-prod.cognitiveservices.azure.com/'; provisioningState = 'Succeeded'
+        datecreated = '2025-06-01T08:00:00Z'
         sku = [PSCustomObject]@{ name = 'S' }
     })
 
@@ -92,6 +94,7 @@ BeforeAll {
     $script:MockResources += New-MockAIResource -Id '/sub/sub-00000001/cv/cv1' -Name 'cv-prod' `
         -Type 'microsoft.cognitiveservices/accounts' -Kind 'ComputerVision' -Props ([PSCustomObject]@{
         endpoint = 'https://cv-prod.cognitiveservices.azure.com/'; provisioningState = 'Succeeded'
+        datecreated = '2025-07-10T14:00:00Z'
         sku = [PSCustomObject]@{ name = 'S1' }
     })
 
@@ -99,6 +102,7 @@ BeforeAll {
     $script:MockResources += New-MockAIResource -Id '/sub/sub-00000001/cs/cs1' -Name 'cs-prod' `
         -Type 'microsoft.cognitiveservices/accounts' -Kind 'ContentSafety' -Props ([PSCustomObject]@{
         endpoint = 'https://cs-prod.cognitiveservices.azure.com/'; provisioningState = 'Succeeded'
+        datecreated = '2025-09-20T12:00:00Z'
         sku = [PSCustomObject]@{ name = 'S0' }
     })
 
@@ -106,6 +110,7 @@ BeforeAll {
     $script:MockResources += New-MockAIResource -Id '/sub/sub-00000001/fr/fr1' -Name 'fr-prod' `
         -Type 'microsoft.cognitiveservices/accounts' -Kind 'FormRecognizer' -Props ([PSCustomObject]@{
         endpoint = 'https://fr-prod.cognitiveservices.azure.com/'; provisioningState = 'Succeeded'
+        datecreated = '2025-05-05T09:00:00Z'
         sku = [PSCustomObject]@{ name = 'S0' }
     })
 
@@ -120,23 +125,35 @@ BeforeAll {
     # ML Workspace (generic)
     $script:MockResources += New-MockAIResource -Id '/sub/sub-00000001/mlws/mlws1' -Name 'mlws-prod' `
         -Type 'microsoft.machinelearningservices/workspaces' -Kind 'Default' -Props ([PSCustomObject]@{
-        storageAccount = '/sa/sa1'; keyVault = '/kv/kv1'; applicationInsights = '/ai/ai1'
+        storageAccount = '/subscriptions/sub-00000001/resourceGroups/rg-ai/providers/Microsoft.Storage/storageAccounts/saml01'
+        keyVault = '/subscriptions/sub-00000001/resourceGroups/rg-ai/providers/Microsoft.KeyVault/vaults/kvml01'
+        applicationInsights = '/subscriptions/sub-00000001/resourceGroups/rg-ai/providers/Microsoft.Insights/components/aiml01'
+        containerRegistry = '/subscriptions/sub-00000001/resourceGroups/rg-ai/providers/Microsoft.ContainerRegistry/registries/crml01'
         publicNetworkAccess = 'Enabled'; provisioningState = 'Succeeded'
+        creationTime = '2025-03-01T10:00:00Z'
         managedNetwork = [PSCustomObject]@{ isolationMode = 'Disabled' }
     })
 
     # AI Foundry Hub
     $script:MockResources += New-MockAIResource -Id '/sub/sub-00000001/mlws/hub1' -Name 'hub-prod' `
         -Type 'microsoft.machinelearningservices/workspaces' -Kind 'Hub' -Props ([PSCustomObject]@{
-        storageAccount = '/sa/sa1'; keyVault = '/kv/kv1'; applicationInsights = '/ai/ai1'
+        storageAccount = '/subscriptions/sub-00000001/resourceGroups/rg-ai/providers/Microsoft.Storage/storageAccounts/sahub01'
+        keyVault = '/subscriptions/sub-00000001/resourceGroups/rg-ai/providers/Microsoft.KeyVault/vaults/kvhub01'
+        applicationInsights = '/subscriptions/sub-00000001/resourceGroups/rg-ai/providers/Microsoft.Insights/components/aihub01'
+        containerRegistry = '/subscriptions/sub-00000001/resourceGroups/rg-ai/providers/Microsoft.ContainerRegistry/registries/crhub01'
         publicNetworkAccess = 'Enabled'; provisioningState = 'Succeeded'
+        creationTime = '2025-04-15T09:00:00Z'
     })
 
     # AI Foundry Project
     $script:MockResources += New-MockAIResource -Id '/sub/sub-00000001/mlws/proj1' -Name 'proj-chatapp' `
         -Type 'microsoft.machinelearningservices/workspaces' -Kind 'Project' -Props ([PSCustomObject]@{
-        storageAccount = '/sa/sa1'; keyVault = '/kv/kv1'; applicationInsights = '/ai/ai1'
+        storageAccount = '/subscriptions/sub-00000001/resourceGroups/rg-ai/providers/Microsoft.Storage/storageAccounts/saproj01'
+        keyVault = '/subscriptions/sub-00000001/resourceGroups/rg-ai/providers/Microsoft.KeyVault/vaults/kvproj01'
+        applicationInsights = '/subscriptions/sub-00000001/resourceGroups/rg-ai/providers/Microsoft.Insights/components/aiproj01'
+        containerRegistry = '/subscriptions/sub-00000001/resourceGroups/rg-ai/providers/Microsoft.ContainerRegistry/registries/crproj01'
         publicNetworkAccess = 'Enabled'; provisioningState = 'Succeeded'
+        creationTime = '2025-05-20T11:00:00Z'
         hubResourceId = '/sub/sub-00000001/mlws/hub1'
     })
 
