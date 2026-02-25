@@ -197,9 +197,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Files with no `.CATEGORY` header fall back to their folder name (backward compatible)
   - Logs filtered file names via `Write-Debug` for traceability
 
-#### Phase 19 — Version Bump
+#### Phase 19 — Polish & Documentation
 
-- **`AzureScout.psd1`** — `ModuleVersion` updated from `1.0.0` to **`2.0.0`** (major version for breaking changes: scope default change, category filtering, rearchitected module structure)
 - Updated `README.md` with ARM-only default documentation, expanded permission tables (ARM + Graph), resource provider requirements, and troubleshooting guide
 - Added Markdown and AsciiDoc to output file table in README
 

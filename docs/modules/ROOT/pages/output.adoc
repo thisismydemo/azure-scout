@@ -56,7 +56,7 @@ Invoke-AzureScout -TenantID '00000000-...' -ReportDir 'D:\Reports' -ReportName '
 {
   "_metadata": {
     "tool": "AzureScout",
-    "version": "2.0.0",
+    "version": "1.0.0",
     "tenantId": "...",
     "subscriptions": ["..."],
     "generatedAt": "2026-02-25T...",

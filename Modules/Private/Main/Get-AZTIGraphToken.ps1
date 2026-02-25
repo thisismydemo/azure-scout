@@ -21,7 +21,7 @@
     This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
-    Version: 2.0.0
+    Version: 1.0.0
     Authors: thisismydemo
     Modified: 2026-02-24 - Changed from Get-AzAccessToken to Azure CLI for proper Graph scopes
 #>

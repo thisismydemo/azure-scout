@@ -14,9 +14,6 @@ AzureScout follows https://keepachangelog.com/en/1.1.0/[Keep a Changelog] format
 |===
 | Version | Highlights
 
-| *v2.0.0*
-| Full rename to AzureScout (AZSC prefix), 170+ ARM modules, 15 Entra ID modules, Excel + JSON + Markdown + AsciiDoc output, draw.io diagrams, permission pre-flight, category filtering, Antora docs site
-
 | *v1.0.0*
-| Initial fork from https://github.com/microsoft/ARI[microsoft/ARI] v3.6.11
+| Full rename to AzureScout (AZSC prefix), 170+ ARM modules, 15 Entra ID modules, Excel + JSON + Markdown + AsciiDoc output, draw.io diagrams, permission pre-flight, category filtering, Antora docs site
 |===

@@ -42,7 +42,7 @@
     This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
-    Version: 2.0.0
+    Version: 1.0.0
     Authors: Claudio Merola, thisismydemo
     Refactored (20.4.1): delegates to Invoke-AZSCPermissionAudit to avoid duplicate logic.
 #>
