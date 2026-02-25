@@ -221,3 +221,6 @@ additions.md
 
 # Test output (generated reports)
 tests/test-output/
+# Real data dumps (keep synthetic sample committed)
+tests/datadump/*
+!tests/datadump/sample-report.json

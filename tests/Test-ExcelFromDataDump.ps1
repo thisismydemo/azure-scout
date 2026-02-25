@@ -58,10 +58,15 @@ Write-Host "`n══════════════════════
 Write-Host "  AzureScout — Excel Report Test Harness" -ForegroundColor Cyan
 Write-Host "═══════════════════════════════════════════════════════════`n" -ForegroundColor DarkCyan
 
-# Find the JSON report file
-$JsonFile = Get-ChildItem -Path $DataDumpPath -Filter '*.json' -ErrorAction SilentlyContinue | Select-Object -First 1
+# Find the JSON report file — prefer the synthetic sample if present
+$SampleFile = Join-Path $DataDumpPath 'sample-report.json'
+if (Test-Path $SampleFile) {
+    $JsonFile = Get-Item $SampleFile
+} else {
+    $JsonFile = Get-ChildItem -Path $DataDumpPath -Filter '*.json' -ErrorAction SilentlyContinue | Select-Object -First 1
+}
 if (-not $JsonFile) {
-    Write-Error "No JSON report file found in $DataDumpPath. Run a live scan first to generate test data."
+    Write-Error "No JSON report file found in $DataDumpPath. Run New-SyntheticSampleReport.ps1 or a live scan first."
     return
 }
 
@@ -266,6 +271,16 @@ Write-Host $File -ForegroundColor White
 
 # ── Phase 1: Report Orchestration ────────────────────────────────────────
 Write-Host "`n── Phase 1: Report Generation ──────────────────────────────" -ForegroundColor DarkCyan
+
+# Stub for Register-AZSCInventoryModule (used by Identity/IdentityProviders.ps1 and
+# Identity/SecurityDefaults.ps1 which use a newer registration pattern not yet wired
+# into the main reporting pipeline). Without this stub the dot-sourcing fails.
+if (-not (Get-Command 'Register-AZSCInventoryModule' -ErrorAction SilentlyContinue)) {
+    function global:Register-AZSCInventoryModule {
+        param($ModuleId, $PhaseId, $ScriptBlock)
+        # no-op stub — these modules are skipped during Excel generation
+    }
+}
 
 $ReportingTimer = [System.Diagnostics.Stopwatch]::StartNew()
 
