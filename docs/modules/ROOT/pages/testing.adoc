@@ -1,0 +1,178 @@
+= Testing
+:description: How to run and write Pester tests for AzureScout.
+:keywords: testing, pester, unit-tests, coverage, azurescout
+
+AzureScout maintains **100 % test coverage** across all 237 PowerShell scripts.
+The test suite uses https://pester.dev[Pester 5] and runs entirely offline — no Azure credentials or live API calls required.
+
+== Prerequisites
+
+[cols="1,2", options="header"]
+|===
+| Requirement | Install Command
+
+| PowerShell 7+
+| Built-in on modern Windows; `brew install --cask powershell` on macOS
+
+| Pester 5.3.2+
+| `Install-Module Pester -MinimumVersion 5.3.2 -Force`
+
+| ImportExcel
+| `Install-Module ImportExcel -Force`
+|===
+
+== Running the Full Suite
+
+[source,powershell]
+----
+Import-Module Pester -RequiredVersion 5.3.2 -Force
+Invoke-Pester -Path .\tests\ -Output Detailed
+----
+
+This runs all 29 test files (~1,240 tests) and typically completes in under 60 seconds.
+
+== Running a Single Test File
+
+[source,powershell]
+----
+# Run only the Compute module tests
+Invoke-Pester -Path .\tests\Compute.Module.Tests.ps1 -Output Detailed
+
+# Run only the private main-function tests
+Invoke-Pester -Path .\tests\Private.Main.Tests.ps1 -Output Detailed
+----
+
+== Test File Overview
+
+The `tests/` directory contains 29 Pester files organized by area:
+
+=== Inventory Module Tests (15 files)
+
+Each category of Azure resource modules has a dedicated test file that validates both the **Processing** phase (data extraction/transformation) and the **Reporting** phase (Excel output).
+
+[cols="2,1,2", options="header"]
+|===
+| Test File | Modules | Category
+
+| `AI.Module.Tests.ps1` | 27 | AI & Machine Learning
+| `Analytics.Module.Tests.ps1` | 6 | Analytics
+| `Compute.Module.Tests.ps1` | 14 | Compute & AVD
+| `Containers.Module.Tests.ps1` | 6 | Containers
+| `Databases.Module.Tests.ps1` | 13 | Databases
+| `Hybrid.Module.Tests.ps1` | 16 | Hybrid & Arc
+| `Identity.Module.Tests.ps1` | 18 | Identity & Entra ID
+| `Integration.Module.Tests.ps1` | 2 | Integration
+| `IoT.Module.Tests.ps1` | 1 | IoT
+| `Management.Module.Tests.ps1` | 14 | Management & Governance
+| `Monitor.Module.Tests.ps1` | 24 | Monitoring
+| `Networking.Module.Tests.ps1` | 21 | Networking
+| `Security.Module.Tests.ps1` | 5 | Security
+| `Storage.Module.Tests.ps1` | 2 | Storage
+| `Web.Module.Tests.ps1` | 2 | Web
+|===
+
+=== Private Module Tests (4 files)
+
+These validate internal helper scripts — file existence, syntax (via `Parser::ParseFile`), and function definitions.
+
+[cols="2,1", options="header"]
+|===
+| Test File | Scripts Covered
+
+| `Private.Main.Tests.ps1` | 13 (orchestration, auth, caching)
+| `Private.Extraction.Tests.ps1` | 9 (API, Graph, subscriptions)
+| `Private.Processing.Tests.ps1` | 9 (cache, advisory, policy jobs)
+| `Private.Reporting.Tests.ps1` | 21 (Excel, JSON, Markdown, AsciiDoc)
+|===
+
+=== Public Function & Integration Tests (10 files)
+
+[cols="2,2", options="header"]
+|===
+| Test File | Purpose
+
+| `Public.Functions.Tests.ps1` | 14 public utility scripts (Diagram, Jobs)
+| `AzureScout.Tests.ps1` | Module manifest & import validation
+| `Invoke-AzureScout.Tests.ps1` | Main entry-point parameter handling
+| `Connect-AZSCLoginSession.Tests.ps1` | Authentication flows
+| `Invoke-AZSCGraphRequest.Tests.ps1` | Graph API request handling
+| `Test-AZSCPermissions.Tests.ps1` | Permission checker logic
+| `Start-AZSCEntraExtraction.Tests.ps1` | Entra ID extraction
+| `PermissionAudit.Tests.ps1` | Permission audit pipeline
+| `OutputFormat.Tests.ps1` | Output format routing
+| `CategoryFiltering.Tests.ps1` | Category filter validation
+|===
+
+== How Inventory Module Tests Work
+
+Each inventory module test follows this pattern:
+
+. **Discovery** — A `$ResourceModules` array lists every module with its file path, Azure resource type, and Excel worksheet name.
+. **Mock Resources** — `BeforeAll` creates in-memory mock Azure resources (hashtables) that match the shapes each module expects.
+. **Processing Phase** — The module script is loaded as a `ScriptBlock` and invoked with `Task = 'Processing'`, mock resources, and a temp directory. The test asserts the function returns non-null data.
+. **Reporting Phase** — The same script is invoked with `Task = 'Reporting'` and the processed data. The test asserts the call completes without throwing.
+
+[source,powershell]
+----
+# Simplified example from Compute.Module.Tests.ps1
+$content = Get-Content -Path $module.File -Raw
+$sb = [ScriptBlock]::Create($content)
+
+# Processing phase
+$result = Invoke-Command -ScriptBlock $sb -ArgumentList @(
+    $TempDir, $null, $null, $MockResources, $null,
+    'Processing', $null, $null, 'Medium', $null
+)
+$result | Should -Not -BeNullOrEmpty
+
+# Reporting phase
+{ Invoke-Command -ScriptBlock $sb -ArgumentList @(
+    $TempDir, $null, $null, $MockResources, $null,
+    'Reporting', $ExcelFile, $result, 'Medium', $null
+) } | Should -Not -Throw
+----
+
+== How Private Module Tests Work
+
+Private module tests validate scripts that are not directly invoked by users:
+
+* **File existence** — Confirms every expected `.ps1` file is present.
+* **Syntax validation** — Uses `[System.Management.Automation.Language.Parser]::ParseFile()` to catch parse errors without executing any code.
+* **Function definitions** — Verifies each script defines the expected function name via regex search of the file content.
+* **Unit tests** — For simple utilities (e.g., `Clear-AZSCMemory`, `Set-AZSCFolder`), the function is dot-sourced and invoked with mocked dependencies.
+
+== Writing Tests for a New Module
+
+When you add a new inventory module:
+
+. Identify which category test file it belongs to (e.g., `Compute.Module.Tests.ps1`).
+. Add an entry to the `$ResourceModules` array with `Name`, `File`, `Type`, and `Worksheet`.
+. Add a mock resource hashtable to the `$MockResources` array that matches the module's expected resource type.
+. Run the test file and verify both Processing and Reporting phases pass.
+
+TIP: Use the `Module-template.tpl` in `Modules/Public/InventoryModules/` as the starting point for both the module and its corresponding test entry.
+
+== Common Pitfalls
+
+* **Case-sensitive hashtable keys** — PowerShell hashtable keys are case-insensitive; avoid duplicate keys like `SKU` and `sku` in mock data.
+* **ARM ID format** — Some modules call `.split('/')[8]` on resource IDs. Always use full ARM paths (e.g., `/subscriptions/.../resourceGroups/.../providers/.../name`) in mocks.
+* **DateTime values** — Modules that cast properties to `[datetime]` will fail if mock values aren't valid date strings.
+* **Cross-resource lookups** — Some modules (e.g., Backup) join data across multiple resource types. Include mock resources for all related types.
+* **Export-Excel -PassThru** — This pattern does not save the file to disk. Test the Reporting phase with `Should -Not -Throw` rather than checking for file existence.
+
+== CI / CD Integration
+
+To run the test suite in a CI pipeline (GitHub Actions, Azure DevOps, etc.):
+
+[source,yaml]
+----
+# GitHub Actions example
+- name: Run Pester Tests
+  shell: pwsh
+  run: |
+    Install-Module Pester -RequiredVersion 5.3.2 -Force -Scope CurrentUser
+    Install-Module ImportExcel -Force -Scope CurrentUser
+    Import-Module Pester -RequiredVersion 5.3.2 -Force
+    $result = Invoke-Pester -Path ./tests/ -Output Detailed -PassThru
+    if ($result.FailedCount -gt 0) { exit 1 }
+----

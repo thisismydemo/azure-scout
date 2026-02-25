@@ -475,6 +475,20 @@ Invoke-AzureScout -TenantID <id> -Category 'AI + Machine Learning'
 
 This project is forked from [microsoft/ARI](https://github.com/microsoft/ARI) (Azure Resource Inventory) v3.6.11, originally created by **Claudio Merola** and **Renato Gregio**. See [CREDITS.md](CREDITS.md) for full attribution details.
 
+## Testing
+
+AzureScout ships with a comprehensive Pester 5 test suite covering **100% of all 237 scripts** (29 test files, ~1,240 tests). Tests run entirely offline with no Azure credentials required.
+
+```powershell
+# Run the full test suite
+Install-Module Pester -MinimumVersion 5.3.2 -Force
+Install-Module ImportExcel -Force
+Import-Module Pester -RequiredVersion 5.3.2 -Force
+Invoke-Pester -Path .\tests\ -Output Detailed
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md#testing) for details on test structure, writing new tests, and CI integration.
+
 ## Contributing
 
 Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for policies and procedures.

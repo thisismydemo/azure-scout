@@ -109,6 +109,81 @@ To maintain code quality and consistency:
 - **Backward Compatibility**: Ensure your changes don't break existing functionality
 - **Test Thoroughly**: Test in various environments (Windows, Linux, Cloud Shell)
 
+## Testing
+
+AzureScout maintains **100% test coverage** across all 237 PowerShell scripts using [Pester 5](https://pester.dev). The full suite runs offline — no Azure credentials or live API calls are required.
+
+### Prerequisites
+
+```powershell
+Install-Module Pester -MinimumVersion 5.3.2 -Force
+Install-Module ImportExcel -Force
+```
+
+### Running Tests
+
+```powershell
+# Run the full suite (~1,240 tests)
+Import-Module Pester -RequiredVersion 5.3.2 -Force
+Invoke-Pester -Path .\tests\ -Output Detailed
+
+# Run a single test file
+Invoke-Pester -Path .\tests\Compute.Module.Tests.ps1 -Output Detailed
+```
+
+### Test Structure
+
+The `tests/` directory contains **29 Pester test files** organized by area:
+
+| Area | Files | What They Cover |
+|------|:-----:|-----------------|
+| Inventory Modules | 15 | One per Azure category (AI, Compute, Networking, etc.) — validates Processing and Reporting phases |
+| Private Modules | 4 | Internal helpers: Main, Extraction, Processing, Reporting — file existence, syntax, function definitions |
+| Public Functions | 1 | Diagram and Jobs utility scripts |
+| Integration Tests | 9 | Module manifest, auth, Graph requests, permissions, output formats, category filtering |
+
+### How Inventory Module Tests Work
+
+Each inventory module test follows this pattern:
+
+1. **Discovery** — A `$ResourceModules` array lists every module with its file path, Azure resource type, and worksheet name
+2. **Mock Resources** — `BeforeAll` creates in-memory mock Azure resources (hashtables) matching each module's expectations
+3. **Processing Phase** — The module script is loaded as a `ScriptBlock` and invoked with `Task = 'Processing'`. The test asserts non-null output
+4. **Reporting Phase** — The same script is invoked with `Task = 'Reporting'` and the processed data. The test asserts the call completes without throwing
+
+### Writing Tests for New Modules
+
+When adding a new inventory module:
+
+1. Identify the appropriate category test file (e.g., `Compute.Module.Tests.ps1`)
+2. Add an entry to the `$ResourceModules` array with `Name`, `File`, `Type`, and `Worksheet`
+3. Add a mock resource hashtable matching your module's expected resource type
+4. Run the test file and verify both **Processing** (returns data) and **Reporting** (does not throw) phases pass
+
+### Common Pitfalls
+
+- **Case-sensitive hashtable keys** — Avoid duplicate keys like `SKU` and `sku` in mock data
+- **ARM ID format** — Use full ARM paths (e.g., `/subscriptions/.../resourceGroups/.../providers/.../name`) — some modules call `.split('/')[8]`
+- **DateTime values** — Modules casting to `[datetime]` require valid date strings in mocks
+- **Cross-resource lookups** — Modules joining multiple resource types need mock resources for all related types
+- **Export-Excel -PassThru** — Does not save to disk; test Reporting with `Should -Not -Throw` instead of file existence
+
+### CI / CD Integration
+
+```yaml
+# GitHub Actions example
+- name: Run Pester Tests
+  shell: pwsh
+  run: |
+    Install-Module Pester -RequiredVersion 5.3.2 -Force -Scope CurrentUser
+    Install-Module ImportExcel -Force -Scope CurrentUser
+    Import-Module Pester -RequiredVersion 5.3.2 -Force
+    $result = Invoke-Pester -Path ./tests/ -Output Detailed -PassThru
+    if ($result.FailedCount -gt 0) { exit 1 }
+```
+
+For the full testing guide, see `docs/modules/ROOT/pages/testing.adoc`.
+
 ## Project Structure
 
 The main module **AzureScout.psm1** is only responsible for dot sourcing all the .ps1 modules.
