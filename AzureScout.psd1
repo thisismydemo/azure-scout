@@ -21,13 +21,13 @@ CompatiblePSEditions = @('Desktop', 'Core')
 GUID = 'a0785538-fd96-4960-bf93-c733f88519e0'
 
 # Author of this module
-Author = 'thisismydemo'
+Author = 'Kristopher Turner'
 
 # Company or vendor of this module
-CompanyName = 'thisismydemo'
+CompanyName = 'Hybrid Cloud Solutions'
 
 # Copyright statement for this module
-Copyright = '(c) 2026 thisismydemo. All rights reserved.'
+Copyright = '(c) 2026 Hybrid Cloud Solutions. All rights reserved.'
 
 # Description of the functionality provided by this module
 Description = 'AzureScout — discover and inventory everything in your Azure environment. Generates Excel, JSON, Markdown, and AsciiDoc reports from Azure resources, Entra ID, and identity objects using Azure Resource Graph and Microsoft Graph REST APIs. See everything. Own your cloud.'
