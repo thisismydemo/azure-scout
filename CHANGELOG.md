@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+#### Power BI / Microsoft Fabric Export (Issue #17)
+
+- **`Export-AZSCPowerBIReport.ps1`** (`Modules/Private/Reporting/`) — New function that exports normalized inventory data as a flat CSV bundle optimized for Power BI Desktop and Microsoft Fabric:
+  - `_metadata.csv` — Scan metadata (tenant ID, date, scope, version, subscription count)
+  - `Subscriptions.csv` — Subscription dimension table (`SubscriptionId`, `SubscriptionName`)
+  - `Resources_{Module}.csv` — One file per ARM inventory module with `_Category` and `_Module` columns
+  - `Entra_{Module}.csv` — One file per Entra ID / Identity module with `_Category` and `_Module` columns
+  - `_relationships.json` — Star-schema relationship manifest describing many-to-one joins from resource tables to `Subscriptions` via `Subscription → SubscriptionName`
+- **`-OutputFormat PowerBI`** added to `Invoke-AzureScout` `ValidateSet` — generates the `PowerBI/` folder as a sibling of the main report file; included in `All` by default
+- **`Test-PowerBIFromDataDump.ps1`** (`tests/`) — Offline test harness that reconstructs the `ReportCache` from a JSON data dump and validates the full CSV bundle without requiring a live Azure connection
+- Pester tests in `OutputFormat.Tests.ps1` covering `Export-AZSCPowerBIReport` function discovery, `_metadata.csv` content, `Subscriptions.csv`, `_relationships.json` validity, and `Resources_*.csv` / `Entra_*.csv` file generation with correct columns
+
 ## [1.0.0] - 2026-02-25
 
 ### Added

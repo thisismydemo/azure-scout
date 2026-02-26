@@ -15,7 +15,7 @@ description: Complete reference of all Invoke-AzureScout and Test-AZSCPermission
 | `-ResourceGroup` | Limit to one or more specific resource groups |
 | `-ManagementGroup` | Inventory all subscriptions under a management group |
 | `-Scope` | `ArmOnly` (default), `All`, or `EntraOnly` — controls which data domains are inventoried |
-| `-OutputFormat` | `All` (default), `Excel`, `Json`, `Markdown` (`MD`), `AsciiDoc` (`Adoc`) — controls report file types |
+| `-OutputFormat` | `All` (default), `Excel`, `Json`, `Markdown` (`MD`), `AsciiDoc` (`Adoc`), `PowerBI` — controls report file types; `PowerBI` generates flat normalized CSVs in a `PowerBI/` subfolder optimized for Power BI / Microsoft Fabric |
 | `-Category` | Filter by resource category: `AI`, `Analytics`, `Compute`, `Containers`, `Databases`, `Hybrid`, `Identity`, `Integration`, `IoT`, `Management`, `Monitor`, `Networking`, `Security`, `Storage`, `Web` — see [Category Filtering](category-filtering.md) |
 
 ### Authentication

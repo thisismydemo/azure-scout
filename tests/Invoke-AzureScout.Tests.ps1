@@ -70,6 +70,12 @@ Describe 'Invoke-AzureScout — Parameter Validation' {
             $attr.ValidValues | Should -Contain 'Json'
         }
 
+        It 'Accepts "PowerBI" as a valid OutputFormat value' {
+            $cmd = Get-Command Invoke-AzureScout
+            $attr = $cmd.Parameters['OutputFormat'].Attributes | Where-Object { $_ -is [System.Management.Automation.ValidateSetAttribute] }
+            $attr.ValidValues | Should -Contain 'PowerBI'
+        }
+
         It 'Rejects an invalid OutputFormat value' {
             { Invoke-AzureScout -TenantID 'test' -OutputFormat 'Csv' } | Should -Throw
         }

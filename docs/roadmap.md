@@ -74,7 +74,7 @@ Focus: depth, breadth, and multi-tenant scenarios.
 | Resource drift reporting | Compare two inventory runs and report what was added, removed, or changed | :bulb: Idea |
 | Azure DevOps integration | Inventory Azure DevOps organizations, projects, pipelines alongside Azure resources | :bulb: Idea |
 | GitHub Actions module | Publish as a GitHub Action so pipelines can generate inventory reports without local setup | :bulb: Idea |
-| Fabric / Power BI export | Export normalized inventory data to a Power BI-ready dataset | :bulb: Idea |
+| Fabric / Power BI export (#17) | `-OutputFormat PowerBI` generates a flat normalized CSV bundle (`PowerBI/` folder) with `_metadata.csv`, `Subscriptions.csv`, per-module `Resources_*.csv` and `Entra_*.csv` files, and a `_relationships.json` star-schema manifest for Power BI Desktop / Microsoft Fabric | :white_check_mark: Done |
 | IoT deep coverage | IoT Hub device registry, Device Provisioning Service, Digital Twins topology | :bulb: Idea |
 
 ## Long-term Vision

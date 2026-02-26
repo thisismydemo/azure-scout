@@ -93,9 +93,12 @@
 
 .PARAMETER OutputFormat
     Controls which report formats are generated. Valid values:
-    - All (default): Generate both Excel (.xlsx) and JSON (.json) reports
-    - Excel: Generate only the Excel report (skip JSON)
-    - Json: Generate only the JSON report (skip Excel generation)
+    - All (default): Generate Excel (.xlsx), JSON (.json), Markdown (.md), AsciiDoc (.adoc), and Power BI CSV bundle
+    - Excel: Generate only the Excel report
+    - Json: Generate only the JSON report
+    - Markdown (MD): Generate only the Markdown report
+    - AsciiDoc (Adoc): Generate only the AsciiDoc report
+    - PowerBI: Generate only the Power BI CSV bundle (flat CSVs + _relationships.json in a PowerBI/ subfolder)
 
 .PARAMETER SkipPermissionCheck
     Skip the pre-flight permission validation. By default, AZSC checks ARM and Graph
@@ -248,7 +251,7 @@ Function Invoke-AzureScout {
         [switch]$PermissionAudit,
         [Alias('EntraAudit','CheckEntraPermissions')]
         [switch]$IncludeEntraPermissions,
-        [ValidateSet('All', 'Excel', 'Json', 'Markdown', 'AsciiDoc', 'MD', 'Adoc')]
+        [ValidateSet('All', 'Excel', 'Json', 'Markdown', 'AsciiDoc', 'MD', 'Adoc', 'PowerBI')]
         [string]$OutputFormat = 'All',
         [ValidateSet('All', 'AI', 'Analytics', 'Compute', 'Containers', 'Databases', 'Hybrid', 'Identity', 'Integration', 'IoT', 'Management', 'Monitor', 'Networking', 'Security', 'Storage', 'Web')]
         [string[]]$Category = @('All')
@@ -331,7 +334,7 @@ Function Invoke-AzureScout {
         Write-Host " -AzureEnvironment        :  Change the Azure Cloud Environment. "
         Write-Host " -ReportName              :  Change the Default Name of the report. "
         Write-Host " -ReportDir               :  Change the Default Path of the report. "
-        Write-Host " -OutputFormat            :  Choose report format: All (default), Excel, Json, Markdown, AsciiDoc. "
+        Write-Host " -OutputFormat            :  Choose report format: All (default), Excel, Json, Markdown, AsciiDoc, PowerBI. "
         Write-Host " -Scope                   :  Data scope. ArmOnly (default), EntraOnly, All. Use -Scope All to include Entra ID. "
         Write-Host " -CheckResourceProviders  :  Warn if required Azure resource providers are not registered. "
         Write-Host " -SkipPermissionCheck     :  Skip pre-flight permission validation. "
@@ -607,6 +610,13 @@ Function Invoke-AzureScout {
     {
         Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting AsciiDoc report export.')
         $AsciiDocFile = Export-AZSCAsciiDocReport -ReportCache $ReportCache -File $File -TenantID $TenantID -Subscriptions $Subscriptions -Scope $Scope
+    }
+
+    # ── Power BI CSV Report ───────────────────────────────────────────────
+    if ($OutputFormat -in ('All', 'PowerBI'))
+    {
+        Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Starting Power BI CSV export.')
+        $PowerBIDir = Export-AZSCPowerBIReport -ReportCache $ReportCache -File $File -TenantID $TenantID -Subscriptions $Subscriptions -Scope $Scope
     }
 
     $ReportingRunTime.Stop()

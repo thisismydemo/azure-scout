@@ -25,6 +25,7 @@ Invoke-AzureScout -TenantID '00000000-...' -ReportDir 'D:\Reports' -ReportName '
 | `AzureScout_Report_<timestamp>.json` | JSON | Machine-readable inventory with `_metadata` envelope |
 | `AzureScout_Report_<timestamp>.md` | Markdown | GitHub-Flavored Markdown with pipe tables per module |
 | `AzureScout_Report_<timestamp>.adoc` | AsciiDoc | AsciiDoc document for Antora/Confluence rendering |
+| `PowerBI/` | CSV bundle | Flat normalized CSVs optimized for Power BI / Microsoft Fabric import (see [Power BI Export](#power-bi-export)) |
 | `AzureScout_Diagram_<timestamp>.drawio` | Draw.io | Network topology diagram (skip with `-SkipDiagram`) |
 
 ## JSON Structure
@@ -90,6 +91,40 @@ Invoke-AzureScout -TenantID '00000000-...' -OutputFormat Markdown
 # AsciiDoc only
 Invoke-AzureScout -TenantID '00000000-...' -OutputFormat AsciiDoc
 
+# Power BI CSV bundle only
+Invoke-AzureScout -TenantID '00000000-...' -OutputFormat PowerBI
+
 # All formats (default)
 Invoke-AzureScout -TenantID '00000000-...' -OutputFormat All
 ```
+
+## Power BI Export
+
+When `-OutputFormat PowerBI` (or `All`) is used, AzureScout generates a `PowerBI/` subfolder alongside the main report containing flat normalized CSV files ready for direct import into Power BI Desktop or Microsoft Fabric.
+
+### Output Structure
+
+```
+PowerBI/
+    _metadata.csv               — Scan metadata (tenant, date, scope, version)
+    _relationships.json         — Star-schema relationship definitions for Power BI data model
+    Subscriptions.csv           — Subscription dimension table (SubscriptionId, SubscriptionName)
+    Resources_{Module}.csv      — One file per ARM inventory module
+    Entra_{Module}.csv          — One file per Entra ID / Identity module
+```
+
+Every resource CSV includes `_Category` and `_Module` columns for cross-table slicing, plus a `Subscription` column that links to `Subscriptions.csv` via the relationships manifest.
+
+### Importing into Power BI Desktop
+
+1. Open Power BI Desktop → **Get Data** → **Folder**
+2. Select the `PowerBI/` directory
+3. Click **Transform Data** and combine the CSVs by prefix (`Resources_*`, `Entra_*`)
+4. Use `_relationships.json` as a reference to configure the data model relationships (or load it as a separate JSON table)
+5. Build slicers on `Subscription`, `_Category`, `Location`, and `_Module`
+
+### Importing into Microsoft Fabric
+
+1. Upload the `PowerBI/` folder to a Fabric **Lakehouse** or **OneLake**
+2. Use **Dataflows Gen2** or **Notebooks** to ingest the CSVs as Delta tables
+3. Build a Fabric **Semantic Model** using the relationship definitions in `_relationships.json`
