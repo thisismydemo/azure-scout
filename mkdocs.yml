@@ -1,0 +1,79 @@
+site_name: AzureScout Documentation
+site_description: See everything. Own your cloud. A PowerShell module for comprehensive Azure + Entra ID discovery and inventory.
+site_url: https://thisismydemo.github.io/azure-scout
+repo_url: https://github.com/thisismydemo/azure-scout
+repo_name: thisismydemo/azure-scout
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Prerequisites & Required Modules: prerequisites.md
+    - Authentication: authentication.md
+    - Usage Guide: usage.md
+    - Permissions: permissions.md
+    - Parameters Reference: parameters.md
+    - Category Filtering: category-filtering.md
+    - Output Files & Formats: output.md
+    - Troubleshooting: troubleshooting.md
+    - Testing: testing.md
+  - Module Reference:
+    - ARM Modules: arm-modules.md
+    - Entra ID Modules: entra-modules.md
+    - Coverage Table: coverage-table.md
+    - Category Structure: category-structure.md
+  - Project:
+    - Roadmap: roadmap.md
+    - Repository Structure: folder-structure.md
+    - Contributing: contributing.md
+    - Credits & Attribution: credits.md
+    - Differences from ARI: ari-differences.md
+    - Changelog: changelog.md

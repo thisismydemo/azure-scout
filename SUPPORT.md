@@ -1,7 +1,7 @@
 # Support for Azure Scout
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/modules/ROOT/images/azurescout-banner.svg" width="400">
+  <img src="https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/images/azurescout-banner.svg" width="400">
   <br><br>
   <p>
     <a href="https://github.com/thisismydemo/azure-scout/issues"><img src="https://img.shields.io/github/issues/thisismydemo/azure-scout" alt="GitHub Issues"></a>

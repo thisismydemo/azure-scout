@@ -124,7 +124,7 @@ PrivateData = @{
         ProjectUri = 'https://github.com/thisismydemo/azure-scout'
 
         # A URL to an icon representing this module.
-        IconUri = 'https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/modules/ROOT/images/azurescout-icon.svg'
+        IconUri = 'https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/images/azurescout-icon.svg'
 
         # ReleaseNotes of this module
         ReleaseNotes = 'v1.0.0 — Initial public release. Full Azure ARM + Entra ID inventory with Excel, JSON, Markdown, and AsciiDoc output. 110 inventory modules across 17 categories. Permission audit, category filtering, Draw.io diagrams, and multi-format reporting.'

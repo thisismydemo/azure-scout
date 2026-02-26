@@ -1,7 +1,7 @@
 # Security Policy
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/modules/ROOT/images/azurescout-banner.svg" width="400">
+  <img src="https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/images/azurescout-banner.svg" width="400">
   <h2>Azure Scout Security Policy</h2>
 </div>
 

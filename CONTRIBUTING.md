@@ -1,7 +1,7 @@
 # Contributing to Azure Scout
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/modules/ROOT/images/azurescout-banner.svg" width="400">
+  <img src="https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/images/azurescout-banner.svg" width="400">
   <h3>Guidelines for Community Contributions</h3>
   
   [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/thisismydemo/azure-scout/pulls)
@@ -182,7 +182,7 @@ When adding a new inventory module:
     if ($result.FailedCount -gt 0) { exit 1 }
 ```
 
-For the full testing guide, see `docs/modules/ROOT/pages/testing.adoc`.
+For the full testing guide, see `docs/testing.md`.
 
 ## Project Structure
 

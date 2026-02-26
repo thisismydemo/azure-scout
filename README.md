@@ -7,7 +7,7 @@ Tags: PowerShell, Azure, Inventory, Entra ID, Excel Report, JSON
 
 <div align="center">
 
-![AzureScout](https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/modules/ROOT/images/azurescout-banner.svg)
+![AzureScout](https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/images/azurescout-banner.svg)
 
 # AzureScout
 
@@ -29,7 +29,7 @@ Tags: PowerShell, Azure, Inventory, Entra ID, Excel Report, JSON
 >
 > AzureScout is a fork of Microsoft's [Azure Resource Inventory](https://github.com/microsoft/ARI) (ARI) v3.6.11, created by **[Claudio Merola](https://github.com/Claudio-Merola)** and **[Renato Gregio](https://github.com/RenatoGregio)**. The ARI project provided the entire foundation — 171 ARM inventory modules, draw.io diagram engine, Excel reporting pipeline, and Azure Automation support — that AzureScout builds upon. We are deeply grateful for their work.
 >
-> See [CREDITS.md](CREDITS.md) for full attribution and [Differences from ARI](docs/modules/ROOT/pages/ari-differences.adoc) for what AzureScout has changed.
+> See [CREDITS.md](CREDITS.md) for full attribution and [Differences from ARI](docs/ari-differences.md) for what AzureScout has changed.
 
 ## Key Features
 - ARM and Entra ID inventory
@@ -74,20 +74,20 @@ Invoke-AzureScout -TenantID <your-tenant-id> -Scope EntraOnly
 
 For detailed guides, module catalog, parameters, permissions, troubleshooting, testing, and contributing, see:
 
-- [Full Documentation](docs/modules/ROOT/pages/index.adoc)
-- [Prerequisites & Required Modules](docs/modules/ROOT/pages/prerequisites.adoc)
-- [Authentication](docs/modules/ROOT/pages/authentication.adoc)
-- [Usage Guide](docs/modules/ROOT/pages/usage.adoc)
-- [Parameters Reference](docs/modules/ROOT/pages/parameters.adoc)
-- [Permissions](docs/modules/ROOT/pages/permissions.adoc)
-- [Category Filtering](docs/modules/ROOT/pages/category-filtering.adoc)
-- [Output Files & Formats](docs/modules/ROOT/pages/output.adoc)
-- [Troubleshooting](docs/modules/ROOT/pages/troubleshooting.adoc)
-- [ARM Modules](docs/modules/ROOT/pages/arm-modules.adoc)
-- [Entra Modules](docs/modules/ROOT/pages/entra-modules.adoc)
-- [Testing](docs/modules/ROOT/pages/testing.adoc)
-- [Contributing](docs/modules/ROOT/pages/contributing.adoc)
-- [Credits & Attribution](docs/modules/ROOT/pages/credits.adoc)
+- [Full Documentation](docs/index.md)
+- [Prerequisites & Required Modules](docs/prerequisites.md)
+- [Authentication](docs/authentication.md)
+- [Usage Guide](docs/usage.md)
+- [Parameters Reference](docs/parameters.md)
+- [Permissions](docs/permissions.md)
+- [Category Filtering](docs/category-filtering.md)
+- [Output Files & Formats](docs/output.md)
+- [Troubleshooting](docs/troubleshooting.md)
+- [ARM Modules](docs/arm-modules.md)
+- [Entra Modules](docs/entra-modules.md)
+- [Testing](docs/testing.md)
+- [Contributing](docs/contributing.md)
+- [Credits & Attribution](docs/credits.md)
 
 ## License
 

@@ -1,0 +1,128 @@
+---
+description: How to use the -Category parameter to scope AzureScout scans to specific Azure resource categories.
+---
+
+# Category Filtering
+
+## Overview
+
+The `-Category` parameter allows you to limit an AZSC inventory run to specific Azure resource categories.
+This is especially useful when you need a targeted scan rather than a full-tenant inventory.
+
+!!! tip
+    Category filtering can reduce run time by 70-90% for large tenants when you only need data from a specific service area.
+
+## Supported Categories
+
+| `-Category` Value | Azure Portal Label | Key Resource Types |
+|-------------------|--------------------|--------------------|
+| `AI` | AI + Machine Learning | Cognitive Services, OpenAI, ML Workspaces, Bot Services, AI Foundry |
+| `Analytics` | Analytics | Synapse, Databricks, Data Factory, Event Hub, Purview |
+| `Compute` | Compute | Virtual Machines, VMSS, Managed Disks, AVD, Cloud Services |
+| `Containers` | Containers | AKS, ARO, Container Apps, Container Registry |
+| `Databases` | Databases | SQL Server, PostgreSQL, MySQL, Cosmos DB, Redis Cache |
+| `Hybrid` | Hybrid + multicloud | Arc Servers, Arc Kubernetes, Azure Local Clusters, Arc Gateways |
+| `Identity` | Identity | Users, Groups, App Registrations, PIM, Conditional Access |
+| `Integration` | Integration | API Management, Service Bus, Event Hubs, Logic Apps |
+| `IoT` | Internet of Things | IoT Hub, IoT DPS |
+| `Management` | Management and governance | Subscriptions, Policy, Backup, Automation, Recovery Vault |
+| `Monitor` | Monitor | App Insights, DCRs, Action Groups, Alert Rules, Log Analytics |
+| `Networking` | Networking | VNets, NSGs, Load Balancers, VPN Gateways, Azure Firewall, Front Door |
+| `Security` | Security | Defender Assessments, Alerts, Secure Score, Key Vault |
+| `Storage` | Storage | Storage Accounts, Azure NetApp Files |
+| `Web` | Web & Mobile | App Service Plans, App Services, Function Apps |
+
+## Alias Support
+
+Long-form names displayed in the Azure portal are automatically normalized to their short equivalents:
+
+```powershell
+# These are equivalent:
+Invoke-AzureScout -TenantID $tid -Category 'IoT'
+Invoke-AzureScout -TenantID $tid -Category 'Internet of Things'
+
+Invoke-AzureScout -TenantID $tid -Category 'Monitor'
+Invoke-AzureScout -TenantID $tid -Category 'Monitoring'
+
+Invoke-AzureScout -TenantID $tid -Category 'Management'
+Invoke-AzureScout -TenantID $tid -Category 'Management and governance'
+```
+
+## Usage Examples
+
+### Single Category
+
+```powershell
+# Inventory only Virtual Machines and related Compute resources
+Invoke-AzureScout -TenantID <tenant-id> -Category Compute
+```
+
+### Multiple Categories
+
+```powershell
+# Inventory Compute and Networking together (common combination for network topology reviews)
+Invoke-AzureScout -TenantID <tenant-id> -Category Compute,Networking
+
+# Security audit: inventory Security + Identity
+Invoke-AzureScout -TenantID <tenant-id> -Category Security,Identity
+
+# Data platform review
+Invoke-AzureScout -TenantID <tenant-id> -Category Databases,Analytics,AI
+```
+
+### Combine with Output Format
+
+```powershell
+# Targeted scan with JSON output only (fastest)
+Invoke-AzureScout -TenantID <tenant-id> -Category Networking -OutputFormat Json
+
+# Generate Markdown report for Compute only
+Invoke-AzureScout -TenantID <tenant-id> -Category Compute -OutputFormat Markdown
+```
+
+### Full Inventory (Default)
+
+```powershell
+# -Category defaults to 'All' — all categories included
+Invoke-AzureScout -TenantID <tenant-id>
+
+# Explicit equivalent
+Invoke-AzureScout -TenantID <tenant-id> -Category All
+```
+
+## How Category Filtering Works
+
+!!! note
+    Category filtering is applied at the module discovery stage, before any Azure API calls are made.
+    Only the selected category folders are loaded, which means Resource Graph queries are also restricted to the resource types defined in those modules.
+
+Execution flow with `-Category Compute`:
+
+```mermaid
+graph TD
+    A[Invoke-AzureScout] --> B{Category specified?}
+    B -- Yes --> C[Normalize aliases]
+    C --> D[Load only Compute/*.ps1 modules]
+    D --> E[Execute Processing blocks]
+    E --> F[Azure Resource Graph query - Compute types only]
+    F --> G[Execute Reporting blocks]
+    G --> H[Write Excel / JSON / Markdown]
+    B -- No / All --> I[Load ALL category modules]
+    I --> E
+```
+
+## Adding New Categories
+
+To add a new category to AZSC:
+
+1. Create a folder under `Modules/Public/InventoryModules/<CategoryName>/`
+2. Add the folder name to the `[ValidateSet]` for `-Category` in `Invoke-AzureScout.ps1`
+3. Optionally add alias entries to `$_categoryAliasMap` for common name variants
+4. Update [Category Structure](category-structure.md) with the new mapping
+5. Create one or more `.ps1` module files using the module template in `Modules/Public/InventoryModules/`
+
+## See Also
+
+- [Category Structure reference](category-structure.md)
+- [Full Coverage Table](coverage-table.md)
+- [AzureScout Documentation Home](index.md)

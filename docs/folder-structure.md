@@ -1,39 +1,45 @@
-= Repository Structure
-:description: Folder layout and module organization for the AzureScout repository.
-:keywords: structure, layout, organization, folders, azurescout
+---
+description: Folder layout and module organization for the AzureScout repository.
+---
 
-== Overview
+# Repository Structure
+
+## Overview
 
 This page documents the repository layout after the Phase 1B reorganization.
-Numbered-prefix folders were renamed, duplicate directories merged, legacy code removed, and the docs tree was converted from MkDocs to Antora/AsciiDoc.
+Numbered-prefix folders were renamed, duplicate directories merged, legacy code removed, and the docs tree uses MkDocs Material with Markdown.
 
-== Directory Tree
+## Directory Tree
 
-[source,text]
-----
+```text
 azure-scout/
 ├── .github/                            # GitHub config (issue templates, workflows, policies)
 │   ├── ISSUE_TEMPLATE/
 │   ├── policies/
 │   ├── PULL_REQUEST_TEMPLATE/
 │   └── workflows/
-├── docs/                               # Antora documentation component
-│   ├── antora.yml                      #   Component descriptor
-│   └── modules/ROOT/
-│       ├── nav.adoc                    #   Navigation file
-│       ├── images/                     #   All consolidated images (32 files)
-│       └── pages/                      #   AsciiDoc content pages
-│           ├── index.adoc
-│           ├── authentication.adoc
-│           ├── usage.adoc
-│           ├── permissions.adoc
-│           ├── arm-modules.adoc
-│           ├── entra-modules.adoc
-│           ├── folder-structure.adoc
-│           ├── contributing.adoc
-│           ├── credits.adoc
-│           └── changelog.adoc
-├── migration-temp/                     # Phase planning docs (removed in Phase 7)
+├── docs/                               # MkDocs documentation
+│   ├── images/                         #   All consolidated images
+│   ├── index.md                        #   Home page
+│   ├── authentication.md              #   Authentication methods
+│   ├── usage.md                        #   Usage guide
+│   ├── permissions.md                  #   Required permissions
+│   ├── parameters.md                   #   Parameters reference
+│   ├── category-filtering.md           #   Category filtering
+│   ├── output.md                       #   Output files
+│   ├── prerequisites.md               #   Prerequisites & modules
+│   ├── testing.md                      #   Testing guide
+│   ├── troubleshooting.md             #   Troubleshooting
+│   ├── arm-modules.md                  #   ARM module catalog
+│   ├── entra-modules.md               #   Entra module catalog
+│   ├── coverage-table.md              #   Full coverage table
+│   ├── category-structure.md           #   Category-to-folder mapping
+│   ├── roadmap.md                      #   Roadmap & planned features
+│   ├── folder-structure.md             #   This page
+│   ├── contributing.md                 #   Contributing guide
+│   ├── credits.md                      #   Credits & attribution
+│   ├── ari-differences.md             #   Differences from ARI
+│   └── changelog.md                    #   Changelog
 ├── Modules/
 │   ├── Private/                        # Internal (non-exported) functions
 │   │   ├── Main/                       #   Core orchestration (was 0.MainFunctions)
@@ -65,9 +71,9 @@ azure-scout/
 │           ├── Diagram/
 │           └── Jobs/
 ├── tests/                              # Pester test suites
-├── antora-playbook.yml                 # Antora site playbook
-├── AzureScout.psd1           # Module manifest
-├── AzureScout.psm1           # Module loader (recursive *.ps1 import)
+├── mkdocs.yml                          # MkDocs Material configuration
+├── AzureScout.psd1                     # Module manifest
+├── AzureScout.psm1                     # Module loader (recursive *.ps1 import)
 ├── CHANGELOG.md
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
@@ -76,34 +82,20 @@ azure-scout/
 ├── README.md
 ├── SECURITY.md
 └── SUPPORT.md
-----
+```
 
-== Phase 1B Changes Summary
+## Phase 1B Changes Summary
 
-[cols="1,3",options="header"]
-|===
-| Action | Detail
+| Action | Detail |
+|--------|--------|
+| Renamed | `0.MainFunctions` → `Main`, `1.ExtractionFunctions` → `Extraction`, `2.ProcessingFunctions` → `Processing`, `3.ReportingFunctions` → `Reporting` |
+| Merged | `Network_1/` + `Network_2/` → `Network/` (20 files) |
+| Deleted | `4.RAMPFunctions/` (untracked .xlsx), `LegacyFunctions/` (6 .ps2 files), `azure-pipelines/` |
+| Cleaned | Root clutter: `HowTo.md`, 5 `test-*.sh` scripts, `workflow_dispatch.json` |
+| Converted | Documentation to MkDocs Material with Markdown; images consolidated into `docs/images/` |
+| Kept | `Hybrid/` directory — validated as active module category |
 
-| Renamed
-| `0.MainFunctions` → `Main`, `1.ExtractionFunctions` → `Extraction`, `2.ProcessingFunctions` → `Processing`, `3.ReportingFunctions` → `Reporting`
-
-| Merged
-| `Network_1/` + `Network_2/` → `Network/` (20 files)
-
-| Deleted
-| `4.RAMPFunctions/` (untracked .xlsx), `LegacyFunctions/` (6 .ps2 files), `azure-pipelines/`
-
-| Cleaned
-| Root clutter: `HowTo.md`, 5 `test-*.sh` scripts, `workflow_dispatch.json`
-
-| Converted
-| MkDocs → Antora/AsciiDoc; images consolidated into `docs/modules/ROOT/images/`
-
-| Kept
-| `Hybrid/` directory — validated as active module category
-|===
-
-== Module Loading
+## Module Loading
 
 The PSM1 loader uses `Get-ChildItem -Recurse *.ps1`.
 Folder names are cosmetic — renaming or merging directories has *zero* impact on which functions are loaded.

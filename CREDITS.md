@@ -10,7 +10,7 @@
 
 AzureScout was forked from [**microsoft/ARI**](https://github.com/microsoft/ARI) at version **3.6.11** (October 2024). The original ARI project provided the entire extraction, processing, and reporting pipeline — including 171 ARM inventory modules, the draw.io diagram engine, Excel/ImportExcel integration, and Azure Automation Account support — that AzureScout continues to build upon.
 
-For a detailed list of what AzureScout has changed and added on top of ARI, see [Differences from ARI](docs/modules/ROOT/pages/ari-differences.adoc).
+For a detailed list of what AzureScout has changed and added on top of ARI, see [Differences from ARI](docs/ari-differences.md).
 
 ## Original Authors
 

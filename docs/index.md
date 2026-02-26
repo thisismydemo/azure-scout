@@ -1,0 +1,72 @@
+---
+description: See everything. Own your cloud. A PowerShell module for comprehensive Azure + Entra ID discovery and inventory.
+---
+
+# AzureScout
+
+![AzureScout — See everything. Own your cloud.](images/azurescout-banner.svg){ align=center }
+
+*See everything. Own your cloud.*
+
+!!! note "Fork Attribution"
+    **AzureScout is a fork of [Azure Resource Inventory (ARI)](https://github.com/microsoft/ARI)** by Microsoft, originally created by [Claudio Merola](https://github.com/Claudio-Merola) and [Renato Gregio](https://github.com/RenatoGregio). The ARI project provided the entire foundation that AzureScout builds upon — 171 ARM inventory modules, the draw.io diagram engine, Excel reporting, and more. We are deeply grateful for their work.
+
+    See [Credits & Attribution](credits.md) for full details, or [Differences from ARI](ari-differences.md) for what has changed.
+
+## Overview
+
+**AzureScout** (AZSC) is a PowerShell module that discovers and inventories everything in your Azure environment — ARM resources, Entra ID objects, costs, security posture, policies, and more. Reports are generated as Excel workbooks, JSON, Markdown, or AsciiDoc.
+
+| Feature | Description |
+|---------|-------------|
+| **ARM Resource Discovery** | 170+ resource modules across 18 Microsoft Azure categories (AI + machine learning, Analytics, Compute, Containers, Databases, Hybrid + multicloud, Identity, Integration, IoT, Management and governance, Monitor, Networking, Security, Storage, Web, and more) |
+| **Entra ID Inventory** | 15 identity modules — Users, Groups, Applications, Service Principals, Conditional Access, PIM, Administrative Units, Named Locations, Domains, Authentication Methods, and more |
+| **Excel Reports** | Rich multi-worksheet workbooks with charts, pivot tables, and conditional formatting |
+| **JSON Output** | Machine-readable normalized output for automation pipelines |
+| **Markdown & AsciiDoc** | Export reports as `.md` or `.adoc` for documentation pipelines and PDF generation |
+| **Network Diagrams** | Auto-generated draw.io topology diagrams |
+| **Category Filtering** | Run only the categories you need: `-Category Compute,Security,Networking` |
+| **Permission Audit** | Pre-flight ARM + Graph access checker with role remediation guidance |
+
+### Quick Start
+
+```powershell
+# Install from PSGallery
+Install-Module -Name AzureScout
+
+# Import from local clone
+Import-Module ./AzureScout.psd1
+
+# Full discovery (ARM only, uses current Azure context)
+Invoke-AzureScout
+
+# ARM + Entra ID
+Invoke-AzureScout -Scope All
+
+# ARM-only scan with JSON output
+Invoke-AzureScout -Scope ArmOnly -OutputFormat Json
+
+# Specific categories only
+Invoke-AzureScout -Category Compute,Security,Networking
+
+# Permission pre-flight check
+Invoke-AzureScout -PermissionAudit
+```
+
+!!! tip
+    If you're already logged in via `Connect-AzAccount`, AzureScout uses your existing session — no additional flags needed.
+
+## Documentation
+
+| Page | Description |
+|------|-------------|
+| [Authentication](authentication.md) | Five authentication methods (interactive, device-code, SPN+secret, SPN+cert, managed identity) |
+| [Usage Guide](usage.md) | Scope, OutputFormat, Category filtering, and examples |
+| [Permissions](permissions.md) | Required ARM RBAC roles and Microsoft Graph API permissions |
+| [Category Filtering](category-filtering.md) | Run targeted scans using Microsoft's 18 Azure categories |
+| [ARM Modules](arm-modules.md) | 170+ resource modules across 18 categories |
+| [Entra Modules](entra-modules.md) | 15 Entra ID identity modules |
+| [Repository Structure](folder-structure.md) | Directory layout and module loading |
+| [Contributing](contributing.md) | How to add new inventory modules |
+| [Credits](credits.md) | Attribution and acknowledgments |
+| [Changelog](changelog.md) | Version history |
