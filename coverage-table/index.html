@@ -6,29 +6,35 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="See everything. Own your cloud. A PowerShell module for comprehensive Azure + Entra ID discovery and inventory.">
+        <meta name="description" content="Every AzureScout inventory module, the Azure resource type it covers, and the Excel worksheet it writes to.">
       
       
       
+        <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/coverage-table/">
       
+      
+        <link rel="prev" href="../entra-modules/">
+      
+      
+        <link rel="next" href="../category-structure/">
       
       
         
       
       
-      <link rel="icon" href="/azure-scout/assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
-        <title>AzureScout Documentation</title>
+        <title>Coverage Table - AzureScout Documentation</title>
       
     
     
-      <link rel="stylesheet" href="/azure-scout/assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="/azure-scout/assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -47,7 +53,7 @@
       
     
     
-    <script>__md_scope=new URL("/azure-scout/",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -71,6 +77,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#coverage-table" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -83,7 +94,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/azure-scout/." title="AzureScout Documentation" class="md-header__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
+    <a href=".." title="AzureScout Documentation" class="md-header__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -103,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              Coverage Table
             
           </span>
         </div>
@@ -221,7 +232,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/azure-scout/." title="AzureScout Documentation" class="md-nav__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
+    <a href=".." title="AzureScout Documentation" class="md-nav__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -251,7 +262,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -332,7 +343,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/prerequisites/" class="md-nav__link">
+      <a href="../prerequisites/" class="md-nav__link">
         
   
   
@@ -360,7 +371,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/authentication/" class="md-nav__link">
+      <a href="../authentication/" class="md-nav__link">
         
   
   
@@ -388,7 +399,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/usage/" class="md-nav__link">
+      <a href="../usage/" class="md-nav__link">
         
   
   
@@ -416,7 +427,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/permissions/" class="md-nav__link">
+      <a href="../permissions/" class="md-nav__link">
         
   
   
@@ -444,7 +455,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/parameters/" class="md-nav__link">
+      <a href="../parameters/" class="md-nav__link">
         
   
   
@@ -472,7 +483,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/category-filtering/" class="md-nav__link">
+      <a href="../category-filtering/" class="md-nav__link">
         
   
   
@@ -500,7 +511,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/output/" class="md-nav__link">
+      <a href="../output/" class="md-nav__link">
         
   
   
@@ -528,7 +539,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/troubleshooting/" class="md-nav__link">
+      <a href="../troubleshooting/" class="md-nav__link">
         
   
   
@@ -556,7 +567,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/testing/" class="md-nav__link">
+      <a href="../testing/" class="md-nav__link">
         
   
   
@@ -588,8 +599,10 @@
       
   
   
+    
   
   
+  
     
     
     
@@ -600,13 +613,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
@@ -627,7 +638,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -645,7 +656,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/arm-modules/" class="md-nav__link">
+      <a href="../arm-modules/" class="md-nav__link">
         
   
   
@@ -673,7 +684,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/entra-modules/" class="md-nav__link">
+      <a href="../entra-modules/" class="md-nav__link">
         
   
   
@@ -698,10 +709,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="/azure-scout/coverage-table/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coverage Table
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -717,6 +755,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#coverage-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coverage Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai-category-27-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Category (27 modules)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compute-category-14-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compute Category (14 modules)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hybrid-category-16-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hybrid Category (16 modules)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#networking-category-21-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Networking Category (21 modules)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -729,7 +842,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/category-structure/" class="md-nav__link">
+      <a href="../category-structure/" class="md-nav__link">
         
   
   
@@ -818,7 +931,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/roadmap/" class="md-nav__link">
+      <a href="../roadmap/" class="md-nav__link">
         
   
   
@@ -846,7 +959,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/folder-structure/" class="md-nav__link">
+      <a href="../folder-structure/" class="md-nav__link">
         
   
   
@@ -874,7 +987,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/contributing/" class="md-nav__link">
+      <a href="../contributing/" class="md-nav__link">
         
   
   
@@ -902,7 +1015,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/credits/" class="md-nav__link">
+      <a href="../credits/" class="md-nav__link">
         
   
   
@@ -930,7 +1043,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/ari-differences/" class="md-nav__link">
+      <a href="../ari-differences/" class="md-nav__link">
         
   
   
@@ -958,7 +1071,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/changelog/" class="md-nav__link">
+      <a href="../changelog/" class="md-nav__link">
         
   
   
@@ -1003,6 +1116,71 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#coverage-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coverage Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai-category-27-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Category (27 modules)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compute-category-14-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compute Category (14 modules)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hybrid-category-16-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hybrid Category (16 modules)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#networking-category-21-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Networking Category (21 modules)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1015,8 +1193,540 @@
               
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
 
+
+  
+  
+
+
+<h1 id="coverage-table">Coverage Table<a class="headerlink" href="#coverage-table" title="Permanent link">&para;</a></h1>
+<p>This page lists every inventory module in AzureScout, the Azure resource type(s) it covers, and the Excel worksheet it writes to.</p>
+<h2 id="coverage-summary">Coverage Summary<a class="headerlink" href="#coverage-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Modules</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI</td>
+<td>27</td>
+<td>Cognitive Services, OpenAI, ML, Bot Services, AI Foundry</td>
+</tr>
+<tr>
+<td>Analytics</td>
+<td>6</td>
+<td>Synapse, Databricks, Event Hub, Purview, Stream Analytics</td>
+</tr>
+<tr>
+<td>Compute</td>
+<td>14</td>
+<td>VMs, VMSS, Disks, AVD, CloudServices, VMware</td>
+</tr>
+<tr>
+<td>Containers</td>
+<td>6</td>
+<td>AKS, ARO, Container Apps, Container Registry</td>
+</tr>
+<tr>
+<td>Databases</td>
+<td>13</td>
+<td>SQL, PostgreSQL, MySQL, Cosmos DB, Redis</td>
+</tr>
+<tr>
+<td>Hybrid</td>
+<td>16</td>
+<td>Arc Servers, Arc Kubernetes, Azure Local, Arc Gateways</td>
+</tr>
+<tr>
+<td>Identity</td>
+<td>18</td>
+<td>Users, Groups, Apps, Roles, PIM, Conditional Access</td>
+</tr>
+<tr>
+<td>Integration</td>
+<td>2</td>
+<td>API Management, Service Bus</td>
+</tr>
+<tr>
+<td>IoT</td>
+<td>1</td>
+<td>IoT Hub</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>14</td>
+<td>Advisor, Backup, Policy, Subscriptions, Recovery Vault</td>
+</tr>
+<tr>
+<td>Monitor</td>
+<td>24</td>
+<td>App Insights, DCRs, Action Groups, Alert Rules, Workspaces</td>
+</tr>
+<tr>
+<td>Networking</td>
+<td>21</td>
+<td>VNets, NSGs, Load Balancers, VPN, Firewall, Front Door</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>5</td>
+<td>Defender Alerts, Assessments, Secure Score, Key Vault</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>2</td>
+<td>Storage Accounts, NetApp Files</td>
+</tr>
+<tr>
+<td>Web</td>
+<td>2</td>
+<td>App Service, App Service Plans</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>171</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="ai-category-27-modules">AI Category (27 modules)<a class="headerlink" href="#ai-category-27-modules" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Resource Type</th>
+<th>Worksheet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AIFoundryHubs</td>
+<td><code>Microsoft.MachineLearningServices/workspaces</code> (kind=Hub)</td>
+<td>AI Foundry Hubs</td>
+</tr>
+<tr>
+<td>AIFoundryProjects</td>
+<td><code>Microsoft.MachineLearningServices/workspaces</code> (kind=Project)</td>
+<td>AI Foundry Projects</td>
+</tr>
+<tr>
+<td>AppliedAIServices</td>
+<td><code>Microsoft.CognitiveServices/accounts</code> (Applied AI)</td>
+<td>Applied AI Services</td>
+</tr>
+<tr>
+<td>AzureAI</td>
+<td><code>Microsoft.CognitiveServices/accounts</code></td>
+<td>Cognitive Services</td>
+</tr>
+<tr>
+<td>BotServices</td>
+<td><code>Microsoft.BotService/botServices</code></td>
+<td>Bot Services</td>
+</tr>
+<tr>
+<td>ComputerVision</td>
+<td><code>Microsoft.CognitiveServices/accounts</code> (computerVision)</td>
+<td>Computer Vision</td>
+</tr>
+<tr>
+<td>ContentModerator</td>
+<td><code>Microsoft.CognitiveServices/accounts</code> (ContentModerator)</td>
+<td>Content Moderator</td>
+</tr>
+<tr>
+<td>ContentSafety</td>
+<td><code>Microsoft.CognitiveServices/accounts</code> (ContentSafety)</td>
+<td>Content Safety</td>
+</tr>
+<tr>
+<td>CustomVision</td>
+<td><code>Microsoft.CognitiveServices/accounts</code> (CustomVision)</td>
+<td>Custom Vision</td>
+</tr>
+<tr>
+<td>FaceAPI</td>
+<td><code>Microsoft.CognitiveServices/accounts</code> (Face)</td>
+<td>Face API</td>
+</tr>
+<tr>
+<td>FormRecognizer</td>
+<td><code>Microsoft.CognitiveServices/accounts</code> (FormRecognizer)</td>
+<td>Form Recognizer</td>
+</tr>
+<tr>
+<td>HealthInsights</td>
+<td><code>Microsoft.HealthInsights/imagingStudies</code></td>
+<td>Health Insights</td>
+</tr>
+<tr>
+<td>ImmersiveReader</td>
+<td><code>Microsoft.CognitiveServices/accounts</code> (ImmersiveReader)</td>
+<td>Immersive Reader</td>
+</tr>
+<tr>
+<td>MachineLearning</td>
+<td><code>Microsoft.MachineLearningServices/workspaces</code></td>
+<td>ML Workspaces</td>
+</tr>
+<tr>
+<td>MLComputes</td>
+<td><code>Microsoft.MachineLearningServices/workspaces/computes</code></td>
+<td>ML Computes</td>
+</tr>
+<tr>
+<td>MLDatasets</td>
+<td>ML Datasets API</td>
+<td>ML Datasets</td>
+</tr>
+<tr>
+<td>MLDatastores</td>
+<td>ML Datastores API</td>
+<td>ML Datastores</td>
+</tr>
+<tr>
+<td>MLEndpoints</td>
+<td>ML Online Endpoints API</td>
+<td>ML Endpoints</td>
+</tr>
+<tr>
+<td>MLModels</td>
+<td>ML Models API</td>
+<td>ML Models</td>
+</tr>
+<tr>
+<td>MLPipelines</td>
+<td>ML Pipeline Jobs API</td>
+<td>ML Pipelines</td>
+</tr>
+<tr>
+<td>OpenAIAccounts</td>
+<td><code>Microsoft.CognitiveServices/accounts</code> (OpenAI)</td>
+<td>OpenAI Accounts</td>
+</tr>
+<tr>
+<td>OpenAIDeployments</td>
+<td>OpenAI Deployments API</td>
+<td>OpenAI Deployments</td>
+</tr>
+<tr>
+<td>SearchIndexes</td>
+<td>Azure Search Indexes API</td>
+<td>Search Indexes</td>
+</tr>
+<tr>
+<td>SearchServices</td>
+<td><code>Microsoft.Search/searchServices</code></td>
+<td>Search Services</td>
+</tr>
+<tr>
+<td>SpeechService</td>
+<td><code>Microsoft.CognitiveServices/accounts</code> (SpeechServices)</td>
+<td>Speech Services</td>
+</tr>
+<tr>
+<td>TextAnalytics</td>
+<td><code>Microsoft.CognitiveServices/accounts</code> (TextAnalytics)</td>
+<td>Text Analytics</td>
+</tr>
+<tr>
+<td>Translator</td>
+<td><code>Microsoft.CognitiveServices/accounts</code> (TextTranslation)</td>
+<td>Translator</td>
+</tr>
+</tbody>
+</table>
+<h2 id="compute-category-14-modules">Compute Category (14 modules)<a class="headerlink" href="#compute-category-14-modules" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Resource Type</th>
+<th>Worksheet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VirtualMachine</td>
+<td><code>Microsoft.Compute/virtualMachines</code></td>
+<td>Virtual Machines</td>
+</tr>
+<tr>
+<td>VirtualMachineScaleSet</td>
+<td><code>Microsoft.Compute/virtualMachineScaleSets</code></td>
+<td>VM Scale Sets</td>
+</tr>
+<tr>
+<td>VMDisk</td>
+<td><code>Microsoft.Compute/disks</code></td>
+<td>Managed Disks</td>
+</tr>
+<tr>
+<td>AvailabilitySets</td>
+<td><code>Microsoft.Compute/availabilitySets</code></td>
+<td>Availability Sets</td>
+</tr>
+<tr>
+<td>AVD</td>
+<td><code>Microsoft.DesktopVirtualization/hostpools</code></td>
+<td>AVD Host Pools</td>
+</tr>
+<tr>
+<td>AVDSessionHosts</td>
+<td>AVD Session Hosts API</td>
+<td>AVD Session Hosts</td>
+</tr>
+<tr>
+<td>AVDApplicationGroups</td>
+<td><code>Microsoft.DesktopVirtualization/applicationgroups</code></td>
+<td>AVD App Groups</td>
+</tr>
+<tr>
+<td>AVDApplications</td>
+<td>AVD Applications API</td>
+<td>AVD Applications</td>
+</tr>
+<tr>
+<td>AVDWorkspaces</td>
+<td><code>Microsoft.DesktopVirtualization/workspaces</code></td>
+<td>AVD Workspaces</td>
+</tr>
+<tr>
+<td>AVDScalingPlans</td>
+<td><code>Microsoft.DesktopVirtualization/scalingplans</code></td>
+<td>AVD Scaling Plans</td>
+</tr>
+<tr>
+<td>AVDAzureLocal</td>
+<td>Arc Machines + HCI VMs (AVD on Azure Local)</td>
+<td>AVD on Azure Local/Arc</td>
+</tr>
+<tr>
+<td>CloudServices</td>
+<td><code>Microsoft.Compute/cloudServices</code></td>
+<td>Cloud Services</td>
+</tr>
+<tr>
+<td>VMWare</td>
+<td><code>Microsoft.ConnectedVMwarevSphere/virtualMachines</code></td>
+<td>VMware VMs</td>
+</tr>
+<tr>
+<td>VMOperationalData</td>
+<td><em>(operational enrichment)</em></td>
+<td>VM Operational Data</td>
+</tr>
+</tbody>
+</table>
+<h2 id="hybrid-category-16-modules">Hybrid Category (16 modules)<a class="headerlink" href="#hybrid-category-16-modules" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Resource Type</th>
+<th>Worksheet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ARCServers</td>
+<td><code>Microsoft.HybridCompute/machines</code></td>
+<td>Arc Servers</td>
+</tr>
+<tr>
+<td>ArcExtensions</td>
+<td><code>Microsoft.HybridCompute/machines/extensions</code></td>
+<td>Arc Extensions</td>
+</tr>
+<tr>
+<td>ArcGateways</td>
+<td><code>Microsoft.HybridCompute/gateways</code></td>
+<td>Arc Gateways</td>
+</tr>
+<tr>
+<td>ArcKubernetes</td>
+<td><code>Microsoft.Kubernetes/connectedClusters</code></td>
+<td>Arc Kubernetes</td>
+</tr>
+<tr>
+<td>ArcResourceBridge</td>
+<td><code>Microsoft.ResourceConnector/appliances</code></td>
+<td>Arc Resource Bridge</td>
+</tr>
+<tr>
+<td>ArcDataControllers</td>
+<td><code>Microsoft.AzureArcData/dataControllers</code></td>
+<td>Arc Data Controllers</td>
+</tr>
+<tr>
+<td>ArcSQLServers</td>
+<td><code>Microsoft.AzureArcData/sqlServerInstances</code></td>
+<td>Arc SQL Servers</td>
+</tr>
+<tr>
+<td>ArcSQLManagedInstances</td>
+<td><code>Microsoft.AzureArcData/sqlManagedInstances</code></td>
+<td>Arc SQL Managed Instances</td>
+</tr>
+<tr>
+<td>ArcSites</td>
+<td><code>Microsoft.ExtendedLocation/customLocations</code></td>
+<td>Arc Sites</td>
+</tr>
+<tr>
+<td>ArcServerOperationalData</td>
+<td><em>(enrichment)</em></td>
+<td>Arc Server Operational Data</td>
+</tr>
+<tr>
+<td>Clusters</td>
+<td><code>Microsoft.AzureStackHCI/clusters</code></td>
+<td>Azure Local Clusters</td>
+</tr>
+<tr>
+<td>VirtualMachines</td>
+<td><code>Microsoft.AzureStackHCI/virtualMachineInstances</code></td>
+<td>Azure Local VMs</td>
+</tr>
+<tr>
+<td>LogicalNetworks</td>
+<td><code>Microsoft.AzureStackHCI/logicalNetworks</code></td>
+<td>Azure Local Networks</td>
+</tr>
+<tr>
+<td>StorageContainers</td>
+<td><code>Microsoft.AzureStackHCI/storageContainers</code></td>
+<td>Azure Local Storage</td>
+</tr>
+<tr>
+<td>GalleryImages</td>
+<td><code>Microsoft.AzureStackHCI/galleryImages</code></td>
+<td>Azure Local Gallery</td>
+</tr>
+<tr>
+<td>MarketplaceGalleryImages</td>
+<td><code>Microsoft.AzureStackHCI/marketplaceGalleryImages</code></td>
+<td>Azure Local Marketplace</td>
+</tr>
+</tbody>
+</table>
+<h2 id="networking-category-21-modules">Networking Category (21 modules)<a class="headerlink" href="#networking-category-21-modules" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Resource Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VirtualNetwork</td>
+<td><code>Microsoft.Network/virtualNetworks</code></td>
+</tr>
+<tr>
+<td>vNETPeering</td>
+<td><code>Microsoft.Network/virtualNetworks/virtualNetworkPeerings</code></td>
+</tr>
+<tr>
+<td>NetworkSecurityGroup</td>
+<td><code>Microsoft.Network/networkSecurityGroups</code></td>
+</tr>
+<tr>
+<td>NetworkInterface</td>
+<td><code>Microsoft.Network/networkInterfaces</code></td>
+</tr>
+<tr>
+<td>PublicIP</td>
+<td><code>Microsoft.Network/publicIPAddresses</code></td>
+</tr>
+<tr>
+<td>LoadBalancer</td>
+<td><code>Microsoft.Network/loadBalancers</code></td>
+</tr>
+<tr>
+<td>ApplicationGateways</td>
+<td><code>Microsoft.Network/applicationGateways</code></td>
+</tr>
+<tr>
+<td>VirtualNetworkGateways</td>
+<td><code>Microsoft.Network/virtualNetworkGateways</code></td>
+</tr>
+<tr>
+<td>Connections</td>
+<td><code>Microsoft.Network/connections</code></td>
+</tr>
+<tr>
+<td>ExpressRoute</td>
+<td><code>Microsoft.Network/expressRouteCircuits</code></td>
+</tr>
+<tr>
+<td>AzureFirewall</td>
+<td><code>Microsoft.Network/azureFirewalls</code></td>
+</tr>
+<tr>
+<td>BastionHosts</td>
+<td><code>Microsoft.Network/bastionHosts</code></td>
+</tr>
+<tr>
+<td>NATGateway</td>
+<td><code>Microsoft.Network/natGateways</code></td>
+</tr>
+<tr>
+<td>PrivateEndpoint</td>
+<td><code>Microsoft.Network/privateEndpoints</code></td>
+</tr>
+<tr>
+<td>PrivateDNS</td>
+<td><code>Microsoft.Network/privateDnsZones</code></td>
+</tr>
+<tr>
+<td>PublicDNS</td>
+<td><code>Microsoft.Network/dnsZones</code></td>
+</tr>
+<tr>
+<td>RouteTables</td>
+<td><code>Microsoft.Network/routeTables</code></td>
+</tr>
+<tr>
+<td>NetworkWatchers</td>
+<td><code>Microsoft.Network/networkWatchers</code></td>
+</tr>
+<tr>
+<td>Frontdoor</td>
+<td><code>Microsoft.Network/frontDoors</code></td>
+</tr>
+<tr>
+<td>TrafficManager</td>
+<td><code>Microsoft.Network/trafficManagerProfiles</code></td>
+</tr>
+<tr>
+<td>VirtualWAN</td>
+<td><code>Microsoft.Network/virtualWans</code></td>
+</tr>
+</tbody>
+</table>
+<p><em>Last updated: February 2026. See <a href="../category-structure/">Category Structure</a> for folder mapping details.</em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
               </article>
             </div>
           
@@ -1061,10 +1771,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "/azure-scout/", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "/azure-scout/assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="/azure-scout/assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

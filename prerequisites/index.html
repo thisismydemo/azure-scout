@@ -6,29 +6,35 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="See everything. Own your cloud. A PowerShell module for comprehensive Azure + Entra ID discovery and inventory.">
+        <meta name="description" content="Software prerequisites and required PowerShell modules for AzureScout.">
       
       
       
+        <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/prerequisites/">
       
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../authentication/">
       
       
         
       
       
-      <link rel="icon" href="/azure-scout/assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
-        <title>AzureScout Documentation</title>
+        <title>Prerequisites & Required Modules - AzureScout Documentation</title>
       
     
     
-      <link rel="stylesheet" href="/azure-scout/assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="/azure-scout/assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -47,7 +53,7 @@
       
     
     
-    <script>__md_scope=new URL("/azure-scout/",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -71,6 +77,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#prerequisites-required-modules" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -83,7 +94,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/azure-scout/." title="AzureScout Documentation" class="md-header__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
+    <a href=".." title="AzureScout Documentation" class="md-header__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -103,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              Prerequisites & Required Modules
             
           </span>
         </div>
@@ -221,7 +232,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/azure-scout/." title="AzureScout Documentation" class="md-nav__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
+    <a href=".." title="AzureScout Documentation" class="md-nav__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -251,7 +262,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -275,8 +286,10 @@
       
   
   
+    
   
   
+  
     
     
     
@@ -287,13 +300,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
@@ -314,7 +325,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -329,10 +340,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="/azure-scout/prerequisites/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prerequisites & Required Modules
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -348,6 +386,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#system-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-powershell-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required PowerShell Modules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-azure-resource-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Azure Resource Providers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -360,7 +462,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/authentication/" class="md-nav__link">
+      <a href="../authentication/" class="md-nav__link">
         
   
   
@@ -388,7 +490,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/usage/" class="md-nav__link">
+      <a href="../usage/" class="md-nav__link">
         
   
   
@@ -416,7 +518,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/permissions/" class="md-nav__link">
+      <a href="../permissions/" class="md-nav__link">
         
   
   
@@ -444,7 +546,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/parameters/" class="md-nav__link">
+      <a href="../parameters/" class="md-nav__link">
         
   
   
@@ -472,7 +574,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/category-filtering/" class="md-nav__link">
+      <a href="../category-filtering/" class="md-nav__link">
         
   
   
@@ -500,7 +602,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/output/" class="md-nav__link">
+      <a href="../output/" class="md-nav__link">
         
   
   
@@ -528,7 +630,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/troubleshooting/" class="md-nav__link">
+      <a href="../troubleshooting/" class="md-nav__link">
         
   
   
@@ -556,7 +658,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/testing/" class="md-nav__link">
+      <a href="../testing/" class="md-nav__link">
         
   
   
@@ -645,7 +747,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/arm-modules/" class="md-nav__link">
+      <a href="../arm-modules/" class="md-nav__link">
         
   
   
@@ -673,7 +775,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/entra-modules/" class="md-nav__link">
+      <a href="../entra-modules/" class="md-nav__link">
         
   
   
@@ -701,7 +803,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/coverage-table/" class="md-nav__link">
+      <a href="../coverage-table/" class="md-nav__link">
         
   
   
@@ -729,7 +831,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/category-structure/" class="md-nav__link">
+      <a href="../category-structure/" class="md-nav__link">
         
   
   
@@ -818,7 +920,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/roadmap/" class="md-nav__link">
+      <a href="../roadmap/" class="md-nav__link">
         
   
   
@@ -846,7 +948,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/folder-structure/" class="md-nav__link">
+      <a href="../folder-structure/" class="md-nav__link">
         
   
   
@@ -874,7 +976,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/contributing/" class="md-nav__link">
+      <a href="../contributing/" class="md-nav__link">
         
   
   
@@ -902,7 +1004,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/credits/" class="md-nav__link">
+      <a href="../credits/" class="md-nav__link">
         
   
   
@@ -930,7 +1032,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/ari-differences/" class="md-nav__link">
+      <a href="../ari-differences/" class="md-nav__link">
         
   
   
@@ -958,7 +1060,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/changelog/" class="md-nav__link">
+      <a href="../changelog/" class="md-nav__link">
         
   
   
@@ -1003,6 +1105,60 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#system-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-powershell-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required PowerShell Modules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-azure-resource-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Azure Resource Providers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1015,8 +1171,157 @@
               
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
 
+
+  
+  
+
+
+<h1 id="prerequisites-required-modules">Prerequisites &amp; Required Modules<a class="headerlink" href="#prerequisites-required-modules" title="Permanent link">&para;</a></h1>
+<h2 id="system-requirements">System Requirements<a class="headerlink" href="#system-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerShell</td>
+<td>7.0 or later (PowerShell Core). Windows PowerShell 5.1 is not supported.</td>
+</tr>
+<tr>
+<td>Operating System</td>
+<td>Windows, Linux, or macOS</td>
+</tr>
+<tr>
+<td>Azure Account</td>
+<td>An Azure identity with read access to target resources</td>
+</tr>
+<tr>
+<td>Entra ID Access</td>
+<td><code>Directory.Read.All</code> or equivalent — required only for <code>-Scope All</code> or <code>-Scope EntraOnly</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="required-powershell-modules">Required PowerShell Modules<a class="headerlink" href="#required-powershell-modules" title="Permanent link">&para;</a></h2>
+<p>AzureScout auto-installs missing modules at first load. If auto-install fails (e.g., restricted network), install them manually.</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Purpose</th>
+<th>Required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Az.Accounts</code></td>
+<td>Azure authentication and token acquisition</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr>
+<td><code>Az.ResourceGraph</code></td>
+<td>ARM resource extraction via batch KQL</td>
+<td><strong>Yes</strong> (ARM scope)</td>
+</tr>
+<tr>
+<td><code>Az.Compute</code></td>
+<td>VM SKU and quota details</td>
+<td><strong>Yes</strong> (ARM scope)</td>
+</tr>
+<tr>
+<td><code>Az.Resources</code></td>
+<td>Role assignments and policy data</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr>
+<td><code>ImportExcel</code></td>
+<td>Excel report generation (.xlsx)</td>
+<td><strong>Yes</strong> (for Excel output)</td>
+</tr>
+<tr>
+<td><code>Az.Storage</code></td>
+<td>Upload report to Azure Storage account</td>
+<td>Optional (only with <code>-StorageAccount</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>NOT required:</strong> Any <code>Microsoft.Graph.*</code> module. AzureScout uses <code>Get-AzAccessToken -ResourceTypeName MSGraph</code> with REST calls instead.</p>
+<h2 id="manual-installation">Manual Installation<a class="headerlink" href="#manual-installation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">Az</span><span class="p">.</span><span class="n">Accounts</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">-Force</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">Az</span><span class="p">.</span><span class="n">ResourceGraph</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">-Force</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">Az</span><span class="p">.</span><span class="n">Compute</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">-Force</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">Az</span><span class="p">.</span><span class="n">Resources</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">-Force</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">ImportExcel</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">-Force</span>
+</code></pre></div>
+<h2 id="required-azure-resource-providers">Required Azure Resource Providers<a class="headerlink" href="#required-azure-resource-providers" title="Permanent link">&para;</a></h2>
+<p>AZSC queries the following resource providers during its pre-flight permission audit.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><strong>Not all resource providers will be — or should be — registered in every subscription.</strong> This is completely normal. Azure only registers providers for services you actually use, and most organisations deliberately limit provider registration per subscription as a governance best practice. For example, a connectivity subscription will not have <code>Microsoft.MachineLearningServices</code> registered, and an identity subscription will not have <code>Microsoft.DesktopVirtualization</code>. The <code>[FAIL]</code> and <code>[WARN]</code> messages in the permission audit output are <strong>informational, not errors</strong> — they tell you which modules will be skipped because the corresponding service is not deployed in that subscription. The scan will complete successfully regardless.</p>
+</div>
+<p>If a provider is not registered, the corresponding inventory modules are simply skipped and the report will not contain a tab for that service in that subscription.</p>
+<table>
+<thead>
+<tr>
+<th>Resource Provider</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Microsoft.Security</code></td>
+<td>Defender for Cloud assessments, alerts, and secure score</td>
+</tr>
+<tr>
+<td><code>Microsoft.Insights</code></td>
+<td>Azure Monitor: DCRs, action groups, alert rules</td>
+</tr>
+<tr>
+<td><code>Microsoft.Maintenance</code></td>
+<td>Azure Update Manager maintenance configurations</td>
+</tr>
+<tr>
+<td><code>Microsoft.RecoveryServices</code></td>
+<td>Azure Backup and Azure Site Recovery</td>
+</tr>
+<tr>
+<td><code>Microsoft.HybridCompute</code></td>
+<td>Arc-enabled servers</td>
+</tr>
+<tr>
+<td><code>Microsoft.Kubernetes</code></td>
+<td>Arc-enabled Kubernetes</td>
+</tr>
+<tr>
+<td><code>Microsoft.AzureStackHCI</code></td>
+<td>Azure Local (Stack HCI) clusters</td>
+</tr>
+</tbody>
+</table>
+<p>Register a provider with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Register-AzResourceProvider</span> <span class="n">-ProviderNamespace</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">Security</span>
+</code></pre></div>
+<p>Run <code>Test-AZSCPermissions</code> to check provider registration status before a full run.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
               </article>
             </div>
           
@@ -1061,10 +1366,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "/azure-scout/", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "/azure-scout/assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="/azure-scout/assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

@@ -6,29 +6,35 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="See everything. Own your cloud. A PowerShell module for comprehensive Azure + Entra ID discovery and inventory.">
+        <meta name="description" content="Five authentication methods supported by AzureScout.">
       
       
       
+        <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/authentication/">
       
+      
+        <link rel="prev" href="../prerequisites/">
+      
+      
+        <link rel="next" href="../usage/">
       
       
         
       
       
-      <link rel="icon" href="/azure-scout/assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
-        <title>AzureScout Documentation</title>
+        <title>Authentication - AzureScout Documentation</title>
       
     
     
-      <link rel="stylesheet" href="/azure-scout/assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="/azure-scout/assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -47,7 +53,7 @@
       
     
     
-    <script>__md_scope=new URL("/azure-scout/",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -71,6 +77,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#authentication" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -83,7 +94,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/azure-scout/." title="AzureScout Documentation" class="md-header__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
+    <a href=".." title="AzureScout Documentation" class="md-header__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -103,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              Authentication
             
           </span>
         </div>
@@ -221,7 +232,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/azure-scout/." title="AzureScout Documentation" class="md-nav__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
+    <a href=".." title="AzureScout Documentation" class="md-nav__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -251,7 +262,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -275,8 +286,10 @@
       
   
   
+    
   
   
+  
     
     
     
@@ -287,13 +300,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
@@ -314,7 +325,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -332,7 +343,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/prerequisites/" class="md-nav__link">
+      <a href="../prerequisites/" class="md-nav__link">
         
   
   
@@ -357,10 +368,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="/azure-scout/authentication/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -376,6 +414,142 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#priority-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority Order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method Details
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-current-user-interactive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Current User (Interactive)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-device-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Device Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-service-principal-client-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Service Principal + Client Secret
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-service-principal-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Service Principal + Certificate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-managed-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Managed Identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loginexperiencev2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LoginExperienceV2
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -388,7 +562,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/usage/" class="md-nav__link">
+      <a href="../usage/" class="md-nav__link">
         
   
   
@@ -416,7 +590,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/permissions/" class="md-nav__link">
+      <a href="../permissions/" class="md-nav__link">
         
   
   
@@ -444,7 +618,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/parameters/" class="md-nav__link">
+      <a href="../parameters/" class="md-nav__link">
         
   
   
@@ -472,7 +646,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/category-filtering/" class="md-nav__link">
+      <a href="../category-filtering/" class="md-nav__link">
         
   
   
@@ -500,7 +674,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/output/" class="md-nav__link">
+      <a href="../output/" class="md-nav__link">
         
   
   
@@ -528,7 +702,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/troubleshooting/" class="md-nav__link">
+      <a href="../troubleshooting/" class="md-nav__link">
         
   
   
@@ -556,7 +730,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/testing/" class="md-nav__link">
+      <a href="../testing/" class="md-nav__link">
         
   
   
@@ -645,7 +819,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/arm-modules/" class="md-nav__link">
+      <a href="../arm-modules/" class="md-nav__link">
         
   
   
@@ -673,7 +847,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/entra-modules/" class="md-nav__link">
+      <a href="../entra-modules/" class="md-nav__link">
         
   
   
@@ -701,7 +875,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/coverage-table/" class="md-nav__link">
+      <a href="../coverage-table/" class="md-nav__link">
         
   
   
@@ -729,7 +903,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/category-structure/" class="md-nav__link">
+      <a href="../category-structure/" class="md-nav__link">
         
   
   
@@ -818,7 +992,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/roadmap/" class="md-nav__link">
+      <a href="../roadmap/" class="md-nav__link">
         
   
   
@@ -846,7 +1020,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/folder-structure/" class="md-nav__link">
+      <a href="../folder-structure/" class="md-nav__link">
         
   
   
@@ -874,7 +1048,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/contributing/" class="md-nav__link">
+      <a href="../contributing/" class="md-nav__link">
         
   
   
@@ -902,7 +1076,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/credits/" class="md-nav__link">
+      <a href="../credits/" class="md-nav__link">
         
   
   
@@ -930,7 +1104,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/ari-differences/" class="md-nav__link">
+      <a href="../ari-differences/" class="md-nav__link">
         
   
   
@@ -958,7 +1132,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/changelog/" class="md-nav__link">
+      <a href="../changelog/" class="md-nav__link">
         
   
   
@@ -1003,6 +1177,132 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#priority-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority Order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method Details
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-current-user-interactive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Current User (Interactive)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-device-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Device Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-service-principal-client-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Service Principal + Client Secret
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-service-principal-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Service Principal + Certificate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-managed-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Managed Identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loginexperiencev2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LoginExperienceV2
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1015,8 +1315,87 @@
               
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
 
+
+  
+  
+
+
+<h1 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>AzureScout supports five authentication methods.
+The module uses <code>Connect-AZSCLoginSession</code> internally, which selects the auth path based on the parameters you provide.</p>
+<h2 id="priority-order">Priority Order<a class="headerlink" href="#priority-order" title="Permanent link">&para;</a></h2>
+<p>When multiple auth parameters are supplied, the module selects the <em>first</em> matching path:</p>
+<ol>
+<li><strong>SPN + Certificate</strong> — <code>AppId</code> + <code>CertificatePath</code> (+ optional <code>CertificatePassword</code>)</li>
+<li><strong>SPN + Client Secret</strong> — <code>AppId</code> + <code>Secret</code></li>
+<li><strong>Device Code</strong> — <code>-DeviceLogin</code> switch</li>
+<li><strong>Managed Identity</strong> — Automatic when running in Azure (no parameters needed)</li>
+<li><strong>Current User / Interactive</strong> — Default fallback, reuses existing <code>Get-AzContext</code></li>
+</ol>
+<h2 id="method-details">Method Details<a class="headerlink" href="#method-details" title="Permanent link">&para;</a></h2>
+<h3 id="1-current-user-interactive">1. Current User (Interactive)<a class="headerlink" href="#1-current-user-interactive" title="Permanent link">&para;</a></h3>
+<p>The default. If you've already run <code>Connect-AzAccount</code>, AZSC reuses your session.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">Connect-AzAccount</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Invoke-AzureScout</span>
+</code></pre></div>
+<p>If no existing context matches the target tenant, the module calls <code>Connect-AzAccount</code> interactively.</p>
+<h3 id="2-device-code">2. Device Code<a class="headerlink" href="#2-device-code" title="Permanent link">&para;</a></h3>
+<p>For headless or remote sessions (SSH, containers).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="s1">&#39;00000000-...&#39;</span> <span class="n">-DeviceLogin</span>
+</code></pre></div>
+<p>The module displays a URL and code. Open the link in any browser, enter the code, and authenticate.</p>
+<h3 id="3-service-principal-client-secret">3. Service Principal + Client Secret<a class="headerlink" href="#3-service-principal-client-secret" title="Permanent link">&para;</a></h3>
+<p>For CI/CD pipelines and unattended automation.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Invoke-AzureScout</span> <span class="p">`</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">-TenantID</span>  <span class="s1">&#39;00000000-...&#39;</span> <span class="p">`</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">-AppId</span>     <span class="s1">&#39;11111111-...&#39;</span> <span class="p">`</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">-Secret</span>    <span class="nv">$env:CLIENT_SECRET</span>
+</code></pre></div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Store the secret in a Key Vault or pipeline secret — never hardcode it.</p>
+</div>
+<h3 id="4-service-principal-certificate">4. Service Principal + Certificate<a class="headerlink" href="#4-service-principal-certificate" title="Permanent link">&para;</a></h3>
+<p>The most secure SPN method — no secret string to rotate.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Invoke-AzureScout</span> <span class="p">`</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">-TenantID</span>         <span class="s1">&#39;00000000-...&#39;</span> <span class="p">`</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">-AppId</span>            <span class="s1">&#39;11111111-...&#39;</span> <span class="p">`</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">-CertificatePath</span>  <span class="s1">&#39;C:\certs\AZSC-spn.pfx&#39;</span> <span class="p">`</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">-CertificatePassword</span> <span class="nv">$certPwd</span>
+</code></pre></div>
+<h3 id="5-managed-identity">5. Managed Identity<a class="headerlink" href="#5-managed-identity" title="Permanent link">&para;</a></h3>
+<p>When running inside Azure (VMs, Azure Functions, Azure Automation).
+The module detects managed identity automatically — no parameters required.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Inside an Azure VM/Function/Automation Account</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="s1">&#39;00000000-...&#39;</span>
+</code></pre></div>
+<h2 id="azure-environment">Azure Environment<a class="headerlink" href="#azure-environment" title="Permanent link">&para;</a></h2>
+<p>All methods accept <code>-AzureEnvironment</code> to target sovereign clouds:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-AzureEnvironment</span> <span class="n">AzureUSGovernment</span>
+</code></pre></div>
+<p>Valid values: <code>AzureCloud</code> (default), <code>AzureUSGovernment</code>, <code>AzureChinaCloud</code>, <code>AzureGermanCloud</code>.</p>
+<h2 id="loginexperiencev2">LoginExperienceV2<a class="headerlink" href="#loginexperiencev2" title="Permanent link">&para;</a></h2>
+<p>The module checks for the <code>LoginExperienceV2</code> Az config setting.
+If enabled, it temporarily disables it to ensure compatibility, then restores the original value after login.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
               </article>
             </div>
           
@@ -1061,10 +1440,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "/azure-scout/", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "/azure-scout/assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="/azure-scout/assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

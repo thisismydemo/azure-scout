@@ -1,0 +1,1907 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="What AzureScout changed, added, and removed compared to the original ARI project.">
+      
+      
+      
+        <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/ari-differences/">
+      
+      
+        <link rel="prev" href="../credits/">
+      
+      
+        <link rel="next" href="../changelog/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>Differences from ARI - AzureScout Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#differences-from-azure-resource-inventory-ari" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="AzureScout Documentation" class="md-header__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AzureScout Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Differences from ARI
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisismydemo/azure-scout" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    thisismydemo/azure-scout
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="AzureScout Documentation" class="md-nav__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AzureScout Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisismydemo/azure-scout" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    thisismydemo/azure-scout
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prerequisites & Required Modules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../authentication/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permissions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Permissions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parameters Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../category-filtering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Category Filtering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../output/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Output Files & Formats
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Module Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arm-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ARM Modules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../entra-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entra ID Modules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../coverage-table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coverage Table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../category-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Category Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Project
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../folder-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Repository Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Credits & Attribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Differences from ARI
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Differences from ARI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-azurescout-inherits-from-ari" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What AzureScout Inherits from ARI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#renamed-identifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renamed Identifiers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Capabilities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="New Capabilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entra-id-inventory-15-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entra ID Inventory (15 Modules)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permission-audit-permissionaudit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permission Audit (-PermissionAudit)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-scope-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Scope (-Scope)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-format-output-outputformat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Format Output (-OutputFormat)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#category-filtering-category" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category Filtering (-Category)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#specialized-excel-tabs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Specialized Excel Tabs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-enrichment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Enrichment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependency-bootstrap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Bootstrap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#structural-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structural Changes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Structural Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#folder-reorganization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Folder Reorganization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#removed-from-ari" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removed from ARI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#not-yet-in-azurescout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not Yet in AzureScout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-lineage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Lineage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Further Reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-azurescout-inherits-from-ari" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What AzureScout Inherits from ARI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#renamed-identifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renamed Identifiers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Capabilities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="New Capabilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entra-id-inventory-15-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entra ID Inventory (15 Modules)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permission-audit-permissionaudit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permission Audit (-PermissionAudit)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-scope-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Scope (-Scope)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-format-output-outputformat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Format Output (-OutputFormat)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#category-filtering-category" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category Filtering (-Category)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#specialized-excel-tabs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Specialized Excel Tabs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-enrichment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Enrichment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependency-bootstrap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Bootstrap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#structural-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structural Changes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Structural Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#folder-reorganization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Folder Reorganization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#removed-from-ari" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removed from ARI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#not-yet-in-azurescout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not Yet in AzureScout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-lineage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Lineage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Further Reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="differences-from-azure-resource-inventory-ari">Differences from Azure Resource Inventory (ARI)<a class="headerlink" href="#differences-from-azure-resource-inventory-ari" title="Permanent link">&para;</a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>AzureScout is a fork of <a href="https://github.com/microsoft/ARI">Azure Resource Inventory (ARI)</a> v3.6.11, created by <a href="https://github.com/claudiomerola">Claudio Merola</a> and <a href="https://github.com/intfrr">Renato Gregio</a> at Microsoft.
+Everything listed on this page describes <em>how AzureScout diverges from ARI</em> — not a criticism of the original project.
+We encourage you to evaluate both projects and choose the one that fits your needs.</p>
+</div>
+<h2 id="what-azurescout-inherits-from-ari">What AzureScout Inherits from ARI<a class="headerlink" href="#what-azurescout-inherits-from-ari" title="Permanent link">&para;</a></h2>
+<p>AzureScout would not exist without the foundation laid by ARI.
+The following core capabilities come directly from the original project:</p>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>What We Inherited</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ARM Resource Extraction</strong></td>
+<td>The fundamental pattern of using Azure Resource Graph and ARM APIs to enumerate resources across subscriptions.</td>
+</tr>
+<tr>
+<td><strong>Draw.io Diagram Engine</strong></td>
+<td>All network topology diagram generation — VNets, subnets, peerings, NSGs, load balancers, and resource layout logic.</td>
+</tr>
+<tr>
+<td><strong>Excel Report Pipeline</strong></td>
+<td>The ImportExcel-based pipeline that turns resource data into formatted <code>.xlsx</code> workbooks with conditional formatting.</td>
+</tr>
+<tr>
+<td><strong>171 ARM Resource Modules</strong></td>
+<td>Every inventory module in <code>Modules/Public/InventoryModules/</code> descends from ARI's original module set. AzureScout has added new modules and enhanced existing ones, but the pattern and many files trace back to ARI.</td>
+</tr>
+<tr>
+<td><strong>Orchestration Pattern</strong></td>
+<td>The extraction → processing → reporting three-phase orchestration that powers the main pipeline.</td>
+</tr>
+<tr>
+<td><strong>Automation Account Mode</strong></td>
+<td>The concept of running inside an Azure Automation Account with a Managed Identity (though AzureScout has not yet documented or validated this path — see <a href="../roadmap/">roadmap</a>).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="renamed-identifiers">Renamed Identifiers<a class="headerlink" href="#renamed-identifiers" title="Permanent link">&para;</a></h2>
+<p>The most visible change is the rebranding from ARI to AzureScout.
+This affects every public-facing name in the module.</p>
+<table>
+<thead>
+<tr>
+<th>What</th>
+<th>ARI Name</th>
+<th>AzureScout Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerShell Module</td>
+<td><code>AzureResourceInventory</code></td>
+<td><code>AzureScout</code></td>
+</tr>
+<tr>
+<td>Main Entry Point</td>
+<td><code>Invoke-ARI</code></td>
+<td><code>Invoke-AzureScout</code></td>
+</tr>
+<tr>
+<td>Exported Function Prefix</td>
+<td><code>*-ARI*</code></td>
+<td><code>*-AZSC*</code></td>
+</tr>
+<tr>
+<td>Internal Function Prefix</td>
+<td><code>*-ARI*</code></td>
+<td><code>*-AZSC*</code></td>
+</tr>
+<tr>
+<td>Module Manifest</td>
+<td><code>AzureResourceInventory.psd1</code></td>
+<td><code>AzureScout.psd1</code></td>
+</tr>
+<tr>
+<td>Root Module File</td>
+<td><code>AzureResourceInventory.psm1</code></td>
+<td><code>AzureScout.psm1</code></td>
+</tr>
+</tbody>
+</table>
+<p>All function definitions inside the <code>.ps1</code> files have been renamed to <code>AZSC</code>, but many <strong>file names on disk</strong> still use an intermediate <code>AZTI</code> prefix (e.g., <code>Start-AZTIAdvisoryJob.ps1</code> contains <code>function Start-AZSCAdvisoryJob</code>). Renaming the file names is tracked as tech debt.</p>
+<h2 id="new-capabilities">New Capabilities<a class="headerlink" href="#new-capabilities" title="Permanent link">&para;</a></h2>
+<p>These features do not exist in ARI v3.6.11 and were built specifically for AzureScout.</p>
+<h3 id="entra-id-inventory-15-modules">Entra ID Inventory (15 Modules)<a class="headerlink" href="#entra-id-inventory-15-modules" title="Permanent link">&para;</a></h3>
+<p>ARI focuses exclusively on ARM resources.
+AzureScout adds 15 Microsoft Graph-based modules that inventory Entra ID (Azure AD) objects:</p>
+<ul>
+<li>Users, Groups, Service Principals, App Registrations</li>
+<li>Conditional Access Policies, Named Locations</li>
+<li>Administrative Units, Directory Roles, Role Assignments</li>
+<li>Identity Providers, Security Defaults</li>
+<li>Managed Identities, Enterprise Applications</li>
+<li>Authentication Methods, Password Policies</li>
+</ul>
+<p>These are extracted via <code>Start-AZSCEntraExtraction</code> using a dedicated Graph API token.</p>
+<h3 id="permission-audit-permissionaudit">Permission Audit (<code>-PermissionAudit</code>)<a class="headerlink" href="#permission-audit-permissionaudit" title="Permanent link">&para;</a></h3>
+<p>A pre-flight capability that checks whether the running identity has the ARM and Graph permissions needed for a complete inventory <em>before</em> starting extraction.</p>
+<ul>
+<li><code>-PermissionAudit</code> — checks ARM permissions only (default)</li>
+<li><code>-PermissionAudit -Scope All</code> — checks both ARM and Graph permissions</li>
+<li>Outputs results to Console, Markdown, AsciiDoc, or JSON</li>
+</ul>
+<h3 id="execution-scope-scope">Execution Scope (<code>-Scope</code>)<a class="headerlink" href="#execution-scope-scope" title="Permanent link">&para;</a></h3>
+<p>ARI always inventories ARM resources across every subscription the identity can see.
+AzureScout adds a <code>-Scope</code> parameter that controls <em>what types of objects</em> are inventoried:</p>
+<ul>
+<li><code>ArmOnly</code> (default) — ARM resources only, same scope as ARI</li>
+<li><code>EntraOnly</code> — Entra ID (Azure AD) objects only, skips ARM</li>
+<li><code>All</code> — both ARM resources and Entra ID objects</li>
+</ul>
+<p>This is separate from the <code>-SubscriptionID</code> parameter (inherited from ARI) that targets a specific subscription.</p>
+<h3 id="multi-format-output-outputformat">Multi-Format Output (<code>-OutputFormat</code>)<a class="headerlink" href="#multi-format-output-outputformat" title="Permanent link">&para;</a></h3>
+<p>ARI outputs Excel (<code>.xlsx</code>) and Draw.io (<code>.drawio</code>) files.
+AzureScout adds:</p>
+<ul>
+<li><strong>JSON</strong> (<code>-OutputFormat JSON</code>) — raw cache data as <code>.json</code> for programmatic consumption</li>
+<li><strong>Markdown</strong> (<code>-OutputFormat Markdown</code> or <code>-OutputFormat MD</code>) — GitHub-Flavored Markdown tables</li>
+<li><strong>AsciiDoc</strong> (<code>-OutputFormat AsciiDoc</code> or <code>-OutputFormat Adoc</code>) — Antora/Confluence-compatible AsciiDoc tables</li>
+<li><strong>All</strong> (<code>-OutputFormat All</code>) — every format at once</li>
+</ul>
+<h3 id="category-filtering-category">Category Filtering (<code>-Category</code>)<a class="headerlink" href="#category-filtering-category" title="Permanent link">&para;</a></h3>
+<p>Lets you limit extraction and reporting to specific Azure resource categories:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-Category</span> <span class="n">Compute</span><span class="p">,</span> <span class="n">Networking</span>
+</code></pre></div>
+<p>Supports both short folder names (<code>Compute</code>) and long Azure portal names (<code>AI + machine learning</code>).
+Modules declare their category via a <code>.CATEGORY</code> comment header, enabling cross-category placement.</p>
+<h3 id="specialized-excel-tabs">Specialized Excel Tabs<a class="headerlink" href="#specialized-excel-tabs" title="Permanent link">&para;</a></h3>
+<p>AzureScout adds purpose-built Excel worksheets that aggregate data across resource types:</p>
+<ul>
+<li><strong>Cost Management</strong> — VM cost estimates, Arc ESU costs, reservation recommendations</li>
+<li><strong>Security Overview</strong> — Defender secure score, high/critical assessments, active alerts, plan pricing</li>
+<li><strong>Azure Update Manager</strong> — Patch compliance across VMs and Arc servers</li>
+<li><strong>Azure Monitor</strong> — Action groups, DCRs, DCEs, App Insights, alert rules, autoscale settings</li>
+</ul>
+<h3 id="resource-enrichment">Resource Enrichment<a class="headerlink" href="#resource-enrichment" title="Permanent link">&para;</a></h3>
+<p>Virtual Machine and Arc Server modules now pull supplementary data from multiple APIs:</p>
+<ul>
+<li><strong>Azure Monitor Metrics</strong> — 7-day average CPU and memory usage</li>
+<li><strong>Azure Site Recovery</strong> — DR replication status, target region, replication health</li>
+<li><strong>Cost Management</strong> — Estimated monthly cost (USD)</li>
+<li><strong>PolicyInsights</strong> — Policy assignment count and compliance state (Arc)</li>
+</ul>
+<h3 id="dependency-bootstrap">Dependency Bootstrap<a class="headerlink" href="#dependency-bootstrap" title="Permanent link">&para;</a></h3>
+<p>ARI requires modules to be pre-installed (declared in <code>RequiredModules</code>).
+AzureScout auto-installs missing dependencies on first import:</p>
+<ul>
+<li><code>ImportExcel</code>, <code>Az.Accounts</code>, <code>Az.ResourceGraph</code>, <code>Az.Storage</code>, <code>Az.Compute</code>, <code>Az.Authorization</code>, <code>Az.Resources</code></li>
+</ul>
+<h2 id="structural-changes">Structural Changes<a class="headerlink" href="#structural-changes" title="Permanent link">&para;</a></h2>
+<h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ARI</th>
+<th>AzureScout</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>README-only docs</td>
+<td>MkDocs Material documentation site (<code>docs/</code> folder) with navigation, search, and cross-references</td>
+</tr>
+<tr>
+<td>No API/architecture docs</td>
+<td>Dedicated pages for category filtering, coverage tables, category-to-folder mapping</td>
+</tr>
+<tr>
+<td>Inline examples only</td>
+<td>4 structured <code>.EXAMPLE</code> blocks on <code>Invoke-AzureScout</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ARI</th>
+<th>AzureScout</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No test suite</td>
+<td>25+ Pester test files covering public functions, private functions, inventory modules, output formats, and category filtering</td>
+</tr>
+<tr>
+<td>No synthetic data</td>
+<td><code>New-SyntheticSampleReport.ps1</code> generates test data for offline validation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="folder-reorganization">Folder Reorganization<a class="headerlink" href="#folder-reorganization" title="Permanent link">&para;</a></h3>
+<p>ARI's <code>Modules/Private/</code> uses numbered folders (<code>1.ExtractionFunctions/</code>, <code>2.ProcessingFunctions/</code>, etc.).
+AzureScout replaces these with descriptive names:</p>
+<table>
+<thead>
+<tr>
+<th>ARI Path</th>
+<th>AzureScout Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Modules/Private/1.ExtractionFunctions/</code></td>
+<td><code>Modules/Private/Extraction/</code></td>
+</tr>
+<tr>
+<td><code>Modules/Private/2.ProcessingFunctions/</code></td>
+<td><code>Modules/Private/Processing/</code></td>
+</tr>
+<tr>
+<td><code>Modules/Private/3.ReportingFunctions/</code></td>
+<td><code>Modules/Private/Reporting/</code></td>
+</tr>
+<tr>
+<td><code>Modules/Private/4.RAMPFunctions/</code></td>
+<td><em>(removed)</em></td>
+</tr>
+</tbody>
+</table>
+<h2 id="removed-from-ari">Removed from ARI<a class="headerlink" href="#removed-from-ari" title="Permanent link">&para;</a></h2>
+<p>The following ARI features were intentionally removed:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RAMP Functions</strong></td>
+<td><code>Invoke-AzureRAMPInventory</code> and the <code>4.RAMPFunctions/</code> folder were removed. RAMP (Risk Assessment &amp; Mitigation Program) is an internal Microsoft program not broadly applicable.</td>
+</tr>
+<tr>
+<td><strong>Auto-Update Logic</strong></td>
+<td>ARI calls <code>Update-Module</code> to self-update. AzureScout removes this — module updates should be a conscious decision by the operator, not automatic.</td>
+</tr>
+<tr>
+<td><strong>Remove-ARIExcelProcess</strong></td>
+<td>ARI included a function that kills Excel processes to prevent file-lock issues. AzureScout removes this aggressive behavior.</td>
+</tr>
+<tr>
+<td><strong>RequiredModules hard dependency</strong></td>
+<td>Replaced with runtime bootstrap (see <a href="#dependency-bootstrap">Dependency Bootstrap</a>).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="not-yet-in-azurescout">Not Yet in AzureScout<a class="headerlink" href="#not-yet-in-azurescout" title="Permanent link">&para;</a></h2>
+<p>These ARI features or ecosystem elements have not been ported or replicated:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GitHub Actions CI</strong></td>
+<td>ARI has CI workflows for automated testing and publishing. AzureScout does not yet have CI — tracked in the project roadmap.</td>
+</tr>
+<tr>
+<td><strong>PSGallery Publishing</strong></td>
+<td>ARI is published to the PowerShell Gallery. AzureScout is GitHub-only for now.</td>
+</tr>
+<tr>
+<td><strong>Automation Account Documentation</strong></td>
+<td>ARI has an 8-step guide for running in Azure Automation. AzureScout has the plumbing but no docs — tracked as <a href="https://github.com/thisismydemo/azure-scout/issues/32">Issue #32</a>.</td>
+</tr>
+<tr>
+<td><strong>Containerized Execution</strong></td>
+<td>ARI documents Docker-based execution. AzureScout has not validated container support.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="version-lineage">Version Lineage<a class="headerlink" href="#version-lineage" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ARI v3.6.11 (microsoft/ARI)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  └── Fork ──→ AzureScout v1.0.0 (thisismydemo/azure-scout)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>                  ├── Rebranding (ARI → AZSC function prefix)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>                  ├── +15 Entra ID modules
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>                  ├── +30 new ARM modules (Phases 7–17)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>                  ├── Permission Audit system
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>                  ├── Multi-format output (JSON, Markdown, AsciiDoc)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>                  ├── Category filtering
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>                  ├── Specialized Excel tabs
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>                  ├── Resource enrichment (metrics, DR, cost)
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>                  ├── MkDocs Material documentation
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>                  └── Pester test suite
+</code></pre></div>
+<h2 id="further-reading">Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../credits/">Credits &amp; Attribution</a> — full list of original authors and contributors</li>
+<li><a href="../">AzureScout Documentation Home</a></li>
+<li><a href="https://github.com/microsoft/ARI">ARI on GitHub</a> — the original project</li>
+<li><a href="https://github.com/thisismydemo/azure-scout">AzureScout on GitHub</a> — this fork</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

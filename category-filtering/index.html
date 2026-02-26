@@ -6,33 +6,35 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="See everything. Own your cloud. A PowerShell module for comprehensive Azure + Entra ID discovery and inventory.">
+        <meta name="description" content="How to use the -Category parameter to scope AzureScout scans to specific Azure resource categories.">
       
       
       
-        <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/">
+        <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/category-filtering/">
       
       
+        <link rel="prev" href="../parameters/">
       
-        <link rel="next" href="prerequisites/">
+      
+        <link rel="next" href="../output/">
       
       
         
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
-        <title>AzureScout Documentation</title>
+        <title>Category Filtering - AzureScout Documentation</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,7 +53,7 @@
       
     
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -76,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#azurescout" class="md-skip">
+        <a href="#category-filtering" class="md-skip">
           Skip to content
         </a>
       
@@ -92,7 +94,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="AzureScout Documentation" class="md-header__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
+    <a href=".." title="AzureScout Documentation" class="md-header__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -112,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              Category Filtering
             
           </span>
         </div>
@@ -230,7 +232,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="AzureScout Documentation" class="md-nav__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
+    <a href=".." title="AzureScout Documentation" class="md-nav__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -257,6 +259,227 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prerequisites & Required Modules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../authentication/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permissions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Permissions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parameters Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -276,7 +499,7 @@
   <span class="md-ellipsis">
     
   
-    Home
+    Category Filtering
   
 
     
@@ -287,14 +510,14 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <a href="." class="md-nav__link md-nav__link--active">
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
   <span class="md-ellipsis">
     
   
-    Home
+    Category Filtering
   
 
     
@@ -328,14 +551,80 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Overview">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Categories
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alias-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alias Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage Examples">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#single-category" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start
+        Single Category
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiple Categories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combine-with-output-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combine with Output Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-inventory-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Inventory (Default)
       
     </span>
   </a>
@@ -348,10 +637,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#documentation" class="md-nav__link">
+  <a href="#how-category-filtering-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Documentation
+        How Category Filtering Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-new-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding New Categories
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
       
     </span>
   </a>
@@ -365,87 +676,6 @@
     </li>
   
 
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Getting Started
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Getting Started
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="prerequisites/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Prerequisites & Required Modules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
               
             
               
@@ -455,147 +685,7 @@
   
   
     <li class="md-nav__item">
-      <a href="authentication/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Authentication
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="usage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Usage Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="permissions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Permissions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="parameters/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Parameters Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="category-filtering/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Category Filtering
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="output/" class="md-nav__link">
+      <a href="../output/" class="md-nav__link">
         
   
   
@@ -623,7 +713,7 @@
   
   
     <li class="md-nav__item">
-      <a href="troubleshooting/" class="md-nav__link">
+      <a href="../troubleshooting/" class="md-nav__link">
         
   
   
@@ -651,7 +741,7 @@
   
   
     <li class="md-nav__item">
-      <a href="testing/" class="md-nav__link">
+      <a href="../testing/" class="md-nav__link">
         
   
   
@@ -740,7 +830,7 @@
   
   
     <li class="md-nav__item">
-      <a href="arm-modules/" class="md-nav__link">
+      <a href="../arm-modules/" class="md-nav__link">
         
   
   
@@ -768,7 +858,7 @@
   
   
     <li class="md-nav__item">
-      <a href="entra-modules/" class="md-nav__link">
+      <a href="../entra-modules/" class="md-nav__link">
         
   
   
@@ -796,7 +886,7 @@
   
   
     <li class="md-nav__item">
-      <a href="coverage-table/" class="md-nav__link">
+      <a href="../coverage-table/" class="md-nav__link">
         
   
   
@@ -824,7 +914,7 @@
   
   
     <li class="md-nav__item">
-      <a href="category-structure/" class="md-nav__link">
+      <a href="../category-structure/" class="md-nav__link">
         
   
   
@@ -913,7 +1003,7 @@
   
   
     <li class="md-nav__item">
-      <a href="roadmap/" class="md-nav__link">
+      <a href="../roadmap/" class="md-nav__link">
         
   
   
@@ -941,7 +1031,7 @@
   
   
     <li class="md-nav__item">
-      <a href="folder-structure/" class="md-nav__link">
+      <a href="../folder-structure/" class="md-nav__link">
         
   
   
@@ -969,7 +1059,7 @@
   
   
     <li class="md-nav__item">
-      <a href="contributing/" class="md-nav__link">
+      <a href="../contributing/" class="md-nav__link">
         
   
   
@@ -997,7 +1087,7 @@
   
   
     <li class="md-nav__item">
-      <a href="credits/" class="md-nav__link">
+      <a href="../credits/" class="md-nav__link">
         
   
   
@@ -1025,7 +1115,7 @@
   
   
     <li class="md-nav__item">
-      <a href="ari-differences/" class="md-nav__link">
+      <a href="../ari-differences/" class="md-nav__link">
         
   
   
@@ -1053,7 +1143,7 @@
   
   
     <li class="md-nav__item">
-      <a href="changelog/" class="md-nav__link">
+      <a href="../changelog/" class="md-nav__link">
         
   
   
@@ -1116,14 +1206,80 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Overview">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Categories
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alias-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alias Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage Examples">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#single-category" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start
+        Single Category
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiple Categories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combine-with-output-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combine with Output Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-inventory-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Inventory (Default)
       
     </span>
   </a>
@@ -1136,10 +1292,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#documentation" class="md-nav__link">
+  <a href="#how-category-filtering-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Documentation
+        How Category Filtering Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-new-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding New Categories
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
       
     </span>
   </a>
@@ -1166,135 +1344,174 @@
   
 
 
-<h1 id="azurescout">AzureScout<a class="headerlink" href="#azurescout" title="Permanent link">&para;</a></h1>
-<p><img align="center" alt="AzureScout — See everything. Own your cloud." src="images/azurescout-banner.svg" /></p>
-<p><em>See everything. Own your cloud.</em></p>
-<div class="admonition note">
-<p class="admonition-title">Fork Attribution</p>
-<p><strong>AzureScout is a fork of <a href="https://github.com/microsoft/ARI">Azure Resource Inventory (ARI)</a></strong> by Microsoft, originally created by <a href="https://github.com/Claudio-Merola">Claudio Merola</a> and <a href="https://github.com/RenatoGregio">Renato Gregio</a>. The ARI project provided the entire foundation that AzureScout builds upon — 171 ARM inventory modules, the draw.io diagram engine, Excel reporting, and more. We are deeply grateful for their work.</p>
-<p>See <a href="credits/">Credits &amp; Attribution</a> for full details, or <a href="ari-differences/">Differences from ARI</a> for what has changed.</p>
-</div>
+<h1 id="category-filtering">Category Filtering<a class="headerlink" href="#category-filtering" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p><strong>AzureScout</strong> (AZSC) is a PowerShell module that discovers and inventories everything in your Azure environment — ARM resources, Entra ID objects, costs, security posture, policies, and more. Reports are generated as Excel workbooks, JSON, Markdown, or AsciiDoc.</p>
-<table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>ARM Resource Discovery</strong></td>
-<td>170+ resource modules across 18 Microsoft Azure categories (AI + machine learning, Analytics, Compute, Containers, Databases, Hybrid + multicloud, Identity, Integration, IoT, Management and governance, Monitor, Networking, Security, Storage, Web, and more)</td>
-</tr>
-<tr>
-<td><strong>Entra ID Inventory</strong></td>
-<td>15 identity modules — Users, Groups, Applications, Service Principals, Conditional Access, PIM, Administrative Units, Named Locations, Domains, Authentication Methods, and more</td>
-</tr>
-<tr>
-<td><strong>Excel Reports</strong></td>
-<td>Rich multi-worksheet workbooks with charts, pivot tables, and conditional formatting</td>
-</tr>
-<tr>
-<td><strong>JSON Output</strong></td>
-<td>Machine-readable normalized output for automation pipelines</td>
-</tr>
-<tr>
-<td><strong>Markdown &amp; AsciiDoc</strong></td>
-<td>Export reports as <code>.md</code> or <code>.adoc</code> for documentation pipelines and PDF generation</td>
-</tr>
-<tr>
-<td><strong>Network Diagrams</strong></td>
-<td>Auto-generated draw.io topology diagrams</td>
-</tr>
-<tr>
-<td><strong>Category Filtering</strong></td>
-<td>Run only the categories you need: <code>-Category Compute,Security,Networking</code></td>
-</tr>
-<tr>
-<td><strong>Permission Audit</strong></td>
-<td>Pre-flight ARM + Graph access checker with role remediation guidance</td>
-</tr>
-</tbody>
-</table>
-<h3 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Install from PSGallery</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">AzureScout</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Import from local clone</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Import-Module</span> <span class="p">./</span><span class="n">AzureScout</span><span class="p">.</span><span class="n">psd1</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Full discovery (ARM only, uses current Azure context)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Invoke-AzureScout</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># ARM + Entra ID</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-Scope</span> <span class="n">All</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># ARM-only scan with JSON output</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-Scope</span> <span class="n">ArmOnly</span> <span class="n">-OutputFormat</span> <span class="n">Json</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c"># Specific categories only</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-Category</span> <span class="n">Compute</span><span class="p">,</span><span class="n">Security</span><span class="p">,</span><span class="n">Networking</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c"># Permission pre-flight check</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-PermissionAudit</span>
-</code></pre></div>
+<p>The <code>-Category</code> parameter allows you to limit an AZSC inventory run to specific Azure resource categories.
+This is especially useful when you need a targeted scan rather than a full-tenant inventory.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>If you're already logged in via <code>Connect-AzAccount</code>, AzureScout uses your existing session — no additional flags needed.</p>
+<p>Category filtering can reduce run time by 70-90% for large tenants when you only need data from a specific service area.</p>
 </div>
-<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<h2 id="supported-categories">Supported Categories<a class="headerlink" href="#supported-categories" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Page</th>
-<th>Description</th>
+<th><code>-Category</code> Value</th>
+<th>Azure Portal Label</th>
+<th>Key Resource Types</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="authentication/">Authentication</a></td>
-<td>Five authentication methods (interactive, device-code, SPN+secret, SPN+cert, managed identity)</td>
+<td><code>AI</code></td>
+<td>AI + Machine Learning</td>
+<td>Cognitive Services, OpenAI, ML Workspaces, Bot Services, AI Foundry</td>
 </tr>
 <tr>
-<td><a href="usage/">Usage Guide</a></td>
-<td>Scope, OutputFormat, Category filtering, and examples</td>
+<td><code>Analytics</code></td>
+<td>Analytics</td>
+<td>Synapse, Databricks, Data Factory, Event Hub, Purview</td>
 </tr>
 <tr>
-<td><a href="permissions/">Permissions</a></td>
-<td>Required ARM RBAC roles and Microsoft Graph API permissions</td>
+<td><code>Compute</code></td>
+<td>Compute</td>
+<td>Virtual Machines, VMSS, Managed Disks, AVD, Cloud Services</td>
 </tr>
 <tr>
-<td><a href="category-filtering/">Category Filtering</a></td>
-<td>Run targeted scans using Microsoft's 18 Azure categories</td>
+<td><code>Containers</code></td>
+<td>Containers</td>
+<td>AKS, ARO, Container Apps, Container Registry</td>
 </tr>
 <tr>
-<td><a href="arm-modules/">ARM Modules</a></td>
-<td>170+ resource modules across 18 categories</td>
+<td><code>Databases</code></td>
+<td>Databases</td>
+<td>SQL Server, PostgreSQL, MySQL, Cosmos DB, Redis Cache</td>
 </tr>
 <tr>
-<td><a href="entra-modules/">Entra Modules</a></td>
-<td>15 Entra ID identity modules</td>
+<td><code>Hybrid</code></td>
+<td>Hybrid + multicloud</td>
+<td>Arc Servers, Arc Kubernetes, Azure Local Clusters, Arc Gateways</td>
 </tr>
 <tr>
-<td><a href="folder-structure/">Repository Structure</a></td>
-<td>Directory layout and module loading</td>
+<td><code>Identity</code></td>
+<td>Identity</td>
+<td>Users, Groups, App Registrations, PIM, Conditional Access</td>
 </tr>
 <tr>
-<td><a href="contributing/">Contributing</a></td>
-<td>How to add new inventory modules</td>
+<td><code>Integration</code></td>
+<td>Integration</td>
+<td>API Management, Service Bus, Event Hubs, Logic Apps</td>
 </tr>
 <tr>
-<td><a href="credits/">Credits</a></td>
-<td>Attribution and acknowledgments</td>
+<td><code>IoT</code></td>
+<td>Internet of Things</td>
+<td>IoT Hub, IoT DPS</td>
 </tr>
 <tr>
-<td><a href="changelog/">Changelog</a></td>
-<td>Version history</td>
+<td><code>Management</code></td>
+<td>Management and governance</td>
+<td>Subscriptions, Policy, Backup, Automation, Recovery Vault</td>
+</tr>
+<tr>
+<td><code>Monitor</code></td>
+<td>Monitor</td>
+<td>App Insights, DCRs, Action Groups, Alert Rules, Log Analytics</td>
+</tr>
+<tr>
+<td><code>Networking</code></td>
+<td>Networking</td>
+<td>VNets, NSGs, Load Balancers, VPN Gateways, Azure Firewall, Front Door</td>
+</tr>
+<tr>
+<td><code>Security</code></td>
+<td>Security</td>
+<td>Defender Assessments, Alerts, Secure Score, Key Vault</td>
+</tr>
+<tr>
+<td><code>Storage</code></td>
+<td>Storage</td>
+<td>Storage Accounts, Azure NetApp Files</td>
+</tr>
+<tr>
+<td><code>Web</code></td>
+<td>Web &amp; Mobile</td>
+<td>App Service Plans, App Services, Function Apps</td>
 </tr>
 </tbody>
 </table>
+<h2 id="alias-support">Alias Support<a class="headerlink" href="#alias-support" title="Permanent link">&para;</a></h2>
+<p>Long-form names displayed in the Azure portal are automatically normalized to their short equivalents:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># These are equivalent:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="nv">$tid</span> <span class="n">-Category</span> <span class="s1">&#39;IoT&#39;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="nv">$tid</span> <span class="n">-Category</span> <span class="s1">&#39;Internet of Things&#39;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="nv">$tid</span> <span class="n">-Category</span> <span class="s1">&#39;Monitor&#39;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="nv">$tid</span> <span class="n">-Category</span> <span class="s1">&#39;Monitoring&#39;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="nv">$tid</span> <span class="n">-Category</span> <span class="s1">&#39;Management&#39;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="nv">$tid</span> <span class="n">-Category</span> <span class="s1">&#39;Management and governance&#39;</span>
+</code></pre></div>
+<h2 id="usage-examples">Usage Examples<a class="headerlink" href="#usage-examples" title="Permanent link">&para;</a></h2>
+<h3 id="single-category">Single Category<a class="headerlink" href="#single-category" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Inventory only Virtual Machines and related Compute resources</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="p">&lt;</span><span class="n">tenant-id</span><span class="p">&gt;</span> <span class="n">-Category</span> <span class="n">Compute</span>
+</code></pre></div>
+<h3 id="multiple-categories">Multiple Categories<a class="headerlink" href="#multiple-categories" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Inventory Compute and Networking together (common combination for network topology reviews)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="p">&lt;</span><span class="n">tenant-id</span><span class="p">&gt;</span> <span class="n">-Category</span> <span class="n">Compute</span><span class="p">,</span><span class="n">Networking</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Security audit: inventory Security + Identity</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="p">&lt;</span><span class="n">tenant-id</span><span class="p">&gt;</span> <span class="n">-Category</span> <span class="n">Security</span><span class="p">,</span><span class="n">Identity</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Data platform review</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="p">&lt;</span><span class="n">tenant-id</span><span class="p">&gt;</span> <span class="n">-Category</span> <span class="n">Databases</span><span class="p">,</span><span class="n">Analytics</span><span class="p">,</span><span class="n">AI</span>
+</code></pre></div>
+<h3 id="combine-with-output-format">Combine with Output Format<a class="headerlink" href="#combine-with-output-format" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Targeted scan with JSON output only (fastest)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="p">&lt;</span><span class="n">tenant-id</span><span class="p">&gt;</span> <span class="n">-Category</span> <span class="n">Networking</span> <span class="n">-OutputFormat</span> <span class="n">Json</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Generate Markdown report for Compute only</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="p">&lt;</span><span class="n">tenant-id</span><span class="p">&gt;</span> <span class="n">-Category</span> <span class="n">Compute</span> <span class="n">-OutputFormat</span> <span class="n">Markdown</span>
+</code></pre></div>
+<h3 id="full-inventory-default">Full Inventory (Default)<a class="headerlink" href="#full-inventory-default" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># -Category defaults to &#39;All&#39; — all categories included</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="p">&lt;</span><span class="n">tenant-id</span><span class="p">&gt;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Explicit equivalent</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="p">&lt;</span><span class="n">tenant-id</span><span class="p">&gt;</span> <span class="n">-Category</span> <span class="n">All</span>
+</code></pre></div>
+<h2 id="how-category-filtering-works">How Category Filtering Works<a class="headerlink" href="#how-category-filtering-works" title="Permanent link">&para;</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Category filtering is applied at the module discovery stage, before any Azure API calls are made.
+Only the selected category folders are loaded, which means Resource Graph queries are also restricted to the resource types defined in those modules.</p>
+</div>
+<p>Execution flow with <code>-Category Compute</code>:</p>
+<pre class="mermaid"><code>graph TD
+    A[Invoke-AzureScout] --&gt; B{Category specified?}
+    B -- Yes --&gt; C[Normalize aliases]
+    C --&gt; D[Load only Compute/*.ps1 modules]
+    D --&gt; E[Execute Processing blocks]
+    E --&gt; F[Azure Resource Graph query - Compute types only]
+    F --&gt; G[Execute Reporting blocks]
+    G --&gt; H[Write Excel / JSON / Markdown]
+    B -- No / All --&gt; I[Load ALL category modules]
+    I --&gt; E</code></pre>
+<h2 id="adding-new-categories">Adding New Categories<a class="headerlink" href="#adding-new-categories" title="Permanent link">&para;</a></h2>
+<p>To add a new category to AZSC:</p>
+<ol>
+<li>Create a folder under <code>Modules/Public/InventoryModules/&lt;CategoryName&gt;/</code></li>
+<li>Add the folder name to the <code>[ValidateSet]</code> for <code>-Category</code> in <code>Invoke-AzureScout.ps1</code></li>
+<li>Optionally add alias entries to <code>$_categoryAliasMap</code> for common name variants</li>
+<li>Update <a href="../category-structure/">Category Structure</a> with the new mapping</li>
+<li>Create one or more <code>.ps1</code> module files using the module template in <code>Modules/Public/InventoryModules/</code></li>
+</ol>
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../category-structure/">Category Structure reference</a></li>
+<li><a href="../coverage-table/">Full Coverage Table</a></li>
+<li><a href="../">AzureScout Documentation Home</a></li>
+</ul>
 
 
 
@@ -1355,10 +1572,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

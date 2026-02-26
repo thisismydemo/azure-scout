@@ -6,29 +6,35 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="See everything. Own your cloud. A PowerShell module for comprehensive Azure + Entra ID discovery and inventory.">
+        <meta name="description" content="Complete reference of all Invoke-AzureScout and Test-AZSCPermissions parameters.">
       
       
       
+        <link rel="canonical" href="https://thisismydemo.github.io/azure-scout/parameters/">
       
+      
+        <link rel="prev" href="../permissions/">
+      
+      
+        <link rel="next" href="../category-filtering/">
       
       
         
       
       
-      <link rel="icon" href="/azure-scout/assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
-        <title>AzureScout Documentation</title>
+        <title>Parameters Reference - AzureScout Documentation</title>
       
     
     
-      <link rel="stylesheet" href="/azure-scout/assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="/azure-scout/assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -47,7 +53,7 @@
       
     
     
-    <script>__md_scope=new URL("/azure-scout/",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -71,6 +77,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#parameters-reference" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -83,7 +94,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/azure-scout/." title="AzureScout Documentation" class="md-header__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
+    <a href=".." title="AzureScout Documentation" class="md-header__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -103,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              Parameters Reference
             
           </span>
         </div>
@@ -221,7 +232,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/azure-scout/." title="AzureScout Documentation" class="md-nav__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
+    <a href=".." title="AzureScout Documentation" class="md-nav__button md-logo" aria-label="AzureScout Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -251,7 +262,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -275,8 +286,10 @@
       
   
   
+    
   
   
+  
     
     
     
@@ -287,13 +300,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
@@ -314,7 +325,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -332,7 +343,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/prerequisites/" class="md-nav__link">
+      <a href="../prerequisites/" class="md-nav__link">
         
   
   
@@ -360,7 +371,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/authentication/" class="md-nav__link">
+      <a href="../authentication/" class="md-nav__link">
         
   
   
@@ -388,7 +399,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/usage/" class="md-nav__link">
+      <a href="../usage/" class="md-nav__link">
         
   
   
@@ -416,7 +427,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/permissions/" class="md-nav__link">
+      <a href="../permissions/" class="md-nav__link">
         
   
   
@@ -441,10 +452,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="/azure-scout/parameters/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parameters Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -460,6 +498,120 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#invoke-azurescout-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invoke-AzureScout Parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Invoke-AzureScout Parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#content-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Content Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagram
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-azscpermissions-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test-AZSCPermissions Parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -472,7 +624,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/category-filtering/" class="md-nav__link">
+      <a href="../category-filtering/" class="md-nav__link">
         
   
   
@@ -500,7 +652,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/output/" class="md-nav__link">
+      <a href="../output/" class="md-nav__link">
         
   
   
@@ -528,7 +680,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/troubleshooting/" class="md-nav__link">
+      <a href="../troubleshooting/" class="md-nav__link">
         
   
   
@@ -556,7 +708,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/testing/" class="md-nav__link">
+      <a href="../testing/" class="md-nav__link">
         
   
   
@@ -645,7 +797,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/arm-modules/" class="md-nav__link">
+      <a href="../arm-modules/" class="md-nav__link">
         
   
   
@@ -673,7 +825,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/entra-modules/" class="md-nav__link">
+      <a href="../entra-modules/" class="md-nav__link">
         
   
   
@@ -701,7 +853,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/coverage-table/" class="md-nav__link">
+      <a href="../coverage-table/" class="md-nav__link">
         
   
   
@@ -729,7 +881,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/category-structure/" class="md-nav__link">
+      <a href="../category-structure/" class="md-nav__link">
         
   
   
@@ -818,7 +970,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/roadmap/" class="md-nav__link">
+      <a href="../roadmap/" class="md-nav__link">
         
   
   
@@ -846,7 +998,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/folder-structure/" class="md-nav__link">
+      <a href="../folder-structure/" class="md-nav__link">
         
   
   
@@ -874,7 +1026,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/contributing/" class="md-nav__link">
+      <a href="../contributing/" class="md-nav__link">
         
   
   
@@ -902,7 +1054,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/credits/" class="md-nav__link">
+      <a href="../credits/" class="md-nav__link">
         
   
   
@@ -930,7 +1082,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/ari-differences/" class="md-nav__link">
+      <a href="../ari-differences/" class="md-nav__link">
         
   
   
@@ -958,7 +1110,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/azure-scout/changelog/" class="md-nav__link">
+      <a href="../changelog/" class="md-nav__link">
         
   
   
@@ -1003,6 +1155,110 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#invoke-azurescout-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invoke-AzureScout Parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Invoke-AzureScout Parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#content-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Content Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagram
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-azscpermissions-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test-AZSCPermissions Parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1015,8 +1271,220 @@
               
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
 
+
+  
+  
+
+
+<h1 id="parameters-reference">Parameters Reference<a class="headerlink" href="#parameters-reference" title="Permanent link">&para;</a></h1>
+<h2 id="invoke-azurescout-parameters">Invoke-AzureScout Parameters<a class="headerlink" href="#invoke-azurescout-parameters" title="Permanent link">&para;</a></h2>
+<h3 id="core">Core<a class="headerlink" href="#core" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-TenantID</code></td>
+<td>Target Azure AD / Entra ID tenant ID</td>
+</tr>
+<tr>
+<td><code>-SubscriptionID</code></td>
+<td>Limit to one or more specific subscription IDs (comma-separated or array)</td>
+</tr>
+<tr>
+<td><code>-ResourceGroup</code></td>
+<td>Limit to one or more specific resource groups</td>
+</tr>
+<tr>
+<td><code>-ManagementGroup</code></td>
+<td>Inventory all subscriptions under a management group</td>
+</tr>
+<tr>
+<td><code>-Scope</code></td>
+<td><code>ArmOnly</code> (default), <code>All</code>, or <code>EntraOnly</code> — controls which data domains are inventoried</td>
+</tr>
+<tr>
+<td><code>-OutputFormat</code></td>
+<td><code>All</code> (default), <code>Excel</code>, <code>Json</code>, <code>Markdown</code> (<code>MD</code>), <code>AsciiDoc</code> (<code>Adoc</code>) — controls report file types</td>
+</tr>
+<tr>
+<td><code>-Category</code></td>
+<td>Filter by resource category: <code>AI</code>, <code>Analytics</code>, <code>Compute</code>, <code>Containers</code>, <code>Databases</code>, <code>Hybrid</code>, <code>Identity</code>, <code>Integration</code>, <code>IoT</code>, <code>Management</code>, <code>Monitor</code>, <code>Networking</code>, <code>Security</code>, <code>Storage</code>, <code>Web</code> — see <a href="../category-filtering/">Category Filtering</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-AppId</code></td>
+<td>Service principal application (client) ID</td>
+</tr>
+<tr>
+<td><code>-Secret</code></td>
+<td>Service principal client secret or certificate password</td>
+</tr>
+<tr>
+<td><code>-CertificatePath</code></td>
+<td>Path to <code>.pfx</code> certificate file for SPN authentication</td>
+</tr>
+<tr>
+<td><code>-DeviceLogin</code></td>
+<td>Use device code authentication flow (for headless/remote sessions)</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="../authentication/">Authentication</a> for detailed examples of each method.</p>
+<h3 id="content-options">Content Options<a class="headerlink" href="#content-options" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-SecurityCenter</code></td>
+<td>Include Microsoft Defender for Cloud data (assessments, alerts, secure score)</td>
+</tr>
+<tr>
+<td><code>-IncludeTags</code></td>
+<td>Include resource tags in Excel worksheets</td>
+</tr>
+<tr>
+<td><code>-SkipPolicy</code></td>
+<td>Skip Azure Policy compliance collection</td>
+</tr>
+<tr>
+<td><code>-SkipAdvisory</code></td>
+<td>Skip Azure Advisor recommendation collection</td>
+</tr>
+<tr>
+<td><code>-SkipVMDetails</code></td>
+<td>Skip extra VM detail collection (extensions, boot diagnostics status)</td>
+</tr>
+<tr>
+<td><code>-SkipDiagram</code></td>
+<td>Skip network diagram generation</td>
+</tr>
+<tr>
+<td><code>-SkipPermissionCheck</code></td>
+<td>Skip the pre-flight permission validation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-ReportName</code></td>
+<td>Custom report filename (default: <code>AzureScout_Report_&lt;timestamp&gt;</code>)</td>
+</tr>
+<tr>
+<td><code>-ReportDir</code></td>
+<td>Custom output directory (default: <code>C:\AzureScout\</code> on Windows, <code>$HOME/AzureScout/</code> on Linux/Mac)</td>
+</tr>
+<tr>
+<td><code>-Lite</code></td>
+<td>Lightweight Excel report — no charts or pivot tables</td>
+</tr>
+</tbody>
+</table>
+<h3 id="diagram">Diagram<a class="headerlink" href="#diagram" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-DiagramFullEnvironment</code></td>
+<td>Include all network components in the draw.io topology diagram</td>
+</tr>
+</tbody>
+</table>
+<h3 id="other">Other<a class="headerlink" href="#other" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-AzureEnvironment</code></td>
+<td>Target Azure cloud: <code>AzureCloud</code> (default), <code>AzureUSGovernment</code>, <code>AzureChinaCloud</code>, <code>AzureGermanCloud</code></td>
+</tr>
+<tr>
+<td><code>-Debug</code></td>
+<td>Verbose debug output during extraction and processing</td>
+</tr>
+</tbody>
+</table>
+<h2 id="test-azscpermissions-parameters">Test-AZSCPermissions Parameters<a class="headerlink" href="#test-azscpermissions-parameters" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-TenantID</code></td>
+<td>Target tenant ID to validate permissions against</td>
+</tr>
+<tr>
+<td><code>-Scope</code></td>
+<td><code>All</code> (default), <code>ArmOnly</code>, or <code>EntraOnly</code> — controls which permission checks run</td>
+</tr>
+</tbody>
+</table>
+<p>Returns a structured object:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">$result</span> <span class="p">=</span> <span class="nb">Test-AZSCPermissions</span> <span class="n">-TenantID</span> <span class="s1">&#39;00000000-...&#39;</span> <span class="n">-Scope</span> <span class="n">All</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$result</span><span class="p">.</span><span class="n">ArmAccess</span>    <span class="c"># $true / $false</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">$result</span><span class="p">.</span><span class="n">GraphAccess</span>  <span class="c"># $true / $false</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">$result</span><span class="p">.</span><span class="n">Details</span>      <span class="c"># Array of check results with remediation guidance</span>
+</code></pre></div>
+<p>See <a href="../permissions/">Permissions</a> for the full list of required roles and API permissions.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
               </article>
             </div>
           
@@ -1061,10 +1529,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "/azure-scout/", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "/azure-scout/assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="/azure-scout/assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
