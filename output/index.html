@@ -625,6 +625,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#power-bi-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Power BI Export
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Power BI Export">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#output-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#importing-into-power-bi-desktop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Importing into Power BI Desktop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#importing-into-microsoft-fabric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Importing into Microsoft Fabric
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1180,6 +1230,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#power-bi-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Power BI Export
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Power BI Export">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#output-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#importing-into-power-bi-desktop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Importing into Power BI Desktop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#importing-into-microsoft-fabric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Importing into Microsoft Fabric
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1254,6 +1354,11 @@
 <td>AsciiDoc document for Antora/Confluence rendering</td>
 </tr>
 <tr>
+<td><code>PowerBI/</code></td>
+<td>CSV bundle</td>
+<td>Flat normalized CSVs optimized for Power BI / Microsoft Fabric import (see <a href="#power-bi-export">Power BI Export</a>)</td>
+</tr>
+<tr>
 <td><code>AzureScout_Diagram_&lt;timestamp&gt;.drawio</code></td>
 <td>Draw.io</td>
 <td>Network topology diagram (skip with <code>-SkipDiagram</code>)</td>
@@ -1317,9 +1422,37 @@
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># AsciiDoc only</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="s1">&#39;00000000-...&#39;</span> <span class="n">-OutputFormat</span> <span class="n">AsciiDoc</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># All formats (default)</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="s1">&#39;00000000-...&#39;</span> <span class="n">-OutputFormat</span> <span class="n">All</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># Power BI CSV bundle only</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="s1">&#39;00000000-...&#39;</span> <span class="n">-OutputFormat</span> <span class="n">PowerBI</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c"># All formats (default)</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="nb">Invoke-AzureScout</span> <span class="n">-TenantID</span> <span class="s1">&#39;00000000-...&#39;</span> <span class="n">-OutputFormat</span> <span class="n">All</span>
 </code></pre></div>
+<h2 id="power-bi-export">Power BI Export<a class="headerlink" href="#power-bi-export" title="Permanent link">&para;</a></h2>
+<p>When <code>-OutputFormat PowerBI</code> (or <code>All</code>) is used, AzureScout generates a <code>PowerBI/</code> subfolder alongside the main report containing flat normalized CSV files ready for direct import into Power BI Desktop or Microsoft Fabric.</p>
+<h3 id="output-structure">Output Structure<a class="headerlink" href="#output-structure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>PowerBI/
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    _metadata.csv               — Scan metadata (tenant, date, scope, version)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    _relationships.json         — Star-schema relationship definitions for Power BI data model
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    Subscriptions.csv           — Subscription dimension table (SubscriptionId, SubscriptionName)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    Resources_{Module}.csv      — One file per ARM inventory module
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    Entra_{Module}.csv          — One file per Entra ID / Identity module
+</code></pre></div>
+<p>Every resource CSV includes <code>_Category</code> and <code>_Module</code> columns for cross-table slicing, plus a <code>Subscription</code> column that links to <code>Subscriptions.csv</code> via the relationships manifest.</p>
+<h3 id="importing-into-power-bi-desktop">Importing into Power BI Desktop<a class="headerlink" href="#importing-into-power-bi-desktop" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Open Power BI Desktop → <strong>Get Data</strong> → <strong>Folder</strong></li>
+<li>Select the <code>PowerBI/</code> directory</li>
+<li>Click <strong>Transform Data</strong> and combine the CSVs by prefix (<code>Resources_*</code>, <code>Entra_*</code>)</li>
+<li>Use <code>_relationships.json</code> as a reference to configure the data model relationships (or load it as a separate JSON table)</li>
+<li>Build slicers on <code>Subscription</code>, <code>_Category</code>, <code>Location</code>, and <code>_Module</code></li>
+</ol>
+<h3 id="importing-into-microsoft-fabric">Importing into Microsoft Fabric<a class="headerlink" href="#importing-into-microsoft-fabric" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Upload the <code>PowerBI/</code> folder to a Fabric <strong>Lakehouse</strong> or <strong>OneLake</strong></li>
+<li>Use <strong>Dataflows Gen2</strong> or <strong>Notebooks</strong> to ingest the CSVs as Delta tables</li>
+<li>Build a Fabric <strong>Semantic Model</strong> using the relationship definitions in <code>_relationships.json</code></li>
+</ol>
 
 
 
