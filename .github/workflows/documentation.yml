@@ -6,18 +6,19 @@ on:
       - main
     paths:
       - 'docs/**'
-      - 'antora-playbook.yml'
-      - '.ui/**'
+      - 'mkdocs.yml'
       - '.github/workflows/documentation.yml'
   pull_request:
     branches:
       - main
     paths:
       - 'docs/**'
-      - 'antora-playbook.yml'
-      - '.ui/**'
+      - 'mkdocs.yml'
       - '.github/workflows/documentation.yml'
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -28,17 +29,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          node-version: '20'
+          python-version: '3.12'
 
-      - name: Build Antora site
-        run: npx antora antora-playbook.yml
+      - name: Install MkDocs Material
+        run: pip install mkdocs-material
+
+      - name: Build MkDocs site
+        run: mkdocs build --strict
 
       - name: Deploy (if on main branch)
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/site
+          publish_dir: ./site
