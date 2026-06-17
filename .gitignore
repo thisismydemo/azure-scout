@@ -201,3 +201,7 @@ tests/test-output/
 # Real data dumps (keep synthetic sample committed)
 tests/datadump/*
 !tests/datadump/sample-report.json
+
+# Claude Code local settings (logs and machine-local overrides only)
+.claude/logs/
+.claude/settings.local.json
