@@ -4,14 +4,15 @@ description: See everything. Own your cloud. A PowerShell module for comprehensi
 
 # AzureScout
 
-![AzureScout — See everything. Own your cloud.](images/azurescout-banner.svg){ align=center }
+![AzureScout — See everything. Own your cloud.](images/azurescout-banner.svg)
 
 *See everything. Own your cloud.*
 
-!!! note "Fork Attribution"
-    **AzureScout is a fork of [Azure Resource Inventory (ARI)](https://github.com/microsoft/ARI)** by Microsoft, originally created by [Claudio Merola](https://github.com/Claudio-Merola) and [Renato Gregio](https://github.com/RenatoGregio). The ARI project provided the entire foundation that AzureScout builds upon — 171 ARM inventory modules, the draw.io diagram engine, Excel reporting, and more. We are deeply grateful for their work.
+::: info Fork Attribution
+**AzureScout is a fork of [Azure Resource Inventory (ARI)](https://github.com/microsoft/ARI)** by Microsoft, originally created by [Claudio Merola](https://github.com/Claudio-Merola) and [Renato Gregio](https://github.com/RenatoGregio). The ARI project provided the entire foundation that AzureScout builds upon — 171 ARM inventory modules, the draw.io diagram engine, Excel reporting, and more. We are deeply grateful for their work.
 
-    See [Credits & Attribution](credits.md) for full details, or [Differences from ARI](ari-differences.md) for what has changed.
+See [Credits & Attribution](credits.md) for full details, or [Differences from ARI](ari-differences.md) for what has changed.
+:::
 
 ## Overview
 
@@ -53,8 +54,9 @@ Invoke-AzureScout -Category Compute,Security,Networking
 Invoke-AzureScout -PermissionAudit
 ```
 
-!!! tip
-    If you're already logged in via `Connect-AzAccount`, AzureScout uses your existing session — no additional flags needed.
+::: tip
+If you're already logged in via `Connect-AzAccount`, AzureScout uses your existing session — no additional flags needed.
+:::
 
 ## Documentation
 

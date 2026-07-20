@@ -132,8 +132,9 @@ When you add a new inventory module:
 3. Add a mock resource hashtable to the `$MockResources` array that matches the module's expected resource type.
 4. Run the test file and verify both Processing and Reporting phases pass.
 
-!!! tip
-    Use the `Module-template.tpl` in `Modules/Public/InventoryModules/` as the starting point for both the module and its corresponding test entry.
+::: tip
+Use the `Module-template.tpl` in `Modules/Public/InventoryModules/` as the starting point for both the module and its corresponding test entry.
+:::
 
 ## Common Pitfalls
 

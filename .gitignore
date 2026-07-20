@@ -29,35 +29,12 @@ coverage/
 # PSScriptAnalyzer results
 PSScriptAnalyzer.results.xml
 
-# MkDocs specific
-site/
-docs_build/
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
+# VitePress build output
+docs/.vitepress/dist/
+docs/.vitepress/cache/
 
-# Python virtual environment
-venv/
-ENV/
-docs-venv/
-.venv/
+# MkDocs legacy (site/ kept in case of rollback)
+site/
 
 # IDE specific files
 .idea/

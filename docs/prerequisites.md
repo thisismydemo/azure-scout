@@ -42,8 +42,9 @@ Install-Module -Name ImportExcel -Scope CurrentUser -Force
 
 AZSC queries the following resource providers during its pre-flight permission audit.
 
-!!! important
-    **Not all resource providers will be — or should be — registered in every subscription.** This is completely normal. Azure only registers providers for services you actually use, and most organisations deliberately limit provider registration per subscription as a governance best practice. For example, a connectivity subscription will not have `Microsoft.MachineLearningServices` registered, and an identity subscription will not have `Microsoft.DesktopVirtualization`. The `[FAIL]` and `[WARN]` messages in the permission audit output are **informational, not errors** — they tell you which modules will be skipped because the corresponding service is not deployed in that subscription. The scan will complete successfully regardless.
+::: warning
+**Not all resource providers will be — or should be — registered in every subscription.** This is completely normal. Azure only registers providers for services you actually use, and most organisations deliberately limit provider registration per subscription as a governance best practice. For example, a connectivity subscription will not have `Microsoft.MachineLearningServices` registered, and an identity subscription will not have `Microsoft.DesktopVirtualization`. The `[FAIL]` and `[WARN]` messages in the permission audit output are **informational, not errors** — they tell you which modules will be skipped because the corresponding service is not deployed in that subscription. The scan will complete successfully regardless.
+:::
 
 If a provider is not registered, the corresponding inventory modules are simply skipped and the report will not contain a tab for that service in that subscription.
 

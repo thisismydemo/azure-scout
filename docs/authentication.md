@@ -53,8 +53,9 @@ Invoke-AzureScout `
     -Secret    $env:CLIENT_SECRET
 ```
 
-!!! important
-    Store the secret in a Key Vault or pipeline secret — never hardcode it.
+::: warning
+Store the secret in a Key Vault or pipeline secret — never hardcode it.
+:::
 
 ### 4. Service Principal + Certificate
 

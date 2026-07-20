@@ -1,0 +1,13 @@
+{
+  "name": "azure-scout-docs",
+  "version": "1.0.0",
+  "description": "AzureScout documentation site",
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "devDependencies": {
+    "vitepress": "^1.5.0"
+  }
+}
