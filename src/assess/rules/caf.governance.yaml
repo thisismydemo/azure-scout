@@ -1,0 +1,27 @@
+area: "Governance (policy & compliance)"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-GOV-01
+    title: "Azure Policy assignments present"
+    severity: high
+    query: "$.governance.policyAssignments[*]"
+    assert: { type: countGreaterThan, value: 0 }
+    remediation: "Assign the ALZ policy initiatives at the appropriate management-group scope."
+    manual: false
+
+  - id: CAF-GOV-02
+    title: "No policy assignment set to DoNotEnforce"
+    severity: medium
+    query: "$.governance.policyAssignments[?(@.properties.enforcementMode == 'DoNotEnforce')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Switch policy assignments from DoNotEnforce to Default once validated."
+    manual: false
+
+  - id: CAF-GOV-03
+    title: "Resource locks protect critical scopes"
+    severity: medium
+    query: "$.governance.resourceLocks[*]"
+    assert: { type: exists }
+    remediation: "Apply CanNotDelete/ReadOnly locks to platform and shared resources."
+    manual: false

@@ -1,0 +1,35 @@
+area: "Network topology & connectivity"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-NET-01
+    title: "Hub-spoke or vWAN topology present"
+    severity: high
+    query: "$.networking.virtualNetworks[?(@.properties.peerings.length > 0)]"
+    assert: { type: countGreaterThan, value: 0 }
+    remediation: "Establish a hub-spoke or Virtual WAN topology per the CAF network design area."
+    manual: false
+
+  - id: CAF-NET-02
+    title: "Azure Firewall or NVA present in hub"
+    severity: high
+    query: "$.networking.azureFirewalls[*]"
+    assert: { type: countGreaterThan, value: 0 }
+    remediation: "Deploy Azure Firewall (or an NVA) in the hub for centralized egress control."
+    manual: false
+
+  - id: CAF-NET-03
+    title: "No subnet exceeds IP utilization threshold"
+    severity: medium
+    query: "$.networking.subnets[?(@.ipUtilizationPct > 90)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Re-address or split subnets exceeding 90% IP utilization."
+    manual: false
+
+  - id: CAF-NET-04
+    title: "DDoS protection plan present on internet-facing VNets"
+    severity: medium
+    query: "$.networking.virtualNetworks[?(@.properties.enableDdosProtection == true)]"
+    assert: { type: countGreaterThan, value: 0 }
+    remediation: "Enable Azure DDoS Network Protection on internet-facing virtual networks."
+    manual: false

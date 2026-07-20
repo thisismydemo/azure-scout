@@ -1,0 +1,35 @@
+area: "Identity & access management"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-IDN-01
+    title: "Role assignments use groups, not individual users, at scale"
+    severity: medium
+    query: "$.governance.roleAssignments[?(@.properties.principalType == 'User')]"
+    assert: { type: countLessThan, value: 50 }
+    remediation: "Prefer Entra ID groups over direct user role assignments for manageability."
+    manual: false
+
+  - id: CAF-IDN-02
+    title: "Privileged Identity Management (PIM) eligibility in use"
+    severity: high
+    query: "$.governance.pimEligibility[*]"
+    assert: { type: exists }
+    remediation: "Adopt PIM eligible assignments for privileged roles instead of permanent grants."
+    manual: false
+
+  - id: CAF-IDN-03
+    title: "No classic subscription administrators remain"
+    severity: high
+    query: "$.governance.classicAdministrators[*]"
+    assert: { type: notExists }
+    remediation: "Remove classic co-administrators; use Azure RBAC exclusively."
+    manual: false
+
+  - id: CAF-IDN-04
+    title: "Conditional Access baseline reviewed"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm a Conditional Access baseline (MFA, device compliance) is defined and enforced."
+    manual: true

@@ -1,0 +1,27 @@
+area: "Performance efficiency"
+framework: WAF
+weight: 1.0
+rules:
+  - id: WAF-PE-01
+    title: "No subnet near IP exhaustion (headroom for scale)"
+    severity: medium
+    query: "$.networking.subnets[?(@.ipUtilizationPct > 90)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Provide address-space headroom so workloads can scale out."
+    manual: false
+
+  - id: WAF-PE-02
+    title: "Advisor performance recommendations addressed"
+    severity: medium
+    query: "$.advisor[?(@.Category == 'Performance' && @.Impact == 'High')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Act on high-impact Advisor performance recommendations."
+    manual: false
+
+  - id: WAF-PE-04
+    title: "Autoscale configured where appropriate"
+    severity: low
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm autoscale rules are defined for elastic workloads."
+    manual: true

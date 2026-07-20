@@ -1,0 +1,21 @@
+# azure-pipelines.yml — read-only, SPN via service connection
+# Runs the full assessment and publishes all report tiers. Tracks ADO Story AB#5052.
+trigger: none
+pool: { vmImage: 'ubuntu-latest' }
+steps:
+  - task: AzurePowerShell@5
+    displayName: 'Run full assessment'
+    inputs:
+      azureSubscription: '<read-only-service-connection>'
+      ScriptType: 'InlineScript'
+      azurePowerShellVersion: 'LatestVersion'
+      pwsh: true
+      Inline: |
+        Import-Module ./AzureScout.psd1
+        Invoke-AzureScout `
+          -Assessment All `
+          -ManagementGroupId $env:MG_ID `
+          -OutputFormat PowerBi,Html,Pptx,Json `
+          -OutputPath $(Build.ArtifactStagingDirectory)
+  - publish: $(Build.ArtifactStagingDirectory)
+    artifact: assessment-output

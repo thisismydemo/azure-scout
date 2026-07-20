@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/base.json",
+  "outputPath": "./output",
+  "readOnly": true,
+  "scoring": {
+    "statusWeight": { "Pass": 1.0, "Partial": 0.5, "Fail": 0.0 }
+  },
+  "ingest": {
+    "azGovViz": {
+      "repoUrl": "https://github.com/Azure/Azure-Governance-Visualizer.git",
+      "pinnedRef": null
+    }
+  }
+}

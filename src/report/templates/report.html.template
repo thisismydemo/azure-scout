@@ -1,0 +1,62 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Landing Zone Assessment</title>
+<style>
+ body{font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;margin:0;color:#1a1a1a}
+ header{background:#1F4E78;color:#fff;padding:20px 28px}
+ .cards{display:flex;gap:16px;padding:20px 28px;flex-wrap:wrap}
+ .card{border:1px solid #e2e2e2;border-radius:10px;padding:18px 22px;min-width:150px}
+ .score{font-size:34px;font-weight:700}
+ .pass{color:#2E7D32}.partial{color:#B8860B}.fail{color:#B00020}.manual{color:#555}
+ table{border-collapse:collapse;width:calc(100% - 56px);margin:0 28px 28px}
+ th,td{border:1px solid #e2e2e2;padding:8px 10px;text-align:left;vertical-align:top}
+ th{background:#1F4E78;color:#fff;cursor:pointer}
+ tr:nth-child(even){background:#f6f9fd}
+ input{margin:0 28px 12px;padding:8px 10px;width:calc(100% - 56px);border:1px solid #ccc;border-radius:6px}
+ .tabs{display:flex;gap:8px;padding:0 28px}.tab{padding:8px 14px;cursor:pointer;border-bottom:3px solid transparent}
+ .tab.active{border-color:#2E75B6;font-weight:600}
+</style></head><body>
+<header><h1>Azure Landing Zone Assessment</h1><div id="ts"></div></header>
+<div class="tabs">
+  <div class="tab active" data-t="scores">Scores</div>
+  <div class="tab" data-t="gaps">Gaps</div>
+  <div class="tab" data-t="manual">Manual review</div>
+  <div class="tab" data-t="all">All findings</div>
+</div>
+<div id="view"></div>
+<script>/*__DATA__*/</script>
+<script>
+const D = window.__FINDINGS__;
+document.getElementById('ts').textContent = 'Generated ' + new Date(D.GeneratedOn).toLocaleString();
+const V = document.getElementById('view');
+const esc = s => (s??'').toString().replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function scores(){
+  const fw = D.Frameworks.map(f=>`<div class="card"><div>${f.Framework}</div><div class="score">${f.Score}</div></div>`).join('');
+  const rows = D.Areas.map(a=>`<tr><td>${a.Framework}</td><td>${esc(a.Area)}</td>
+    <td class="${a.Score>=80?'pass':a.Score>=50?'partial':'fail'}">${a.Score??'&mdash;'}</td>
+    <td class="pass">${a.Pass}</td><td class="fail">${a.Fail}</td><td class="manual">${a.Manual}</td></tr>`).join('');
+  V.innerHTML = `<div class="cards">${fw}</div>
+   <table><tr><th>Framework</th><th>Area</th><th>Score</th><th>Pass</th><th>Fail</th><th>Manual</th></tr>${rows}</table>`;
+}
+function gaps(){
+  V.innerHTML = `<input id="q" placeholder="Filter gaps...">
+   <table id="gt"><tr><th>Severity</th><th>Area</th><th>Finding</th><th>Remediation</th></tr>
+   ${D.Gaps.map(g=>`<tr><td class="${g.Severity==='high'?'fail':g.Severity==='medium'?'partial':''}">${g.Severity}</td>
+     <td>${esc(g.Area)}</td><td>${esc(g.Title)}</td><td>${esc(g.Remediation)}</td></tr>`).join('')}</table>`;
+  document.getElementById('q').oninput = e=>{const v=e.target.value.toLowerCase();
+    [...document.querySelectorAll('#gt tr')].slice(1).forEach(r=>r.style.display=r.innerText.toLowerCase().includes(v)?'':'none');};
+}
+function manual(){
+  V.innerHTML = `<table><tr><th>Area</th><th>Question</th><th>Evidence found</th><th>Guidance</th></tr>
+   ${D.Manual.map(m=>`<tr><td>${esc(m.Area)}</td><td>${esc(m.Title)}</td>
+     <td>${m.EvidenceCount} item(s)</td><td>${esc(m.Remediation)}</td></tr>`).join('')}</table>`;
+}
+function all(){
+  V.innerHTML = `<table><tr><th>Id</th><th>Area</th><th>Status</th><th>Sev</th><th>Finding</th></tr>
+   ${D.Findings.map(f=>`<tr><td>${f.Id}</td><td>${esc(f.Area)}</td>
+     <td class="${f.Status.toLowerCase()}">${f.Status}</td><td>${f.Severity??''}</td><td>${esc(f.Title)}</td></tr>`).join('')}</table>`;
+}
+const R={scores,gaps,manual,all};
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active'); R[t.dataset.t]();});
+scores();
+</script></body></html>
