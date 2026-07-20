@@ -22,7 +22,19 @@
       "WebFetch(domain:dev.azure.com)",
       "Bash(mkdocs:*)",
       "Bash(pip:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "mcp__8e36de33-4075-4e27-a840-adf850ff97de__get_auth_token",
+      "mcp__8e36de33-4075-4e27-a840-adf850ff97de__get_kv_secret",
+      "mcp__8e36de33-4075-4e27-a840-adf850ff97de__get_tenant",
+      "mcp__8e36de33-4075-4e27-a840-adf850ff97de__list_tenants",
+      "mcp__8e36de33-4075-4e27-a840-adf850ff97de__get_standard",
+      "mcp__8e36de33-4075-4e27-a840-adf850ff97de__get_guidance",
+      "mcp__8e36de33-4075-4e27-a840-adf850ff97de__get_repo",
+      "mcp__8e36de33-4075-4e27-a840-adf850ff97de__find_repos",
+      "mcp__8e36de33-4075-4e27-a840-adf850ff97de__validate",
+      "mcp__8e36de33-4075-4e27-a840-adf850ff97de__which_standards_apply",
+      "mcp__8e36de33-4075-4e27-a840-adf850ff97de__check_drift",
+      "mcp__8e36de33-4075-4e27-a840-adf850ff97de__bootstrap"
     ]
   }
 }
