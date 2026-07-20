@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### CAF/WAF assessment platform — three-layer architecture (Epic AB#5023)
+
+- **Assessment layer** (`src/assess/`) — declarative rule engine that grades collected data against CAF design areas and WAF pillars, producing scored findings and a prioritized gap list:
+  - `engine/Get-RuleSet.ps1`, `Resolve-JsonPath.ps1`, `Invoke-Rule.ps1` (7 assert types), `Get-Score.ps1` (dual CAF/WAF scoring)
+  - `rules/caf.*.yaml` (8 CAF design areas) and `rules/waf.*.yaml` (5 WAF pillars)
+  - `benchmarks/alz-reference.json` + `Compare-Benchmark.ps1` (ALZ benchmark diff)
+- **Ingest layer** (`src/ingest/`) — `Import-AzGovViz.ps1`, `Invoke-ArgQueryPack.ps1`, `Import-AdvisorScores.ps1` normalize external collectors into a single `collect.json`
+- **Reporting layer** (`src/report/`) — tiered renderer engine (`Export-Report` → PowerBi / Html / Pptx / Excel / Json) reading a shared `findings.json`
+- **Module registry** (`manifests/assessments.psd1`) + `Invoke-AzureScout` entry point for run-one/some/all; read-only permission pre-flight; unattended `.ado/azure-pipelines.yml`
+- JSON-on-disk contract (`collect.json` → `findings.json`) so each layer runs independently
+
+#### Per-domain CAF/WAF analytics across all categories (Epic AB#5056)
+
+- Every Scout discovery category (15: AI, Analytics, Compute, Containers, Databases, Hybrid, Identity, Integration, IoT, Management, Monitor, Networking, Security, Storage, Web) becomes an **independently runnable, categorized and tagged assessment** with its own CAF/WAF analytics
+- Manifest schema extended with `Category`, `Frameworks`, and `Tags` so `-Assessment <Category>` runs scoped discovery + scoped scoring (planned — AB#5057)
+- Finer named sub-bundles inside a category (e.g. Governance / Policy / UpdateManager under Management; Monitoring under Monitor)
+
 #### Power BI / Microsoft Fabric Export (Issue #17)
 
 - **`Export-AZSCPowerBIReport.ps1`** (`Modules/Private/Reporting/`) — New function that exports normalized inventory data as a flat CSV bundle optimized for Power BI Desktop and Microsoft Fabric:

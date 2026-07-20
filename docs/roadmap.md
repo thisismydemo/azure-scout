@@ -77,6 +77,32 @@ Focus: depth, breadth, and multi-tenant scenarios.
 | Fabric / Power BI export (#17) | `-OutputFormat PowerBI` generates a flat normalized CSV bundle (`PowerBI/` folder) with `_metadata.csv`, `Subscriptions.csv`, per-module `Resources_*.csv` and `Entra_*.csv` files, and a `_relationships.json` star-schema manifest for Power BI Desktop / Microsoft Fabric | :white_check_mark: Done |
 | IoT deep coverage | IoT Hub device registry, Device Provisioning Service, Digital Twins topology | :bulb: Idea |
 
+## Major — v2.0.0 — CAF/WAF Assessment Platform (Epic AB#5023)
+
+Focus: turn inventory into a **scored CAF/WAF landing-zone assessment**. Collection stays as-is; a three-layer, JSON-on-disk architecture (`collect.json` → `findings.json` → deliverables) adds assessment and rebuilds reporting. Read-only throughout.
+
+| Capability | Description | Status |
+|---|---|---|
+| Assessment engine | Declarative YAML rules (JSONPath + 7 assert types), dual CAF/WAF scoring, prioritized gap list | :blue_circle: Planned (AB#5027, AB#5034) |
+| CAF/WAF rule content | 8 CAF design areas + 5 WAF pillars as version-controlled rule files | :blue_circle: Planned (AB#5031) |
+| Ingest layer | Fold Azure Governance Visualizer, an ARG query pack, and Advisor into one `collect.json` | :blue_circle: Planned (AB#5037) |
+| ALZ benchmark diff | Compare the live tenant against a canonical ALZ reference (MG archetypes, required policies) | :blue_circle: Planned (AB#5041) |
+| Tiered reporting | Power BI (primary), self-contained HTML, executive PPTX; Excel/JSON retained as evidence | :blue_circle: Planned (AB#5044) |
+| Module registry + entry point | `-Assessment` run one/some/all; read-only permission pre-flight; unattended pipeline | :blue_circle: Planned (AB#5024, AB#5050) |
+| React report + drift tracking | Richer React report variant and cross-run score-drift tracking | :blue_circle: Planned (AB#5053) |
+
+## Major — v2.1.0 — Per-Domain CAF/WAF Analytics (Epic AB#5056)
+
+Focus: extend CAF/WAF analytics to **every** Scout category, not just the landing-zone roll-up. Each of the 15 discovery categories becomes an **independently runnable, categorized and tagged assessment** — so you can run and score *just* Governance, *just* Monitoring, *just* Update Manager, etc.
+
+| Capability | Description | Status |
+|---|---|---|
+| Assessment taxonomy & tagging | Manifest gains `Category` / `Frameworks` / `Tags`; `-Assessment <Category>` runs scoped discovery + scoped scoring; sub-bundles (Governance/Policy/UpdateManager under Management, Monitoring under Monitor) | :blue_circle: Planned (AB#5057) |
+| Per-category coverage | CAF/WAF rule coverage authored for each category — Management, Monitor, Networking, Identity, Security, Compute, Storage, Databases, Containers, Web, Analytics, AI, Integration, Hybrid, IoT | :blue_circle: Planned (AB#5061–AB#5075) |
+| Registry document | A table of every possible assessment: category, sub-bundles, CAF areas, WAF pillars, tags | :blue_circle: Planned (AB#5057) |
+
+See [`RELEASES.md`](https://github.com/thisismydemo/azure-scout/blob/main/RELEASES.md) for the build/release ledger.
+
 ## Long-term Vision
 
 AzureScout aims to be the definitive open-source Azure visibility tool for:
