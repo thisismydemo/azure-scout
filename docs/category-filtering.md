@@ -9,8 +9,9 @@ description: How to use the -Category parameter to scope AzureScout scans to spe
 The `-Category` parameter allows you to limit an AZSC inventory run to specific Azure resource categories.
 This is especially useful when you need a targeted scan rather than a full-tenant inventory.
 
-!!! tip
-    Category filtering can reduce run time by 70-90% for large tenants when you only need data from a specific service area.
+::: tip
+Category filtering can reduce run time by 70-90% for large tenants when you only need data from a specific service area.
+:::
 
 ## Supported Categories
 
@@ -92,9 +93,10 @@ Invoke-AzureScout -TenantID <tenant-id> -Category All
 
 ## How Category Filtering Works
 
-!!! note
-    Category filtering is applied at the module discovery stage, before any Azure API calls are made.
-    Only the selected category folders are loaded, which means Resource Graph queries are also restricted to the resource types defined in those modules.
+::: info
+Category filtering is applied at the module discovery stage, before any Azure API calls are made.
+Only the selected category folders are loaded, which means Resource Graph queries are also restricted to the resource types defined in those modules.
+:::
 
 Execution flow with `-Category Compute`:
 

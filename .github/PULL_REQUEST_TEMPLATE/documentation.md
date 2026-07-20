@@ -2,43 +2,31 @@
 
 ## Description
 
-This PR adds a comprehensive documentation system using MkDocs with the Material theme.
+<!-- Describe what documentation was added, updated, or restructured. -->
 
 ## Changes Made
 
-- Added MkDocs with Material theme configuration
-- Created documentation structure with the following sections:
-  - Getting Started (Installation and Quick Start)
-  - User Guide (Basic Usage, Parameters, Common Scenarios)
-  - Features (Excel Reports and more)
-  - Advanced (Automation and Resource Types)
-- Added GitHub Actions workflow for automatic documentation deployment
-- Added local testing scripts (`test-docs.sh` and `test-workflow.sh`)
+<!-- List the files and sections changed. -->
 
 ## Testing
 
-- Documentation has been tested locally with `mkdocs serve`
-- GitHub workflow has been tested locally with `act`
+- [ ] `npm run docs:build` completes without errors
+- [ ] `npm run docs:dev` renders correctly at `http://localhost:5173/azure-scout/`
+- [ ] All navigation links resolve
+- [ ] Search returns expected results
 
-## Deployment Instructions
+## Deployment Notes
 
-1. Review the documentation content for accuracy and completeness
-2. Make any required adjustments to the content or structure
-3. Once merged, the GitHub workflow will deploy the documentation to GitHub Pages
-4. Enable GitHub Pages in repository settings:
-   - Go to Settings > Pages
-   - Select "GitHub Actions" as the source
-   - The documentation will be available at `https://[organization].github.io/AZSC/`
+After merge, the GitHub Actions workflow builds and deploys to GitHub Pages automatically.
 
-## Screenshots
-
-(If applicable, add screenshots of the documentation site)
+To enable GitHub Pages (first time only):
+1. Go to **Settings → Pages**
+2. Set source to **GitHub Actions**
+3. The site will be available at `https://thisismydemo.github.io/azure-scout/`
 
 ## Checklist
 
-- [ ] Documentation content is accurate and up-to-date
-- [ ] All links work correctly
-- [ ] Documentation navigation is intuitive
-- [ ] GitHub workflow is correctly configured
-- [ ] MkDocs configuration is correctly set up
-- [ ] Documentation renders correctly in local testing 
+- [ ] Content is accurate and up-to-date
+- [ ] All internal links work
+- [ ] VitePress config (`docs/.vitepress/config.ts`) updated if nav/sidebar changed
+- [ ] No MkDocs-specific syntax left (`!!!`, `{ .md-button }`, `{ align=... }`)

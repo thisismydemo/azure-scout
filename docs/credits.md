@@ -4,13 +4,14 @@ description: Credits and attribution for the AzureScout project.
 
 # Credits & Attribution
 
-!!! important
-    **AzureScout exists because of [Azure Resource Inventory (ARI)](https://github.com/microsoft/ARI).**
-    Without the foundation built by the ARI team at Microsoft, this project would not exist.
+::: warning
+**AzureScout exists because of [Azure Resource Inventory (ARI)](https://github.com/microsoft/ARI).**
+Without the foundation built by the ARI team at Microsoft, this project would not exist.
+:::
 
 The full credits file is maintained in the repository root and rendered on GitHub.
 
-[View CREDITS.md on GitHub](https://github.com/thisismydemo/azure-scout/blob/main/CREDITS.md){ .md-button .md-button--primary }
+[View CREDITS.md on GitHub](https://github.com/thisismydemo/azure-scout/blob/main/CREDITS.md)
 
 ## Fork Origin
 

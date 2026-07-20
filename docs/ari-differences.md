@@ -4,10 +4,11 @@ description: What AzureScout changed, added, and removed compared to the origina
 
 # Differences from Azure Resource Inventory (ARI)
 
-!!! important
-    AzureScout is a fork of [Azure Resource Inventory (ARI)](https://github.com/microsoft/ARI) v3.6.11, created by [Claudio Merola](https://github.com/claudiomerola) and [Renato Gregio](https://github.com/intfrr) at Microsoft.
-    Everything listed on this page describes *how AzureScout diverges from ARI* — not a criticism of the original project.
-    We encourage you to evaluate both projects and choose the one that fits your needs.
+::: warning
+AzureScout is a fork of [Azure Resource Inventory (ARI)](https://github.com/microsoft/ARI) v3.6.11, created by [Claudio Merola](https://github.com/claudiomerola) and [Renato Gregio](https://github.com/intfrr) at Microsoft.
+Everything listed on this page describes *how AzureScout diverges from ARI* — not a criticism of the original project.
+We encourage you to evaluate both projects and choose the one that fits your needs.
+:::
 
 ## What AzureScout Inherits from ARI
 
