@@ -28,7 +28,19 @@ function Invoke-Rule {
         $status = 'Manual'
     }
     else {
-        $matches = Resolve-JsonPath -InputObject $Collect -Path $Rule.query
+        try {
+            $matches = Resolve-JsonPath -InputObject $Collect -Path $Rule.query
+        }
+        catch {
+            # A query that threw (unsupported/invalid JSONPath) is an Error, never a
+            # silent Pass on countEquals:0 (AB#5083). Surface it so it's visible.
+            Write-Warning "Rule $($Rule.id): query '$($Rule.query)' failed: $_"
+            return [pscustomobject]@{
+                Id = $Rule.id; Title = $Rule.title; Framework = $Framework; Area = $Area
+                Severity = $Rule.severity; Status = 'Error'; EvidenceCount = 0; Evidence = @()
+                Remediation = $Rule.remediation; Manual = [bool]$Rule.manual
+            }
+        }
         $evidenceCount = $matches.Count
         $evidence = $matches | Select-Object -First 25    # cap evidence payload
         $v = $Rule.assert.value
@@ -41,10 +53,18 @@ function Invoke-Rule {
             'notExists'         { $status = ($evidenceCount -eq   0) ? 'Pass' : 'Fail' }
             'percentageAtLeast' {
                 $denom = (Resolve-JsonPath -InputObject $Collect -Path $Rule.assert.denominatorQuery).Count
-                $pct   = if ($denom -gt 0) { $evidenceCount / $denom * 100 } else { 0 }
-                $status = ($pct -ge $v) ? 'Pass' : (($pct -gt 0) ? 'Partial' : 'Fail')
+                # No denominator = nothing collected for this dimension -> Unknown,
+                # NOT a 0% Fail, which would be misleading (AB#5085).
+                if ($denom -le 0) { $status = 'Unknown' }
+                else {
+                    $pct = $evidenceCount / $denom * 100
+                    $status = ($pct -ge $v) ? 'Pass' : (($pct -gt 0) ? 'Partial' : 'Fail')
+                }
             }
-            default { $status = 'Unknown' }
+            default {
+                Write-Warning "Rule $($Rule.id): unknown assert type '$($Rule.assert.type)'"
+                $status = 'Error'
+            }
         }
     }
 

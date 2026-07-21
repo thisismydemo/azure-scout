@@ -40,13 +40,18 @@ function Invoke-AZSCInventoryLoop {
     $LocalResults = @()
     if($FSubscri.count -gt 200)
         {
-            $SubLoop = $FSubscri.count / 200
+            # Batch in non-overlapping windows of 200. The previous inclusive range
+            # $FSubscri[$NStart..$NEnd] produced 201-item batches and re-queried the
+            # boundary subscription in two consecutive batches, double-counting its
+            # resources; clamp the upper bound to the array end (AB#5078).
+            $SubLoop = [math]::Ceiling($FSubscri.count / 200)
             $SubLooper = 0
             $NStart = 0
-            $NEnd = 200
+            $NEnd = 199
             while ($SubLooper -lt $SubLoop)
                 {
-                    $Sub = $FSubscri[$NStart..$NEnd]
+                    $upper = [math]::Min($NEnd, $FSubscri.count - 1)
+                    $Sub = $FSubscri[$NStart..$upper]
                     try
                         {
                             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Extracting First 1000 '+ $LoopName)
@@ -79,6 +84,7 @@ function Invoke-AZSCInventoryLoop {
                     $NEnd = $NEnd + 200
                     $SubLooper ++
                     $ReportCounter ++
+                    if ($NStart -ge $FSubscri.count) { break }
                 }
         }
     else

@@ -5,7 +5,7 @@ rules:
   - id: CAF-NET-01
     title: "Hub-spoke or vWAN topology present"
     severity: high
-    query: "$.networking.virtualNetworks[?(@.properties.peerings.length > 0)]"
+    query: "$.networking.virtualNetworks[?(@.peeringCount > 0)]"
     assert: { type: countGreaterThan, value: 0 }
     remediation: "Establish a hub-spoke or Virtual WAN topology per the CAF network design area."
     manual: false
@@ -29,7 +29,7 @@ rules:
   - id: CAF-NET-04
     title: "DDoS protection plan present on internet-facing VNets"
     severity: medium
-    query: "$.networking.virtualNetworks[?(@.properties.enableDdosProtection == true)]"
+    query: "$.networking.virtualNetworks[?(@.ddosEnabled == true)]"
     assert: { type: countGreaterThan, value: 0 }
     remediation: "Enable Azure DDoS Network Protection on internet-facing virtual networks."
     manual: false

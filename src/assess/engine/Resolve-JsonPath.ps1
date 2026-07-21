@@ -15,15 +15,15 @@ function Resolve-JsonPath {
         [Parameter(Mandatory)] $InputObject,
         [Parameter(Mandatory)] [AllowEmptyString()] [AllowNull()] [string] $Path
     )
+    # A null/blank path is a legitimate "no query" (e.g. manual rules) -> empty set.
     if ([string]::IsNullOrWhiteSpace($Path)) { return @() }
+
     $json  = $InputObject | ConvertTo-Json -Depth 100
     $token = [Newtonsoft.Json.Linq.JToken]::Parse($json)
-    try {
-        $results = $token.SelectTokens($Path)
-        return @($results)
-    }
-    catch {
-        Write-Warning "JSONPath '$Path' failed: $_"
-        return @()
-    }
+
+    # A query that THROWS (unsupported/invalid JSONPath) must NOT collapse into an
+    # empty result set — that would let a broken query score as a Pass on
+    # countEquals:0 asserts (AB#5083). Rethrow so Invoke-Rule can mark it Error.
+    $results = $token.SelectTokens($Path, $false)
+    return @($results)
 }

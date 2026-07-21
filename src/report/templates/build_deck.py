@@ -41,9 +41,13 @@ bullets("Framework Scores",
 bullets("Area Scores",
         [f'{a["Framework"]} — {a["Area"]}: {a["Score"]}' for a in data["Areas"] if a["Score"] is not None])
 
+def sev(g):
+    # Defensive: a null/missing severity must not crash the whole deck (AB#5089).
+    return (g.get("Severity") or "unknown").upper()
+
 top = data["Gaps"][:10]
 bullets("Top 10 Prioritized Gaps",
-        [f'[{g["Severity"].upper()}] {g["Area"]}: {g["Title"]}' for g in top])
+        [f'[{sev(g)}] {g["Area"]}: {g["Title"]}' for g in top])
 
 bullets("Manual Review Items (questionnaire remainder)",
         [f'{m["Area"]}: {m["Title"]}' for m in data["Manual"][:12]])

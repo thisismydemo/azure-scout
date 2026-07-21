@@ -5,9 +5,9 @@ rules:
   - id: WAF-RE-05
     title: "Zone-redundant deployment where supported"
     severity: high
-    query: "$.compute.virtualMachines[?(@.zones == null || @.zones.length == 0)]"
+    query: "$.compute.virtualMachines[?(@.zoneRedundant == false)]"
     assert: { type: countEquals, value: 0 }
-    remediation: "Deploy across availability zones for workloads requiring high availability."
+    remediation: "Deploy across availability zones for workloads requiring high availability (zone-eligible SKUs/regions)."
     manual: false
 
   - id: WAF-RE-09

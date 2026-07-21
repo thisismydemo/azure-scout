@@ -54,11 +54,9 @@ Function Start-AZSCGraphExtraction {
 
     if(![string]::IsNullOrEmpty($ResourceGroup) -and [string]::IsNullOrEmpty($SubscriptionID))
         {
+            # Throw rather than Exit — Exit kills the whole host/runbook uncatchably (AB#5077).
             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Resource Group Name present, but missing Subscription ID.')
-            Write-Output ''
-            Write-Output 'If Using the -ResourceGroup Parameter, the Subscription ID must be informed'
-            Write-Output ''
-            Exit
+            throw 'If using the -ResourceGroup parameter, the -SubscriptionID must also be provided.'
         }
     else
         {

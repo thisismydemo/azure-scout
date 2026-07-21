@@ -31,7 +31,7 @@ const esc = s => (s??'').toString().replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;'
 function scores(){
   const fw = D.Frameworks.map(f=>`<div class="card"><div>${f.Framework}</div><div class="score">${f.Score}</div></div>`).join('');
   const rows = D.Areas.map(a=>`<tr><td>${a.Framework}</td><td>${esc(a.Area)}</td>
-    <td class="${a.Score>=80?'pass':a.Score>=50?'partial':'fail'}">${a.Score??'&mdash;'}</td>
+    <td class="${a.Score==null?'':a.Score>=80?'pass':a.Score>=50?'partial':'fail'}">${a.Score??'&mdash;'}</td>
     <td class="pass">${a.Pass}</td><td class="fail">${a.Fail}</td><td class="manual">${a.Manual}</td></tr>`).join('');
   V.innerHTML = `<div class="cards">${fw}</div>
    <table><tr><th>Framework</th><th>Area</th><th>Score</th><th>Pass</th><th>Fail</th><th>Manual</th></tr>${rows}</table>`;
