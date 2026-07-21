@@ -101,7 +101,27 @@ Collectors, runtime/auth/pipeline, and the reporting/diagram features. Full list
 
 ## 6. Audit findings & recommendations
 
-Cross-layer correctness audit (2026-07-20). **These are not yet logged as ADO Bugs — see Open Actions §8.** Severity: 🔴 wrong/lost data · 🟠 robustness · 🟡 polish.
+Cross-layer correctness audit (2026-07-20). **All findings are now logged as authored ADO Bugs (AB#5076–#5092), each parented to the Feature that owns the fix and tagged `audit`.** Severity: 🔴 wrong/lost data · 🟠 robustness · 🟡 polish.
+
+| Bug | Finding | Parent Feature |
+|---|---|---|
+| AB#5076 | MG query unpaged (drops subs >1000) | AB#353 |
+| AB#5077 | Bare `Exit` kills host/runbook | AB#353 |
+| AB#5078 | >200-sub batch off-by-one / double-count | AB#354 |
+| AB#5079 | One bad sub aborts whole tenant run | AB#397 |
+| AB#5080 | No zero-resources guard | AB#401 |
+| AB#5081 | `Invoke-Collect` adapter missing | AB#5024 |
+| AB#5082 | Discovery↔assessment data-shape mismatch | AB#5024 |
+| AB#5083 | JSONPath `.length` + exception-as-Pass | AB#5027 |
+| AB#5084 | Benchmark silent all-Fail w/o governance | AB#5041 |
+| AB#5085 | `percentageAtLeast` zero-denom / value:0 | AB#5027 |
+| AB#5086 | WAF-RE-05 no "where supported" | AB#5031 |
+| AB#5087 | `AreaWeight` dead / unweighted framework score | AB#5034 |
+| AB#5088 | `Unknown` rules silently dropped | AB#5034 |
+| AB#5089 | Null severity sorts to top / PPTX crash | AB#5034 |
+| AB#5090 | HTML null area score renders red | AB#5044 |
+| AB#5091 | Banker's rounding / Excel sheet collision | AB#5044 |
+| AB#5092 | Power BI join needs stable `AreaKey` | AB#5044 |
 
 ### Discovery / collection (`Modules/`)
 | Sev | Location | Finding | Fix | Track under |
@@ -147,11 +167,14 @@ Cross-layer correctness audit (2026-07-20). **These are not yet logged as ADO Bu
 
 ## 8. Open actions (next)
 
-1. **Log the §6 audit findings as ADO Bugs** against the mapped Features (not yet done).
-2. **Unblock assessment**: build `Invoke-Collect` flat→nested adapter (or rewrite rule queries to the flat schema) + fix JSONPath `.length`.
-3. **Land the safe discovery data-loss fixes** (MG paging, `Exit`→`throw`, batch off-by-one).
-4. **Wire the module manifest** to dot-source the new `src/` functions + add a Pester smoke test.
-5. Fix scoring holes (AreaWeight, Unknown surfacing, severity-null, HTML null-red).
+1. ✅ **Log the §6 audit findings as ADO Bugs** — done: AB#5076–#5092, parented to their Features.
+2. **Unblock assessment** (AB#5081, AB#5082, AB#5083): build `Invoke-Collect` flat→nested adapter (or rewrite rule queries to the flat schema) + fix JSONPath `.length`.
+3. **Land the safe discovery data-loss fixes** (AB#5076, AB#5077, AB#5078): MG paging, `Exit`→`throw`, batch off-by-one.
+4. **Wire the module manifest** to dot-source the new `src/` functions + add a Pester smoke test (AB#5024).
+5. **Fix scoring holes** (AB#5087, AB#5088, AB#5089, AB#5090): AreaWeight, Unknown surfacing, severity-null, HTML null-red.
+
+### Planning gap-check (2026-07-21)
+Full ADO scan: **161 items** (2 Epics, 106 Features, 29 Stories, 24 Bugs) — **0 missing priority, 0 missing acceptance criteria, 0 orphaned items, 0 non-vocabulary tags.** The board is internally consistent and ready to work.
 
 ## 9. Release plan
 
@@ -164,3 +187,4 @@ See [`RELEASES.md`](https://github.com/thisismydemo/azure-scout/blob/main/RELEAS
 | Date | Change |
 |---|---|
 | 2026-07-21 | Initial master plan consolidating architecture, work-item index (Epics #5023 + #5056), the cross-layer audit findings, new feature requests, and the release plan. |
+| 2026-07-21 | Logged all 17 audit findings as ADO Bugs (AB#5076–#5092) parented to their Features; ran full ADO gap-check (0 missing priority/AC/parent/tag issues). |
