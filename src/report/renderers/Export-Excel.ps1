@@ -14,8 +14,19 @@ function Export-Excel {
     $xlsx = "$OutputPath/assessment_evidence.xlsx"
     if (Get-Module -ListAvailable -Name ImportExcel) {
         Import-Module ImportExcel
+        # Excel worksheet names cap at 31 chars. Truncating alone can collapse two
+        # similarly-prefixed areas into one sheet and -Append silently interleaves
+        # their evidence. Disambiguate on collision (AB#5091).
+        $used = @{}
         $Findings.Findings | Group-Object Area | ForEach-Object {
-            $sheet = ($_.Name -replace '[^\w]', '_') | ForEach-Object { $_.Substring(0, [math]::Min(31, $_.Length)) }
+            $base = ($_.Name -replace '[^\w]', '_')
+            $sheet = $base.Substring(0, [math]::Min(31, $base.Length))
+            if ($used.ContainsKey($sheet)) {
+                $used[$sheet]++
+                $suffix = "~$($used[$sheet])"
+                $sheet = $base.Substring(0, [math]::Min(31 - $suffix.Length, $base.Length)) + $suffix
+            }
+            else { $used[$sheet] = 1 }
             $_.Group | Select-Object Id, Framework, Severity, Status, EvidenceCount, Title, Remediation |
                 Export-Excel -Path $xlsx -WorksheetName $sheet -AutoSize -Append
         }

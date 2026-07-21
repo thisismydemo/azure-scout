@@ -1,0 +1,25 @@
+area: "Containers security & reliability"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-CON-01
+    title: "AKS clusters are private or API-access restricted"
+    severity: high
+    query: "$.domains.containers.aksClusters[?(@.privateCluster == false)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Enable private cluster or authorized IP ranges on the AKS API server."
+    manual: false
+  - id: CAF-CON-02
+    title: "AKS clusters have RBAC enabled"
+    severity: high
+    query: "$.domains.containers.aksClusters[?(@.rbacEnabled == false)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Enable Kubernetes RBAC (and Entra integration) on all clusters."
+    manual: false
+  - id: CAF-CON-03
+    title: "Container registries disable the admin user"
+    severity: medium
+    query: "$.domains.containers.containerRegistries[?(@.adminEnabled == true)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Disable the ACR admin user; use Entra identities / tokens."
+    manual: false

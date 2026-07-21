@@ -1,0 +1,18 @@
+area: "Storage reliability"
+framework: WAF
+weight: 1.0
+rules:
+  - id: WAF-STO-01
+    title: "Storage accounts use zone- or geo-redundant SKUs"
+    severity: medium
+    query: "$.domains.storage.storageAccounts[?(@.sku == 'Standard_LRS' || @.sku == 'Premium_LRS')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Use ZRS/GRS/GZRS redundancy for workloads requiring durability."
+    manual: false
+  - id: WAF-STO-02
+    title: "Advisor high-impact reliability items on storage addressed"
+    severity: low
+    query: null
+    assert: { type: manual }
+    remediation: "Review Advisor reliability recommendations for storage and confirm remediation."
+    manual: true

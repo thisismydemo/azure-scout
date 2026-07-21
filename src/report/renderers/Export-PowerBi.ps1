@@ -14,10 +14,18 @@ function Export-PowerBi {
     $pbiDir = Join-Path $OutputPath 'powerbi'
     New-Item -ItemType Directory -Path $pbiDir -Force | Out-Null
 
-    $Findings.Areas      | Export-Csv "$pbiDir/fact_area_scores.csv" -NoTypeInformation
-    $Findings.Frameworks | Export-Csv "$pbiDir/fact_framework.csv"   -NoTypeInformation
-    $Findings.Gaps       | Export-Csv "$pbiDir/dim_gaps.csv"         -NoTypeInformation
-    $Findings.Findings | Select-Object Id, Framework, Area, Severity, Status, EvidenceCount, Title, Remediation, Manual |
+    # Emit a normalized AreaKey (lowercased, trimmed "framework|area") into both
+    # the area and findings tables so the Power BI relationship binds on a stable
+    # key instead of fragile raw-text (Framework, Area) equality (AB#5092).
+    function New-AreaKey($fw, $ar) { ("{0}|{1}" -f $fw, $ar).ToLower().Trim() }
+
+    $Findings.Areas | Select-Object @{n = 'AreaKey'; e = { New-AreaKey $_.Framework $_.Area } }, * |
+        Export-Csv "$pbiDir/fact_area_scores.csv" -NoTypeInformation
+    $Findings.Frameworks | Export-Csv "$pbiDir/fact_framework.csv" -NoTypeInformation
+    $Findings.Gaps | Select-Object @{n = 'AreaKey'; e = { New-AreaKey $_.Framework $_.Area } }, * |
+        Export-Csv "$pbiDir/dim_gaps.csv" -NoTypeInformation
+    $Findings.Findings |
+        Select-Object @{n = 'AreaKey'; e = { New-AreaKey $_.Framework $_.Area } }, Id, Framework, Area, Severity, Status, EvidenceCount, Title, Remediation, Manual |
         Export-Csv "$pbiDir/fact_findings.csv" -NoTypeInformation
 
     $tpl = "$PSScriptRoot/../templates/report.pbit"

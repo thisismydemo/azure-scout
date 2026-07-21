@@ -125,6 +125,80 @@ resourcecontainers
 | where type =~ "microsoft.resources/subscriptions/resourcegroups"
 | project name, subscriptionId
 '@
+        storageAccounts = @'
+resources | where type =~ "microsoft.storage/storageaccounts"
+| extend publicAccess = tobool(properties.allowBlobPublicAccess)
+| extend httpsOnly = tobool(properties.supportsHttpsTrafficOnly)
+| extend minTls = tostring(properties.minimumTlsVersion)
+| project name, resourceGroup, sku = tostring(sku.name), publicAccess, httpsOnly, minTls
+'@
+        sqlDatabases = @'
+resources | where type =~ "microsoft.sql/servers/databases"
+| extend zoneRedundant = tobool(properties.zoneRedundant)
+| project name, resourceGroup, zoneRedundant, tier = tostring(sku.tier)
+'@
+        sqlServers = @'
+resources | where type =~ "microsoft.sql/servers"
+| extend publicNetworkAccess = tostring(properties.publicNetworkAccess)
+| project name, resourceGroup, publicNetworkAccess
+'@
+        webApps = @'
+resources | where type =~ "microsoft.web/sites"
+| extend httpsOnly = tobool(properties.httpsOnly)
+| extend minTls = tostring(properties.siteConfig.minTlsVersion)
+| project name, resourceGroup, httpsOnly, minTls
+'@
+        aksClusters = @'
+resources | where type =~ "microsoft.containerservice/managedclusters"
+| extend k8sVersion = tostring(properties.kubernetesVersion)
+| extend privateCluster = tobool(properties.apiServerAccessProfile.enablePrivateCluster)
+| extend rbacEnabled = tobool(properties.enableRBAC)
+| project name, resourceGroup, k8sVersion, privateCluster, rbacEnabled
+'@
+        containerRegistries = @'
+resources | where type =~ "microsoft.containerregistry/registries"
+| extend adminEnabled = tobool(properties.adminUserEnabled)
+| extend publicAccess = tostring(properties.publicNetworkAccess)
+| project name, resourceGroup, sku = tostring(sku.name), adminEnabled, publicAccess
+'@
+        keyVaults = @'
+resources | where type =~ "microsoft.keyvault/vaults"
+| extend softDelete = tobool(properties.enableSoftDelete)
+| extend purgeProtection = tobool(properties.enablePurgeProtection)
+| project name, resourceGroup, softDelete, purgeProtection
+'@
+        cognitiveAccounts = @'
+resources | where type =~ "microsoft.cognitiveservices/accounts"
+| extend publicAccess = tostring(properties.publicNetworkAccess)
+| extend kind = tostring(kind)
+| project name, resourceGroup, kind, publicAccess
+'@
+        arcServers = @'
+resources | where type =~ "microsoft.hybridcompute/machines"
+| extend status = tostring(properties.status)
+| project name, resourceGroup, status, agentVersion = tostring(properties.agentVersion)
+'@
+        eventHubNamespaces = @'
+resources | where type =~ "microsoft.eventhub/namespaces"
+| extend zoneRedundant = tobool(properties.zoneRedundant)
+| extend publicAccess = tostring(properties.publicNetworkAccess)
+| project name, resourceGroup, zoneRedundant, publicAccess
+'@
+        apiManagement = @'
+resources | where type =~ "microsoft.apimanagement/service"
+| extend virtualNetworkType = tostring(properties.virtualNetworkType)
+| project name, resourceGroup, sku = tostring(sku.name), virtualNetworkType
+'@
+        iotHubs = @'
+resources | where type =~ "microsoft.devices/iothubs"
+| extend publicAccess = tostring(properties.publicNetworkAccess)
+| project name, resourceGroup, sku = tostring(sku.name), publicAccess
+'@
+        synapseWorkspaces = @'
+resources | where type =~ "microsoft.synapse/workspaces"
+| extend publicAccess = tostring(properties.publicNetworkAccess)
+| project name, resourceGroup, publicAccess
+'@
     }
 
     function Invoke-Arg([string] $Query) {
@@ -164,6 +238,20 @@ resourcecontainers
         }
         costCleanup   = [pscustomobject]@{ orphanedDisks = $r.orphanedDisks; orphanedPips = $r.orphanedPips }
         opsPosture    = [pscustomobject]@{ diagnosticCoverage = $r.diagnosticCoverage }
+        # Per-domain resource data (scalar compliance fields) for the per-category
+        # assessments in Epic AB#5056.
+        domains       = [pscustomobject]@{
+            storage      = [pscustomobject]@{ storageAccounts = $r.storageAccounts }
+            databases    = [pscustomobject]@{ sqlDatabases = $r.sqlDatabases; sqlServers = $r.sqlServers }
+            web          = [pscustomobject]@{ webApps = $r.webApps }
+            containers   = [pscustomobject]@{ aksClusters = $r.aksClusters; containerRegistries = $r.containerRegistries }
+            security     = [pscustomobject]@{ keyVaults = $r.keyVaults }
+            ai           = [pscustomobject]@{ cognitiveAccounts = $r.cognitiveAccounts }
+            hybrid       = [pscustomobject]@{ arcServers = $r.arcServers }
+            integration  = [pscustomobject]@{ eventHubNamespaces = $r.eventHubNamespaces; apiManagement = $r.apiManagement }
+            iot          = [pscustomobject]@{ iotHubs = $r.iotHubs }
+            analytics    = [pscustomobject]@{ synapseWorkspaces = $r.synapseWorkspaces }
+        }
         advisor       = @()
         _meta         = [pscustomobject]@{
             generatedOn = (Get-Date).ToString('o'); scope = $Scope

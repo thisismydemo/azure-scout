@@ -1,0 +1,25 @@
+area: "Web & app services security"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-WEB-01
+    title: "App Services enforce HTTPS-only"
+    severity: high
+    query: "$.domains.web.webApps[?(@.httpsOnly == false)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Enable httpsOnly on all App Service sites."
+    manual: false
+  - id: CAF-WEB-02
+    title: "App Services require TLS 1.2 minimum"
+    severity: medium
+    query: "$.domains.web.webApps[?(@.minTls == '1.0' || @.minTls == '1.1')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Set minTlsVersion to 1.2 on all App Service sites."
+    manual: false
+  - id: CAF-WEB-03
+    title: "App Services use managed identity for secrets"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm apps source secrets from Key Vault via managed identity, not app settings."
+    manual: true

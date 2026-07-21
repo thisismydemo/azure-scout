@@ -1,0 +1,25 @@
+area: "Hybrid & Arc management"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-HYB-01
+    title: "Arc-enabled servers are connected"
+    severity: medium
+    query: "$.domains.hybrid.arcServers[?(@.status != 'Connected')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Investigate Arc servers not in Connected state (agent/network/identity)."
+    manual: false
+  - id: CAF-HYB-02
+    title: "Arc footprint is present where hybrid is in scope"
+    severity: low
+    query: "$.domains.hybrid.arcServers[*]"
+    assert: { type: exists }
+    remediation: "Onboard hybrid/multicloud servers to Azure Arc for unified governance."
+    manual: false
+  - id: CAF-HYB-03
+    title: "Arc agent version currency reviewed"
+    severity: low
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm Arc agents are on a supported/current version."
+    manual: true

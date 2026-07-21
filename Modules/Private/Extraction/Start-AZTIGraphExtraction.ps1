@@ -165,6 +165,15 @@ Function Start-AZSCGraphExtraction {
 
     Write-Progress -activity 'Azure Inventory' -PercentComplete 10
 
+    # Zero-resources guard: an (almost) empty result usually means a permission or
+    # scope problem, not an empty tenant — surface it rather than silently produce
+    # an empty report (AB#5080).
+    if (@($Resources).Count -eq 0 -and @($ResourceContainers).Count -eq 0) {
+        Write-Warning ("[AzureScout] Extraction returned zero resources. Verify the identity has Reader " +
+            "at the target scope (root management group for full coverage) and that the -ManagementGroup/" +
+            "-SubscriptionID scope is correct.")
+    }
+
     $tmp = [PSCustomObject]@{
         Resources              = $Resources
         ResourceContainers     = $ResourceContainers

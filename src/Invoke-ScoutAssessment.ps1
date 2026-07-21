@@ -4,10 +4,11 @@ $ErrorActionPreference = 'Stop'
 
 <#
 .SYNOPSIS
-    Azure Scout top-level entry point — collect, assess, and report.
+    Azure Scout assessment entry point — collect, assess, and report.
 
 .DESCRIPTION
-    Orchestrates the three-layer JSON-on-disk contract:
+    The assessment-platform orchestrator (distinct from the inventory cmdlet
+    Invoke-AzureScout). Orchestrates the three-layer JSON-on-disk contract:
         COLLECT  -> collect.json
         ASSESS   -> findings.json
         REPORT   -> deliverables
@@ -17,16 +18,20 @@ $ErrorActionPreference = 'Stop'
     re-scanning. Read-only throughout.
 
 .EXAMPLE
-    Invoke-AzureScout -Assessment LandingZone -OutputFormat Html,Pptx
+    Invoke-ScoutAssessment -Assessment LandingZone -OutputFormat Html,Pptx
 
 .EXAMPLE
-    Invoke-AzureScout -Assessment LandingZone -CollectOnly
-    Invoke-AzureScout -Assessment LandingZone -FromCollect ./output/20260720_101500/collect.json -OutputFormat PowerBi
+    Invoke-ScoutAssessment -Assessment Management        # governance/policy/update-manager, scored
+    Invoke-ScoutAssessment -Assessment Monitor -OutputFormat Html
+
+.EXAMPLE
+    Invoke-ScoutAssessment -Assessment LandingZone -CollectOnly
+    Invoke-ScoutAssessment -Assessment LandingZone -FromCollect ./output/20260720_101500/collect.json -OutputFormat PowerBi
 
 .NOTES
-    Tracks ADO Epic AB#5023 (Feature AB#5024, Story AB#5026).
+    Tracks ADO Epic AB#5023 (Feature AB#5024, Story AB#5026) and Epic AB#5056.
 #>
-function Invoke-AzureScout {
+function Invoke-ScoutAssessment {
     [CmdletBinding()]
     param(
         [string[]] $Assessment = @('Estate'),   # one, many, or 'All'
