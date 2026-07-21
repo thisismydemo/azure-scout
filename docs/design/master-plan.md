@@ -202,7 +202,47 @@ Full ADO scan: **161 items** (2 Epics, 106 Features, 29 Stories, 24 Bugs) — **
 
 Some implementation code exists on branch `claude/repo-access-wexuku` (the assessment platform scaffold, per-domain rules, and audit fixes), but it is **prototype/unverified** — static-validated only (no pwsh/Az to run it) — and is **not** claimed as done on the board. Work items advance out of New only when their acceptance criteria are actually met and verified.
 
-## 9. Release plan
+## 9. Build phases (from spec §9)
+
+The owner's spec defines the build order. Carried in verbatim so the plan follows it.
+
+- **Phase 1 — Foundations.** Three-layer JSON contract; `-Assessment` switch + manifest registry; confirm cost/security modules pull Advisor + Policy compliance (add via ingest if missing). *(Maps to AB#5024, AB#5037.)*
+- **Phase 2 — Landing Zone module.** Encode CAF 8-area + WAF 5-pillar rule files; rule engine + scoring; governance-visualizer ingest; ARG query pack; ALZ benchmark diff. *(AB#5027, AB#5031, AB#5034, AB#5037, AB#5041.)*
+- **Phase 3 — Reporting overhaul.** Power BI template + CSV emitters; self-contained HTML; PPTX generator. Demote Excel to evidence tier. *(AB#5044 — see §9a reporting decision below.)*
+- **Phase 4 — Remaining modules.** Identity (IT/OT boundary rules, directory-source reconciliation inputs); Cost (RI/AHB/orphan/right-size → external TCO feed); app/wave modules scoped as **data feeds to the migration tool, not reimplementations**. *(Epic AB#5056 per-domain features.)*
+- **Phase 5 — Polish.** React report variant; drift tracking (commit `findings.json` to Git, diff over runs); one-command pipeline producing all tiers into a dated folder. *(AB#5053.)*
+
+## 9a. Reporting solution — design decision (open, blocks AB#5044)
+
+Design Goal #4 requires **replacing Excel-first output with a better, tiered renderer**. Before building AB#5044, a renderer approach must be chosen — the spec's default (python-pptx shell-out for the executive deck) adds a Python dependency and should not be inherited without evaluation.
+
+| Option | Portable on Linux CI? | Dependency |
+|---|---|---|
+| python-pptx (spec default) | ✅ | python3 + python-pptx |
+| OpenXML SDK (`DocumentFormat.OpenXml`) | ✅ | none (pure .NET) — more code |
+| COM automation | ❌ Windows-only | PowerPoint installed |
+
+**Open action (new ADO item to create):** *"Reporting solution design — evaluate python-pptx vs. OpenXML vs. native; pick a portable, low-dependency renderer for the executive deck; produce a decision record. Blocks AB#5044."* Power BI (primary tier) and self-contained HTML are unaffected; this decision only governs the PPTX deck.
+
+## 10. Dependencies (from spec §10)
+
+| Component | Requirement | Why |
+|---|---|---|
+| PowerShell | 7.0.3+ | Whole module is PS7; 5.1 unsupported |
+| Az modules | Az.Accounts, Az.Resources, Az.ResourceGraph, **Az.Advisor**, **Az.Security** | Auth/tokens, resources/policy, bulk KQL, the one automated WAF signal (Advisor), Defender data |
+| YAML | powershell-yaml | Parses the CAF/WAF rule files — no parser, no rules |
+| Graph (ingest) | read-only app perms: User/Group/Application.Read.All, PrivilegedAccess.Read.AzureResources | AzGovViz ingest reads identity/PIM (read-only) |
+| PPTX | python3 + python-pptx | Executive deck (pending §9a decision) |
+| Power BI | Power BI Desktop | Author the `.pbit` template once; tool emits CSVs |
+| Diagrams | draw.io export | Network topology (already in collection layer) |
+
+## 11. Scope discipline — what NOT to build (from spec §11)
+
+- **No remediation / execution.** Assess and report only. Findings carry remediation guidance; **the tool never mutates the tenant.** Read-only throughout (Reader @ MG root + read-only Graph).
+- **Don't reimplement the migration/ML tooling.** 6R classification, wave AI, and TCO modeling stay external; this platform **feeds them normalized data**, it does not replace them.
+- **The architect's judgment stays human.** Network design intent and CAF gap interpretation are review activities. The tool front-loads evidence and scores what is machine-verifiable; the **`Manual` status** exists precisely to hand the rest to a person with the evidence already attached.
+
+## 12. Release plan
 
 See [`RELEASES.md`](https://github.com/thisismydemo/azure-scout/blob/main/RELEASES.md). Summary: v1.1.0 (quality), v1.2.0 (collector depth), **v2.0.0** (assessment platform — major, breaking output surface), **v2.1.0** (per-domain analytics).
 
@@ -217,3 +257,4 @@ See [`RELEASES.md`](https://github.com/thisismydemo/azure-scout/blob/main/RELEAS
 | 2026-07-21 | Implemented the critical-path fixes: `Invoke-Collect` adapter, scalar-field rule rewrites, JSONPath error-surfacing, weighted scoring + Unknown/Error surfacing, reporting null-guards, benchmark governance guard, and the 3 discovery data-loss fixes. Committed and static-validated (no pwsh/Az to runtime-verify). |
 | 2026-07-21 | Added per-domain CAF/WAF analytics prototype (Epic AB#5056): domain ARG collection, 15 category assessments + sub-bundles in the manifest, 10 rule files, registry doc; wired `src/` into the module as `Invoke-ScoutAssessment`. |
 | 2026-07-21 | Corrected an overreach: 64 items had been moved to Resolved prematurely — reverted all to New. ADO now reflects planning only; no item is marked delivered until its acceptance criteria are verified. |
+| 2026-07-21 | Carried in the three missing spec sections verbatim — §9 Build phases, §10 Dependencies, §11 Scope discipline — and added §9a: the reporting-solution design decision (evaluate python-pptx vs. OpenXML vs. native before building AB#5044). Renumbered Release plan to §12. |
