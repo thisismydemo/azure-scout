@@ -13,7 +13,24 @@ description: Master design and delivery plan for Azure Scout — the single sour
 - **GitHub repo:** `thisismydemo/azure-scout`
 - **Working branch:** `claude/repo-access-wexuku`
 - **Governance:** HCS split source-of-truth — ADO masters Epic→Feature→Story→Task; GitHub masters Bug/Feature-request intake.
-- **Last updated:** 2026-07-21
+- **Last updated:** 2026-07-21 07:20 UTC
+
+### Companion documents (source of record)
+
+| Document | Purpose |
+|---|---|
+| [`enhancement-spec.md`](enhancement-spec.md) | **The owner's original AzureScout Enhancement Specification, verbatim** — the source requirement this whole plan derives from (§0–§12: architecture, engine, ingest, benchmark, reporting, build phases). |
+| [`task-list.md`](task-list.md) | Complete flat list of every task (161 ADO items / 91 GitHub issues) grouped by release/epic. |
+| [`assessment-registry.md`](assessment-registry.md) | Catalogue of every runnable assessment (category, sub-bundles, CAF/WAF coverage, tags). |
+| [`../roadmap.md`](../roadmap.md) · [`../../RELEASES.md`](../../RELEASES.md) | Public roadmap and release/build ledger. |
+
+### ⚠️ ADO verification status (2026-07-21 07:20 UTC)
+
+The ADO work-item state described in §4–§6 was authored during the earlier session
+(commits 00:02–00:26 UTC). **It has NOT been re-verified against the live ADO board
+in the current session** — every ADO MCP call this session was blocked at the
+approval/permission step. Treat the AB# numbers below as the *intended* board state
+until a live ADO query confirms them. **Open action: verify the board (see §8.6).**
 
 ---
 
