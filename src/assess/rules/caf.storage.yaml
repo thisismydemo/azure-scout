@@ -1,0 +1,25 @@
+area: "Storage security & protection"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-STO-01
+    title: "Storage accounts disable public blob access"
+    severity: high
+    query: "$.domains.storage.storageAccounts[?(@.publicAccess == true)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Disable allowBlobPublicAccess on storage accounts; use private endpoints or SAS."
+    manual: false
+  - id: CAF-STO-02
+    title: "Storage accounts enforce HTTPS-only traffic"
+    severity: high
+    query: "$.domains.storage.storageAccounts[?(@.httpsOnly == false)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Enable supportsHttpsTrafficOnly on all storage accounts."
+    manual: false
+  - id: CAF-STO-03
+    title: "Storage accounts require TLS 1.2 minimum"
+    severity: medium
+    query: "$.domains.storage.storageAccounts[?(@.minTls == 'TLS1_0' || @.minTls == 'TLS1_1')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Set minimumTlsVersion to TLS1_2 on all storage accounts."
+    manual: false

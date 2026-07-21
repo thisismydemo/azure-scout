@@ -1,0 +1,27 @@
+area: "Billing & cost management"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-BIL-01
+    title: "Cost Management budgets configured"
+    severity: medium
+    query: "$.governance.budgets[*]"
+    assert: { type: countGreaterThan, value: 0 }
+    remediation: "Create Cost Management budgets with alerts per subscription or MG."
+    manual: false
+
+  - id: CAF-BIL-02
+    title: "No unattached (orphaned) managed disks"
+    severity: low
+    query: "$.costCleanup.orphanedDisks[*]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Delete or snapshot-and-remove unattached managed disks to reduce spend."
+    manual: false
+
+  - id: CAF-BIL-03
+    title: "No orphaned public IP addresses"
+    severity: low
+    query: "$.costCleanup.orphanedPips[*]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Release public IPs with no IP configuration."
+    manual: false

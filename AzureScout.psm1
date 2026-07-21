@@ -46,6 +46,18 @@ foreach ($directory in @('modules\Private', '.\modules\Public\PublicFunctions'))
     Get-ChildItem -Path "$PSScriptRoot\$directory\*.ps1" -Recurse | ForEach-Object { . $_.FullName }
 }
 
+# Assessment platform (Epics AB#5023 / AB#5056) — collect, engine, ingest,
+# benchmark, report, orchestrator. Loaded after the inventory modules so the
+# assessment layer can call into collection when needed (AB#5024).
+$_assessmentRoot = Join-Path $PSScriptRoot 'src'
+if (Test-Path $_assessmentRoot) {
+    Get-ChildItem -Path $_assessmentRoot -Filter '*.ps1' -Recurse |
+        Sort-Object FullName | ForEach-Object {
+            try { . $_.FullName }
+            catch { Write-Warning "[AzureScout] Failed to load assessment file $($_.FullName): $_" }
+        }
+}
+
 
 <#
 $PrivateFiles = @( Get-ChildItem -Path (Join-Path $PSScriptRoot "Modules" "Private" "*.ps1") -Recurse -ErrorAction SilentlyContinue )

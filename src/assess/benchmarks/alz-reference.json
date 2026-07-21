@@ -1,0 +1,18 @@
+{
+  "managementGroups": {
+    "expected": ["platform", "connectivity", "identity", "management", "landingzones", "corp", "online", "sandbox", "decommissioned"],
+    "note": "Intermediate root + canonical ALZ archetypes"
+  },
+  "requiredPolicyAssignments": [
+    "Deny-Public-IP",
+    "Deploy-Diagnostics-LogAnalytics",
+    "Deny-Subnet-Without-Nsg",
+    "Deploy-VM-Backup",
+    "Audit-ResourceLocks"
+  ],
+  "network": {
+    "requireHubSpoke": true,
+    "requireFirewallInHub": true,
+    "requireDdosOnInternetVnets": true
+  }
+}

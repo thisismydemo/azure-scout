@@ -54,11 +54,9 @@ Function Start-AZSCGraphExtraction {
 
     if(![string]::IsNullOrEmpty($ResourceGroup) -and [string]::IsNullOrEmpty($SubscriptionID))
         {
+            # Throw rather than Exit — Exit kills the whole host/runbook uncatchably (AB#5077).
             Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Resource Group Name present, but missing Subscription ID.')
-            Write-Output ''
-            Write-Output 'If Using the -ResourceGroup Parameter, the Subscription ID must be informed'
-            Write-Output ''
-            Exit
+            throw 'If using the -ResourceGroup parameter, the -SubscriptionID must also be provided.'
         }
     else
         {
@@ -166,6 +164,15 @@ Function Start-AZSCGraphExtraction {
     Write-Debug ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Number of Retirements: '+ $RetirementCount)
 
     Write-Progress -activity 'Azure Inventory' -PercentComplete 10
+
+    # Zero-resources guard: an (almost) empty result usually means a permission or
+    # scope problem, not an empty tenant — surface it rather than silently produce
+    # an empty report (AB#5080).
+    if (@($Resources).Count -eq 0 -and @($ResourceContainers).Count -eq 0) {
+        Write-Warning ("[AzureScout] Extraction returned zero resources. Verify the identity has Reader " +
+            "at the target scope (root management group for full coverage) and that the -ManagementGroup/" +
+            "-SubscriptionID scope is correct.")
+    }
 
     $tmp = [PSCustomObject]@{
         Resources              = $Resources

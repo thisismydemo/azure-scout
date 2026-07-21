@@ -1,0 +1,18 @@
+area: "IoT security"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-IOT-01
+    title: "IoT Hubs disable public network access"
+    severity: high
+    query: "$.domains.iot.iotHubs[?(@.publicAccess == 'Enabled')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Restrict IoT Hubs to private endpoints / selected networks."
+    manual: false
+  - id: CAF-IOT-02
+    title: "Device authentication posture reviewed"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm per-device authentication (X.509/TPM) rather than shared keys."
+    manual: true

@@ -1,0 +1,27 @@
+area: "Management & monitoring"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-MGT-01
+    title: "Diagnostic settings coverage above threshold"
+    severity: medium
+    query: "$.opsPosture.diagnosticCoverage[?(@.coveragePct >= 80)]"
+    assert: { type: exists }
+    remediation: "Route diagnostics to a central Log Analytics workspace for at least 80% of resource types."
+    manual: false
+
+  - id: CAF-MGT-02
+    title: "Recovery Services vault backup items present"
+    severity: high
+    query: "$.management.recoveryVaults[*].backupItems[*]"
+    assert: { type: countGreaterThan, value: 0 }
+    remediation: "Configure Azure Backup for stateful workloads."
+    manual: false
+
+  - id: CAF-MGT-03
+    title: "Update management / patch baseline confirmed"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm a patch/update management baseline is applied across the estate."
+    manual: true

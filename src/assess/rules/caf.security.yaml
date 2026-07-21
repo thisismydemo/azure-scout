@@ -1,0 +1,27 @@
+area: "Security"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-SEC-01
+    title: "No NSG rule allows unrestricted inbound from Internet"
+    severity: high
+    query: "$.networking.nsgPublicInbound[*]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Remove or scope inbound NSG rules that allow * / 0.0.0.0/0 / Internet source."
+    manual: false
+
+  - id: CAF-SEC-02
+    title: "Microsoft Defender for Cloud enabled"
+    severity: high
+    query: "$.security.defenderPlans[?(@.properties.pricingTier == 'Standard')]"
+    assert: { type: exists }
+    remediation: "Enable Defender for Cloud enhanced plans on production subscriptions."
+    manual: false
+
+  - id: CAF-SEC-03
+    title: "Private endpoints used for PaaS data services"
+    severity: medium
+    query: "$.networking.privateEndpoints[*]"
+    assert: { type: exists }
+    remediation: "Adopt Private Endpoints for PaaS data services rather than public exposure."
+    manual: false

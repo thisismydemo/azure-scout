@@ -1,0 +1,27 @@
+area: "Resource organization"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-RES-01
+    title: "Subscriptions tagged with owner/environment"
+    severity: medium
+    query: "$.subscriptions[?(@.tags.Environment)]"
+    assert: { type: exists }
+    remediation: "Apply a consistent tagging taxonomy (Environment, Owner, CostCenter) across subscriptions."
+    manual: false
+
+  - id: CAF-RES-02
+    title: "Management group hierarchy beyond the tenant root"
+    severity: high
+    query: "$.governance.managementGroups[*]"
+    assert: { type: countGreaterThan, value: 1 }
+    remediation: "Build an intermediate management-group hierarchy per the ALZ archetype."
+    manual: false
+
+  - id: CAF-RES-03
+    title: "Consistent tag values per key across subscriptions"
+    severity: low
+    query: "$.tags[*]"
+    assert: { type: exists }
+    remediation: "Normalize tag values to reduce sprawl and enable reliable cost allocation."
+    manual: false

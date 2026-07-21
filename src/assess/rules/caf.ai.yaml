@@ -1,0 +1,18 @@
+area: "AI governance & security"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-AI-01
+    title: "Cognitive / OpenAI accounts disable public network access"
+    severity: high
+    query: "$.domains.ai.cognitiveAccounts[?(@.publicAccess == 'Enabled')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Set publicNetworkAccess to Disabled and use private endpoints for AI services."
+    manual: false
+  - id: CAF-AI-02
+    title: "Responsible-AI / content-filtering posture reviewed"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm content filtering and responsible-AI controls are configured on deployed models."
+    manual: true

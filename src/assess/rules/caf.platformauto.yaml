@@ -1,0 +1,27 @@
+area: "Platform automation & DevOps"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-AUT-01
+    title: "Infrastructure managed as code (IaC deployments present)"
+    severity: medium
+    query: "$.management.deployments[?(@.properties.templateHash)]"
+    assert: { type: exists }
+    remediation: "Deploy landing-zone resources via Bicep/Terraform pipelines, not the portal."
+    manual: false
+
+  - id: CAF-AUT-02
+    title: "Policy-as-code / DINE assignments deploy configuration"
+    severity: low
+    query: "$.governance.policyAssignments[?(@.properties.parameters)]"
+    assert: { type: exists }
+    remediation: "Use DeployIfNotExists policies to enforce platform configuration automatically."
+    manual: false
+
+  - id: CAF-AUT-03
+    title: "CI/CD release process documented"
+    severity: low
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm platform changes flow through a reviewed CI/CD release process."
+    manual: true

@@ -1,0 +1,27 @@
+area: "Reliability"
+framework: WAF
+weight: 1.0
+rules:
+  - id: WAF-RE-05
+    title: "Zone-redundant deployment where supported"
+    severity: high
+    query: "$.compute.virtualMachines[?(@.zoneRedundant == false)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Deploy across availability zones for workloads requiring high availability (zone-eligible SKUs/regions)."
+    manual: false
+
+  - id: WAF-RE-09
+    title: "Backup configured (Recovery Services vault items present)"
+    severity: high
+    query: "$.management.recoveryVaults[*].backupItems[*]"
+    assert: { type: countGreaterThan, value: 0 }
+    remediation: "Configure Azure Backup for stateful workloads."
+    manual: false
+
+  - id: WAF-RE-03
+    title: "Failure-mode analysis performed"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm FMA has been performed and documented for critical flows."
+    manual: true

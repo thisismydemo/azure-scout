@@ -1,0 +1,18 @@
+area: "Analytics data governance"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-ANL-01
+    title: "Synapse workspaces disable public network access"
+    severity: high
+    query: "$.domains.analytics.synapseWorkspaces[?(@.publicAccess == 'Enabled')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Set publicNetworkAccess to Disabled and use managed private endpoints for Synapse."
+    manual: false
+  - id: CAF-ANL-02
+    title: "Data governance (Purview) coverage confirmed"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm data estate is catalogued/classified in Microsoft Purview."
+    manual: true

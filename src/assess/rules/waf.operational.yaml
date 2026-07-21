@@ -1,0 +1,27 @@
+area: "Operational excellence"
+framework: WAF
+weight: 1.0
+rules:
+  - id: WAF-OE-01
+    title: "Diagnostic settings coverage above threshold"
+    severity: medium
+    query: "$.opsPosture.diagnosticCoverage[?(@.coveragePct >= 80)]"
+    assert: { type: exists }
+    remediation: "Enable diagnostic settings to a central workspace for at least 80% of resource types."
+    manual: false
+
+  - id: WAF-OE-02
+    title: "Infrastructure deployed as code"
+    severity: medium
+    query: "$.management.deployments[?(@.properties.templateHash)]"
+    assert: { type: exists }
+    remediation: "Manage infrastructure via IaC pipelines with peer review."
+    manual: false
+
+  - id: WAF-OE-05
+    title: "Runbooks / operational procedures documented"
+    severity: low
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm operational runbooks exist for incident response and recovery."
+    manual: true

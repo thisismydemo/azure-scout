@@ -1,0 +1,25 @@
+area: "Integration connectivity & reliability"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-INT-01
+    title: "Event Hub namespaces disable public network access"
+    severity: medium
+    query: "$.domains.integration.eventHubNamespaces[?(@.publicAccess == 'Enabled')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Restrict Event Hub namespaces to private endpoints / selected networks."
+    manual: false
+  - id: CAF-INT-02
+    title: "Event Hub namespaces are zone-redundant"
+    severity: medium
+    query: "$.domains.integration.eventHubNamespaces[?(@.zoneRedundant == false)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Enable zone redundancy on Event Hub namespaces where supported."
+    manual: false
+  - id: CAF-INT-03
+    title: "API Management is VNet-integrated"
+    severity: medium
+    query: "$.domains.integration.apiManagement[?(@.virtualNetworkType == 'None')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Deploy APIM in Internal/External VNet mode for network isolation."
+    manual: false

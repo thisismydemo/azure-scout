@@ -1,0 +1,25 @@
+area: "Databases security & resilience"
+framework: CAF
+weight: 1.0
+rules:
+  - id: CAF-DB-01
+    title: "SQL servers disable public network access"
+    severity: high
+    query: "$.domains.databases.sqlServers[?(@.publicNetworkAccess == 'Enabled')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Set publicNetworkAccess to Disabled and use private endpoints for SQL servers."
+    manual: false
+  - id: CAF-DB-02
+    title: "Production SQL databases are zone-redundant"
+    severity: medium
+    query: "$.domains.databases.sqlDatabases[?(@.zoneRedundant == true)]"
+    assert: { type: countGreaterThan, value: 0 }
+    remediation: "Enable zone redundancy for Business Critical / Premium SQL databases."
+    manual: false
+  - id: CAF-DB-03
+    title: "Transparent Data Encryption confirmed"
+    severity: high
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm TDE is enabled on all SQL databases (default on, verify no opt-outs)."
+    manual: true

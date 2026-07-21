@@ -1,0 +1,27 @@
+area: "Security"
+framework: WAF
+weight: 1.0
+rules:
+  - id: WAF-SE-01
+    title: "No unrestricted inbound exposure from the Internet"
+    severity: high
+    query: "$.networking.nsgPublicInbound[*]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Eliminate Allow-from-Internet inbound rules; front workloads with a firewall/WAF."
+    manual: false
+
+  - id: WAF-SE-04
+    title: "Advisor security recommendations addressed"
+    severity: medium
+    query: "$.advisor[?(@.Category == 'Security' && @.Impact == 'High')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Remediate high-impact Advisor security recommendations."
+    manual: false
+
+  - id: WAF-SE-07
+    title: "Secrets stored in Key Vault, not in config"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm application secrets are sourced from Key Vault with managed identity access."
+    manual: true

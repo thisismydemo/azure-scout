@@ -1,0 +1,27 @@
+area: "Cost optimization"
+framework: WAF
+weight: 1.0
+rules:
+  - id: WAF-CO-01
+    title: "No orphaned disks accumulating cost"
+    severity: medium
+    query: "$.costCleanup.orphanedDisks[*]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Remove unattached managed disks."
+    manual: false
+
+  - id: WAF-CO-02
+    title: "Advisor cost recommendations addressed"
+    severity: medium
+    query: "$.advisor[?(@.Category == 'Cost' && @.Impact == 'High')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Act on high-impact Advisor cost recommendations (right-size, reserved instances)."
+    manual: false
+
+  - id: WAF-CO-03
+    title: "Budgets with alerts in place"
+    severity: low
+    query: "$.governance.budgets[*]"
+    assert: { type: countGreaterThan, value: 0 }
+    remediation: "Define Cost Management budgets with threshold alerts."
+    manual: false
