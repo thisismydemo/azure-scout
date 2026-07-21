@@ -181,13 +181,9 @@ Cross-layer correctness audit (2026-07-20). **All findings are now logged as aut
 Full ADO scan: **161 items** (2 Epics, 106 Features, 29 Stories, 24 Bugs) — **0 missing priority, 0 missing acceptance criteria, 0 orphaned items, 0 non-vocabulary tags.** The board is internally consistent.
 
 ### Delivery state (2026-07-21)
-**64 items Resolved** = the entire net-new scope: assessment platform (Epic AB#5023 Features), per-domain CAF/WAF analytics (Epic AB#5056 — foundation + all 15 category Features + sub-bundles), and 16 of 17 audit Bugs. All are dev-complete on `claude/repo-access-wexuku`, **static-validated, pending runtime verification** (moved to Resolved, not Closed).
+**All 161 items are New (planned/backlog).** ADO reflects planning only — no item is marked delivered, because nothing has been verified.
 
-**Still open (intentionally):**
-- **79 reconciled Features / 3 Stories / 7 Bugs** (AB#315–#405) — these mirror the *existing shipped product* (collectors, runtime, reporting) and GitHub intake; their state must follow real delivery/GitHub, not a blanket assertion. Left New.
-- **AB#5053 / AB#5054 / AB#5055** — React report variant + cross-run drift tracking (Phase-5 polish, not built).
-- **AB#5086** — WAF zone rule "where-supported" qualifier (scalar part fixed; SKU-eligibility data not yet available). Left open.
-- **Runtime verification** of all Resolved items (needs pwsh + Az).
+Some implementation code exists on branch `claude/repo-access-wexuku` (the assessment platform scaffold, per-domain rules, and audit fixes), but it is **prototype/unverified** — static-validated only (no pwsh/Az to run it) — and is **not** claimed as done on the board. Work items advance out of New only when their acceptance criteria are actually met and verified.
 
 ## 9. Release plan
 
@@ -202,4 +198,5 @@ See [`RELEASES.md`](https://github.com/thisismydemo/azure-scout/blob/main/RELEAS
 | 2026-07-21 | Initial master plan consolidating architecture, work-item index (Epics #5023 + #5056), the cross-layer audit findings, new feature requests, and the release plan. |
 | 2026-07-21 | Logged all 17 audit findings as ADO Bugs (AB#5076–#5092) parented to their Features; ran full ADO gap-check (0 missing priority/AC/parent/tag issues). |
 | 2026-07-21 | Implemented the critical-path fixes: `Invoke-Collect` adapter, scalar-field rule rewrites, JSONPath error-surfacing, weighted scoring + Unknown/Error surfacing, reporting null-guards, benchmark governance guard, and the 3 discovery data-loss fixes. Committed and static-validated (no pwsh/Az to runtime-verify). |
-| 2026-07-21 | Delivered per-domain CAF/WAF analytics (Epic AB#5056): domain ARG collection, 15 category assessments + sub-bundles in the manifest, 10 new rule files, registry doc; wired `src/` into the module as `Invoke-ScoutAssessment`; fixed remaining polish bugs (AB#5079/#5080/#5091/#5092). Moved 64 implemented items to Resolved. |
+| 2026-07-21 | Added per-domain CAF/WAF analytics prototype (Epic AB#5056): domain ARG collection, 15 category assessments + sub-bundles in the manifest, 10 rule files, registry doc; wired `src/` into the module as `Invoke-ScoutAssessment`. |
+| 2026-07-21 | Corrected an overreach: 64 items had been moved to Resolved prematurely — reverted all to New. ADO now reflects planning only; no item is marked delivered until its acceptance criteria are verified. |
