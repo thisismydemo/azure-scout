@@ -9,6 +9,10 @@ description: Planned features, future enhancements, and the long-term vision for
 This page outlines what's planned, what's in progress, and what's been delivered.
 Community contributions are welcome — see [Contributing](contributing.md) to get involved.
 
+> The consolidated architecture, work-item index, audit findings, and delivery
+> plan live in the [Master Design & Plan](design/master-plan.md). This roadmap is
+> the public-facing summary of it.
+
 ## Current Release — v1.0.0
 
 Released February 2026.
