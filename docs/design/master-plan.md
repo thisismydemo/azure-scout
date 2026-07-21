@@ -168,10 +168,14 @@ Cross-layer correctness audit (2026-07-20). **All findings are now logged as aut
 ## 8. Open actions (next)
 
 1. ✅ **Log the §6 audit findings as ADO Bugs** — done: AB#5076–#5092, parented to their Features.
-2. **Unblock assessment** (AB#5081, AB#5082, AB#5083): build `Invoke-Collect` flat→nested adapter (or rewrite rule queries to the flat schema) + fix JSONPath `.length`.
-3. **Land the safe discovery data-loss fixes** (AB#5076, AB#5077, AB#5078): MG paging, `Exit`→`throw`, batch off-by-one.
-4. **Wire the module manifest** to dot-source the new `src/` functions + add a Pester smoke test (AB#5024).
-5. **Fix scoring holes** (AB#5087, AB#5088, AB#5089, AB#5090): AreaWeight, Unknown surfacing, severity-null, HTML null-red.
+2. ✅ **Unblock assessment** (AB#5081, AB#5082, AB#5083) — `src/collect/Invoke-Collect.ps1` normalized ARG adapter added; `.length` filters rewritten to scalar fields; `Resolve-JsonPath`/`Invoke-Rule` surface thrown queries as `Error`. _Committed, static-validated, not yet runtime-verified._
+3. ✅ **Discovery data-loss fixes** (AB#5076, AB#5077, AB#5078) — SkipToken paging, `Exit`→`throw`, batch off-by-one. _Committed, static-validated._
+4. ✅ **Scoring/reporting holes** (AB#5084, AB#5085, AB#5087, AB#5088, AB#5089, AB#5090) — weighted framework score, Unknown/Error surfaced, deterministic rounding, severity-null sort, HTML null-neutral, benchmark governance guard, PPTX severity guard. _Committed, static-validated._
+5. **Remaining — needs a PowerShell + Az environment:**
+   - **Runtime-verify** the above (run `tests/Assessment.Engine.Tests.ps1` + an end-to-end `-FromCollect` pass) — no `pwsh`/Az in the authoring environment, so all fixes above are parse/brace-validated only.
+   - **Wire the module manifest** (`AzureScout.psd1`) to dot-source `src/` functions so `Invoke-AzureScout`, `Invoke-Collect`, etc. load as a module (AB#5024).
+   - Author the **per-category rule content** and manifest entries (Epic AB#5056).
+   - Remaining polish bugs: AB#5086 (zone "where supported"), AB#5091 (Excel sheet collision), AB#5092 (Power BI AreaKey), AB#5079/#5080 (discovery fallback isolation + zero-resource guard).
 
 ### Planning gap-check (2026-07-21)
 Full ADO scan: **161 items** (2 Epics, 106 Features, 29 Stories, 24 Bugs) — **0 missing priority, 0 missing acceptance criteria, 0 orphaned items, 0 non-vocabulary tags.** The board is internally consistent and ready to work.
@@ -188,3 +192,4 @@ See [`RELEASES.md`](https://github.com/thisismydemo/azure-scout/blob/main/RELEAS
 |---|---|
 | 2026-07-21 | Initial master plan consolidating architecture, work-item index (Epics #5023 + #5056), the cross-layer audit findings, new feature requests, and the release plan. |
 | 2026-07-21 | Logged all 17 audit findings as ADO Bugs (AB#5076–#5092) parented to their Features; ran full ADO gap-check (0 missing priority/AC/parent/tag issues). |
+| 2026-07-21 | Implemented the critical-path fixes: `Invoke-Collect` adapter, scalar-field rule rewrites, JSONPath error-surfacing, weighted scoring + Unknown/Error surfacing, reporting null-guards, benchmark governance guard, and the 3 discovery data-loss fixes. Committed and static-validated (no pwsh/Az to runtime-verify). |

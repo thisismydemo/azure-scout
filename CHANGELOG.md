@@ -7,7 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Discovery data-loss fixes**: `Get-AZSCManagementGroups` now pages Resource Graph via SkipToken (was capped at 1000 subs — AB#5076) and throws instead of `Exit` on a bad management group (AB#5077); `Start-AZTIGraphExtraction` throws instead of `Exit` (AB#5077); `Invoke-AZTIInventoryLoop` no longer double-counts boundary subscriptions in the >200-subscription batch loop (AB#5078).
+- **Assessment correctness**: rewrote `.length` JSONPath filters to scalar fields; `Resolve-JsonPath` no longer swallows a thrown query into an empty result and `Invoke-Rule` surfaces it as `Error` rather than a false Pass (AB#5083); `percentageAtLeast` with a zero denominator yields `Unknown` (AB#5085); `Compare-Benchmark` guards absent governance data instead of emitting false all-Fail (AB#5084).
+- **Scoring/reporting**: framework score is weighted by `AreaWeight` (AB#5087); `Unknown`/`Error` statuses are surfaced, not silently dropped (AB#5088); unknown severities sort last and can't crash the PPTX deck (AB#5089); null area scores render neutral in HTML, not red (AB#5090); deterministic rounding.
+
 ### Added
+
+- **`src/collect/Invoke-Collect.ps1`** — normalized, read-only Azure Resource Graph adapter that produces the canonical `collect.json` (scalar fields) the rule engine evaluates against, resolving the discovery→assessment data-shape gap (AB#5081, AB#5082).
+- **`tests/Assessment.Engine.Tests.ps1`** — Pester smoke tests for the scoring math and assert semantics.
 
 #### CAF/WAF assessment platform — three-layer architecture (Epic AB#5023)
 
