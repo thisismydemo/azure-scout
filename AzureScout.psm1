@@ -24,7 +24,9 @@ $_requiredModules = @(
     'Az.ResourceGraph',
     'Az.Storage',
     'Az.Compute',
-    'Az.Resources'
+    'Az.Resources',
+    'Az.Advisor',        # CAF/WAF assessment ingest — Import-AdvisorScores
+    'powershell-yaml'    # CAF/WAF assessment rule-file parsing — Get-RuleSet
 )
 foreach ($_mod in $_requiredModules) {
     if (-not (Get-Module -Name $_mod -ListAvailable)) {

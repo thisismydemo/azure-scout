@@ -55,7 +55,7 @@ Invoke-ScoutAssessment -Assessment All -PermissionAudit
 | Az modules | Az.Accounts, Az.Resources, Az.ResourceGraph, Az.Advisor, Az.Security |
 | YAML | powershell-yaml (rule files) |
 | Excel tier | ImportExcel (optional; falls back to CSV) |
-| PPTX | python3 + python-pptx |
+| PPTX | DocumentFormat.OpenXml (.NET SDK, auto-acquired via NuGet — no Python) |
 | Power BI | Power BI Desktop (author the `.pbit` once) |
 
 ## Scope discipline
