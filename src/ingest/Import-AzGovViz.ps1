@@ -21,6 +21,13 @@ function Import-AzGovViz {
         return $Collect
     }
 
+    # AzGovViz depends on the AzAPICall module and prompts interactively to install it
+    # when missing — fatal in an unattended host (AB#5050). Ensure it up front.
+    if (-not (Get-Module -ListAvailable -Name AzAPICall)) {
+        Write-Warning 'Import-AzGovViz: installing required AzAPICall module (CurrentUser scope).'
+        Install-Module AzAPICall -Scope CurrentUser -Force -Repository PSGallery
+    }
+
     $govPath = Join-Path $OutputPath 'govviz'
     New-Item -ItemType Directory -Path $govPath -Force | Out-Null
 
@@ -28,12 +35,30 @@ function Import-AzGovViz {
     if (-not (Test-Path "$govPath/repo/pwsh/AzGovVizParallel.ps1")) {
         git clone --depth 1 https://github.com/Azure/Azure-Governance-Visualizer.git "$govPath/repo" 2>$null
     }
-    & "$govPath/repo/pwsh/AzGovVizParallel.ps1" `
-        -ManagementGroupId $ManagementGroupId `
-        -OutputPath        $govPath `
-        -DoPSRule `
-        -NoScopeInsights `
-        -ALZPolicyAssignmentsChecker
+    # -NoPIMEligibility: PIM eligibility needs the PrivilegedAccess.Read.AzureResources
+    # Graph app permission plus an Entra ID P2 license; without both, AzGovViz's
+    # permission pre-flight hard-fails. Skip that one dataset rather than the whole run.
+    # AzGovViz is third-party code that is not StrictMode-safe — this module's
+    # Set-StrictMode -Version Latest propagates into it and crashes its ALZ policy
+    # checker, so strict mode is disabled for the external invocation only.
+    # A crash inside AzGovViz (e.g. retired ARM APIs such as classicAdministrators
+    # returning 404 InvalidResourceType) must degrade the governance dataset, not kill
+    # the whole Scout run — any JSON it produced before failing is still folded in below.
+    try {
+        & {
+            Set-StrictMode -Off
+            & "$govPath/repo/pwsh/AzGovVizParallel.ps1" `
+                -ManagementGroupId $ManagementGroupId `
+                -OutputPath        $govPath `
+                -DoPSRule `
+                -NoScopeInsights `
+                -NoPIMEligibility `
+                -ALZPolicyAssignmentsChecker
+        }
+    }
+    catch {
+        Write-Warning "Import-AzGovViz: AzGovViz run failed mid-collection: $($_.Exception.Message). Folding in any partial exports; benchmark rules degrade to Unknown where data is missing."
+    }
 
     # Fold selected JSON exports into the collect object under a 'governance' key
     $jsonDir = Get-ChildItem "$govPath" -Directory -Filter 'JSON_*' | Select-Object -First 1
