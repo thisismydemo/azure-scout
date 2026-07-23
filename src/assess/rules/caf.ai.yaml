@@ -19,26 +19,30 @@ rules:
   - id: CAF-AI-03
     title: "Cognitive Services / Azure OpenAI accounts use managed identity, not API keys"
     severity: medium
-    # collect.json's cognitiveAccounts producer projects only name/resourceGroup/
-    # kind/publicAccess (Invoke-Collect.ps1) — no identity/authOptions field yet.
-    query: null
-    assert: { type: manual }
-    remediation: "Confirm consuming applications authenticate via managed identity + Entra ID rather than account API keys stored in app config; extend the cognitiveAccounts collector with the identity block before automating."
-    manual: true
+    # `identity` is a top-level Resource Graph column; Invoke-Collect.ps1 now
+    # projects it as identityType (AB#5057). This confirms a managed identity
+    # exists on the account — it cannot confirm consuming apps actually use it
+    # instead of API keys, so treat a Pass as necessary, not sufficient.
+    query: "$.domains.ai.cognitiveAccounts[?(@.identityType == '' || @.identityType == 'None')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Confirm consuming applications authenticate via managed identity + Entra ID rather than account API keys stored in app config."
+    manual: false
   - id: CAF-AI-04
     title: "Private endpoint adoption for AI Foundry / OpenAI resources"
     severity: high
-    # networking.privateEndpoints only projects name/resourceGroup/subscriptionId —
-    # no target-resource linkage, so it can't be joined to a specific AI account.
-    query: null
-    assert: { type: manual }
-    remediation: "Confirm each Cognitive Services/Azure OpenAI/AI Foundry account has a dedicated private endpoint (publicNetworkAccess=Disabled alone is not sufficient evidence); extend the privateEndpoints collector to project the target resource ID before automating."
-    manual: true
+    # networking.privateEndpoints now projects the linked-service target
+    # (targetProvider/targetType, parsed from privateLinkServiceConnections ->
+    # privateLinkServiceId) so PEs pointed at Cognitive Services accounts can be
+    # counted without a full cross-table join (AB#5057).
+    query: "$.networking.privateEndpoints[?(@.targetProvider == 'microsoft.cognitiveservices' && @.targetType == 'accounts')]"
+    assert: { type: percentageAtLeast, value: 80, denominatorQuery: "$.domains.ai.cognitiveAccounts[*]" }
+    remediation: "Confirm each Cognitive Services/Azure OpenAI/AI Foundry account has a dedicated private endpoint (publicNetworkAccess=Disabled alone is not sufficient evidence)."
+    manual: false
   - id: CAF-AI-05
     title: "Customer-managed key (CMK) encryption configured where required"
     severity: medium
-    # collect.json's cognitiveAccounts producer does not project encryption/keySource.
-    query: null
-    assert: { type: manual }
-    remediation: "Confirm accounts holding sensitive prompt/response data use customer-managed keys in Key Vault rather than platform-managed encryption; extend the cognitiveAccounts collector with properties.encryption before automating."
-    manual: true
+    # properties.encryption.keySource is now projected as cmkEnabled (AB#5057).
+    query: "$.domains.ai.cognitiveAccounts[?(@.cmkEnabled == false)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Confirm accounts holding sensitive prompt/response data use customer-managed keys in Key Vault rather than platform-managed encryption."
+    manual: false

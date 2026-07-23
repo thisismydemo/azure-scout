@@ -33,10 +33,12 @@ rules:
   - id: CAF-STO-05
     title: "Storage account network rules default-deny with explicit allow-list"
     severity: high
-    query: null
-    assert: { type: manual }
-    remediation: "Set networkAcls.defaultAction to Deny and add explicit VNet/IP allow rules or private endpoints. collect.json does not yet capture networkAcls — verify via `az storage account show --query networkRuleSet`."
-    manual: true
+    # properties.networkAcls.defaultAction is on the storage account resource
+    # itself, so Invoke-Collect.ps1 now projects it as networkDefaultDeny (AB#5057).
+    query: "$.domains.storage.storageAccounts[?(@.networkDefaultDeny == false)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Set networkAcls.defaultAction to Deny and add explicit VNet/IP allow rules or private endpoints."
+    manual: false
   - id: CAF-STO-06
     title: "Immutability policies applied to compliance-sensitive containers"
     severity: low

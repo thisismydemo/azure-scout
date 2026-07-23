@@ -45,9 +45,10 @@ rules:
   - id: CAF-MGT-06
     title: "Log Analytics workspace retention meets the compliance minimum"
     severity: medium
-    # No collector currently reads workspace retentionInDays; collect.json has no
-    # field for it (would need a dedicated Log Analytics ARG/ARM query).
-    query: null
-    assert: { type: manual }
+    # Invoke-Collect.ps1 now queries microsoft.operationalinsights/workspaces
+    # and projects properties.retentionInDays as management.logAnalyticsWorkspaces[]
+    # (AB#5057). 90 days is the floor named in the remediation text below.
+    query: "$.management.logAnalyticsWorkspaces[?(@.retentionInDays < 90)]"
+    assert: { type: countEquals, value: 0 }
     remediation: "Confirm Log Analytics workspace retention (interactive + archive) meets the minimum required by the workload's compliance obligations, e.g. 90+ days for regulated data."
-    manual: true
+    manual: false

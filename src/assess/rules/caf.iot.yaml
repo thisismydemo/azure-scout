@@ -19,11 +19,14 @@ rules:
   - id: CAF-IOT-03
     title: "Device Provisioning Service (DPS) linked-hub security reviewed"
     severity: medium
-    # No DPS collector exists in collect.json today (no
-    # microsoft.devices/provisioningservices query).
+    # microsoft.devices/provisioningservices IS indexed by Resource Graph, but
+    # enrollment groups (individualEnrollments/enrollmentGroups — where the
+    # cert-vs-symmetric-key auth type actually lives) are child resources that
+    # Resource Graph does not index, so the criterion this rule needs still
+    # isn't ARG-collectable (AB#5057 investigation).
     query: null
     assert: { type: manual }
-    remediation: "Confirm DPS instances use certificate-based enrollment groups (not shared symmetric-key group enrollment) and linked IoT Hub access policies are least-privilege; add a provisioningservices collector before automating."
+    remediation: "Confirm DPS instances use certificate-based enrollment groups (not shared symmetric-key group enrollment) and linked IoT Hub access policies are least-privilege."
     manual: true
   - id: CAF-IOT-04
     title: "IoT Hub SKU / throughput-unit right-sizing reviewed"
@@ -37,9 +40,10 @@ rules:
   - id: CAF-IOT-05
     title: "Private endpoint adoption for IoT Hubs"
     severity: medium
-    # networking.privateEndpoints only projects name/resourceGroup/subscriptionId —
-    # no target-resource linkage, so it can't be joined to a specific IoT Hub.
-    query: null
-    assert: { type: manual }
-    remediation: "Confirm IoT Hubs handling sensitive telemetry have a dedicated private endpoint (publicNetworkAccess=Disabled alone is not sufficient evidence); extend the privateEndpoints collector to project the target resource ID before automating."
-    manual: true
+    # networking.privateEndpoints now projects the linked-service target
+    # (targetProvider/targetType) so PEs pointed at IoT Hubs can be counted
+    # without a full cross-table join (AB#5057).
+    query: "$.networking.privateEndpoints[?(@.targetProvider == 'microsoft.devices' && @.targetType == 'iothubs')]"
+    assert: { type: percentageAtLeast, value: 80, denominatorQuery: "$.domains.iot.iotHubs[*]" }
+    remediation: "Confirm IoT Hubs handling sensitive telemetry have a dedicated private endpoint (publicNetworkAccess=Disabled alone is not sufficient evidence)."
+    manual: false

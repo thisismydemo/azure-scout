@@ -26,17 +26,27 @@ rules:
   - id: CAF-HYB-04
     title: "Arc-enabled server extension coverage reviewed"
     severity: medium
-    query: null
-    assert: { type: manual }
-    remediation: "Invoke-Collect.ps1 does not query microsoft.hybridcompute/machines/extensions, so extension coverage has no collect.json field yet. Manually confirm baseline extensions (Azure Monitor Agent, Microsoft Defender for Endpoint, Update Manager) are installed on Arc-connected servers, or add a collector so this can be automated."
-    manual: true
+    # Invoke-Collect.ps1 now queries microsoft.hybridcompute/machines/extensions
+    # as domains.hybrid.arcExtensions[] (AB#5057). Automates the Azure Monitor
+    # Agent piece of the baseline (the first extension named in the
+    # remediation); Defender for Endpoint / Update Manager coverage still needs
+    # a human look since agent naming varies by onboarding path.
+    query: "$.domains.hybrid.arcExtensions[?(@.extensionType == 'AzureMonitorWindowsAgent' || @.extensionType == 'AzureMonitorLinuxAgent')]"
+    assert: { type: percentageAtLeast, value: 80, denominatorQuery: "$.domains.hybrid.arcServers[*]" }
+    remediation: "Confirm baseline extensions (Azure Monitor Agent, Microsoft Defender for Endpoint, Update Manager) are installed on Arc-connected servers."
+    manual: false
   - id: CAF-HYB-05
     title: "Azure Local (Arc-enabled HCI) cluster health reviewed"
     severity: high
-    query: null
-    assert: { type: manual }
-    remediation: "No collector exists yet for microsoft.azurestackhci/clusters — this is a genuine collect.json gap, not just an unset field. Manually review Azure Local (Arc-enabled HCI) cluster status, storage/S2D health, and Arc connectivity in the portal until a dedicated collector is added."
-    manual: true
+    # Invoke-Collect.ps1 now queries microsoft.azurestackhci/clusters and
+    # projects properties.connectivityStatus (the documented cluster
+    # connectivity enum) as domains.hybrid.azureLocalClusters[] (AB#5057).
+    # This covers Arc connectivity only — storage/S2D health is not exposed by
+    # the clusters resource and still needs a portal/CLI look.
+    query: "$.domains.hybrid.azureLocalClusters[?(@.connectivityStatus != 'Connected')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Investigate any Azure Local cluster not reporting Connected; review storage/S2D health in the portal separately."
+    manual: false
   - id: CAF-HYB-06
     title: "Arc-scoped policy compliance reviewed"
     severity: medium

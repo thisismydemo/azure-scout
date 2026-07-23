@@ -19,12 +19,12 @@ rules:
   - id: CAF-ANL-03
     title: "Synapse workspaces use a managed virtual network"
     severity: medium
-    # collect.json's synapseWorkspaces producer projects only name/resourceGroup/
-    # publicAccess (Invoke-Collect.ps1) — no managedVirtualNetwork field yet.
-    query: null
-    assert: { type: manual }
-    remediation: "Confirm workspaces are provisioned with a managed virtual network to isolate Spark pool / pipeline compute; extend the synapseWorkspaces collector with properties.managedVirtualNetwork before automating."
-    manual: true
+    # properties.managedVirtualNetwork is a top-level workspace property, now
+    # projected as managedVnetEnabled (AB#5057).
+    query: "$.domains.analytics.synapseWorkspaces[?(@.managedVnetEnabled == false)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Confirm workspaces are provisioned with a managed virtual network to isolate Spark pool / pipeline compute."
+    manual: false
   - id: CAF-ANL-04
     title: "Data Factory / Synapse pipelines use private endpoints for linked services"
     severity: high

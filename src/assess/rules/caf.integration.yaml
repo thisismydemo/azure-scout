@@ -33,14 +33,18 @@ rules:
   - id: CAF-INT-05
     title: "Event Hub throughput-unit autoscale enabled"
     severity: low
-    query: null
-    assert: { type: manual }
-    remediation: "Invoke-Collect.ps1's eventHubNamespaces query does not project autoInflateEnabled/maximumThroughputUnits — collect.json has no field for this yet. Manually confirm auto-inflate is enabled (az eventhubs namespace show) for namespaces with variable ingest load, or extend the collector to add these scalars."
-    manual: true
+    # Invoke-Collect.ps1's eventHubNamespaces query now projects
+    # properties.isAutoInflateEnabled as autoInflateEnabled (AB#5057).
+    query: "$.domains.integration.eventHubNamespaces[?(@.autoInflateEnabled == false)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Enable auto-inflate for namespaces with variable ingest load (az eventhubs namespace show)."
+    manual: false
   - id: CAF-INT-06
     title: "Service Bus namespaces restrict public network access"
     severity: medium
-    query: null
-    assert: { type: manual }
-    remediation: "Service Bus namespaces are not yet collected by Invoke-Collect.ps1 (no microsoft.servicebus/namespaces query, so there is no $.domains.integration.serviceBusNamespaces node). Manually confirm publicNetworkAccess is Disabled and private endpoints are used, or add a collector query so this can be automated."
-    manual: true
+    # Invoke-Collect.ps1 now runs a microsoft.servicebus/namespaces query and
+    # exposes it as $.domains.integration.serviceBusNamespaces[] (AB#5057).
+    query: "$.domains.integration.serviceBusNamespaces[?(@.publicAccess == 'Enabled')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Set publicNetworkAccess to Disabled and use private endpoints for Service Bus namespaces."
+    manual: false

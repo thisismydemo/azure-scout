@@ -19,19 +19,29 @@ $ErrorActionPreference = 'Stop'
     Canonical shape (top-level keys the rules query):
         subscriptions[], tags[]
         networking { virtualNetworks[{name,peeringCount,ddosEnabled}], subnets[{ipUtilizationPct}],
-                     azureFirewalls[], nsgPublicInbound[], privateEndpoints[], privateDnsZones[], vpnGateways[] }
+                     azureFirewalls[], nsgPublicInbound[], privateDnsZones[], vpnGateways[],
+                     privateEndpoints[{targetResourceId,targetProvider,targetType}] }
         compute    { virtualMachines[{name,zoneRedundant,zoneEligible}] }
-        management { recoveryVaults[{backupItems[]}], deployments[] }
+        management { recoveryVaults[{backupItems[]}], deployments[],
+                     logAnalyticsWorkspaces[{retentionInDays}] }
         security   { defenderPlans[] }
         governance { managementGroups[], policyAssignments[], roleAssignments[], budgets[],
                      resourceLocks[], pimEligibility[], classicAdministrators[] }  (mostly filled by ingest)
         costCleanup { orphanedDisks[], orphanedPips[] }
         opsPosture  { diagnosticCoverage[{type,coveragePct}] }
-        domains     { storage{storageAccounts[]}, databases{sqlServers[],sqlDatabases[]},
-                      web{webApps[]}, containers{aksClusters[],containerRegistries[]},
-                      security{keyVaults[]}, ai{cognitiveAccounts[]}, hybrid{arcServers[]},
-                      integration{eventHubNamespaces[],apiManagement[]}, iot{iotHubs[]},
-                      analytics{synapseWorkspaces[]} }   (per-category scalars, Epic AB#5056)
+        domains     { storage{storageAccounts[{networkDefaultDeny}]},
+                      databases{sqlServers[],sqlDatabases[]},
+                      web{webApps[{vnetIntegrated,customDomainBound}]},
+                      containers{aksClusters[{networkPolicyEnabled,aadIntegrated,allPoolsZoned}],
+                                 containerRegistries[]},
+                      security{keyVaults[]},
+                      ai{cognitiveAccounts[{identityType,cmkEnabled}]},
+                      hybrid{arcServers[], arcExtensions[{machineId,extensionType}],
+                             azureLocalClusters[{connectivityStatus}]},
+                      integration{eventHubNamespaces[{autoInflateEnabled}], apiManagement[],
+                                  serviceBusNamespaces[{publicAccess}]},
+                      iot{iotHubs[]},
+                      analytics{synapseWorkspaces[{managedVnetEnabled}]} }   (per-category scalars, Epic AB#5056)
         advisor[]                                                                   (filled by ingest)
 
     Read-only throughout.
@@ -40,6 +50,15 @@ $ErrorActionPreference = 'Stop'
     Tracks ADO AB#5081, AB#5082 (Feature AB#5024). Every scalar the rules need
     (peeringCount, zoneRedundant, ipUtilizationPct, coveragePct) is computed here
     in KQL so no rule has to compute array lengths at evaluation time.
+
+    AB#5057 follow-up: extended per-domain collectors so previously-manual CAF/WAF
+    rules can assert against real ARG scalars instead of a human review. Every new
+    field below was verified against a documented ARM property (or, for
+    Microsoft.AzureStackHCI/clusters, the SDK-level enum) via Microsoft Learn before
+    being added — sub-resources that Resource Graph does not index (SQL firewall
+    rules/auditing/TDE, storage blob-service/management-policy settings, Synapse
+    firewall rules, DPS enrollment groups) were deliberately left out; those rules
+    stay manual.
 #>
 function Invoke-Collect {
     [CmdletBinding()]
@@ -87,7 +106,17 @@ resources | where type =~ "microsoft.network/virtualnetworkgateways"
 '@
         privateEndpoints = @'
 resources | where type =~ "microsoft.network/privateendpoints"
-| project name, resourceGroup, subscriptionId
+// AB#5057: expose the linked-service target so per-domain rules (CAF-AI-04,
+// CAF-IOT-05, ...) can test "does this account/hub have a dedicated PE" without
+// a full cross-table join. ARG mv-expand only supports kind=bag|array (no outer),
+// so take the first connection instead — preserves endpoints with no connection
+// row, keeping the plain existence-count rules ($.networking.privateEndpoints[*])
+// unaffected. PEs carry exactly one privateLinkServiceConnection in practice.
+| extend conn = coalesce(properties.privateLinkServiceConnections[0], properties.manualPrivateLinkServiceConnections[0])
+| extend targetResourceId = tostring(conn.properties.privateLinkServiceId)
+| extend targetProvider = tolower(tostring(split(targetResourceId, "/")[6]))
+| extend targetType = tolower(tostring(split(targetResourceId, "/")[7]))
+| project name, resourceGroup, subscriptionId, targetResourceId, targetProvider, targetType
 '@
         privateDnsZones = @'
 resources | where type =~ "microsoft.network/privatednszones"
@@ -146,7 +175,10 @@ resources | where type =~ "microsoft.storage/storageaccounts"
 | extend publicAccess = tobool(properties.allowBlobPublicAccess)
 | extend httpsOnly = tobool(properties.supportsHttpsTrafficOnly)
 | extend minTls = tostring(properties.minimumTlsVersion)
-| project name, resourceGroup, sku = tostring(sku.name), publicAccess, httpsOnly, minTls
+// properties.networkAcls is on the storage account resource itself (not a
+// sub-resource), so it's safe to project directly — CAF-STO-05 (AB#5057).
+| extend networkDefaultDeny = tostring(properties.networkAcls.defaultAction) =~ "Deny"
+| project name, resourceGroup, sku = tostring(sku.name), publicAccess, httpsOnly, minTls, networkDefaultDeny
 '@
         sqlDatabases = @'
 resources | where type =~ "microsoft.sql/servers/databases"
@@ -162,14 +194,30 @@ resources | where type =~ "microsoft.sql/servers"
 resources | where type =~ "microsoft.web/sites"
 | extend httpsOnly = tobool(properties.httpsOnly)
 | extend minTls = tostring(properties.siteConfig.minTlsVersion)
-| project name, resourceGroup, httpsOnly, minTls
+// virtualNetworkSubnetId and hostNameSslStates are top-level site properties
+// (NOT part of the siteConfig summary object, which Resource Graph does not
+// fully expand) — CAF-WEB-04/05 (AB#5057). customDomainBound is a coarse
+// signal (more than the always-present *.azurewebsites.net entry), same
+// tradeoff as the VM zoneEligible heuristic below.
+| extend vnetIntegrated = isnotempty(tostring(properties.virtualNetworkSubnetId))
+| extend customDomainBound = array_length(properties.hostNameSslStates) > 1
+| project name, resourceGroup, httpsOnly, minTls, vnetIntegrated, customDomainBound
 '@
         aksClusters = @'
 resources | where type =~ "microsoft.containerservice/managedclusters"
 | extend k8sVersion = tostring(properties.kubernetesVersion)
 | extend privateCluster = tobool(properties.apiServerAccessProfile.enablePrivateCluster)
 | extend rbacEnabled = tobool(properties.enableRBAC)
-| project name, resourceGroup, k8sVersion, privateCluster, rbacEnabled
+| extend networkPolicyEnabled = isnotempty(tostring(properties.networkProfile.networkPolicy))
+| extend aadIntegrated = isnotnull(properties.aadProfile)
+// agentPoolProfiles is an array, so per-pool zone spread needs mv-expand +
+// summarize back to one row per cluster — CAF-CON-05 (AB#5057).
+| mv-expand pool = properties.agentPoolProfiles
+| extend poolZoned = array_length(pool.availabilityZones) > 0
+| summarize totalPools = count(), zonedPools = countif(poolZoned)
+    by name, resourceGroup, k8sVersion, privateCluster, rbacEnabled, networkPolicyEnabled, aadIntegrated
+| extend allPoolsZoned = zonedPools == totalPools
+| project name, resourceGroup, k8sVersion, privateCluster, rbacEnabled, networkPolicyEnabled, aadIntegrated, allPoolsZoned
 '@
         containerRegistries = @'
 resources | where type =~ "microsoft.containerregistry/registries"
@@ -186,8 +234,15 @@ resources | where type =~ "microsoft.keyvault/vaults"
         cognitiveAccounts = @'
 resources | where type =~ "microsoft.cognitiveservices/accounts"
 | extend publicAccess = tostring(properties.publicNetworkAccess)
-| extend kind = tostring(kind)
-| project name, resourceGroup, kind, publicAccess
+// `kind` is a reserved Kusto keyword — it can be neither an extend target nor a
+// project alias; read the built-in column via ['kind'] and expose it as accountKind.
+| extend accountKind = tostring(['kind'])
+// `identity` is a top-level Resource Graph column (not under properties) —
+// CAF-AI-03 (AB#5057). properties.encryption.keySource is the standard
+// BYOK/CMK marker used across RPs (matches EventHub/Synapse) — CAF-AI-05.
+| extend identityType = tostring(identity.type)
+| extend cmkEnabled = tostring(properties.encryption.keySource) =~ "Microsoft.KeyVault"
+| project name, resourceGroup, accountKind, publicAccess, identityType, cmkEnabled
 '@
         arcServers = @'
 resources | where type =~ "microsoft.hybridcompute/machines"
@@ -198,12 +253,19 @@ resources | where type =~ "microsoft.hybridcompute/machines"
 resources | where type =~ "microsoft.eventhub/namespaces"
 | extend zoneRedundant = tobool(properties.zoneRedundant)
 | extend publicAccess = tostring(properties.publicNetworkAccess)
-| project name, resourceGroup, zoneRedundant, publicAccess
+// The ARM property is isAutoInflateEnabled, not autoInflateEnabled — CAF-INT-05 (AB#5057).
+| extend autoInflateEnabled = tobool(properties.isAutoInflateEnabled)
+| project name, resourceGroup, zoneRedundant, publicAccess, autoInflateEnabled
 '@
         apiManagement = @'
 resources | where type =~ "microsoft.apimanagement/service"
 | extend virtualNetworkType = tostring(properties.virtualNetworkType)
 | project name, resourceGroup, sku = tostring(sku.name), virtualNetworkType
+'@
+        serviceBusNamespaces = @'
+resources | where type =~ "microsoft.servicebus/namespaces"
+| extend publicAccess = tostring(properties.publicNetworkAccess)
+| project name, resourceGroup, publicAccess
 '@
         iotHubs = @'
 resources | where type =~ "microsoft.devices/iothubs"
@@ -213,14 +275,40 @@ resources | where type =~ "microsoft.devices/iothubs"
         synapseWorkspaces = @'
 resources | where type =~ "microsoft.synapse/workspaces"
 | extend publicAccess = tostring(properties.publicNetworkAccess)
-| project name, resourceGroup, publicAccess
+// properties.managedVirtualNetwork is "default" when the workspace-managed
+// VNet is on, empty otherwise — a top-level workspace property, not a
+// sub-resource — CAF-ANL-03 (AB#5057).
+| extend managedVnetEnabled = isnotempty(tostring(properties.managedVirtualNetwork))
+| project name, resourceGroup, publicAccess, managedVnetEnabled
+'@
+        arcExtensions = @'
+resources | where type =~ "microsoft.hybridcompute/machines/extensions"
+| extend extensionType = tostring(properties.type)
+| extend machineId = tostring(split(id, "/extensions/")[0])
+| project machineId, name, extensionType, resourceGroup
+'@
+        azureLocalClusters = @'
+resources | where type =~ "microsoft.azurestackhci/clusters"
+// connectivityStatus is the documented cluster-resource health enum
+// (Connected/Disconnected/NotConnectedRecently/PartiallyConnected/
+// NotYetRegistered/NotSpecified) — CAF-HYB-05 (AB#5057).
+| extend connectivityStatus = tostring(properties.connectivityStatus)
+| project name, resourceGroup, connectivityStatus
+'@
+        logAnalyticsWorkspaces = @'
+resources | where type =~ "microsoft.operationalinsights/workspaces"
+| extend retentionInDays = toint(properties.retentionInDays)
+| project name, resourceGroup, retentionInDays
 '@
     }
 
     function Invoke-Arg([string] $Query) {
         $rows = @(); $skip = 0
         do {
-            $batch = @(Search-AzGraph -Query $Query -First 1000 -Skip $skip -ErrorAction Stop)
+            # Search-AzGraph rejects -Skip 0 (ValidateRange minimum is 1) — omit it on the first page.
+            $params = @{ Query = $Query; First = 1000; ErrorAction = 'Stop' }
+            if ($skip -gt 0) { $params.Skip = $skip }
+            $batch = @(Search-AzGraph @params)
             $rows += $batch; $skip += 1000
         } while ($batch.Count -eq 1000)
         return , $rows
@@ -246,7 +334,10 @@ resources | where type =~ "microsoft.synapse/workspaces"
             nsgPublicInbound = $r.nsgPublicInbound
         }
         compute       = [pscustomobject]@{ virtualMachines = $r.virtualMachines }
-        management    = [pscustomobject]@{ recoveryVaults = @(); deployments = $r.deployments }
+        management    = [pscustomobject]@{
+            recoveryVaults = @(); deployments = $r.deployments
+            logAnalyticsWorkspaces = $r.logAnalyticsWorkspaces
+        }
         security      = [pscustomobject]@{ defenderPlans = @() }
         governance    = [pscustomobject]@{
             managementGroups = @(); policyAssignments = @(); roleAssignments = @()
@@ -263,8 +354,14 @@ resources | where type =~ "microsoft.synapse/workspaces"
             containers   = [pscustomobject]@{ aksClusters = $r.aksClusters; containerRegistries = $r.containerRegistries }
             security     = [pscustomobject]@{ keyVaults = $r.keyVaults }
             ai           = [pscustomobject]@{ cognitiveAccounts = $r.cognitiveAccounts }
-            hybrid       = [pscustomobject]@{ arcServers = $r.arcServers }
-            integration  = [pscustomobject]@{ eventHubNamespaces = $r.eventHubNamespaces; apiManagement = $r.apiManagement }
+            hybrid       = [pscustomobject]@{
+                arcServers = $r.arcServers; arcExtensions = $r.arcExtensions
+                azureLocalClusters = $r.azureLocalClusters
+            }
+            integration  = [pscustomobject]@{
+                eventHubNamespaces = $r.eventHubNamespaces; apiManagement = $r.apiManagement
+                serviceBusNamespaces = $r.serviceBusNamespaces
+            }
             iot          = [pscustomobject]@{ iotHubs = $r.iotHubs }
             analytics    = [pscustomobject]@{ synapseWorkspaces = $r.synapseWorkspaces }
         }
