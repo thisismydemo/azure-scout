@@ -32,7 +32,7 @@ releases over time*.
 | **1.1.0** | _TBD_ | 🔵 | Quality & reliability — Pester suite, CI, throttling/retry, `-WhatIf`, non-destructive cache | AB#315–#352 |
 | **1.2.0** | _TBD_ | 🔵 | Collector depth — governance, networking, private-endpoint, and policy collectors | AB#353–#405 |
 | **2.0.0** | 2026-07-23 | ✅ | **CAF/WAF assessment platform** — assessment engine (139 rules), ARG collect layer, AzGovViz/Advisor/ARG ingest, ALZ benchmark, tiered reporting (Power BI / HTML / OpenXML PPTX / Excel / JSON); per-domain analytics foundation. Runtime-verified offline + live tenant. | **Epic AB#5023** (AB#5024, 5027, 5031, 5034, 5044) + **Epic AB#5056** (AB#5057–5060) |
-| **2.1.0** | _TBD_ | 🟡 | **Per-domain CAF/WAF analytics** — native governance collector (AB#5041), unattended pipeline (AB#5050), and React report / drift tracking (AB#5053) shipped; full per-category rule depth still in progress | **Epic AB#5023** (AB#5041, AB#5050, AB#5053) + **Epic AB#5056** (Features AB#5061–#5075) |
+| **2.1.0** | 2026-07-23 | 🟢 | **Platform hardening** — native governance collector (AB#5041), unattended pipeline (AB#5050), and React report / drift tracking (AB#5053). Full per-category rule depth (Epic AB#5056) continues in a later release | **Epic AB#5023** (AB#5041, AB#5050, AB#5053) + **Epic AB#5056** (Features AB#5061–#5075) |
 
 > **2.0.0 is a major bump** because the reporting overhaul demotes Excel-first
 > output to an evidence tier and introduces the `findings.json` contract — a
@@ -40,7 +40,7 @@ releases over time*.
 
 ---
 
-## 2.1.0 — Unreleased (TBD)
+## 2.1.0 — 2026-07-23
 
 Delivered on `main` in the current development line (not yet tagged or published):
 

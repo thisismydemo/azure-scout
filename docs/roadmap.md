@@ -118,7 +118,7 @@ Turned inventory into a **scored CAF/WAF landing-zone assessment**. Collection s
 | Module registry + entry point | `-Assessment` run one/some/all; read-only permission pre-flight | :white_check_mark: Done (AB#5024); unattended one-command pipeline :white_check_mark: Done (AB#5050, v2.1.0) |
 | React report + drift tracking | Richer React report variant and cross-run score-drift tracking | :white_check_mark: Done (AB#5053, v2.1.0) |
 
-## Major — v2.1.0 — Platform Hardening (Epic AB#5023 carryover) — In Development
+## Major — v2.1.0 — Platform Hardening (Epic AB#5023 carryover) — Released 2026-07-23
 
 Three more Epic AB#5023 capabilities have shipped on `main` ahead of the full
 per-domain analytics epic below. Not yet tagged/released — see

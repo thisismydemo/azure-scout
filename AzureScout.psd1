@@ -12,7 +12,7 @@
 RootModule = 'AzureScout.psm1'
 
 # Version number of this module.
-ModuleVersion = '2.0.1'
+ModuleVersion = '2.1.0'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop', 'Core')
@@ -134,7 +134,7 @@ PrivateData = @{
         IconUri = 'https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/images/azurescout-icon.svg'
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'v2.0.1 — Point the Project Site link at the documentation site (thisismydemo.cloud/azure-scout). v2.0.0 — CAF/WAF Assessment Platform (major). Adds a read-only, three-layer assessment engine (collect.json -> findings.json -> report) on top of the v1 inventory tool: a declarative CAF/WAF rule engine (139 rules across 8 CAF design areas + 5 WAF pillars, dual scoring, prioritized gaps), an Azure Resource Graph collect layer, AzGovViz/Advisor/ARG ingest, an ALZ benchmark diff, and tiered reporting (Power BI, self-contained HTML, executive PowerPoint via the OpenXML SDK, plus Excel + JSON evidence). Per-domain analytics: every discovery category is an independently runnable, tagged assessment via Invoke-ScoutAssessment -Assessment <Category>. Runtime-verified offline (Pester) and against a live tenant. BREAKING: introduces the findings.json output contract and demotes Excel-first output to an evidence tier. Assessment features require PowerShell 7. Full inventory functionality from v1.0.0 is unchanged. See CHANGELOG.md for details.'
+        ReleaseNotes = 'v2.1.0 — Platform hardening. Native governance collector (Import-Governance) replaces the Azure Governance Visualizer dependency: management-group, policy-assignment, role-assignment, budget, and resource-lock data now come from Azure Resource Graph + ARM REST directly, so the ALZ benchmark needs only ARM Reader at the management-group root (no Microsoft Graph app permissions by default). New unattended one-command pipeline (Invoke-ScoutPipeline) for CI/cron with a machine-readable run summary and exit codes. New self-contained interactive React HTML report (-OutputFormat React) plus cross-run drift tracking (New/Resolved/Regressed deltas across runs). v2.0.1 — Point the Project Site link at the documentation site (thisismydemo.cloud/azure-scout). v2.0.0 — CAF/WAF Assessment Platform (major). Adds a read-only, three-layer assessment engine (collect.json -> findings.json -> report) on top of the v1 inventory tool: a declarative CAF/WAF rule engine (139 rules across 8 CAF design areas + 5 WAF pillars, dual scoring, prioritized gaps), an Azure Resource Graph collect layer, AzGovViz/Advisor/ARG ingest, an ALZ benchmark diff, and tiered reporting (Power BI, self-contained HTML, executive PowerPoint via the OpenXML SDK, plus Excel + JSON evidence). Per-domain analytics: every discovery category is an independently runnable, tagged assessment via Invoke-ScoutAssessment -Assessment <Category>. Runtime-verified offline (Pester) and against a live tenant. BREAKING: introduces the findings.json output contract and demotes Excel-first output to an evidence tier. Assessment features require PowerShell 7. Full inventory functionality from v1.0.0 is unchanged. See CHANGELOG.md for details.'
 
         # Prerelease string of this module
         # Prerelease = ''
