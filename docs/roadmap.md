@@ -13,7 +13,29 @@ Community contributions are welcome — see [Contributing](contributing.md) to g
 > plan live in the [Master Design & Plan](design/master-plan.md). This roadmap is
 > the public-facing summary of it.
 
-## Current Release — v1.0.0
+## Current Release — v2.0.0 — CAF/WAF Assessment Platform
+
+Released 23 July 2026. Turns AzureScout from an inventory tool into a read-only
+CAF/WAF landing-zone assessment. Runtime-verified offline (Pester) and against a
+live Azure tenant.
+
+| Capability | What shipped |
+|---|---|
+| Assessment engine | Declarative YAML rules (JSONPath + assert types), dual CAF/WAF scoring, prioritized gap list — **139 rules across 8 CAF design areas + 5 WAF pillars** |
+| Collect + ingest | Read-only ARG collect layer (`collect.json`); AzGovViz / ARG query pack / Advisor ingest |
+| ALZ benchmark | Live tenant diffed against a canonical ALZ reference |
+| Tiered reporting | Power BI, self-contained HTML, executive **PowerPoint (OpenXML SDK — no Python)**, Excel + JSON evidence |
+| Per-domain analytics | Every discovery category runnable + tagged: `Invoke-ScoutAssessment -Assessment <Category>` |
+| Entry point | `Invoke-ScoutAssessment` (run one/some/all), read-only permission pre-flight |
+
+> **Breaking:** introduces the `findings.json` contract and demotes Excel-first
+> output to an evidence tier. Assessment features require PowerShell 7.
+
+Deferred to v2.1.0: full per-category rule depth (AB#5061–5075), the fully
+unattended pipeline (AB#5050), and the React report variant + cross-run drift
+tracking (AB#5053).
+
+## Previous Release — v1.0.0
 
 Released February 2026.
 
@@ -81,19 +103,19 @@ Focus: depth, breadth, and multi-tenant scenarios.
 | Fabric / Power BI export (#17) | `-OutputFormat PowerBI` generates a flat normalized CSV bundle (`PowerBI/` folder) with `_metadata.csv`, `Subscriptions.csv`, per-module `Resources_*.csv` and `Entra_*.csv` files, and a `_relationships.json` star-schema manifest for Power BI Desktop / Microsoft Fabric | :white_check_mark: Done |
 | IoT deep coverage | IoT Hub device registry, Device Provisioning Service, Digital Twins topology | :bulb: Idea |
 
-## Major — v2.0.0 — CAF/WAF Assessment Platform (Epic AB#5023)
+## Major — v2.0.0 — CAF/WAF Assessment Platform (Epic AB#5023) — Delivered
 
-Focus: turn inventory into a **scored CAF/WAF landing-zone assessment**. Collection stays as-is; a three-layer, JSON-on-disk architecture (`collect.json` → `findings.json` → deliverables) adds assessment and rebuilds reporting. Read-only throughout.
+Turned inventory into a **scored CAF/WAF landing-zone assessment**. Collection stays as-is; a three-layer, JSON-on-disk architecture (`collect.json` → `findings.json` → deliverables) adds assessment and rebuilds reporting. Read-only throughout. **Shipped in v2.0.0 (2026-07-23).**
 
 | Capability | Description | Status |
 |---|---|---|
-| Assessment engine | Declarative YAML rules (JSONPath + 7 assert types), dual CAF/WAF scoring, prioritized gap list | :blue_circle: Planned (AB#5027, AB#5034) |
-| CAF/WAF rule content | 8 CAF design areas + 5 WAF pillars as version-controlled rule files | :blue_circle: Planned (AB#5031) |
-| Ingest layer | Fold Azure Governance Visualizer, an ARG query pack, and Advisor into one `collect.json` | :blue_circle: Planned (AB#5037) |
-| ALZ benchmark diff | Compare the live tenant against a canonical ALZ reference (MG archetypes, required policies) | :blue_circle: Planned (AB#5041) |
-| Tiered reporting | Power BI (primary), self-contained HTML, executive PPTX; Excel/JSON retained as evidence | :blue_circle: Planned (AB#5044) |
-| Module registry + entry point | `-Assessment` run one/some/all; read-only permission pre-flight; unattended pipeline | :blue_circle: Planned (AB#5024, AB#5050) |
-| React report + drift tracking | Richer React report variant and cross-run score-drift tracking | :blue_circle: Planned (AB#5053) |
+| Assessment engine | Declarative YAML rules (JSONPath + assert types), dual CAF/WAF scoring, prioritized gap list | :white_check_mark: Done (AB#5027, AB#5034) |
+| CAF/WAF rule content | 8 CAF design areas + 5 WAF pillars — 139 rules across 23 version-controlled files | :white_check_mark: Done (AB#5031, AB#5057) |
+| Ingest layer | Fold Azure Governance Visualizer, an ARG query pack, and Advisor into one `collect.json` | :white_check_mark: Done (AB#5037) |
+| ALZ benchmark diff | Compare the live tenant against a canonical ALZ reference (MG archetypes, required policies) | :white_check_mark: Done — engine; governance dataset pending an upstream AzGovViz fix (AB#5041) |
+| Tiered reporting | Power BI (primary), self-contained HTML, executive PPTX (OpenXML SDK); Excel/JSON retained as evidence | :white_check_mark: Done (AB#5044) |
+| Module registry + entry point | `-Assessment` run one/some/all; read-only permission pre-flight | :white_check_mark: Done (AB#5024); unattended pipeline :blue_circle: Planned v2.1.0 (AB#5050) |
+| React report + drift tracking | Richer React report variant and cross-run score-drift tracking | :blue_circle: Planned v2.1.0 (AB#5053) |
 
 ## Major — v2.1.0 — Per-Domain CAF/WAF Analytics (Epic AB#5056)
 

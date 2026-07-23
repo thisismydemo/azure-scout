@@ -22,7 +22,7 @@ description: Master design and delivery plan for Azure Scout — the single sour
 | [`enhancement-spec.md`](enhancement-spec.md) | **The owner's original AzureScout Enhancement Specification, verbatim** — the source requirement this whole plan derives from (§0–§12: architecture, engine, ingest, benchmark, reporting, build phases). |
 | [`task-list.md`](task-list.md) | Complete flat list of every task (161 ADO items / 91 GitHub issues) grouped by release/epic. |
 | [`assessment-registry.md`](assessment-registry.md) | Catalogue of every runnable assessment (category, sub-bundles, CAF/WAF coverage, tags). |
-| [`../roadmap.md`](../roadmap.md) · [`../../RELEASES.md`](../../RELEASES.md) | Public roadmap and release/build ledger. |
+| [`../roadmap.md`](../roadmap.md) · [`RELEASES.md`](https://github.com/thisismydemo/azure-scout/blob/main/RELEASES.md) | Public roadmap and release/build ledger. |
 
 ### ⚠️ ADO verification status (2026-07-21 07:20 UTC)
 

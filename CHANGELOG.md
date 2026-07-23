@@ -7,13 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-07-23
+
+Major release — the **CAF/WAF Assessment Platform**. Extends AzureScout from an
+inventory tool into a read-only Cloud Adoption Framework / Well-Architected
+landing-zone assessment. Runtime-verified offline (Pester) and against a live
+Azure tenant.
+
+> **Breaking:** introduces the `findings.json` output contract and demotes
+> Excel-first output to an evidence tier. Assessment features require
+> PowerShell 7; the v1 inventory functionality is unchanged and still runs on 5.1.
+
 ### Fixed
 
 - **Discovery data-loss fixes**: `Get-AZSCManagementGroups` now pages Resource Graph via SkipToken (was capped at 1000 subs — AB#5076) and throws instead of `Exit` on a bad management group (AB#5077); `Start-AZTIGraphExtraction` throws instead of `Exit` (AB#5077); `Invoke-AZTIInventoryLoop` no longer double-counts boundary subscriptions in the >200-subscription batch loop (AB#5078).
 - **Assessment correctness**: rewrote `.length` JSONPath filters to scalar fields; `Resolve-JsonPath` no longer swallows a thrown query into an empty result and `Invoke-Rule` surfaces it as `Error` rather than a false Pass (AB#5083); `percentageAtLeast` with a zero denominator yields `Unknown` (AB#5085); `Compare-Benchmark` guards absent governance data instead of emitting false all-Fail (AB#5084).
 - **Scoring/reporting**: framework score is weighted by `AreaWeight` (AB#5087); `Unknown`/`Error` statuses are surfaced, not silently dropped (AB#5088); unknown severities sort last and can't crash the PPTX deck (AB#5089); null area scores render neutral in HTML, not red (AB#5090); deterministic rounding.
+- **StrictMode runtime defects surfaced by first engine execution** (AB#5027): `Resolve-JsonPath` empty-result collapse to `$null` across the function boundary; `Get-Score` zero-match pipeline null-collapse under `Set-StrictMode -Version Latest`; `Invoke-Rule` unconditional `assert.value` access for `exists`/`notExists`/`manual` rules; and an unguarded `$spec.Benchmark` lookup in `Invoke-ScoutAssessment` that broke 21 of 22 manifest assessments.
+- **WAF-RE-05** zone-redundancy rule scoped to zone-eligible regions instead of flagging every non-zone-redundant VM (AB#5086).
+- **Ingest robustness surfaced by live root-MG runs** (AB#5037): `Invoke-ArgQueryPack` and `Invoke-Collect` no longer pass `-Skip 0` (rejected by `Search-AzGraph`); `Import-AzGovViz` preinstalls its `AzAPICall` dependency, passes `-NoPIMEligibility` when PIM data is unavailable, isolates the third-party script from the module's strict mode, and folds in partial exports if AzGovViz crashes mid-run instead of failing the whole assessment.
 
 ### Added
+
+- **Reporting — OpenXML PowerPoint renderer** (AB#5044): `Export-Pptx.ps1` rebuilt on `DocumentFormat.OpenXml` (acquired via NuGet on first use, cached locally, no committed binaries) — the Python `python-pptx`/`build_deck.py` prototype is removed entirely. Generates a themed executive deck (title, executive summary, area-score breakdown, prioritized gaps, manual worklist, next steps) with a designer-template extension point. Decision recorded in `docs/design/decisions/pptx-renderer.md`.
+- **Collect layer — per-domain ARG collectors**: extended `Invoke-Collect.ps1` (Service Bus, Arc extensions, Azure Local clusters, Log Analytics retention, private-endpoint target linkage, plus storage/web/AKS/AI/analytics/integration fields) so 16 previously manual rules now evaluate automatically. Rule set is 139 rules across 23 files (93 automated / 46 manual, each documenting the data source it needs).
+- **Verification fixtures & tests**: `tests/datadump/sample-collect.json` canonical fixture exercising every status path; `tests/Test-PptxFromDataDump.ps1` smoke test; engine Pester suite green (6/6), full repo suite passing.
 
 - **`src/collect/Invoke-Collect.ps1`** — normalized, read-only Azure Resource Graph adapter that produces the canonical `collect.json` (scalar fields) the rule engine evaluates against, resolving the discovery→assessment data-shape gap (AB#5081, AB#5082).
 - **`tests/Assessment.Engine.Tests.ps1`** — Pester smoke tests for the scoring math and assert semantics.
@@ -336,7 +354,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 **Version Control**
-- Created: 2026-02-22 by thisismydemo
-- Last Edited: 2026-02-25 by thisismydemo
-- Version: 1.0.0
-- Tags: changelog, AzureScout, dashboard-tabs, rebranding, version-reset, json-output, phase-7, antora, pester
+- Created: 2026-02-22 by Kristopher Turner
+- Last Edited: 2026-07-23 by Kristopher Turner
+- Version: 2.0.0
+- Tags: changelog, AzureScout, assessment, CAF, WAF, landing-zone, openxml, pptx, ingest, runtime-verification

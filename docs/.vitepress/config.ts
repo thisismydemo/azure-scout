@@ -11,6 +11,7 @@ export default defineConfig({
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Getting Started', link: '/prerequisites' },
+      { text: 'Assessment', link: '/assessment' },
       { text: 'Module Reference', link: '/arm-modules' },
       { text: 'Project', link: '/roadmap' },
     ],
@@ -28,6 +29,12 @@ export default defineConfig({
           { text: 'Output Files & Formats', link: '/output' },
           { text: 'Troubleshooting', link: '/troubleshooting' },
           { text: 'Testing', link: '/testing' },
+        ],
+      },
+      {
+        text: 'CAF/WAF Assessment',
+        items: [
+          { text: 'Assessment Platform', link: '/assessment' },
         ],
       },
       {

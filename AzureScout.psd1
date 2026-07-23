@@ -12,7 +12,7 @@
 RootModule = 'AzureScout.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0.0'
+ModuleVersion = '2.0.0'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop', 'Core')
@@ -30,7 +30,7 @@ CompanyName = 'Hybrid Cloud Solutions'
 Copyright = '(c) 2026 Hybrid Cloud Solutions. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'AzureScout — discover and inventory everything in your Azure environment. Generates Excel, JSON, Markdown, and AsciiDoc reports from Azure resources, Entra ID, and identity objects using Azure Resource Graph and Microsoft Graph REST APIs. See everything. Own your cloud.'
+Description = 'AzureScout — discover, inventory, and assess everything in your Azure environment. Inventories Azure resources, Entra ID, and identity objects (Excel, JSON, Markdown, AsciiDoc), and runs a read-only CAF/WAF landing-zone assessment: a declarative rule engine scores the tenant against Cloud Adoption Framework design areas and Well-Architected pillars, producing Power BI, self-contained HTML, executive PowerPoint, and JSON/Excel evidence. See everything. Own your cloud. (Assessment features require PowerShell 7.)'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '5.1'
@@ -119,7 +119,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @('Azure','AzureScout','Discovery','Inventory','AZSC','EntraID','Resources','ARM','Graph','Reporting','Excel')
+        Tags = @('Azure','AzureScout','Discovery','Inventory','Assessment','CAF','WAF','WellArchitected','CloudAdoptionFramework','LandingZone','Governance','AZSC','EntraID','Resources','ARM','Graph','Reporting','Excel','PowerBI')
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/thisismydemo/azure-scout/blob/main/LICENSE'
@@ -131,7 +131,7 @@ PrivateData = @{
         IconUri = 'https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/images/azurescout-icon.svg'
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'v1.0.0 — Initial public release. Full Azure ARM + Entra ID inventory with Excel, JSON, Markdown, and AsciiDoc output. 110 inventory modules across 17 categories. Permission audit, category filtering, Draw.io diagrams, and multi-format reporting.'
+        ReleaseNotes = 'v2.0.0 — CAF/WAF Assessment Platform (major). Adds a read-only, three-layer assessment engine (collect.json -> findings.json -> report) on top of the v1 inventory tool: a declarative CAF/WAF rule engine (139 rules across 8 CAF design areas + 5 WAF pillars, dual scoring, prioritized gaps), an Azure Resource Graph collect layer, AzGovViz/Advisor/ARG ingest, an ALZ benchmark diff, and tiered reporting (Power BI, self-contained HTML, executive PowerPoint via the OpenXML SDK, plus Excel + JSON evidence). Per-domain analytics: every discovery category is an independently runnable, tagged assessment via Invoke-ScoutAssessment -Assessment <Category>. Runtime-verified offline (Pester) and against a live tenant. BREAKING: introduces the findings.json output contract and demotes Excel-first output to an evidence tier. Assessment features require PowerShell 7. Full inventory functionality from v1.0.0 is unchanged. See CHANGELOG.md for details.'
 
         # Prerelease string of this module
         # Prerelease = ''

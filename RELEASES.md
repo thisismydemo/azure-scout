@@ -31,8 +31,8 @@ releases over time*.
 | **1.0.0** | 2026-02-25 | ✅ | Fork from microsoft/ARI → AzureScout; 170+ ARM modules, 15 Entra modules, Excel/JSON/Markdown output, draw.io diagrams, category filtering, permission pre-flight | — |
 | **1.1.0** | _TBD_ | 🔵 | Quality & reliability — Pester suite, CI, throttling/retry, `-WhatIf`, non-destructive cache | AB#315–#352 |
 | **1.2.0** | _TBD_ | 🔵 | Collector depth — governance, networking, private-endpoint, and policy collectors | AB#353–#405 |
-| **2.0.0** | _TBD_ | 🔵 | **CAF/WAF assessment platform** — assessment engine, ingest, ALZ benchmark, tiered reporting (Power BI / HTML / PPTX) | **Epic AB#5023** (Features AB#5024–#5055) |
-| **2.1.0** | _TBD_ | 🔵 | **Per-domain CAF/WAF analytics** — every category an independently runnable, tagged assessment | **Epic AB#5056** (Features AB#5057–#5075) |
+| **2.0.0** | 2026-07-23 | ✅ | **CAF/WAF assessment platform** — assessment engine (139 rules), ARG collect layer, AzGovViz/Advisor/ARG ingest, ALZ benchmark, tiered reporting (Power BI / HTML / OpenXML PPTX / Excel / JSON); per-domain analytics foundation. Runtime-verified offline + live tenant. | **Epic AB#5023** (AB#5024, 5027, 5031, 5034, 5044) + **Epic AB#5056** (AB#5057–5060) |
+| **2.1.0** | _TBD_ | 🔵 | **Per-domain CAF/WAF analytics** — full per-category rule depth + unattended pipeline (AB#5050) and React report / drift tracking (AB#5053) | **Epic AB#5056** (Features AB#5061–#5075) |
 
 > **2.0.0 is a major bump** because the reporting overhaul demotes Excel-first
 > output to an evidence tier and introduces the `findings.json` contract — a
@@ -46,7 +46,7 @@ Builds are cut from `main` once CI passes. Record each build here as it is produ
 
 | Build | Commit | Date | From version | Artifacts | Notes |
 |---|---|---|---|---|---|
-| _pending first CI-green build_ | — | — | — | — | — |
+| v2.0.0 | `0518c7a` | 2026-07-23 | 2.0.0 | `AzureScout` module (PSGallery), GitHub release `v2.0.0` | First assessment-platform release. Verified offline (Pester) + against a live tenant (140 findings, all report tiers). |
 
 ---
 
