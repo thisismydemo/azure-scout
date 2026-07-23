@@ -13,17 +13,19 @@ function Compare-Benchmark {
     param($Collect, $Benchmark)
     $findings = @()
 
-    # Guard: the benchmark needs governance data (populated only by the AzGovViz
-    # ingestor). Without it, do NOT emit false all-Fail findings (AB#5084) —
-    # return an explicit Unknown so the report shows "not collected", not "0% compliant".
+    # Guard: the benchmark needs governance data (populated by the native
+    # Governance ingestor — Import-Governance). Without management-group data,
+    # do NOT emit false all-Fail findings (AB#5084) — return an explicit Unknown
+    # so the report shows "not collected", not "0% compliant". This normally only
+    # happens when the collecting identity lacks Reader at the management-group root.
     $hasGov = $Collect.PSObject.Properties['governance'] -and $Collect.governance -and
               @($Collect.governance.managementGroups).Where({ $_ }).Count -gt 0
     if (-not $hasGov) {
         return , ([pscustomobject]@{
-            Id = 'BENCH-GOV-DATA'; Title = 'ALZ benchmark requires governance data (run the AzGovViz ingestor)'
+            Id = 'BENCH-GOV-DATA'; Title = 'ALZ benchmark requires governance data (management-group visibility)'
             Framework = 'CAF'; Area = 'Governance (policy & compliance)'; Severity = 'medium'
             Status = 'Unknown'; EvidenceCount = 0; Evidence = @()
-            Remediation = 'Enable the AzGovViz ingestor so management-group and policy-assignment data is collected before benchmarking.'
+            Remediation = 'Grant the collecting identity Reader at the management-group root so the Governance ingestor can enumerate management groups and policy assignments, then re-run.'
             Manual = $false
         })
     }

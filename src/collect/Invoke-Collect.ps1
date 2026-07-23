@@ -26,7 +26,7 @@ $ErrorActionPreference = 'Stop'
                      logAnalyticsWorkspaces[{retentionInDays}] }
         security   { defenderPlans[] }
         governance { managementGroups[], policyAssignments[], roleAssignments[], budgets[],
-                     resourceLocks[], pimEligibility[], classicAdministrators[] }  (mostly filled by ingest)
+                     resourceLocks[], pimEligibility[], classicAdministrators[] }  (filled by the native Governance ingestor, Import-Governance)
         costCleanup { orphanedDisks[], orphanedPips[] }
         opsPosture  { diagnosticCoverage[{type,coveragePct}] }
         domains     { storage{storageAccounts[{networkDefaultDeny}]},
