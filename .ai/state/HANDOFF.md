@@ -6,7 +6,38 @@
   (possibly a different tool) starts by reading it.
 -->
 
-## Last session (2026-07-23, Claude Code)
+## Last session (2026-07-23, Claude Code) — v2.1.0 feature trio
+
+- **What changed and why:** Delivered the three items that were parked as "v2.1.0 /
+  blocked". (1) **AB#5041** — new native governance collector `Import-Governance`
+  (`src/ingest/`) replaces the AzGovViz hard dependency: pulls policy/role/MG data
+  from Azure Resource Graph + budgets/locks via ambient-token ARM REST. The ALZ
+  benchmark is no longer blocked on any upstream AzGovViz fix. (2) **AB#5050** —
+  `Invoke-ScoutPipeline` (`src/`), a headless one-command collect→assess→report with
+  a CI-facing `pipeline-summary.json` and exit codes. (3) **AB#5053** — `Export-React`
+  self-contained interactive report + `Get-ScoutDrift` cross-run drift, wired into the
+  orchestrator (`-OutputFormat React`).
+- **Files touched:** new `src/ingest/Import-Governance.ps1`, `src/Invoke-ScoutPipeline.ps1`,
+  `src/report/renderers/Export-React.ps1`, `src/report/Get-ScoutDrift.ps1`,
+  `src/report/templates/report-react.html.template`; edited `src/Invoke-ScoutAssessment.ps1`,
+  `src/report/Export-Report.ps1`, `src/assess/Compare-Benchmark.ps1`,
+  `src/collect/Invoke-Collect.ps1`, `manifests/assessments.psd1`, `AzureScout.psd1`;
+  5 new test files; 13 docs/design files updated.
+- **Commands / tests run:** full Pester suite **1325 pass / 0 fail / 3 skip**; VitePress
+  `npm run docs:build` green (0 dead links). Governance collector **live-verified** via
+  SPN against the HCS tenant (real ARG policy/role data, rules scored real Pass/Fail,
+  benchmark guard correct). Real-orchestrator E2E produced a 220KB self-contained React
+  report + drift across two runs. One integration bug found & fixed by E2E: Export-React's
+  return path leaked into Invoke-ScoutAssessment's output (reporter loop now `| Out-Null`;
+  regression test added).
+- **Branch:** main — committed (5 per-concern commits `1379826..ee7ebfa`) — pushed: yes.
+- **ADO:** AB#5041, AB#5050, AB#5053 all moved New → **Resolved** with commit evidence.
+- **Blockers / open decision:** these three constitute **v2.1.0** but it is NOT yet cut or
+  published. Release docs are staged as "v2.1.0 — Unreleased". Awaiting the owner's go to
+  cut the version bump + tag + GitHub release + PSGallery publish (PSGallery key is in
+  kv-hcs-vault-01 as `hcs-vault-azure-scout-powershellgallery-publisher-api-key`).
+
+## Prior session (2026-07-23, Claude Code)
 
 - **What changed and why:** Full remaining-backlog implementation pass (multi-agent).
   (1) Collector extensions in `src/collect/Invoke-Collect.ps1` + 9 rule files — 16 rules
