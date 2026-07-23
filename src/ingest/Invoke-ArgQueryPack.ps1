@@ -63,7 +63,10 @@ resources
     foreach ($k in $queries.Keys) {
         $rows = @(); $skip = 0
         do {
-            $batch = Search-AzGraph -Query $queries[$k] -First 1000 -Skip $skip
+            # Search-AzGraph rejects -Skip 0 (ValidateRange minimum is 1) — omit it on the first page.
+            $params = @{ Query = $queries[$k]; First = 1000 }
+            if ($skip -gt 0) { $params.Skip = $skip }
+            $batch = @(Search-AzGraph @params)
             $rows += $batch; $skip += 1000
         } while ($batch.Count -eq 1000)
         $arg[$k] = $rows

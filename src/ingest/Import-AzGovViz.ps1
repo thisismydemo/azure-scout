@@ -13,6 +13,14 @@ $ErrorActionPreference = 'Stop'
 function Import-AzGovViz {
     param($Collect, [string] $OutputPath, [string] $ManagementGroupId)
 
+    # AzGovViz needs a management-group scope; without one its parameter prompts spin
+    # forever in a non-interactive host. Skip the ingest — Compare-Benchmark already
+    # degrades to Unknown when $Collect.governance is absent (AB#5084 guard).
+    if (-not $ManagementGroupId) {
+        Write-Warning 'Import-AzGovViz: no -ManagementGroupId supplied; skipping AzGovViz ingest (governance rules will report Unknown).'
+        return $Collect
+    }
+
     $govPath = Join-Path $OutputPath 'govviz'
     New-Item -ItemType Directory -Path $govPath -Force | Out-Null
 
