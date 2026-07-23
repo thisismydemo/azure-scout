@@ -25,3 +25,27 @@ rules:
     assert: { type: exists }
     remediation: "Normalize tag values to reduce sprawl and enable reliable cost allocation."
     manual: false
+
+  - id: CAF-RES-04
+    title: "Every subscription is assigned to a management group"
+    severity: high
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm no subscriptions remain unassigned at the tenant root. collect.json's managementGroups collection does not yet capture subscription-to-management-group membership to automate this check."
+    manual: true
+
+  - id: CAF-RES-05
+    title: "Resource and resource-group names follow a documented naming convention"
+    severity: low
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm names follow the CAF naming pattern (resourceType-workload-env-region-instance). No naming-pattern signal is currently collected."
+    manual: true
+
+  - id: CAF-RES-06
+    title: "Environment tag coverage across subscriptions meets threshold"
+    severity: medium
+    query: "$.subscriptions[?(@.tags.Environment)]"
+    assert: { type: percentageAtLeast, value: 80, denominatorQuery: "$.subscriptions[*]" }
+    remediation: "Apply the Environment tag to at least 80% of subscriptions to support reliable cost allocation and policy scoping."
+    manual: false

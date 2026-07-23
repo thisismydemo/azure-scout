@@ -25,3 +25,27 @@ rules:
     assert: { type: manual }
     remediation: "Confirm autoscale rules are defined for elastic workloads."
     manual: true
+
+  - id: WAF-PE-05
+    title: "CDN or caching layer adopted for latency-sensitive content"
+    severity: low
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm Azure Front Door/CDN or an application-layer cache is used for latency-sensitive or high-traffic content. No CDN-adoption collector exists yet."
+    manual: true
+
+  - id: WAF-PE-06
+    title: "Majority of subnets maintain healthy IP headroom"
+    severity: low
+    query: "$.networking.subnets[?(@.ipUtilizationPct < 75)]"
+    assert: { type: percentageAtLeast, value: 90, denominatorQuery: "$.networking.subnets[*]" }
+    remediation: "Keep most subnets below 75% IP utilization so workloads can scale without a re-addressing project."
+    manual: false
+
+  - id: WAF-PE-07
+    title: "Medium-impact Advisor performance recommendations addressed"
+    severity: low
+    query: "$.advisor[?(@.Category == 'Performance' && @.Impact == 'Medium')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Act on medium-impact Advisor performance recommendations in addition to high-impact ones."
+    manual: false

@@ -25,3 +25,27 @@ rules:
     assert: { type: manual }
     remediation: "Confirm operational runbooks exist for incident response and recovery."
     manual: true
+
+  - id: WAF-OE-06
+    title: "Alert rules configured for critical resource health/metrics"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm Azure Monitor alert rules and action groups cover critical resource health and key metrics. collect.json does not yet collect an alert-rule inventory."
+    manual: true
+
+  - id: WAF-OE-07
+    title: "Automation accounts / runbooks reduce manual operational toil"
+    severity: low
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm Automation Accounts, runbooks, or Update Management are in place to automate routine operational tasks. No automation-account collector exists yet."
+    manual: true
+
+  - id: WAF-OE-08
+    title: "Majority of resource groups show IaC-managed deployments"
+    severity: medium
+    query: "$.management.deployments[?(@.properties.templateHash)]"
+    assert: { type: percentageAtLeast, value: 70, denominatorQuery: "$.management.deployments[*]" }
+    remediation: "Increase the share of deployments driven by IaC pipelines rather than manual/portal changes; target at least 70%."
+    manual: false

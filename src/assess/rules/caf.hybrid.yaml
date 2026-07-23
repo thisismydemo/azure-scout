@@ -21,5 +21,26 @@ rules:
     severity: low
     query: null
     assert: { type: manual }
-    remediation: "Confirm Arc agents are on a supported/current version."
+    remediation: "collect.json's domains.hybrid.arcServers[].agentVersion reports the Connected Machine agent version per server. Compare it against the current supported version in the Azure Arc agent release notes — the 'latest supported' threshold changes too often to hard-code as an automated assert — and flag any server materially behind."
+    manual: true
+  - id: CAF-HYB-04
+    title: "Arc-enabled server extension coverage reviewed"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Invoke-Collect.ps1 does not query microsoft.hybridcompute/machines/extensions, so extension coverage has no collect.json field yet. Manually confirm baseline extensions (Azure Monitor Agent, Microsoft Defender for Endpoint, Update Manager) are installed on Arc-connected servers, or add a collector so this can be automated."
+    manual: true
+  - id: CAF-HYB-05
+    title: "Azure Local (Arc-enabled HCI) cluster health reviewed"
+    severity: high
+    query: null
+    assert: { type: manual }
+    remediation: "No collector exists yet for microsoft.azurestackhci/clusters — this is a genuine collect.json gap, not just an unset field. Manually review Azure Local (Arc-enabled HCI) cluster status, storage/S2D health, and Arc connectivity in the portal until a dedicated collector is added."
+    manual: true
+  - id: CAF-HYB-06
+    title: "Arc-scoped policy compliance reviewed"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "governance.policyAssignments is populated by the AzGovViz ingest step and has no field distinguishing Arc-scoped policies (guest configuration, Arc VM extension policies) from general assignments. Manually confirm Arc-connected machines are in scope for, and compliant with, the relevant Azure Policy initiatives."
     manual: true

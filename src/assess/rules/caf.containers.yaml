@@ -23,3 +23,38 @@ rules:
     assert: { type: countEquals, value: 0 }
     remediation: "Disable the ACR admin user; use Entra identities / tokens."
     manual: false
+  - id: CAF-CON-04
+    title: "Container registries restrict public network access"
+    severity: high
+    query: "$.domains.containers.containerRegistries[?(@.publicAccess == 'Enabled')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Set publicNetworkAccess to Disabled on ACR and use private endpoints for image pull/push."
+    manual: false
+  - id: CAF-CON-05
+    title: "AKS node pools spread across availability zones"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Configure agent pools with zones [1,2,3] for production clusters. collect.json does not yet capture per-node-pool zone configuration — verify via `az aks nodepool show --query availabilityZones`."
+    manual: true
+  - id: CAF-CON-06
+    title: "AKS clusters enforce a network policy"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Enable a network policy engine (Azure or Calico) to restrict pod-to-pod traffic. collect.json does not yet capture networkProfile.networkPolicy — verify via `az aks show --query networkProfile.networkPolicy`."
+    manual: true
+  - id: CAF-CON-07
+    title: "Container registries enable vulnerability scanning"
+    severity: high
+    query: null
+    assert: { type: manual }
+    remediation: "Enable Microsoft Defender for Containers / ACR image scanning (or content trust for signed images). collect.json does not yet capture scanning or content-trust configuration — verify in Defender for Cloud registry coverage."
+    manual: true
+  - id: CAF-CON-08
+    title: "AKS clusters use Entra ID integrated authentication"
+    severity: high
+    query: null
+    assert: { type: manual }
+    remediation: "Enable AKS-managed Entra ID integration (aadProfile) rather than local Kubernetes accounts. collect.json does not yet capture aadProfile — verify via `az aks show --query aadProfile`."
+    manual: true

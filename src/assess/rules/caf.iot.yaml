@@ -16,3 +16,30 @@ rules:
     assert: { type: manual }
     remediation: "Confirm per-device authentication (X.509/TPM) rather than shared keys."
     manual: true
+  - id: CAF-IOT-03
+    title: "Device Provisioning Service (DPS) linked-hub security reviewed"
+    severity: medium
+    # No DPS collector exists in collect.json today (no
+    # microsoft.devices/provisioningservices query).
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm DPS instances use certificate-based enrollment groups (not shared symmetric-key group enrollment) and linked IoT Hub access policies are least-privilege; add a provisioningservices collector before automating."
+    manual: true
+  - id: CAF-IOT-04
+    title: "IoT Hub SKU / throughput-unit right-sizing reviewed"
+    severity: low
+    # collect.json's iotHubs producer projects sku but not message-count/throttling
+    # metrics needed to judge right-sizing (Invoke-Collect.ps1).
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm IoT Hub SKU/tier and provisioned units match sustained message throughput, avoiding both throttled under-provisioning and oversized tiers; extend the collector with Monitor throughput metrics before automating."
+    manual: true
+  - id: CAF-IOT-05
+    title: "Private endpoint adoption for IoT Hubs"
+    severity: medium
+    # networking.privateEndpoints only projects name/resourceGroup/subscriptionId —
+    # no target-resource linkage, so it can't be joined to a specific IoT Hub.
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm IoT Hubs handling sensitive telemetry have a dedicated private endpoint (publicNetworkAccess=Disabled alone is not sufficient evidence); extend the privateEndpoints collector to project the target resource ID before automating."
+    manual: true

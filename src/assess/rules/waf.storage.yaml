@@ -16,3 +16,24 @@ rules:
     assert: { type: manual }
     remediation: "Review Advisor reliability recommendations for storage and confirm remediation."
     manual: true
+  - id: WAF-STO-03
+    title: "Lifecycle management policy configured for storage accounts"
+    severity: low
+    query: null
+    assert: { type: manual }
+    remediation: "Configure a lifecycle management policy to tier or expire aging blobs and control cost/performance tradeoffs. collect.json does not yet capture lifecycle management policy state — verify via `az storage account management-policy show`."
+    manual: true
+  - id: WAF-STO-04
+    title: "Blob soft-delete retention meets minimum recovery window"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm blob soft-delete retention is set to at least the org's minimum recovery window (commonly 7-30 days). collect.json does not yet capture deleteRetentionPolicy.days — verify via `az storage account blob-service-properties show`."
+    manual: true
+  - id: WAF-STO-05
+    title: "GRS/GZRS storage accounts have tested failover readiness"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "For accounts using GRS/GZRS, confirm customer-managed failover has been tested/documented and RPO/RTO expectations are understood. collect.json does not yet capture failover status — verify via `az storage account show --query failoverInProgress` and DR runbooks."
+    manual: true

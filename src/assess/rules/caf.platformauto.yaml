@@ -25,3 +25,27 @@ rules:
     assert: { type: manual }
     remediation: "Confirm platform changes flow through a reviewed CI/CD release process."
     manual: true
+
+  - id: CAF-AUT-04
+    title: "Majority of resource groups show IaC-managed deployments"
+    severity: medium
+    query: "$.management.deployments[?(@.properties.templateHash)]"
+    assert: { type: percentageAtLeast, value: 70, denominatorQuery: "$.management.deployments[*]" }
+    remediation: "Increase the proportion of deployments driven by Bicep/Terraform pipelines rather than ad hoc portal changes; target at least 70% IaC-managed."
+    manual: false
+
+  - id: CAF-AUT-05
+    title: "Resource naming follows a documented convention"
+    severity: low
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm resource and resource-group names follow the CAF naming convention (resourceType-workload-env-region-instance). collect.json does not currently capture a naming-pattern signal to automate this check."
+    manual: true
+
+  - id: CAF-AUT-06
+    title: "Automated pipelines enforce policy/security gates before promotion"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm CI/CD pipelines run policy-compliance and security-scanning gates before production promotion. Pipeline/build definitions are not currently collected by collect.json."
+    manual: true

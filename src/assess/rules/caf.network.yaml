@@ -33,3 +33,27 @@ rules:
     assert: { type: countGreaterThan, value: 0 }
     remediation: "Enable Azure DDoS Network Protection on internet-facing virtual networks."
     manual: false
+
+  - id: CAF-NET-05
+    title: "VPN gateways deployed in active-active configuration"
+    severity: medium
+    query: "$.networking.vpnGateways[?(@.activeActive == false)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Reconfigure VPN gateways for active-active mode (dual tunnel/instance) for connection redundancy. Passes vacuously if no VPN gateways are deployed (e.g. ExpressRoute-only or Virtual WAN hub connectivity)."
+    manual: false
+
+  - id: CAF-NET-06
+    title: "Private DNS zones deployed for internal name resolution"
+    severity: medium
+    query: "$.networking.privateDnsZones[*]"
+    assert: { type: countGreaterThan, value: 0 }
+    remediation: "Deploy and link private DNS zones to VNets so private-endpoint-enabled PaaS resources resolve privately instead of falling back to public DNS."
+    manual: false
+
+  - id: CAF-NET-07
+    title: "Firewall/NVA coverage confirmed per hub VNet"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "collect.json's networking.virtualNetworks does not tag which VNets are hubs vs. spokes, so per-hub firewall coverage can't be computed automatically. Manually confirm each hub VNet in the topology has an Azure Firewall or NVA deployed in its own VNet/resource group; use CAF-NET-02 for the aggregate firewall count as a starting point."
+    manual: true

@@ -23,3 +23,24 @@ rules:
     assert: { type: countEquals, value: 0 }
     remediation: "Deploy APIM in Internal/External VNet mode for network isolation."
     manual: false
+  - id: CAF-INT-04
+    title: "API Management uses a zone-redundancy-capable SKU"
+    severity: medium
+    query: "$.domains.integration.apiManagement[?(@.sku == 'Developer' || @.sku == 'Consumption')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Move production API Management instances off Developer/Consumption to Premium (or StandardV2) so zone redundancy and VNet integration can be enabled."
+    manual: false
+  - id: CAF-INT-05
+    title: "Event Hub throughput-unit autoscale enabled"
+    severity: low
+    query: null
+    assert: { type: manual }
+    remediation: "Invoke-Collect.ps1's eventHubNamespaces query does not project autoInflateEnabled/maximumThroughputUnits — collect.json has no field for this yet. Manually confirm auto-inflate is enabled (az eventhubs namespace show) for namespaces with variable ingest load, or extend the collector to add these scalars."
+    manual: true
+  - id: CAF-INT-06
+    title: "Service Bus namespaces restrict public network access"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Service Bus namespaces are not yet collected by Invoke-Collect.ps1 (no microsoft.servicebus/namespaces query, so there is no $.domains.integration.serviceBusNamespaces node). Manually confirm publicNetworkAccess is Disabled and private endpoints are used, or add a collector query so this can be automated."
+    manual: true

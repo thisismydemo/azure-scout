@@ -23,3 +23,26 @@ rules:
     assert: { type: manual }
     remediation: "Confirm apps source secrets from Key Vault via managed identity, not app settings."
     manual: true
+  - id: CAF-WEB-04
+    title: "App Services use regional VNet integration for back-end traffic"
+    severity: medium
+    # collect.json's webApps producer projects only name/resourceGroup/httpsOnly/minTls
+    # (Invoke-Collect.ps1) — no vnetIntegration/outboundVnetName field exists yet.
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm App Service plans handling internal/back-end traffic use regional VNet integration (or run inside an App Service Environment); extend the webApps collector with virtualNetworkSubnetId before automating."
+    manual: true
+  - id: CAF-WEB-05
+    title: "Custom domains use organization-managed TLS certificates"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm production App Service sites are bound to verified custom domains with certificates (App Service Managed Certificate or Key Vault-backed) tracked for renewal; extend the webApps collector with hostNameSslStates before automating."
+    manual: true
+  - id: CAF-WEB-06
+    title: "Always On and health-check probes are configured"
+    severity: low
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm Always On and a Health Check path are configured on production App Service sites to avoid cold-start gaps and enable automatic instance failover; extend the webApps collector with siteConfig.alwaysOn/healthCheckPath before automating."
+    manual: true

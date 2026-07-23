@@ -23,3 +23,24 @@ rules:
     assert: { type: countEquals, value: 0 }
     remediation: "Set minimumTlsVersion to TLS1_2 on all storage accounts."
     manual: false
+  - id: CAF-STO-04
+    title: "Storage accounts enable blob soft delete or versioning"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Enable blob soft delete and/or blob versioning (deleteRetentionPolicy, isVersioningEnabled) to protect against accidental or malicious deletion. collect.json does not yet capture these properties (SKU redundancy is already covered by WAF-STO-01) — verify via `az storage account blob-service-properties show`."
+    manual: true
+  - id: CAF-STO-05
+    title: "Storage account network rules default-deny with explicit allow-list"
+    severity: high
+    query: null
+    assert: { type: manual }
+    remediation: "Set networkAcls.defaultAction to Deny and add explicit VNet/IP allow rules or private endpoints. collect.json does not yet capture networkAcls — verify via `az storage account show --query networkRuleSet`."
+    manual: true
+  - id: CAF-STO-06
+    title: "Immutability policies applied to compliance-sensitive containers"
+    severity: low
+    query: null
+    assert: { type: manual }
+    remediation: "Apply time-based retention or legal hold immutability policies to containers holding regulated or audit-sensitive data. collect.json does not yet capture immutability policy state — verify via `az storage container immutability-policy show`."
+    manual: true

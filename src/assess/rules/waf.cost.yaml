@@ -25,3 +25,27 @@ rules:
     assert: { type: countGreaterThan, value: 0 }
     remediation: "Define Cost Management budgets with threshold alerts."
     manual: false
+
+  - id: WAF-CO-04
+    title: "No orphaned public IP addresses accumulating cost"
+    severity: low
+    query: "$.costCleanup.orphanedPips[*]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Release public IPs with no attached IP configuration."
+    manual: false
+
+  - id: WAF-CO-05
+    title: "Reserved Instance / Savings Plan coverage reviewed"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm steady-state compute/database workloads are covered by Reserved Instances or Savings Plans. collect.json has no RI/Savings Plan coverage collector yet."
+    manual: true
+
+  - id: WAF-CO-06
+    title: "Medium-impact Advisor cost recommendations addressed (right-sizing, idle resources)"
+    severity: low
+    query: "$.advisor[?(@.Category == 'Cost' && @.Impact == 'Medium')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Act on medium-impact Advisor cost recommendations, including VM/database right-sizing and idle-resource guidance."
+    manual: false

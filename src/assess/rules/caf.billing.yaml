@@ -25,3 +25,39 @@ rules:
     assert: { type: countEquals, value: 0 }
     remediation: "Release public IPs with no IP configuration."
     manual: false
+
+  - id: CAF-BIL-04
+    title: "High-impact Advisor cost recommendations remediated"
+    severity: medium
+    query: "$.advisor[?(@.Category == 'Cost' && @.Impact == 'High')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Act on high-impact Advisor cost recommendations (right-size, shut down idle, buy reservations)."
+    manual: false
+
+  - id: CAF-BIL-05
+    title: "Budget scope granularity beyond a single tenant-wide default"
+    severity: low
+    query: "$.governance.budgets[*]"
+    assert: { type: countGreaterThan, value: 1 }
+    remediation: "Define budgets per subscription or workload rather than a single tenant-wide budget, so overspend alerts point at an accountable owner."
+    manual: false
+
+  - id: CAF-BIL-06
+    title: "Reserved Instance / Savings Plan coverage reviewed"
+    severity: medium
+    # No collector reads Cost Management reservation recommendations/coverage or
+    # Consumption RI utilization; collect.json has no field for this yet.
+    query: null
+    assert: { type: manual }
+    remediation: "Review Reservation/Savings Plan coverage and utilization reports in Cost Management + Billing; purchase or true-up commitments for steady-state compute, database, and App Service workloads."
+    manual: true
+
+  - id: CAF-BIL-07
+    title: "Cost anomalies reviewed and root-caused"
+    severity: low
+    # No anomaly-detection ingest exists yet (Cost Management anomaly alerts are not
+    # collected into collect.json).
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm Cost Management anomaly alerts are reviewed on a regular cadence and unexplained spend spikes are root-caused, not just acknowledged."
+    manual: true

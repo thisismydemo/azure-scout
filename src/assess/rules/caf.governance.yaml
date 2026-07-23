@@ -25,3 +25,42 @@ rules:
     assert: { type: exists }
     remediation: "Apply CanNotDelete/ReadOnly locks to platform and shared resources."
     manual: false
+
+  - id: CAF-GOV-04
+    title: "Policy assignment coverage beyond the default starter set"
+    severity: low
+    query: "$.governance.policyAssignments[*]"
+    assert: { type: countGreaterThan, value: 5 }
+    remediation: "Extend policy coverage beyond the built-in default assignments with ALZ security, tagging, and network-baseline initiatives."
+    manual: false
+
+  - id: CAF-GOV-05
+    title: "DeployIfNotExists / Modify assignments enforce configuration drift correction"
+    severity: medium
+    query: "$.governance.policyAssignments[?(@.properties.parameters)]"
+    assert: { type: exists }
+    remediation: "Adopt DINE/Modify policy effects so drift from the governed baseline (diagnostics, tags, encryption) is auto-remediated, not just flagged."
+    manual: false
+
+  - id: CAF-GOV-06
+    title: "Management group hierarchy conforms to the ALZ landing-zone archetype"
+    severity: medium
+    # collect.json's managementGroups[] proves depth exists (see CAF-RES-02) but not
+    # that the platform/landing-zones/sandbox separation matches the ALZ archetype —
+    # that semantic mapping needs a human to read the MG names/structure.
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm the management group hierarchy separates Platform (Management/Identity/Connectivity) from Landing Zones (Corp/Online) and Sandbox per the ALZ archetype, not just a flat depth-2+ tree."
+    manual: true
+
+  - id: CAF-GOV-07
+    title: "Tag governance taxonomy formally documented and enforced"
+    severity: low
+    # Automated checks elsewhere (CAF-RES-01/03) confirm individual tag keys exist;
+    # this rule is about whether a mandatory-tag taxonomy (allowed keys, enum values,
+    # ownership) is documented and enforced by policy, which collect.json has no
+    # field for.
+    query: null
+    assert: { type: manual }
+    remediation: "Document the mandatory tag taxonomy (keys, allowed values, owners) and confirm it is enforced via policy (deny or append) rather than convention alone."
+    manual: true

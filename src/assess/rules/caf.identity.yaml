@@ -33,3 +33,27 @@ rules:
     assert: { type: manual }
     remediation: "Confirm a Conditional Access baseline (MFA, device compliance) is defined and enforced."
     manual: true
+
+  - id: CAF-IDN-05
+    title: "Majority of privileged role assignments are PIM-eligible rather than standing"
+    severity: medium
+    query: "$.governance.pimEligibility[*]"
+    assert: { type: percentageAtLeast, value: 50, denominatorQuery: "$.governance.roleAssignments[?(@.properties.principalType == 'User')]" }
+    remediation: "Convert standing (permanent) privileged user role assignments to PIM-eligible, time-bound assignments; target at least half of privileged user access as eligible rather than always-on."
+    manual: false
+
+  - id: CAF-IDN-06
+    title: "Stale privileged role assignments reviewed and removed"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Periodically review privileged role assignments for principals who changed roles or left the organization, and remove stale grants. Assignment age / last-sign-in is not currently collected in collect.json — cross-check against Entra ID sign-in logs."
+    manual: true
+
+  - id: CAF-IDN-07
+    title: "Guest (B2B) user access reviewed periodically"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm Entra ID access reviews are configured and run on a recurring cadence for guest users holding standing access. Guest enumeration via Microsoft Graph is not currently collected in collect.json."
+    manual: true

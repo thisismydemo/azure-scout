@@ -25,3 +25,29 @@ rules:
     assert: { type: manual }
     remediation: "Confirm a patch/update management baseline is applied across the estate."
     manual: true
+
+  - id: CAF-MGT-04
+    title: "Backup coverage across the VM estate meets minimum threshold"
+    severity: high
+    query: "$.management.recoveryVaults[*].backupItems[*]"
+    assert: { type: percentageAtLeast, value: 80, denominatorQuery: "$.compute.virtualMachines[*]" }
+    remediation: "Onboard remaining virtual machines to a Recovery Services vault backup policy until coverage reaches at least 80% of the compute estate."
+    manual: false
+
+  - id: CAF-MGT-05
+    title: "No resource type left with zero diagnostic coverage"
+    severity: high
+    query: "$.opsPosture.diagnosticCoverage[?(@.coveragePct == 0)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Every in-scope resource type should have at least partial diagnostic-settings coverage; a 0% type is a monitoring blind spot, not just below-threshold."
+    manual: false
+
+  - id: CAF-MGT-06
+    title: "Log Analytics workspace retention meets the compliance minimum"
+    severity: medium
+    # No collector currently reads workspace retentionInDays; collect.json has no
+    # field for it (would need a dedicated Log Analytics ARG/ARM query).
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm Log Analytics workspace retention (interactive + archive) meets the minimum required by the workload's compliance obligations, e.g. 90+ days for regulated data."
+    manual: true

@@ -25,3 +25,35 @@ rules:
     assert: { type: exists }
     remediation: "Adopt Private Endpoints for PaaS data services rather than public exposure."
     manual: false
+
+  - id: CAF-SEC-04
+    title: "Key Vaults have soft-delete protection enabled"
+    severity: high
+    query: "$.domains.security.keyVaults[?(@.softDelete == false)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Enable soft-delete on all Key Vaults to protect against accidental or malicious deletion of secrets, keys, and certificates."
+    manual: false
+
+  - id: CAF-SEC-05
+    title: "Key Vaults have purge protection enabled"
+    severity: medium
+    query: "$.domains.security.keyVaults[?(@.purgeProtection == false)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Enable purge protection on all Key Vaults so a deleted vault cannot be permanently purged before its retention window expires."
+    manual: false
+
+  - id: CAF-SEC-06
+    title: "Private DNS zones support private endpoint name resolution"
+    severity: medium
+    query: "$.networking.privateDnsZones[*]"
+    assert: { type: exists }
+    remediation: "Link private DNS zones to consuming virtual networks so private-endpoint-enabled PaaS FQDNs resolve to private IPs instead of falling back to public endpoints."
+    manual: false
+
+  - id: CAF-SEC-07
+    title: "Microsoft Defender for Cloud secure score trend reviewed"
+    severity: low
+    query: null
+    assert: { type: manual }
+    remediation: "Review the Defender for Cloud secure score monthly and confirm the trend is stable or improving. Secure score history is not currently collected in collect.json — check the Defender for Cloud portal directly."
+    manual: true

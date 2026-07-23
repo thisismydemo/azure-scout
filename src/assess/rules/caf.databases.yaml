@@ -23,3 +23,24 @@ rules:
     assert: { type: manual }
     remediation: "Confirm TDE is enabled on all SQL databases (default on, verify no opt-outs)."
     manual: true
+  - id: CAF-DB-04
+    title: "SQL auditing and Advanced Threat Protection enabled"
+    severity: high
+    query: null
+    assert: { type: manual }
+    remediation: "Enable SQL Server/Database auditing to a storage account or Log Analytics workspace, and enable Microsoft Defender for SQL. collect.json does not yet capture auditing/threat-detection settings — verify via `az sql server audit-policy show` and `az sql server advanced-threat-protection-setting show`."
+    manual: true
+  - id: CAF-DB-05
+    title: "SQL database backup retention meets minimum policy"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm point-in-time restore retention (and long-term retention for compliance workloads) meets the org's minimum retention policy. collect.json does not yet capture backup retention settings — verify via `az sql db show-backup-short-term-retention-policy` / long-term retention policy."
+    manual: true
+  - id: CAF-DB-06
+    title: "SQL server firewall rules exclude an 'allow all' entry"
+    severity: high
+    query: null
+    assert: { type: manual }
+    remediation: "Remove any firewall rule spanning 0.0.0.0-255.255.255.255 (or the 0.0.0.0-0.0.0.0 'Allow Azure services' rule left too broad) and scope rules to specific ranges or private endpoints. collect.json does not yet capture SQL server firewall rules — verify via `az sql server firewall-rule list`."
+    manual: true

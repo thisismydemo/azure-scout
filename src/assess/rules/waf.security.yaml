@@ -10,12 +10,44 @@ rules:
     remediation: "Eliminate Allow-from-Internet inbound rules; front workloads with a firewall/WAF."
     manual: false
 
+  - id: WAF-SE-02
+    title: "Advisor medium-impact security recommendations addressed"
+    severity: low
+    query: "$.advisor[?(@.Category == 'Security' && @.Impact == 'Medium')]"
+    assert: { type: countLessThan, value: 5 }
+    remediation: "Triage and remediate medium-impact Advisor security recommendations rather than letting them accumulate unaddressed."
+    manual: false
+
+  - id: WAF-SE-03
+    title: "SQL Servers restrict public network access"
+    severity: high
+    query: "$.domains.databases.sqlServers[?(@.publicNetworkAccess == 'Enabled')]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Disable public network access on Azure SQL logical servers; connect via Private Endpoint instead."
+    manual: false
+
   - id: WAF-SE-04
-    title: "Advisor security recommendations addressed"
+    title: "Advisor high-impact security recommendations addressed"
     severity: medium
     query: "$.advisor[?(@.Category == 'Security' && @.Impact == 'High')]"
     assert: { type: countEquals, value: 0 }
     remediation: "Remediate high-impact Advisor security recommendations."
+    manual: false
+
+  - id: WAF-SE-05
+    title: "Encryption at rest enforced for data services"
+    severity: medium
+    query: null
+    assert: { type: manual }
+    remediation: "Confirm Transparent Data Encryption (TDE) is enabled for SQL databases and Storage Service Encryption is enforced (customer-managed keys where required by policy). No encryption-at-rest field is currently collected in collect.json."
+    manual: true
+
+  - id: WAF-SE-06
+    title: "Threat detection enabled across resource types (Microsoft Defender for Cloud)"
+    severity: high
+    query: "$.security.defenderPlans[?(@.properties.pricingTier == 'Standard')]"
+    assert: { type: countGreaterThan, value: 0 }
+    remediation: "Enable Defender for Cloud plans across applicable resource types (servers, storage, SQL, containers, Key Vault) so threat detection coverage extends beyond baseline enablement."
     manual: false
 
   - id: WAF-SE-07
