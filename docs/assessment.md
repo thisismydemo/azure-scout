@@ -36,20 +36,29 @@ re-scanning.
 | **Assess** | A declarative rule engine grades the collected data — **139 rules across 8 CAF design areas + 5 WAF pillars** — producing scored `findings.json` with a prioritized gap list. |
 | **Report** | Renders `findings.json` into tiered deliverables. |
 
-::: info Collect runs the full query set every time
-`Invoke-Collect.ps1` accepts a `-Categories` parameter (and
-`Invoke-ScoutAssessment` passes each assessment's declared `Collect` list, or
-your `-Category` override, into it), but in the current implementation that
-value is recorded into `collect.json`'s `_meta.categories` for provenance
-only — **it does not filter which Resource Graph queries run.** Every
-`Invoke-Collect` call executes the same fixed set of ~25 queries regardless
-of assessment or `-Category`. The practical effect: choosing `-Assessment
-Security` vs. `-Assessment LandingZone` changes which **rules** are scored
-and which **ingestors** run, not how much data Collect pulls. This is worth
-knowing if you were expecting `-Category` to shrink scan time the way it does
-for `Invoke-AzureScout` (see [Category Filtering](category-filtering.md),
-which is the v1, module-loading-level behavior — different mechanism, not
-shared with the assessment platform).
+::: info Collect is now actually scoped by category
+`Invoke-Collect.ps1`'s `-Categories` parameter (populated from each
+assessment's declared `Collect` list, or your `-Category` override) **does
+filter which Resource Graph queries run**. Every query in `Invoke-Collect` is
+tagged with the `Collect` category name(s) whose rule files reference its
+output — cross-domain references included (e.g. `waf.security` needs
+`domains.databases.sqlServers`, so that query runs for both `Databases` and
+`Security`). `subscriptions` always runs (base data every rule set needs).
+Passing `-Categories '*'` (or an empty list, or omitting `-Category`/leaving
+an assessment's own `Collect` list at `@('*')` — `LandingZone` and `Estate`
+both do this) runs every query, same as before. The practical effect:
+`-Assessment Security` now collects a materially smaller set of resource
+types than `-Assessment LandingZone` (see the run below) — this is a
+different mechanism from `Invoke-AzureScout`'s module-loading-level
+[Category Filtering](category-filtering.md), but for the assessment platform
+it now actually shrinks scan time and query volume, not just what gets
+scored.
+
+```powershell
+# Pulls only Security-relevant resource types (Key Vaults, NSGs, private
+# endpoints/DNS zones, SQL servers, ...) instead of the full ~25-query set.
+Invoke-ScoutAssessment -Assessment Security -OutputFormat Json
+```
 :::
 
 ## Run modes
@@ -128,16 +137,17 @@ for exactly what this does and does not verify.
 Invoke-ScoutAssessment -Assessment LandingZone -ManagementGroupId 'contoso-root-mg' -OutputFormat Html
 ```
 
-::: warning Only scopes the AzGovViz ingest, not Collect
-`-ManagementGroupId` is passed straight through to `Import-AzGovViz`, which
-needs it to invoke the Azure Governance Visualizer. It is **not** used by
-`Invoke-Collect` to scope the Resource Graph queries — those already run
-tenant-wide against whatever subscriptions your authenticated context can
-see (no `-Subscription`/`-ManagementGroup` filter is ever passed to
-`Search-AzGraph`). For the 5 assessments that ingest AzGovViz
-(`LandingZone`, `Management`, `Identity`, `Governance`, `Policy`), omitting
-`-ManagementGroupId` doesn't error — it silently skips the ingest and
-governance rules degrade to `Unknown`. See
+::: warning Scopes Collect too now — and still gates the AzGovViz ingest
+`-ManagementGroupId` is passed to **both** `Import-AzGovViz` (which needs it
+to invoke the Azure Governance Visualizer) **and** `Invoke-Collect` /
+`Invoke-ArgQueryPack`, which now pass it through as `Search-AzGraph
+-ManagementGroup` on every Resource Graph query. Omit it and both layers keep
+the previous tenant-wide behavior (no `-ManagementGroup` filter is passed to
+`Search-AzGraph` at all — not an empty/wildcard scope, the parameter is left
+off entirely). For the 5 assessments that ingest AzGovViz (`LandingZone`,
+`Management`, `Identity`, `Governance`, `Policy`), omitting
+`-ManagementGroupId` still doesn't error — it silently skips the AzGovViz
+ingest and governance rules degrade to `Unknown`, same as before. See
 [Auth & permissions per scan type](assessment-permissions.md#-managementgroupid-and-the-azgovviz-only-assessments).
 :::
 
@@ -145,20 +155,29 @@ governance rules degrade to `Unknown`. See
 
 ```powershell
 Invoke-ScoutAssessment -Assessment LandingZone -Scope All        # default
-Invoke-ScoutAssessment -Assessment LandingZone -Scope ArmOnly
-Invoke-ScoutAssessment -Assessment LandingZone -Scope EntraOnly
+Invoke-ScoutAssessment -Assessment LandingZone -Scope ArmOnly    # identical to All today
+Invoke-ScoutAssessment -Assessment LandingZone -Scope EntraOnly  # throws -- see below
 ```
 
-::: info Ambiguity flagged, not guessed
-`-Scope` is accepted (`ValidateSet 'All','ArmOnly','EntraOnly'`) and forwarded
-to `Invoke-Collect`, which stores it in `_meta.scope` — but `Invoke-Collect`
-has no ARM-vs-Entra branch in its query logic today (it only ever runs
-Resource Graph / ARM queries; there is no Graph-based collection path in the
-Collect layer). Functionally, in the current code, changing `-Scope` does not
-change what Collect gathers. Treat it as reserved / forward-compatible rather
-than a working ARM/Entra toggle for the assessment platform specifically —
-this differs from `Invoke-AzureScout -Scope`, which does gate ARM vs. Entra
-extraction in the v1 inventory tool (see [Usage Guide](usage.md#scope)).
+::: info EntraOnly throws instead of silently collecting nothing
+The assessment platform's Collect layer is ARG/ARM only — there is no
+Graph-based collection path in `Invoke-Collect`. `-Scope EntraOnly` used to be
+accepted and silently produce a run that could never gather any data;
+it now **throws immediately** with a redirect to the tool that actually has
+an Entra collection path:
+
+```
+Invoke-ScoutAssessment collects ARM/Resource Graph data only -- the assessment
+platform's Collect layer has no Entra ID collection path. Use
+'Invoke-AzureScout -Scope EntraOnly' for Entra ID inventory instead.
+```
+
+`ArmOnly` and `All` remain accepted and behave identically (both just run the
+ARM collect) — kept for forward compatibility rather than removed, since
+`Invoke-Collect` has no ARM-vs-Entra branch to differentiate them. This
+differs from `Invoke-AzureScout -Scope`, which does gate ARM vs. Entra
+extraction in the v1 inventory tool (see [Usage Guide](usage.md#scope)) — use
+that cmdlet for Entra ID inventory.
 :::
 
 ### `-Category` override
@@ -167,14 +186,16 @@ extraction in the v1 inventory tool (see [Usage Guide](usage.md#scope)).
 Invoke-ScoutAssessment -Assessment Compute -Category Compute,Storage
 ```
 
-`-Category` replaces the categories recorded for the run rather than adding
-to the chosen assessment's own `Collect` list — but per the note above, it
-does not change what Collect actually queries (everything runs regardless),
-and it never changes which **rules** are scored (`Compute`'s `Rules` stay
+`-Category` replaces the categories recorded for the run — and, per the note
+above, this now **does** change what `Invoke-Collect` actually queries (it
+runs only the queries tagged for the categories you pass, plus base data).
+It never changes which **rules** are scored (`Compute`'s `Rules` stay
 `waf.reliability`/`waf.cost`/`waf.performance` no matter what `-Category` you
-pass). Prefer leaving `-Category` unset and letting each assessment use its
-own manifest-declared `Collect` list unless you have a specific provenance
-reason to override it.
+pass) — so overriding `-Category` to something narrower than what those rules
+need can starve them of data (they'll show `Unknown`/fail-vacuously instead
+of a real result). Prefer leaving `-Category` unset and letting each
+assessment use its own manifest-declared `Collect` list, which is kept in
+sync with what its `Rules` actually reference.
 
 ### `-OutputFormat` — one example per tier
 

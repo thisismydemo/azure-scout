@@ -158,6 +158,18 @@ assessments if you want governance rules actually scored:
 Invoke-ScoutAssessment -Assessment LandingZone -ManagementGroupId 'contoso-root-mg' -OutputFormat Html
 ```
 
+`-ManagementGroupId` also scopes the Resource Graph `Collect` layer now —
+`Invoke-Collect` and `Invoke-ArgQueryPack` pass it through to every
+`Search-AzGraph` call as `-ManagementGroup`. Omitting it leaves ARG queries
+running tenant-wide against whatever your authenticated context can see
+(no `-ManagementGroup`/`-Subscription` filter is sent at all — not the same
+as skipping the AzGovViz ingest above, which is a separate, additional
+effect of omitting the same parameter). The ARM `Reader` requirement in
+[The short version](#the-short-version) still applies regardless of whether
+you pass `-ManagementGroupId` — it only narrows *which* subscriptions under
+your Reader scope get queried, it does not substitute for the role
+assignment.
+
 ## Next steps
 
 - [Assessment guide — run modes and examples](assessment.md)

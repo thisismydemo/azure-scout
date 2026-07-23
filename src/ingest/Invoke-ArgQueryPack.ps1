@@ -8,10 +8,12 @@ $ErrorActionPreference = 'Stop'
     the collect shapes the rules expect.
 
 .NOTES
-    Tracks ADO Story AB#5039.
+    Tracks ADO Story AB#5039. `-ManagementGroupId`, when supplied, is passed as
+    `-ManagementGroup` to every `Search-AzGraph` call so this ingest is scoped the
+    same way `Invoke-Collect` is, instead of always running tenant-wide.
 #>
 function Invoke-ArgQueryPack {
-    param($Collect)
+    param($Collect, [string] $ManagementGroupId)
     Import-Module Az.ResourceGraph -ErrorAction Stop
 
     $queries = @{
@@ -66,17 +68,24 @@ resources
             # Search-AzGraph rejects -Skip 0 (ValidateRange minimum is 1) — omit it on the first page.
             $params = @{ Query = $queries[$k]; First = 1000 }
             if ($skip -gt 0) { $params.Skip = $skip }
+            if ($ManagementGroupId) { $params.ManagementGroup = $ManagementGroupId }
             $batch = @(Search-AzGraph @params)
             $rows += $batch; $skip += 1000
         } while ($batch.Count -eq 1000)
         $arg[$k] = $rows
     }
 
-    # normalize into the shapes the rules expect
-    $Collect | Add-Member -NotePropertyName networking -NotePropertyValue ([pscustomobject]@{
-        subnets          = $arg.subnetIpUsage
-        nsgPublicInbound = $arg.publicExposure
-    }) -Force
+    # normalize into the shapes the rules expect.
+    # Invoke-Collect already populated `networking` (virtualNetworks, azureFirewalls,
+    # vpnGateways, privateEndpoints, privateDnsZones, ...). MERGE subnets +
+    # nsgPublicInbound onto that existing object instead of replacing it — a `-Force`
+    # replace here wiped the collector's networking data, so CAF-SEC-03/CAF-SEC-06/
+    # CAF-NET-* rules saw empty inputs and false-failed.
+    if (-not $Collect.PSObject.Properties['networking']) {
+        $Collect | Add-Member -NotePropertyName networking -NotePropertyValue ([pscustomobject]@{}) -Force
+    }
+    $Collect.networking | Add-Member -NotePropertyName subnets          -NotePropertyValue $arg.subnetIpUsage  -Force
+    $Collect.networking | Add-Member -NotePropertyName nsgPublicInbound -NotePropertyValue $arg.publicExposure -Force
     $Collect | Add-Member -NotePropertyName costCleanup -NotePropertyValue ([pscustomobject]@{
         orphanedDisks = $arg.orphanedDisks
         orphanedPips  = $arg.orphanedPips

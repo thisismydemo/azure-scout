@@ -30,13 +30,28 @@ $ErrorActionPreference = 'Stop'
 
 .NOTES
     Tracks ADO Epic AB#5023 (Feature AB#5024, Story AB#5026) and Epic AB#5056.
+
+    `-Scope`: the Collect layer is ARG/ARM only — there is no Entra/Graph
+    collection path here, so 'EntraOnly' throws with a redirect to
+    `Invoke-AzureScout -Scope EntraOnly` (the v1 inventory tool) rather than
+    silently running a collect that can never gather anything. 'ArmOnly' and
+    'All' are accepted and behave identically (both run the ARM collect) —
+    kept for forward compatibility rather than removed.
+
+    `-ManagementGroupId` now actually scopes the ARG collect (`Search-AzGraph
+    -ManagementGroup`, threaded through `Invoke-Collect` and
+    `Invoke-ArgQueryPack`), not just the AzGovViz ingest.
+
+    `-Category` (or each assessment's manifest `Collect` list) now actually
+    filters which Resource Graph queries `Invoke-Collect` runs, instead of
+    always collecting the full ~25-query set.
 #>
 function Invoke-ScoutAssessment {
     [CmdletBinding()]
     param(
         [string[]] $Assessment = @('Estate'),   # one, many, or 'All'
         [ValidateSet('All', 'ArmOnly', 'EntraOnly')]
-        [string]   $Scope = 'All',
+        [string]   $Scope = 'All',              # EntraOnly throws -- ARM/ARG collect only, no Entra path here
         [string[]] $Category,                    # existing category filter still works
         [ValidateSet('PowerBi', 'Html', 'Pptx', 'Excel', 'Json', 'All')]
         [string[]] $OutputFormat = @('Html'),
@@ -63,6 +78,15 @@ function Invoke-ScoutAssessment {
         $collect = Get-Content $FromCollect -Raw | ConvertFrom-Json -Depth 100
     }
     else {
+        # There is no Entra/Graph collection path in this platform's Collect layer
+        # (Invoke-Collect is ARG/ARM only) — 'EntraOnly' could never actually
+        # collect anything, so fail fast with the honest redirect instead of
+        # silently returning an empty/misleading run. 'ArmOnly' and 'All' are
+        # functionally identical today (both just run the ARM collect) and stay
+        # accepted for forward compatibility.
+        if ($Scope -eq 'EntraOnly') {
+            throw "Invoke-ScoutAssessment collects ARM/Resource Graph data only -- the assessment platform's Collect layer has no Entra ID collection path. Use 'Invoke-AzureScout -Scope EntraOnly' for Entra ID inventory instead."
+        }
         $categories = $Assessment | ForEach-Object { $manifest[$_].Collect } | Select-Object -Unique
         if ($Category) { $categories = $Category }
         $collect = Invoke-Collect -Categories $categories -Scope $Scope -ManagementGroupId $ManagementGroupId
@@ -72,7 +96,7 @@ function Invoke-ScoutAssessment {
         foreach ($i in $ingestors) {
             switch ($i) {
                 'AzGovViz'      { $collect = Import-AzGovViz     -Collect $collect -OutputPath $runPath -ManagementGroupId $ManagementGroupId }
-                'ArgQueryPack'  { $collect = Invoke-ArgQueryPack -Collect $collect }
+                'ArgQueryPack'  { $collect = Invoke-ArgQueryPack -Collect $collect -ManagementGroupId $ManagementGroupId }
                 'AdvisorScores' { $collect = Import-AdvisorScores -Collect $collect }
             }
         }

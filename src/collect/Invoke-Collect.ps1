@@ -59,6 +59,20 @@ $ErrorActionPreference = 'Stop'
     rules/auditing/TDE, storage blob-service/management-policy settings, Synapse
     firewall rules, DPS enrollment groups) were deliberately left out; those rules
     stay manual.
+
+    Parameter wiring (this pass):
+      - `-ManagementGroupId`, when supplied, is passed as `-ManagementGroup` to
+        every `Search-AzGraph` call so Collect is actually scoped, not tenant-wide.
+        Omitted entirely when not supplied (preserves current tenant-wide behavior).
+      - `-Categories` now really filters which ARG queries run. Each query below is
+        tagged in `$queryCategories` with the manifest `Collect` category name(s)
+        whose rule files reference its output path (cross-checked against every
+        `src/assess/rules/*.yaml` `query:` field) — including cross-domain
+        references (e.g. `waf.security` needs `domains.databases.sqlServers`, so
+        `sqlServers` is tagged both `Databases` and `Security`). `subscriptions` is
+        always collected (base data every rule set / the canonical shape needs). A
+        `'*'` entry, an empty list, or omitting `-Categories` runs every query
+        (unchanged full-collect behavior).
 #>
 function Invoke-Collect {
     [CmdletBinding()]
@@ -302,12 +316,70 @@ resources | where type =~ "microsoft.operationalinsights/workspaces"
 '@
     }
 
+    # ---- category tagging (AB#5057 follow-up) ----
+    # Which manifest `Collect` categories need each query's output, derived from
+    # every rule file's `query:` JSONPath (see .NOTES). '*' means "always run"
+    # regardless of the requested categories.
+    $queryCategories = @{
+        subscriptions       = @('*')
+        virtualNetworks     = @('Networking')
+        subnets             = @('Networking', 'Compute')
+        azureFirewalls      = @('Networking')
+        vpnGateways         = @('Networking')
+        # caf.security (CAF-SEC-03/06), caf.ai (CAF-AI-04), caf.iot (CAF-IOT-05)
+        # all filter networking.privateEndpoints by target — those categories need
+        # this query too, not just Networking.
+        privateEndpoints    = @('Networking', 'Security', 'AI', 'IoT')
+        privateDnsZones     = @('Networking', 'Security')
+        nsgPublicInbound    = @('Networking', 'Security')
+        virtualMachines     = @('Compute')
+        # caf.billing (CAF-BIL-02/03) and waf.cost both need these under Management
+        # and Compute/Cost respectively.
+        orphanedDisks       = @('Compute', 'Cost', 'Management')
+        orphanedPips        = @('Compute', 'Cost', 'Management')
+        diagnosticCoverage  = @('Monitor', 'Management')
+        deployments         = @('Monitor', 'Management')
+        storageAccounts     = @('Storage')
+        sqlDatabases        = @('Databases')
+        # waf.security (WAF-SE-03) filters domains.databases.sqlServers too.
+        sqlServers          = @('Databases', 'Security')
+        webApps             = @('Web')
+        aksClusters         = @('Containers')
+        containerRegistries = @('Containers')
+        keyVaults           = @('Security')
+        cognitiveAccounts   = @('AI')
+        arcServers          = @('Hybrid')
+        arcExtensions       = @('Hybrid')
+        azureLocalClusters  = @('Hybrid')
+        eventHubNamespaces  = @('Integration')
+        apiManagement       = @('Integration')
+        serviceBusNamespaces = @('Integration')
+        iotHubs             = @('IoT')
+        synapseWorkspaces   = @('Analytics')
+        logAnalyticsWorkspaces = @('Management', 'Monitor')
+    }
+
+    $runAllCategories = (-not $Categories) -or (@($Categories).Count -eq 0) -or ($Categories -contains '*')
+    $selectedKeys = if ($runAllCategories) {
+        $q.Keys
+    }
+    else {
+        $q.Keys | Where-Object {
+            $cats = $queryCategories[$_]
+            $cats -and (($cats -contains '*') -or ($Categories | Where-Object { $cats -contains $_ }))
+        }
+    }
+
     function Invoke-Arg([string] $Query) {
         $rows = @(); $skip = 0
         do {
             # Search-AzGraph rejects -Skip 0 (ValidateRange minimum is 1) — omit it on the first page.
             $params = @{ Query = $Query; First = 1000; ErrorAction = 'Stop' }
             if ($skip -gt 0) { $params.Skip = $skip }
+            # Scope the query to the requested management group when one was
+            # supplied; omit -ManagementGroup entirely otherwise (preserves the
+            # existing tenant-wide behavior of the authenticated context).
+            if ($ManagementGroupId) { $params.ManagementGroup = $ManagementGroupId }
             $batch = @(Search-AzGraph @params)
             $rows += $batch; $skip += 1000
         } while ($batch.Count -eq 1000)
@@ -316,6 +388,7 @@ resources | where type =~ "microsoft.operationalinsights/workspaces"
 
     $r = @{}
     foreach ($k in $q.Keys) {
+        if ($selectedKeys -notcontains $k) { $r[$k] = @(); continue }
         try { $r[$k] = Invoke-Arg $q[$k] }
         catch { Write-Warning "Invoke-Collect: query '$k' failed: $_"; $r[$k] = @() }
     }

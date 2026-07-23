@@ -20,7 +20,13 @@
     LandingZone = @{
         Description = 'CAF/WAF landing zone audit (all areas)'
         Category    = '*'
-        Collect     = @('Networking', 'Management', 'Security', 'Identity', 'Monitor')
+        # Rules = caf.*, waf.* pulls in every rule file (all 8 CAF areas + all 5 WAF
+        # pillars, including the per-domain rule files from Epic AB#5056), so Collect
+        # must gather every category too, not the 5-category subset this used to list
+        # — now that -Categories actually filters which ARG queries Invoke-Collect
+        # runs, an incomplete list here would silently starve Storage/Databases/Web/
+        # Containers/Analytics/AI/Integration/Hybrid/IoT/Compute/Cost rules of data.
+        Collect     = @('*')
         Ingest      = @('AzGovViz', 'ArgQueryPack', 'AdvisorScores')
         Rules       = @('caf.*', 'waf.*')
         Frameworks  = @('CAF: all 8 design areas', 'WAF: all 5 pillars')

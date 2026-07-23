@@ -11,7 +11,7 @@
 
 .NOTES
     Author:  Kristopher Turner
-    Version: 1.0.0
+    Version: 2.0.1
     Created: 2026-01-20
 #>
 
@@ -38,9 +38,9 @@ Describe 'Module Manifest Tests' {
         $Manifest.Guid | Should -Be 'a0785538-fd96-4960-bf93-c733f88519e0'
     }
 
-    It 'Has version 1.0.0' {
+    It 'Has version 2.0.1' {
         $Manifest = Test-ModuleManifest -Path $ManifestPath -ErrorAction Stop
-        $Manifest.Version | Should -Be '1.0.0'
+        $Manifest.Version | Should -Be '2.0.1'
     }
 
     It 'Has the correct author' {
