@@ -166,3 +166,11 @@ See the [Changelog](changelog.md) for the full history.
 Open an issue at [github.com/thisismydemo/azure-scout/issues](https://github.com/thisismydemo/azure-scout/issues) with the label `enhancement`.
 
 Pull requests are welcome — see [Contributing](contributing.md) for guidelines.
+
+## Fork Attribution
+
+::: info Fork Attribution
+**AzureScout is a fork of [Azure Resource Inventory (ARI)](https://github.com/microsoft/ARI)** by Microsoft, originally created by [Claudio Merola](https://github.com/Claudio-Merola) and [Renato Gregio](https://github.com/RenatoGregio). The ARI project provided the entire foundation that AzureScout builds upon — 171 ARM inventory modules, the draw.io diagram engine, Excel reporting, and more. We are deeply grateful for their work.
+
+See [Credits & Attribution](credits.md) for full details, or [Differences from ARI](ari-differences.md) for what has changed.
+:::

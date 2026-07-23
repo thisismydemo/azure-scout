@@ -8,12 +8,6 @@ description: See everything. Own your cloud. A PowerShell module for comprehensi
 
 *See everything. Own your cloud.*
 
-::: info Fork Attribution
-**AzureScout is a fork of [Azure Resource Inventory (ARI)](https://github.com/microsoft/ARI)** by Microsoft, originally created by [Claudio Merola](https://github.com/Claudio-Merola) and [Renato Gregio](https://github.com/RenatoGregio). The ARI project provided the entire foundation that AzureScout builds upon — 171 ARM inventory modules, the draw.io diagram engine, Excel reporting, and more. We are deeply grateful for their work.
-
-See [Credits & Attribution](credits.md) for full details, or [Differences from ARI](ari-differences.md) for what has changed.
-:::
-
 ## Overview
 
 **AzureScout** (AZSC) is a PowerShell module that discovers and inventories everything in your Azure environment — ARM resources, Entra ID objects, costs, security posture, policies, and more. Reports are generated as Excel workbooks, JSON, Markdown, or AsciiDoc.

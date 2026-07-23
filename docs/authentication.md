@@ -94,7 +94,11 @@ Valid values: `AzureCloud` (default), `AzureUSGovernment`, `AzureChinaCloud`, `A
 The module checks for the `LoginExperienceV2` Az config setting.
 If enabled, it temporarily disables it to ensure compatibility, then restores the original value after login.
 
-## Authentication for the CAF/WAF assessment platform
+## Assessment platform — same sign-in, broader permissions (no separate login)
+
+**The CAF/WAF assessment platform does not have its own authentication.** This
+section is an FYI to make that explicit: you sign in exactly as above, and the
+only difference is the *permissions* your identity needs.
 
 Everything above is `Connect-AZSCLoginSession`, used by the v1 inventory
 cmdlet (`Invoke-AzureScout`). The v2 assessment platform
