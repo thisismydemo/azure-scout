@@ -11,7 +11,7 @@ Import-Module ./AzureScout.psd1
 Invoke-AzureScout
 ```
 
-With no parameters, AZSC runs a full inventory (ARM + Entra) using your current Azure context and generates both Excel and JSON reports.
+With no parameters, AZSC runs a full **ARM-only** inventory (`-Scope ArmOnly` is the default — Entra ID is skipped unless you pass `-Scope All` or `-Scope EntraOnly`) using your current Azure context, and generates both Excel and JSON reports.
 
 ## Scope
 
@@ -19,17 +19,26 @@ The `-Scope` parameter controls which data domains are inventoried:
 
 | Value | Behavior |
 |-------|----------|
-| `All` (default) | Inventories both ARM resources and Entra ID objects |
-| `ArmOnly` | Skips all Entra ID extraction — ARM resources only |
+| `ArmOnly` (default) | Inventories ARM resources only — Entra ID is **not** scanned unless requested |
 | `EntraOnly` | Skips all ARM extraction — Entra ID objects only |
+| `All` | Inventories both ARM resources and Entra ID objects |
 
 ```powershell
-# ARM only — skip Entra ID
-Invoke-AzureScout -Scope ArmOnly
+# Default — ARM only, Entra ID is skipped
+Invoke-AzureScout
+
+# ARM + Entra ID
+Invoke-AzureScout -Scope All
 
 # Entra ID only — skip ARM resources
 Invoke-AzureScout -Scope EntraOnly
 ```
+
+::: tip
+This is the `-Scope` default for the **inventory** cmdlet (`Invoke-AzureScout`) only. The
+**assessment platform** (`Invoke-ScoutAssessment`) has its own `-Scope` parameter with a
+different default (`All`) and different semantics — see [Assessment Platform: `-Scope`](assessment.md#-scope).
+:::
 
 ## Output Format
 

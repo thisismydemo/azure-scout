@@ -15,7 +15,7 @@ The full credits file is maintained in the repository root and rendered on GitHu
 
 ## Fork Origin
 
-AzureScout was forked from [microsoft/ARI](https://github.com/microsoft/ARI) (Azure Resource Inventory) at version **3.6.11** in October 2024. The original project provided the entire extraction, processing, and reporting pipeline — including 171 ARM inventory modules, the draw.io diagram engine, Excel/ImportExcel integration, and Azure Automation Account support.
+AzureScout was forked from [microsoft/ARI](https://github.com/microsoft/ARI) (Azure Resource Inventory) at version **3.6.11** in October 2024. The original project provided the entire extraction, processing, and reporting pipeline — including its ARM inventory module set, the draw.io diagram engine, Excel/ImportExcel integration, and Azure Automation Account support. AzureScout has since added new ARM modules and an Entra ID module set that ARI does not have; the module is now at **154 ARM + 17 Entra ID = 171 inventory modules** — see [ARM Modules](arm-modules.md), [Entra ID Modules](entra-modules.md), and [Differences from ARI](ari-differences.md) for exactly what changed.
 
 ## Original Authors
 

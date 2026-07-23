@@ -4,6 +4,13 @@ description: Five authentication methods supported by AzureScout.
 
 # Authentication
 
+::: tip This page covers the v1 inventory tool
+This page describes `Connect-AZSCLoginSession`, used by the **v1 inventory cmdlet**
+(`Invoke-AzureScout`). The **CAF/WAF assessment platform** (`Invoke-ScoutAssessment`)
+reuses this exact same sign-in flow — see the note at the bottom of this page. Not
+sure which tool you need? See [Overview: Inventory vs Assessment](overview.md).
+:::
+
 ## Overview
 
 AzureScout supports five authentication methods.

@@ -20,7 +20,7 @@ The following core capabilities come directly from the original project:
 | **ARM Resource Extraction** | The fundamental pattern of using Azure Resource Graph and ARM APIs to enumerate resources across subscriptions. |
 | **Draw.io Diagram Engine** | All network topology diagram generation — VNets, subnets, peerings, NSGs, load balancers, and resource layout logic. |
 | **Excel Report Pipeline** | The ImportExcel-based pipeline that turns resource data into formatted `.xlsx` workbooks with conditional formatting. |
-| **171 ARM Resource Modules** | Every inventory module in `Modules/Public/InventoryModules/` descends from ARI's original module set. AzureScout has added new modules and enhanced existing ones, but the pattern and many files trace back to ARI. |
+| **154 ARM Resource Modules** | Every ARM inventory module in `Modules/Public/InventoryModules/` (the module count excludes the 17 Entra ID modules, cataloged separately — see [Entra ID Inventory](#entra-id-inventory-17-modules) below) descends from ARI's original module set. AzureScout has added new modules and enhanced existing ones, but the pattern and many files trace back to ARI. |
 | **Orchestration Pattern** | The extraction → processing → reporting three-phase orchestration that powers the main pipeline. |
 | **Automation Account Mode** | The concept of running inside an Azure Automation Account with a Managed Identity (though AzureScout has not yet documented or validated this path — see [roadmap](roadmap.md)). |
 
@@ -44,19 +44,20 @@ All function definitions inside the `.ps1` files have been renamed to `AZSC`, bu
 
 These features do not exist in ARI v3.6.11 and were built specifically for AzureScout.
 
-### Entra ID Inventory (15 Modules)
+### Entra ID Inventory (17 Modules)
 
 ARI focuses exclusively on ARM resources.
-AzureScout adds 15 Microsoft Graph-based modules that inventory Entra ID (Azure AD) objects:
+AzureScout adds 17 Microsoft Graph-based modules that inventory Entra ID (Azure AD) objects:
 
 - Users, Groups, Service Principals, App Registrations
 - Conditional Access Policies, Named Locations
-- Administrative Units, Directory Roles, Role Assignments
-- Identity Providers, Security Defaults
-- Managed Identities, Enterprise Applications
-- Authentication Methods, Password Policies
+- Administrative Units, Directory Roles, PIM Role Assignments
+- Identity Providers, Security Defaults, Security Policies
+- Managed Identities, Cross-Tenant Access
+- Domains, Licensing (Subscribed SKUs), Risky Users
 
 These are extracted via `Start-AZSCEntraExtraction` using a dedicated Graph API token.
+See the [Entra ID Modules](entra-modules.md) page for the full module-to-endpoint catalog.
 
 ### Permission Audit (`-PermissionAudit`)
 
@@ -180,8 +181,8 @@ These ARI features or ecosystem elements have not been ported or replicated:
 ARI v3.6.11 (microsoft/ARI)
   └── Fork ──→ AzureScout v1.0.0 (thisismydemo/azure-scout)
                   ├── Rebranding (ARI → AZSC function prefix)
-                  ├── +15 Entra ID modules
-                  ├── +30 new ARM modules (Phases 7–17)
+                  ├── +17 Entra ID modules
+                  ├── new ARM modules (Phases 7–17)
                   ├── Permission Audit system
                   ├── Multi-format output (JSON, Markdown, AsciiDoc)
                   ├── Category filtering

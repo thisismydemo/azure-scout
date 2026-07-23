@@ -4,6 +4,15 @@ description: ARM RBAC and Microsoft Graph permissions required by AzureScout.
 
 # Required Permissions
 
+::: tip This page covers the v1 inventory tool
+This page describes the permission model for the **v1 inventory cmdlet**
+(`Invoke-AzureScout` / `Test-AZSCPermissions`). The **CAF/WAF assessment platform**
+(`Invoke-ScoutAssessment` / `Test-ScoutPermission`) uses a different, narrower model
+— see the note at the bottom of this page, or go straight to
+[Assessment Permissions](assessment-permissions.md). Not sure which tool you need?
+See [Overview: Inventory vs Assessment](overview.md).
+:::
+
 ## Overview
 
 AzureScout requires two categories of permissions:

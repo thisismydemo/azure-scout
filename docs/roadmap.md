@@ -41,13 +41,13 @@ Released February 2026.
 
 | Area | What's included |
 |------|-----------------|
-| Excel Reports | 170+ worksheets covering all 18 Azure resource categories |
+| Excel Reports | 171 worksheets (154 ARM + 17 Entra ID) covering all 15 Azure resource categories |
 | Category Filtering | `-Category` parameter to scope runs to specific resource types |
-| AI / ML Coverage | 15 modules: OpenAI, AI Foundry, Azure ML, Cognitive Services, Bot Services, Search |
+| AI / ML Coverage | 27 modules: OpenAI, AI Foundry, Azure ML, Cognitive Services, Bot Services, Search |
 | AVD Coverage | 6 modules: Host Pools, App Groups, Workspaces, Session Hosts, Scaling Plans, Applications |
 | Arc Coverage | Sites, SQL Servers, Data Controllers, SQL Managed Instances, Arc-enabled Kubernetes enhancements |
 | VM & Arc Enrichment | Backup status, Site Recovery, Update Manager, Advisor score, Monitor metrics, Cost estimates |
-| Monitor Coverage | 22 modules: Diagnostic settings, alert rules, DCRs, App Insights deep data, autoscale, workbooks |
+| Monitor Coverage | 24 modules: Diagnostic settings, alert rules, DCRs, App Insights deep data, autoscale, workbooks |
 | Markdown / AsciiDoc Export | `-OutputFormat Markdown\|AsciiDoc` generates portable reports alongside Excel/JSON |
 | Permission Audit | `Invoke-AZSCPermissionAudit` with ARM + Graph checks, color output, Markdown/AsciiDoc export |
 | Subscription & MG Completeness | Captures ALL subscriptions (including empty/disabled) and full MG hierarchy |
@@ -170,7 +170,7 @@ Pull requests are welcome — see [Contributing](contributing.md) for guidelines
 ## Fork Attribution
 
 ::: info Fork Attribution
-**AzureScout is a fork of [Azure Resource Inventory (ARI)](https://github.com/microsoft/ARI)** by Microsoft, originally created by [Claudio Merola](https://github.com/Claudio-Merola) and [Renato Gregio](https://github.com/RenatoGregio). The ARI project provided the entire foundation that AzureScout builds upon — 171 ARM inventory modules, the draw.io diagram engine, Excel reporting, and more. We are deeply grateful for their work.
+**AzureScout is a fork of [Azure Resource Inventory (ARI)](https://github.com/microsoft/ARI)** by Microsoft, originally created by [Claudio Merola](https://github.com/Claudio-Merola) and [Renato Gregio](https://github.com/RenatoGregio). The ARI project provided the entire foundation that AzureScout builds upon — its ARM inventory module set, the draw.io diagram engine, Excel reporting, and more. AzureScout is now at 154 ARM + 17 Entra ID = 171 inventory modules — see [ARM Modules](arm-modules.md) and [Entra ID Modules](entra-modules.md). We are deeply grateful for their work.
 
 See [Credits & Attribution](credits.md) for full details, or [Differences from ARI](ari-differences.md) for what has changed.
 :::

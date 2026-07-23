@@ -144,6 +144,27 @@ Use the `Module-template.tpl` in `Modules/Public/InventoryModules/` as the start
 - **Cross-resource lookups** — Some modules (e.g., Backup) join data across multiple resource types. Include mock resources for all related types.
 - **Export-Excel -PassThru** — This pattern does not save the file to disk. Test the Reporting phase with `Should -Not -Throw` rather than checking for file existence.
 
+## Testing the CAF/WAF assessment platform
+
+The tests above cover the **v1 inventory** modules and pipeline. The **v2 assessment
+platform** (`src/collect`, `src/assess`, `src/report`) has its own, separate test
+coverage:
+
+- **`tests/Assessment.Engine.Tests.ps1`** — pure-logic smoke tests for the rule
+  engine: JSONPath resolution (`Resolve-JsonPath`), rule assertion semantics
+  (`Invoke-Rule`), and CAF/WAF scoring math (`Get-Score`). No Azure connection.
+- **`tests/datadump/`** — synthetic fixture data used to offline-render each report
+  tier without a live tenant: `Test-ExcelFromDataDump.ps1`,
+  `Test-PowerBIFromDataDump.ps1`, and `Test-PptxFromDataDump.ps1` render the
+  Excel evidence, Power BI CSV bundle, and PowerPoint deck respectively from the
+  same fixture `findings.json`/`collect.json` shape.
+
+Run them the same way as the rest of the suite:
+
+```powershell
+Invoke-Pester -Path .\tests\Assessment.Engine.Tests.ps1 -Output Detailed
+```
+
 ## CI / CD Integration
 
 To run the test suite in a CI pipeline (GitHub Actions, Azure DevOps, etc.):

@@ -55,9 +55,14 @@ shared with the assessment platform).
 ## Run modes
 
 Every discovery category is an independently runnable, tagged assessment —
-pass one, several, or `All` to `-Assessment`. All examples assume:
+pass one, several, or `All` to `-Assessment`. All examples assume you've installed
+and imported the module:
 
 ```powershell
+# Install once, from the PowerShell Gallery (current version 2.0.1)
+Install-Module -Name AzureScout
+
+# Or import from a local clone
 Import-Module ./AzureScout.psd1
 ```
 

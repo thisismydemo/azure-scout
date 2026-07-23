@@ -10,6 +10,7 @@ export default defineConfig({
 
     nav: [
       { text: 'Home', link: '/' },
+      { text: 'Overview', link: '/overview' },
       { text: 'Getting Started', link: '/prerequisites' },
       { text: 'Assessment', link: '/assessment' },
       { text: 'Module Reference', link: '/arm-modules' },
@@ -20,15 +21,15 @@ export default defineConfig({
       {
         text: 'Getting Started',
         items: [
+          { text: 'Overview: Inventory vs Assessment', link: '/overview' },
           { text: 'Prerequisites & Required Modules', link: '/prerequisites' },
           { text: 'Authentication', link: '/authentication' },
           { text: 'Usage Guide', link: '/usage' },
           { text: 'Permissions', link: '/permissions' },
-          { text: 'Parameters Reference', link: '/parameters' },
           { text: 'Category Filtering', link: '/category-filtering' },
+          { text: 'Parameters Reference', link: '/parameters' },
           { text: 'Output Files & Formats', link: '/output' },
           { text: 'Troubleshooting', link: '/troubleshooting' },
-          { text: 'Testing', link: '/testing' },
         ],
       },
       {
@@ -54,6 +55,7 @@ export default defineConfig({
         items: [
           { text: 'Roadmap', link: '/roadmap' },
           { text: 'Repository Structure', link: '/folder-structure' },
+          { text: 'Testing', link: '/testing' },
           { text: 'Contributing', link: '/contributing' },
           { text: 'Credits & Attribution', link: '/credits' },
           { text: 'Differences from ARI', link: '/ari-differences' },

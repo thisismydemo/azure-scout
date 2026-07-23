@@ -4,14 +4,38 @@ description: Software prerequisites and required PowerShell modules for AzureSco
 
 # Prerequisites & Required Modules
 
+::: tip This page covers the v1 inventory tool
+This page covers the **v1 inventory cmdlet** (`Invoke-AzureScout`). For the **CAF/WAF
+assessment platform** (`Invoke-ScoutAssessment`) — which has stricter, PowerShell
+7-only prerequisites — see [Assessment Prerequisites](assessment-prerequisites.md).
+Not sure which tool you need? See [Overview: Inventory vs Assessment](overview.md).
+:::
+
 ## System Requirements
 
-| Requirement | Details |
-|-------------|---------|
-| PowerShell | 7.0 or later (PowerShell Core). Windows PowerShell 5.1 is not supported. |
-| Operating System | Windows, Linux, or macOS |
-| Azure Account | An Azure identity with read access to target resources |
-| Entra ID Access | `Directory.Read.All` or equivalent — required only for `-Scope All` or `-Scope EntraOnly` |
+Requirements differ by tool — see [Overview: Inventory vs Assessment](overview.md) for the
+full comparison.
+
+| Requirement | v1 Inventory (`Invoke-AzureScout`) | v2 Assessment (`Invoke-ScoutAssessment`) |
+|-------------|-------------------------------------|-------------------------------------------|
+| PowerShell | 5.1 or later (Windows PowerShell **or** PowerShell 7+) | **7.0 or later only** — every assessment script starts with `#Requires -Version 7.0` and will not load under 5.1 |
+| Operating System | Windows, Linux, or macOS | Windows, Linux, or macOS |
+| Azure Account | An Azure identity with read access to target resources | ARM `Reader` at the tenant-root management group — see [Assessment Permissions](assessment-permissions.md) |
+| Entra ID Access | `Directory.Read.All` or equivalent — required only for `-Scope All` or `-Scope EntraOnly` | Microsoft Graph app permissions — required only for 5 of the 22 assessments |
+
+The rest of this page covers **v1 inventory** prerequisites only. For the assessment
+platform's additional module and `.NET SDK` requirements, see
+[Assessment Prerequisites](assessment-prerequisites.md).
+
+## Installing AzureScout
+
+```powershell
+# From the PowerShell Gallery (current version 2.0.1)
+Install-Module -Name AzureScout
+
+# Or import directly from a local clone
+Import-Module ./AzureScout.psd1
+```
 
 ## Required PowerShell Modules
 

@@ -16,7 +16,7 @@ This page lists every inventory module in AzureScout, the Azure resource type(s)
 | Containers | 6 | AKS, ARO, Container Apps, Container Registry |
 | Databases | 13 | SQL, PostgreSQL, MySQL, Cosmos DB, Redis |
 | Hybrid | 16 | Arc Servers, Arc Kubernetes, Azure Local, Arc Gateways |
-| Identity | 18 | Users, Groups, Apps, Roles, PIM, Conditional Access |
+| Identity | 18 | 17 Entra ID (Graph) + 1 ARM (`ManagedIds`) — Users, Groups, Apps, Roles, PIM, Conditional Access |
 | Integration | 2 | API Management, Service Bus |
 | IoT | 1 | IoT Hub |
 | Management | 14 | Advisor, Backup, Policy, Subscriptions, Recovery Vault |
@@ -25,7 +25,7 @@ This page lists every inventory module in AzureScout, the Azure resource type(s)
 | Security | 5 | Defender Alerts, Assessments, Secure Score, Key Vault |
 | Storage | 2 | Storage Accounts, NetApp Files |
 | Web | 2 | App Service, App Service Plans |
-| **Total** | **171** | |
+| **Total** | **171** | 154 ARM + 17 Entra ID — see [ARM Modules](arm-modules.md) and [Entra ID Modules](entra-modules.md) |
 
 ## AI Category (27 modules)
 
