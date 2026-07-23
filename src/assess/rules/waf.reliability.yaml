@@ -5,7 +5,10 @@ rules:
   - id: WAF-RE-05
     title: "Zone-redundant deployment where supported"
     severity: high
-    query: "$.compute.virtualMachines[?(@.zoneRedundant == false)]"
+    # Scoped to zone-eligible regions/SKUs only (AB#5086) — collect.json's zoneEligible
+    # flag is computed from the Az region/SKU zone-mapping so non-eligible VMs (e.g.
+    # regions or SKUs with no zone support) don't count as false negatives.
+    query: "$.compute.virtualMachines[?(@.zoneEligible == true && @.zoneRedundant == false)]"
     assert: { type: countEquals, value: 0 }
     remediation: "Deploy across availability zones for workloads requiring high availability (zone-eligible SKUs/regions)."
     manual: false

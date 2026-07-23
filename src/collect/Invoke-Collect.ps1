@@ -20,13 +20,18 @@ $ErrorActionPreference = 'Stop'
         subscriptions[], tags[]
         networking { virtualNetworks[{name,peeringCount,ddosEnabled}], subnets[{ipUtilizationPct}],
                      azureFirewalls[], nsgPublicInbound[], privateEndpoints[], privateDnsZones[], vpnGateways[] }
-        compute    { virtualMachines[{name,zoneRedundant}] }
+        compute    { virtualMachines[{name,zoneRedundant,zoneEligible}] }
         management { recoveryVaults[{backupItems[]}], deployments[] }
         security   { defenderPlans[] }
         governance { managementGroups[], policyAssignments[], roleAssignments[], budgets[],
                      resourceLocks[], pimEligibility[], classicAdministrators[] }  (mostly filled by ingest)
         costCleanup { orphanedDisks[], orphanedPips[] }
         opsPosture  { diagnosticCoverage[{type,coveragePct}] }
+        domains     { storage{storageAccounts[]}, databases{sqlServers[],sqlDatabases[]},
+                      web{webApps[]}, containers{aksClusters[],containerRegistries[]},
+                      security{keyVaults[]}, ai{cognitiveAccounts[]}, hybrid{arcServers[]},
+                      integration{eventHubNamespaces[],apiManagement[]}, iot{iotHubs[]},
+                      analytics{synapseWorkspaces[]} }   (per-category scalars, Epic AB#5056)
         advisor[]                                                                   (filled by ingest)
 
     Read-only throughout.
@@ -102,7 +107,18 @@ resources
 | where type =~ "microsoft.compute/virtualmachines"
 | extend zoneCount = array_length(zones)
 | extend zoneRedundant = iff(zoneCount > 0, true, false)
-| project name, resourceGroup, subscriptionId, zoneRedundant,
+// Region-level AZ availability (documented, stable list) — a coarse but honest
+// zone-eligibility signal. SKU-level zone capability needs a join against the
+// resourceSkus table, deliberately deferred: it varies per region/SKU/quota
+// and would need periodic refresh to stay accurate (AB#5086).
+| extend zoneEligible = location in (
+    "eastus","eastus2","westus2","westus3","centralus","southcentralus",
+    "northeurope","westeurope","uksouth","francecentral","germanywestcentral",
+    "switzerlandnorth","norwayeast","swedencentral","southeastasia","eastasia",
+    "australiaeast","japaneast","koreacentral","centralindia","canadacentral",
+    "brazilsouth","uaenorth","southafricanorth"
+  )
+| project name, resourceGroup, subscriptionId, zoneRedundant, zoneEligible,
           size = tostring(properties.hardwareProfile.vmSize)
 '@
         orphanedDisks = @'
