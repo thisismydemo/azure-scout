@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-07-23
+
+### Changed
+
+- **Manifest `ProjectUri`** now points at the documentation site (`https://thisismydemo.cloud/azure-scout/`) so the PowerShell Gallery "Project Site" link lands on the docs rather than the GitHub repo.
+
 ## [2.0.0] - 2026-07-23
 
 Major release — the **CAF/WAF Assessment Platform**. Extends AzureScout from an
