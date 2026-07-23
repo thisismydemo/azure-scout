@@ -14,7 +14,7 @@ function Export-Report {
     switch ($Renderer) {
         'PowerBi' { Export-PowerBi -Findings $Findings -Collect $Collect -OutputPath $OutputPath }
         'Html'    { Export-Html    -Findings $Findings -Collect $Collect -OutputPath $OutputPath }
-        'Pptx'    { Export-Pptx    -Findings $Findings -OutputPath $OutputPath }
+        'Pptx'    { Export-Pptx    -Findings $Findings -Collect $Collect -OutputPath $OutputPath }
         'Excel'   { Export-Excel   -Findings $Findings -Collect $Collect -OutputPath $OutputPath }
         'Json'    { $Findings | ConvertTo-Json -Depth 100 | Out-File "$OutputPath/findings.json" }
         default   { Write-Warning "Unknown renderer '$Renderer' — skipped." }

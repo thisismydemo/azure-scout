@@ -125,3 +125,65 @@ from nothing.
   `python-pptx` is already provisioned elsewhere in their environment), that
   is a valid override — record it as an amendment to this file rather than
   a silent reversal.
+
+## 5. Implementation note (AB#5044, 2026-07-23)
+
+**Status stays Accepted.** `src/report/renderers/Export-Pptx.ps1` is
+implemented per §1–§3 above, with two deliberate amendments to the original
+plan, both because a designer-authored binary `.pptx` cannot be committed to
+this repo (§3's original text assumed one would be):
+
+- **Template-as-code, not a committed `deck.pptx.template` binary.** Instead
+  of opening a pre-authored `.pptx` and cloning its slide layouts, the deck's
+  entire visual design — theme (navy `#1F4E78` / steel `#2E75B6` / gold
+  `#B8860B` palette, matching `report.html.template`), slide master, title
+  layout, and content layout — is built programmatically in
+  `New-ScoutDeckShell` and the shared `Add-ScoutSlideChrome` function. This
+  is the "template-driven approach" the acceptance criterion asks for, just
+  authored in PowerShell instead of PowerPoint Desktop.
+  **Extension point:** a future designer-authored `deck.pptx.template` can
+  still replace this — swap `New-ScoutDeckShell`'s theme/master/layout
+  construction for code that opens the template and clones its parts
+  (`SlideMasterPart`/`SlideLayoutPart`/`ThemePart`), and leave every
+  slide-content builder (`New-ScoutTitleSlide`, `New-ScoutExecSummarySlide`,
+  `New-ScoutAreaTableSlides`, `New-ScoutGapsSlides`, `New-ScoutManualSlide`,
+  `New-ScoutNextStepsSlide`) untouched — they only depend on the shell
+  exposing a title `SlideLayoutPart` and a content `SlideLayoutPart`. This
+  extension point is also called out in a code comment at the top of
+  `Export-Pptx.ps1`.
+- **Assembly acquisition instead of a `$_requiredModules` PowerShell Gallery
+  entry.** No PSGallery wrapper module for `DocumentFormat.OpenXml` was
+  stable enough to depend on at implementation time (the rejection of
+  `PSWriteOffice` in §2 still applies), so `Export-Pptx.ps1` acquires the
+  pinned `DocumentFormat.OpenXml` NuGet package itself on first use: it
+  shells out to `dotnet build` against a throwaway class-library project
+  referencing the package, which resolves the full transitive dependency
+  graph (`DocumentFormat.OpenXml.Framework`, `System.IO.Packaging`) via
+  NuGet/MSBuild rather than hand-rolling flat-container downloads, and
+  caches the three resulting DLLs under `output/.tools/openxml/<version>/`
+  (already `.gitignore`d — no binaries committed). Subsequent calls in the
+  same or later runs load straight from the cache. If offline and nothing
+  is cached, `Export-Pptx` throws a clear, actionable error rather than
+  silently skipping the deck or faking success — the same failure mode the
+  original python-pptx prototype had for a missing `python` binary, now
+  fixed instead of inherited.
+- **`Export-Pptx` gained an optional `-Collect` parameter**, matching
+  `Export-Html`/`-Excel`/`-PowerBi`'s existing signature (the original §3
+  text expected the signature to stay `-Findings`/`-OutputPath` only).
+  `Collect._meta.scope` / `.managementGroupId` are shown on the title slide
+  when present; the deck degrades gracefully to date + branding only when
+  `-Collect` is omitted or empty, since neither `Get-Score`'s Findings
+  contract nor `src/collect/Invoke-Collect.ps1`'s canonical collect shape
+  carries a tenant field today.
+- The AB#5089 defensive severity guard (null/unknown severity sorts LAST,
+  never throws) is carried into the renderer as
+  `Get-ScoutSeverityRank`/`Get-ScoutSeverityLabel`, applied redundantly at
+  render time even though `Get-Score` already sorts gaps this way — same
+  belt-and-suspenders intent as the retired `build_deck.py`'s `sev()`
+  helper.
+
+Smoke-tested via `tests/Test-PptxFromDataDump.ps1` (synthetic findings
+derived from `tests/datadump/sample-report.json`, including deliberately
+null/blank/unrecognized severities): renders an 8-slide deck, validates as
+a well-formed OPC package, and passes `DocumentFormat.OpenXml.Validation.OpenXmlValidator`
+with zero schema issues.
