@@ -1,0 +1,385 @@
+<!doctype html><html><head><meta charset="utf-8">
+<title>Azure Landing Zone Assessment — Interactive Report</title>
+<style>
+:root{
+  --navy:#1F4E78; --steel:#2E75B6; --green:#2E7D32; --gold:#B8860B;
+  --red:#B00020; --gray:#595959; --ink:#1A1A1A; --paper:#FFFFFF; --mist:#F6F9FD;
+}
+*{box-sizing:border-box}
+body{font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;margin:0;color:var(--ink);background:var(--paper)}
+header{background:var(--navy);color:#fff;padding:20px 28px;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+header h1{margin:0;font-size:20px;font-weight:600}
+header .meta{font-size:12px;color:#dce6f2}
+nav.tabs{display:flex;gap:6px;padding:10px 28px 0;background:var(--mist);border-bottom:1px solid #e2e2e2;flex-wrap:wrap}
+nav.tabs .tab{padding:9px 16px;cursor:pointer;border:1px solid transparent;border-bottom:3px solid transparent;border-radius:6px 6px 0 0;font-weight:600;color:var(--navy);background:transparent;font-size:13px}
+nav.tabs .tab.active{border-color:#e2e2e2;border-bottom-color:var(--steel);background:var(--paper)}
+main{padding:20px 28px 40px}
+.cards{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.card{border:1px solid #e2e2e2;border-left:6px solid var(--steel);border-radius:8px;padding:14px 20px;min-width:150px;background:var(--paper)}
+.card .label{font-size:12px;color:var(--gray);text-transform:uppercase;letter-spacing:.04em}
+.card .score{font-size:32px;font-weight:700;margin-top:4px}
+.band-pass{border-left-color:var(--green)}.band-pass .score{color:var(--green)}
+.band-partial{border-left-color:var(--gold)}.band-partial .score{color:var(--gold)}
+.band-fail{border-left-color:var(--red)}.band-fail .score{color:var(--red)}
+.band-none{border-left-color:var(--gray)}.band-none .score{color:var(--gray)}
+.section-title{font-size:15px;font-weight:700;color:var(--navy);margin:24px 0 10px}
+.donut-wrap{display:flex;gap:28px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.donut{width:150px;height:150px;border-radius:50%;position:relative}
+.donut .hole{position:absolute;inset:22px;background:var(--paper);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.donut .hole b{font-size:24px;color:var(--ink)}
+.donut .hole span{font-size:11px;color:var(--gray)}
+.legend{display:flex;flex-direction:column;gap:6px;font-size:13px}
+.legend .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.arealist{display:flex;flex-direction:column;gap:8px}
+.arearow{display:flex;align-items:center;gap:10px}
+.arearow .name{width:260px;flex:0 0 auto;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arearow .bar{flex:1;background:#eef2f7;border-radius:4px;height:14px;overflow:hidden}
+.arearow .bar > i{display:block;height:100%;border-radius:4px}
+.arearow .val{width:42px;text-align:right;font-weight:700;font-size:13px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.filters select,.filters input{padding:7px 10px;border:1px solid #ccc;border-radius:6px;font-size:13px}
+.filters input[type=search]{flex:1;min-width:200px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border:1px solid #e2e2e2;padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--navy);color:#fff;cursor:pointer;white-space:nowrap;user-select:none}
+th .arrow{opacity:.6;font-size:10px;margin-left:4px}
+tr:nth-child(even){background:var(--mist)}
+.status-pass{color:var(--green);font-weight:700}
+.status-fail{color:var(--red);font-weight:700}
+.status-partial{color:var(--gold);font-weight:700}
+.status-manual,.status-unknown,.status-error{color:var(--gray);font-weight:700}
+.sev-high{color:var(--red);font-weight:700}
+.sev-medium{color:var(--gold);font-weight:700}
+.sev-low{color:var(--steel);font-weight:700}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;color:#fff}
+.badge-new{background:var(--steel)}
+.badge-resolved{background:var(--green)}
+.badge-regressed{background:var(--red)}
+.badge-unchanged{background:var(--gray)}
+.banner{border:1px solid #e2e2e2;background:var(--mist);border-left:6px solid var(--steel);padding:14px 18px;border-radius:8px;margin-bottom:16px}
+.delta-up{color:var(--green);font-weight:700}
+.delta-down{color:var(--red);font-weight:700}
+.delta-flat{color:var(--gray);font-weight:700}
+.empty{color:var(--gray);font-style:italic;padding:12px 0}
+footer{padding:16px 28px;color:var(--gray);font-size:12px;border-top:1px solid #e2e2e2}
+</style></head>
+<body>
+<header>
+  <div>
+    <h1>Azure Landing Zone Assessment</h1>
+    <div class="meta" id="hdr-meta"></div>
+  </div>
+  <div class="meta" id="hdr-ts"></div>
+</header>
+<nav class="tabs" id="tabs"></nav>
+<main id="view"></main>
+<footer>Generated offline by Azure Scout (Export-React) — self-contained, no external network dependencies.</footer>
+<script>window.__SCOUT_DATA__ = /*__SCOUT_DATA__*/;</script>
+<script>
+(function(){
+"use strict";
+var DATA = window.__SCOUT_DATA__ || {};
+var F = DATA.Findings || {};
+var DRIFT = DATA.Drift || null;
+var META = DATA.Meta || {};
+var Frameworks = F.Frameworks || [];
+var Areas = F.Areas || [];
+var Gaps = F.Gaps || [];
+var Manual = F.Manual || [];
+var AllFindings = F.Findings || [];
+
+var esc = function(s){ return (s===null||s===undefined?'':String(s)).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); };
+var fmtDate = function(d){ if(!d) return 'unknown'; try{ return new Date(d).toLocaleString(); }catch(e){ return String(d); } };
+
+function scoreBand(score){
+  if(score===null||score===undefined) return 'none';
+  if(score>=80) return 'pass';
+  if(score>=50) return 'partial';
+  return 'fail';
+}
+function bandColor(band){
+  return band==='pass' ? 'var(--green)' : band==='partial' ? 'var(--gold)' : band==='fail' ? 'var(--red)' : 'var(--gray)';
+}
+function statusClass(status){
+  var s = (status||'').toString().toLowerCase();
+  return 'status-' + (['pass','fail','partial','manual','unknown','error'].indexOf(s) >= 0 ? s : 'unknown');
+}
+function sevClass(sev){
+  var s = (sev||'').toString().toLowerCase();
+  return 'sev-' + (['high','medium','low'].indexOf(s) >= 0 ? s : 'low');
+}
+
+function uniqueVals(arr, key){
+  var seen = {}; var out = [];
+  arr.forEach(function(item){
+    var v = item[key];
+    if(v===null||v===undefined||v==='') return;
+    if(!seen[v]){ seen[v]=true; out.push(v); }
+  });
+  out.sort();
+  return out;
+}
+
+// ---- global UI state ----
+var state = {
+  tab: 'dashboard',
+  findingsSort: { key: 'Id', dir: 1 },
+  findingsFilter: { Framework:'', Area:'', Severity:'', Status:'' },
+  findingsSearch: '',
+  gapsSearch: '',
+  driftSort: { key: 'Id', dir: 1 },
+  driftFilter: ''
+};
+
+function sortRows(rows, key, dir){
+  return rows.slice().sort(function(a,b){
+    var av = a[key]; var bv = b[key];
+    av = (av===null||av===undefined) ? '' : av;
+    bv = (bv===null||bv===undefined) ? '' : bv;
+    if(av < bv) return -1*dir;
+    if(av > bv) return 1*dir;
+    return 0;
+  });
+}
+
+// ---- Dashboard ----
+function renderDashboard(){
+  var cards = Frameworks.map(function(fw){
+    var band = scoreBand(fw.Score);
+    return '<div class="card band-'+band+'"><div class="label">'+esc(fw.Framework)+'</div><div class="score">'+(fw.Score===null||fw.Score===undefined?'&mdash;':fw.Score)+'</div></div>';
+  }).join('');
+
+  var counts = { Pass:0, Partial:0, Fail:0, Manual:0, Unknown:0, Error:0 };
+  AllFindings.forEach(function(f){
+    var s = f.Status || 'Unknown';
+    if(counts.hasOwnProperty(s)) counts[s]++; else counts.Unknown++;
+  });
+  var total = AllFindings.length || 1;
+  var order = [['Pass','var(--green)'],['Partial','var(--gold)'],['Fail','var(--red)'],['Manual','var(--gray)'],['Unknown','#9e9e9e'],['Error','#7b1fa2']];
+  var acc = 0; var stops = [];
+  order.forEach(function(pair){
+    var pct = counts[pair[0]] / total * 100;
+    if(pct > 0){
+      stops.push(pair[1] + ' ' + acc.toFixed(2) + '% ' + (acc+pct).toFixed(2) + '%');
+      acc += pct;
+    }
+  });
+  var gradient = stops.length ? stops.join(', ') : 'var(--mist) 0% 100%';
+  var passRate = Math.round((counts.Pass / total) * 100);
+
+  var legend = order.map(function(pair){
+    return '<div><span class="dot" style="background:'+pair[1]+'"></span>'+pair[0]+': <b>'+counts[pair[0]]+'</b></div>';
+  }).join('');
+
+  var areaRows = Areas.map(function(a){
+    var band = scoreBand(a.Score);
+    var pct = (a.Score===null||a.Score===undefined) ? 0 : a.Score;
+    return '<div class="arearow"><div class="name" title="'+esc(a.Framework)+' / '+esc(a.Area)+'">'+esc(a.Framework)+' / '+esc(a.Area)+'</div>'+
+      '<div class="bar"><i style="width:'+pct+'%;background:'+bandColor(band)+'"></i></div>'+
+      '<div class="val">'+(a.Score===null||a.Score===undefined?'&mdash;':a.Score)+'</div></div>';
+  }).join('') || '<div class="empty">No scored areas.</div>';
+
+  document.getElementById('view').innerHTML =
+    '<div class="section-title">Framework scores</div>'+
+    '<div class="cards">'+(cards || '<div class="empty">No frameworks scored.</div>')+'</div>'+
+    '<div class="section-title">Overall pass rate</div>'+
+    '<div class="donut-wrap">'+
+      '<div class="donut" style="background:conic-gradient('+gradient+')"><div class="hole"><b>'+passRate+'%</b><span>pass rate</span></div></div>'+
+      '<div class="legend">'+legend+'</div>'+
+    '</div>'+
+    '<div class="section-title">Area scores</div>'+
+    '<div class="arealist">'+areaRows+'</div>';
+}
+
+// ---- Findings ----
+function findingsFilterOptions(){
+  return {
+    Framework: uniqueVals(AllFindings, 'Framework'),
+    Area: uniqueVals(AllFindings, 'Area'),
+    Severity: uniqueVals(AllFindings, 'Severity'),
+    Status: uniqueVals(AllFindings, 'Status')
+  };
+}
+function applyFindingsFilters(){
+  var f = state.findingsFilter;
+  var q = state.findingsSearch.toLowerCase();
+  return AllFindings.filter(function(row){
+    if(f.Framework && row.Framework !== f.Framework) return false;
+    if(f.Area && row.Area !== f.Area) return false;
+    if(f.Severity && (row.Severity||'') !== f.Severity) return false;
+    if(f.Status && row.Status !== f.Status) return false;
+    if(q){
+      var hay = [row.Id, row.Title, row.Area, row.Framework, row.Remediation].join(' ').toLowerCase();
+      if(hay.indexOf(q) === -1) return false;
+    }
+    return true;
+  });
+}
+function renderFindings(){
+  var opts = findingsFilterOptions();
+  function optionList(vals, current){
+    return '<option value="">All</option>' + vals.map(function(v){
+      return '<option value="'+esc(v)+'"'+(v===current?' selected':'')+'>'+esc(v)+'</option>';
+    }).join('');
+  }
+  var rows = sortRows(applyFindingsFilters(), state.findingsSort.key, state.findingsSort.dir);
+  var arrow = function(key){ return state.findingsSort.key===key ? (state.findingsSort.dir===1?'&#9650;':'&#9660;') : ''; };
+  var cols = [['Id','Id'],['Framework','Framework'],['Area','Area'],['Severity','Sev'],['Status','Status'],['Title','Finding'],['EvidenceCount','Evidence']];
+
+  document.getElementById('view').innerHTML =
+    '<div class="filters">'+
+      '<select id="ff-Framework">'+optionList(opts.Framework, state.findingsFilter.Framework)+'</select>'+
+      '<select id="ff-Area">'+optionList(opts.Area, state.findingsFilter.Area)+'</select>'+
+      '<select id="ff-Severity">'+optionList(opts.Severity, state.findingsFilter.Severity)+'</select>'+
+      '<select id="ff-Status">'+optionList(opts.Status, state.findingsFilter.Status)+'</select>'+
+      '<input type="search" id="ff-search" placeholder="Search findings..." value="'+esc(state.findingsSearch)+'">'+
+    '</div>'+
+    '<table id="findings-table"><thead><tr>'+
+      cols.map(function(c){ return '<th data-key="'+c[0]+'">'+c[1]+'<span class="arrow">'+arrow(c[0])+'</span></th>'; }).join('')+
+      '<th>Remediation</th></tr></thead><tbody>'+
+      (rows.map(function(f){
+        return '<tr><td>'+esc(f.Id)+'</td><td>'+esc(f.Framework)+'</td><td>'+esc(f.Area)+'</td>'+
+          '<td class="'+sevClass(f.Severity)+'">'+esc(f.Severity||'')+'</td>'+
+          '<td class="'+statusClass(f.Status)+'">'+esc(f.Status)+'</td>'+
+          '<td>'+esc(f.Title)+'</td><td>'+(f.EvidenceCount===undefined?'':f.EvidenceCount)+'</td>'+
+          '<td>'+esc(f.Remediation)+'</td></tr>';
+      }).join('') || '<tr><td colspan="8" class="empty">No findings match the current filters.</td></tr>')+
+    '</tbody></table>';
+
+  ['Framework','Area','Severity','Status'].forEach(function(k){
+    document.getElementById('ff-'+k).onchange = function(e){ state.findingsFilter[k] = e.target.value; renderFindings(); };
+  });
+  document.getElementById('ff-search').oninput = function(e){ state.findingsSearch = e.target.value; renderFindings(); };
+  document.querySelectorAll('#findings-table th[data-key]').forEach(function(th){
+    th.onclick = function(){
+      var key = th.getAttribute('data-key');
+      if(state.findingsSort.key === key){ state.findingsSort.dir *= -1; }
+      else { state.findingsSort.key = key; state.findingsSort.dir = 1; }
+      renderFindings();
+    };
+  });
+}
+
+// ---- Gaps ----
+function renderGaps(){
+  var q = state.gapsSearch.toLowerCase();
+  var rows = Gaps.filter(function(g){
+    if(!q) return true;
+    var hay = [g.Id, g.Title, g.Area, g.Framework, g.Remediation, g.Severity].join(' ').toLowerCase();
+    return hay.indexOf(q) !== -1;
+  });
+  document.getElementById('view').innerHTML =
+    '<div class="filters"><input type="search" id="gaps-search" placeholder="Filter gaps..." value="'+esc(state.gapsSearch)+'"></div>'+
+    '<table><thead><tr><th>Severity</th><th>Area</th><th>Finding</th><th>Remediation</th></tr></thead><tbody>'+
+      (rows.map(function(g){
+        return '<tr><td class="'+sevClass(g.Severity)+'">'+esc(g.Severity||'')+'</td><td>'+esc(g.Area)+'</td>'+
+          '<td>'+esc(g.Title)+'</td><td>'+esc(g.Remediation)+'</td></tr>';
+      }).join('') || '<tr><td colspan="4" class="empty">No gaps.</td></tr>')+
+    '</tbody></table>';
+  document.getElementById('gaps-search').oninput = function(e){ state.gapsSearch = e.target.value; renderGaps(); };
+}
+
+// ---- Manual review ----
+function renderManual(){
+  document.getElementById('view').innerHTML =
+    '<table><thead><tr><th>Area</th><th>Question</th><th>Evidence found</th><th>Guidance</th></tr></thead><tbody>'+
+      (Manual.map(function(m){
+        return '<tr><td>'+esc(m.Area)+'</td><td>'+esc(m.Title)+'</td><td>'+(m.EvidenceCount===undefined?0:m.EvidenceCount)+' item(s)</td><td>'+esc(m.Remediation)+'</td></tr>';
+      }).join('') || '<tr><td colspan="4" class="empty">No manual-review items.</td></tr>')+
+    '</tbody></table>';
+}
+
+// ---- Drift ----
+function driftBadge(d){
+  var key = (d||'Unchanged').toLowerCase();
+  return '<span class="badge badge-'+key+'">'+esc(d)+'</span>';
+}
+function renderDrift(){
+  if(!DRIFT){
+    document.getElementById('view').innerHTML = '<div class="empty">No drift data was embedded in this report.</div>';
+    return;
+  }
+  var summary = DRIFT.Summary || {};
+  var deltaClass = 'delta-flat'; var deltaText = 'n/a';
+  if(DRIFT.ScoreDelta !== null && DRIFT.ScoreDelta !== undefined){
+    deltaClass = DRIFT.ScoreDelta > 0 ? 'delta-up' : (DRIFT.ScoreDelta < 0 ? 'delta-down' : 'delta-flat');
+    deltaText = (DRIFT.ScoreDelta > 0 ? '+' : '') + DRIFT.ScoreDelta;
+  }
+
+  var banner = DRIFT.IsBaseline
+    ? '<div class="banner">Baseline run (RunId <b>'+esc(DRIFT.RunId)+'</b>) — no prior history to compare against yet. Drift tracking begins on the next run.</div>'
+    : '<div class="banner">Compared against previous run <b>'+esc(DRIFT.PreviousRunId)+'</b>. Overall score: <b>'+(DRIFT.OverallScore===null?'&mdash;':DRIFT.OverallScore)+'</b> '+
+      '(previous <b>'+(DRIFT.PreviousScore===null?'&mdash;':DRIFT.PreviousScore)+'</b>, delta <span class="'+deltaClass+'">'+deltaText+'</span>)</div>';
+
+  var cards = ['New','Resolved','Regressed','Unchanged','Removed'].map(function(k){
+    var band = k==='Resolved' ? 'pass' : k==='Regressed' ? 'fail' : k==='New' ? 'partial' : 'none';
+    return '<div class="card band-'+band+'"><div class="label">'+k+'</div><div class="score">'+(summary[k]||0)+'</div></div>';
+  }).join('');
+
+  var driftRows = (DRIFT.Findings || []);
+  var filtered = state.driftFilter ? driftRows.filter(function(r){ return r.Drift === state.driftFilter; }) : driftRows;
+  var sorted = sortRows(filtered, state.driftSort.key, state.driftSort.dir);
+  var arrow = function(key){ return state.driftSort.key===key ? (state.driftSort.dir===1?'&#9650;':'&#9660;') : ''; };
+  var driftOptions = ['New','Resolved','Regressed','Unchanged'].map(function(d){
+    return '<option value="'+d+'"'+(state.driftFilter===d?' selected':'')+'>'+d+'</option>';
+  }).join('');
+
+  document.getElementById('view').innerHTML =
+    banner +
+    '<div class="section-title">Run-over-run summary</div>'+
+    '<div class="cards">'+cards+'</div>'+
+    '<div class="section-title">Per-finding changes</div>'+
+    '<div class="filters"><select id="drift-filter"><option value="">All changes</option>'+driftOptions+'</select></div>'+
+    '<table id="drift-table"><thead><tr>'+
+      '<th data-key="Id">Id<span class="arrow">'+arrow('Id')+'</span></th>'+
+      '<th data-key="Framework">Framework<span class="arrow">'+arrow('Framework')+'</span></th>'+
+      '<th data-key="Area">Area<span class="arrow">'+arrow('Area')+'</span></th>'+
+      '<th>Title</th><th>Previous</th><th>Current</th><th data-key="Drift">Drift<span class="arrow">'+arrow('Drift')+'</span></th>'+
+    '</tr></thead><tbody>'+
+      (sorted.map(function(r){
+        return '<tr><td>'+esc(r.Id)+'</td><td>'+esc(r.Framework)+'</td><td>'+esc(r.Area)+'</td><td>'+esc(r.Title)+'</td>'+
+          '<td class="'+statusClass(r.PreviousStatus)+'">'+esc(r.PreviousStatus||'&mdash;')+'</td>'+
+          '<td class="'+statusClass(r.CurrentStatus)+'">'+esc(r.CurrentStatus)+'</td>'+
+          '<td>'+driftBadge(r.Drift)+'</td></tr>';
+      }).join('') || '<tr><td colspan="7" class="empty">No per-finding changes to show.</td></tr>')+
+    '</tbody></table>';
+
+  document.getElementById('drift-filter').onchange = function(e){ state.driftFilter = e.target.value; renderDrift(); };
+  document.querySelectorAll('#drift-table th[data-key]').forEach(function(th){
+    th.onclick = function(){
+      var key = th.getAttribute('data-key');
+      if(state.driftSort.key === key){ state.driftSort.dir *= -1; }
+      else { state.driftSort.key = key; state.driftSort.dir = 1; }
+      renderDrift();
+    };
+  });
+}
+
+var ROUTES = { dashboard: renderDashboard, findings: renderFindings, gaps: renderGaps, manual: renderManual, drift: renderDrift };
+
+function renderTabs(){
+  var tabs = [['dashboard','Dashboard'],['findings','Findings'],['gaps','Gaps'],['manual','Manual review']];
+  if(DRIFT){ tabs.push(['drift','Drift']); }
+  document.getElementById('tabs').innerHTML = tabs.map(function(t){
+    return '<div class="tab'+(state.tab===t[0]?' active':'')+'" data-t="'+t[0]+'">'+t[1]+'</div>';
+  }).join('');
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.onclick = function(){
+      state.tab = t.getAttribute('data-t');
+      renderTabs();
+      ROUTES[state.tab]();
+    };
+  });
+}
+
+// ---- boot ----
+document.getElementById('hdr-ts').textContent = 'Generated ' + fmtDate(F.GeneratedOn);
+var metaBits = [];
+if(META.Scope) metaBits.push('Scope: ' + META.Scope);
+if(META.ManagementGroupId) metaBits.push('Management group: ' + META.ManagementGroupId);
+document.getElementById('hdr-meta').textContent = metaBits.join('  |  ');
+renderTabs();
+ROUTES[state.tab]();
+})();
+</script>
+</body></html>
