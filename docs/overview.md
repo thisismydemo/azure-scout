@@ -8,8 +8,9 @@ AzureScout ships **two** entry points from the same module. They answer differen
 have different defaults, and — for the assessment platform — a different PowerShell version
 requirement. Read this page first if you're new to AzureScout.
 
-| | `Invoke-AzureScout` (v1) | `Invoke-ScoutAssessment` (v2) |
-|---|---|---|
+| Compare | `Invoke-AzureScout` (v1) | `Invoke-ScoutAssessment` (v2) |
+|:--|:--|:--|
+| Purpose | Inventory — list everything in the tenant | Assessment — score the tenant against CAF/WAF |
 | Answers | "What's in my tenant?" | "How well does my tenant conform to CAF/WAF?" |
 | Output | Excel workbook, JSON, Markdown, AsciiDoc, Power BI CSVs — raw inventory | Scored `findings.json`, Power BI, HTML, PowerPoint, Excel evidence |
 | `-Scope` default | `ArmOnly` | `All` |
