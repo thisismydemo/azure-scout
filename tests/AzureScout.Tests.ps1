@@ -10,7 +10,7 @@
     are exported, and that the manifest is well-formed.
 
 .NOTES
-    Author:  thisismydemo
+    Author:  Kristopher Turner
     Version: 1.0.0
     Created: 2026-01-20
 #>
@@ -45,7 +45,7 @@ Describe 'Module Manifest Tests' {
 
     It 'Has the correct author' {
         $Manifest = Test-ModuleManifest -Path $ManifestPath -ErrorAction Stop
-        $Manifest.Author | Should -Be 'thisismydemo'
+        $Manifest.Author | Should -Be 'Kristopher Turner'
     }
 
     It 'Has a root module' {

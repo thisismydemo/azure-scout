@@ -1,7 +1,7 @@
 #
 # Module manifest for module 'AzureScout'
 #
-# Author: thisismydemo
+# Author: Kristopher Turner
 #
 # Created: 2026-02-22
 #
