@@ -13,7 +13,7 @@ description: Master design and delivery plan for Azure Scout — the single sour
 - **GitHub repo:** `thisismydemo/azure-scout`
 - **Working branch:** `claude/repo-access-wexuku`
 - **Governance:** HCS split source-of-truth — ADO masters Epic→Feature→Story→Task; GitHub masters Bug/Feature-request intake.
-- **Last updated:** 2026-07-21 07:20 UTC
+- **Last updated:** 2026-07-22 (§9a reporting-solution decision recorded)
 
 ### Companion documents (source of record)
 
@@ -212,9 +212,9 @@ The owner's spec defines the build order. Carried in verbatim so the plan follow
 - **Phase 4 — Remaining modules.** Identity (IT/OT boundary rules, directory-source reconciliation inputs); Cost (RI/AHB/orphan/right-size → external TCO feed); app/wave modules scoped as **data feeds to the migration tool, not reimplementations**. *(Epic AB#5056 per-domain features.)*
 - **Phase 5 — Polish.** React report variant; drift tracking (commit `findings.json` to Git, diff over runs); one-command pipeline producing all tiers into a dated folder. *(AB#5053.)*
 
-## 9a. Reporting solution — design decision (open, blocks AB#5044)
+## 9a. Reporting solution — design decision (recorded, no longer blocking)
 
-Design Goal #4 requires **replacing Excel-first output with a better, tiered renderer**. Before building AB#5044, a renderer approach must be chosen — the spec's default (python-pptx shell-out for the executive deck) adds a Python dependency and should not be inherited without evaluation.
+Design Goal #4 requires **replacing Excel-first output with a better, tiered renderer**. Before building AB#5044, a renderer approach needed to be chosen — the spec's default (python-pptx shell-out for the executive deck) adds a Python dependency and should not be inherited without evaluation.
 
 | Option | Portable on Linux CI? | Dependency |
 |---|---|---|
@@ -222,7 +222,9 @@ Design Goal #4 requires **replacing Excel-first output with a better, tiered ren
 | OpenXML SDK (`DocumentFormat.OpenXml`) | ✅ | none (pure .NET) — more code |
 | COM automation | ❌ Windows-only | PowerPoint installed |
 
-**Open action (new ADO item to create):** *"Reporting solution design — evaluate python-pptx vs. OpenXML vs. native; pick a portable, low-dependency renderer for the executive deck; produce a decision record. Blocks AB#5044."* Power BI (primary tier) and self-contained HTML are unaffected; this decision only governs the PPTX deck.
+**Decision recorded:** [`decisions/pptx-renderer.md`](decisions/pptx-renderer.md) — recommends the **OpenXML SDK** route (pure .NET, no Python runtime, no `.ado/azure-pipelines.yml` changes needed), templated against a pre-authored `deck.pptx.template` to keep the "more code" cost bounded. `python-pptx` and COM automation are both rejected — see the decision record for the full reasoning grounded in this repo's actual `Export-Pptx.ps1`/`build_deck.py` prototype and CI (`ubuntu-latest`, no `pip install` step today).
+
+**This is a drafted recommendation, not a unilateral final call.** Picking the reporting library is an architectural decision that needs the repo owner's sign-off before AB#5044 is built against it. The open ADO action is downgraded from "design the solution" to **"repo owner: confirm or override the recommendation in `decisions/pptx-renderer.md`"** — no longer a hard blocker on starting AB#5044's other renderers (Power BI, HTML), since those tiers are unaffected either way. Power BI (primary tier) and self-contained HTML remain unaffected by this decision; it only governs the PPTX deck.
 
 ## 10. Dependencies (from spec §10)
 
@@ -258,3 +260,4 @@ See [`RELEASES.md`](https://github.com/thisismydemo/azure-scout/blob/main/RELEAS
 | 2026-07-21 | Added per-domain CAF/WAF analytics prototype (Epic AB#5056): domain ARG collection, 15 category assessments + sub-bundles in the manifest, 10 rule files, registry doc; wired `src/` into the module as `Invoke-ScoutAssessment`. |
 | 2026-07-21 | Corrected an overreach: 64 items had been moved to Resolved prematurely — reverted all to New. ADO now reflects planning only; no item is marked delivered until its acceptance criteria are verified. |
 | 2026-07-21 | Carried in the three missing spec sections verbatim — §9 Build phases, §10 Dependencies, §11 Scope discipline — and added §9a: the reporting-solution design decision (evaluate python-pptx vs. OpenXML vs. native before building AB#5044). Renumbered Release plan to §12. |
+| 2026-07-22 | Recorded the §9a reporting-solution decision: [`decisions/pptx-renderer.md`](decisions/pptx-renderer.md) recommends OpenXML SDK over python-pptx/COM, grounded in the current `Export-Pptx.ps1`/`build_deck.py` prototype and the `ubuntu-latest` CI agent. Flagged as a drafted recommendation pending repo owner sign-off — not a unilateral final call. §9a reframed from "open, blocks AB#5044" to "recorded, no longer blocking". |
