@@ -13,7 +13,7 @@ description: Master design and delivery plan for Azure Scout — the single sour
 - **GitHub repo:** `thisismydemo/azure-scout`
 - **Working branch:** `claude/repo-access-wexuku`
 - **Governance:** HCS split source-of-truth — ADO masters Epic→Feature→Story→Task; GitHub masters Bug/Feature-request intake.
-- **Last updated:** 2026-07-22 (§9a reporting-solution decision recorded)
+- **Last updated:** 2026-07-23 (runtime + live-tenant verification complete; §8 corrected)
 
 ### Companion documents (source of record)
 
@@ -188,11 +188,17 @@ Cross-layer correctness audit (2026-07-20). **All findings are now logged as aut
 2. ✅ **Unblock assessment** (AB#5081, AB#5082, AB#5083) — `src/collect/Invoke-Collect.ps1` normalized ARG adapter added; `.length` filters rewritten to scalar fields; `Resolve-JsonPath`/`Invoke-Rule` surface thrown queries as `Error`. _Committed, static-validated, not yet runtime-verified._
 3. ✅ **Discovery data-loss fixes** (AB#5076, AB#5077, AB#5078) — SkipToken paging, `Exit`→`throw`, batch off-by-one. _Committed, static-validated._
 4. ✅ **Scoring/reporting holes** (AB#5084, AB#5085, AB#5087, AB#5088, AB#5089, AB#5090) — weighted framework score, Unknown/Error surfaced, deterministic rounding, severity-null sort, HTML null-neutral, benchmark governance guard, PPTX severity guard. _Committed, static-validated._
-5. **Remaining — needs a PowerShell + Az environment:**
-   - **Runtime-verify** the above (run `tests/Assessment.Engine.Tests.ps1` + an end-to-end `-FromCollect` pass) — no `pwsh`/Az in the authoring environment, so all fixes above are parse/brace-validated only.
-   - **Wire the module manifest** (`AzureScout.psd1`) to dot-source `src/` functions so `Invoke-AzureScout`, `Invoke-Collect`, etc. load as a module (AB#5024).
-   - Author the **per-category rule content** and manifest entries (Epic AB#5056).
-   - Remaining polish bugs: AB#5086 (zone "where supported"), AB#5091 (Excel sheet collision), AB#5092 (Power BI AreaKey), AB#5079/#5080 (discovery fallback isolation + zero-resource guard).
+5. ✅ **Wire the module manifest** (AB#5024) — `Invoke-ScoutAssessment`/`Test-ScoutPermission` exported; `src/` dot-sourced. _Committed `ddebe27`._
+6. ✅ **Per-category rule content** (Epic AB#5056 / AB#5057) — 139 rules across all 23 CAF/WAF files; collector extensions (2026-07-23) flipped 16 more rules from `manual` to automated (93 automated / 46 manual; every remaining manual rule documents exactly which non-ARG data source it needs).
+7. ✅ **Polish bugs** — AB#5086 (zone scoping), AB#5079/#5080/#5091/#5092 all fixed in code.
+8. ✅ **Runtime verification (2026-07-23)** — first actual execution of the engine, in two stages:
+   - **Offline**: `tests/Assessment.Engine.Tests.ps1` 6/6 passing (was 0/6 — four StrictMode defects fixed in `Resolve-JsonPath`, `Get-Score`, `Invoke-Rule`, and an unguarded `$spec.Benchmark` in `Invoke-ScoutAssessment` that broke 21 of 22 manifest assessments). Full repo suite 1263 passed / 1 pre-existing unrelated failure (manifest author metadata) / 3 skipped. End-to-end `-FromCollect` against the new canonical fixture `tests/datadump/sample-collect.json`: all renderer tiers valid; all 22 manifest entries smoke-tested.
+   - **Live** (HCS tenant, read-only SPN): full `collect → assess → report` — every ARG query succeeds, 140 findings, all five tiers rendered including the new OpenXML PPTX deck. Live-only bugs found and fixed: `Search-AzGraph -Skip 0` rejected on first page (both `Invoke-Collect` and `Invoke-ArgQueryPack`), `mv-expand kind=outer` unsupported by ARG, `kind` reserved-keyword collision, and `Import-AzGovViz` looping on interactive prompts when run without `-ManagementGroupId` (now guarded: skips with a warning; benchmark degrades to Unknown per the AB#5084 guard).
+9. **Still open:**
+   - AzGovViz/governance ingest has not run live — requires `-ManagementGroupId` plus Reader at MG root and read-only Graph app permissions for the SPN.
+   - Optional: designer-authored `deck.pptx.template` to replace the programmatic slide master (extension point documented in `Export-Pptx.ps1` and the §9a decision record).
+   - ADO board state updates for the items whose acceptance criteria the above verification now satisfies.
+   - Tag-vocabulary standards PR (Platform Engineering PR #5) awaiting repo-owner approval.
 
 ### Planning gap-check (2026-07-21)
 Full ADO scan: **161 items** (2 Epics, 106 Features, 29 Stories, 24 Bugs) — **0 missing priority, 0 missing acceptance criteria, 0 orphaned items, 0 non-vocabulary tags.** The board is internally consistent.
@@ -234,7 +240,7 @@ Design Goal #4 requires **replacing Excel-first output with a better, tiered ren
 | Az modules | Az.Accounts, Az.Resources, Az.ResourceGraph, **Az.Advisor**, **Az.Security** | Auth/tokens, resources/policy, bulk KQL, the one automated WAF signal (Advisor), Defender data |
 | YAML | powershell-yaml | Parses the CAF/WAF rule files — no parser, no rules |
 | Graph (ingest) | read-only app perms: User/Group/Application.Read.All, PrivilegedAccess.Read.AzureResources | AzGovViz ingest reads identity/PIM (read-only) |
-| PPTX | python3 + python-pptx | Executive deck (pending §9a decision) |
+| PPTX | .NET SDK (DocumentFormat.OpenXml 3.0.2, auto-acquired via NuGet on first use) | Executive deck (§9a decision implemented — no Python) |
 | Power BI | Power BI Desktop | Author the `.pbit` template once; tool emits CSVs |
 | Diagrams | draw.io export | Network topology (already in collection layer) |
 
@@ -260,4 +266,5 @@ See [`RELEASES.md`](https://github.com/thisismydemo/azure-scout/blob/main/RELEAS
 | 2026-07-21 | Added per-domain CAF/WAF analytics prototype (Epic AB#5056): domain ARG collection, 15 category assessments + sub-bundles in the manifest, 10 rule files, registry doc; wired `src/` into the module as `Invoke-ScoutAssessment`. |
 | 2026-07-21 | Corrected an overreach: 64 items had been moved to Resolved prematurely — reverted all to New. ADO now reflects planning only; no item is marked delivered until its acceptance criteria are verified. |
 | 2026-07-21 | Carried in the three missing spec sections verbatim — §9 Build phases, §10 Dependencies, §11 Scope discipline — and added §9a: the reporting-solution design decision (evaluate python-pptx vs. OpenXML vs. native before building AB#5044). Renumbered Release plan to §12. |
+| 2026-07-23 | Full backlog implementation pass: collector extensions flipped 16 rules to automated (AB#5057); AB#5044 PPTX renderer rebuilt on DocumentFormat.OpenXml (python-pptx/`build_deck.py` removed); engine runtime-verified offline (Pester 6/6, fixture end-to-end, all 22 manifest entries) AND live against the HCS tenant (140 findings, all 5 tiers). Fixed 4 StrictMode engine defects + 4 live-only collect/ingest defects (ARG `-Skip 0`, `mv-expand kind=outer`, `kind` keyword, AzGovViz interactive-prompt hang). §8 rewritten to reflect delivered state. |
 | 2026-07-22 | Recorded the §9a reporting-solution decision: [`decisions/pptx-renderer.md`](decisions/pptx-renderer.md) recommends OpenXML SDK over python-pptx/COM, grounded in the current `Export-Pptx.ps1`/`build_deck.py` prototype and the `ubuntu-latest` CI agent. Flagged as a drafted recommendation pending repo owner sign-off — not a unilateral final call. §9a reframed from "open, blocks AB#5044" to "recorded, no longer blocking". |
