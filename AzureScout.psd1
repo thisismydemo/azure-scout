@@ -92,7 +92,10 @@ FunctionsToExport = @(
 
             #Assessment platform entry points (Epics AB#5023 / AB#5056, AB#5024)
             'Invoke-ScoutAssessment',
-            'Test-ScoutPermission'
+            'Test-ScoutPermission',
+
+            #Unattended pipeline entry point (AB#5050)
+            'Invoke-ScoutPipeline'
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

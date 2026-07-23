@@ -53,7 +53,7 @@ function Invoke-ScoutAssessment {
         [ValidateSet('All', 'ArmOnly', 'EntraOnly')]
         [string]   $Scope = 'All',              # EntraOnly throws -- ARM/ARG collect only, no Entra path here
         [string[]] $Category,                    # existing category filter still works
-        [ValidateSet('PowerBi', 'Html', 'Pptx', 'Excel', 'Json', 'All')]
+        [ValidateSet('PowerBi', 'Html', 'Pptx', 'Excel', 'Json', 'React', 'All')]
         [string[]] $OutputFormat = @('Html'),
         [string]   $OutputPath = './output',
         [switch]   $PermissionAudit,
@@ -95,6 +95,12 @@ function Invoke-ScoutAssessment {
         $ingestors = $Assessment | ForEach-Object { $manifest[$_].Ingest } | Select-Object -Unique
         foreach ($i in $ingestors) {
             switch ($i) {
+                # Native governance collector (AB#5041) — ARG + ambient-token ARM
+                # REST, no AzGovViz dependency. Default for every assessment that
+                # needs management-group / policy / role / budget / lock data.
+                'Governance'    { $collect = Import-Governance   -Collect $collect -ManagementGroupId $ManagementGroupId }
+                # AzGovViz stays available as an opt-in heavy collector, but nothing
+                # in the manifest references it by default any more.
                 'AzGovViz'      { $collect = Import-AzGovViz     -Collect $collect -OutputPath $runPath -ManagementGroupId $ManagementGroupId }
                 'ArgQueryPack'  { $collect = Invoke-ArgQueryPack -Collect $collect -ManagementGroupId $ManagementGroupId }
                 'AdvisorScores' { $collect = Import-AdvisorScores -Collect $collect }
@@ -124,10 +130,31 @@ function Invoke-ScoutAssessment {
     $scored = Get-Score -Findings $allFindings
     $scored | ConvertTo-Json -Depth 100 | Out-File "$runPath/findings.json"
 
+    # ---- DRIFT (cross-run) ----
+    # Compare this run against the immediately previous run and append it to a
+    # findings-history log shared across every run under $OutputPath (keyed by
+    # $runId), so the React report's Drift tab can show New/Resolved/Regressed
+    # deltas (AB#5053). History lives under $OutputPath (not $runPath) so it
+    # persists across dated run folders. Never fatal — a drift failure must not
+    # sink an otherwise-good assessment.
+    $drift = $null
+    try {
+        $drift = Get-ScoutDrift -Findings $scored -HistoryPath (Join-Path $OutputPath '.scout-history') -RunId $runId
+    }
+    catch {
+        Write-Warning "Invoke-ScoutAssessment: drift tracking skipped: $($_.Exception.Message)"
+    }
+
     # ---- REPORT ----
-    $reporters = if ($OutputFormat -contains 'All') { @('PowerBi', 'Html', 'Pptx', 'Excel', 'Json') } else { $OutputFormat }
+    $reporters = if ($OutputFormat -contains 'All') { @('PowerBi', 'Html', 'Pptx', 'Excel', 'Json', 'React') } else { $OutputFormat }
     foreach ($r in $reporters) {
-        Export-Report -Renderer $r -Findings $scored -Collect $collect -OutputPath $runPath
+        # Pipe to Out-Null: some renderers (Export-React) RETURN the path they
+        # wrote, and that must not leak into this function's output stream — the
+        # only thing Invoke-ScoutAssessment returns is $runPath. Without this,
+        # a run that includes 'React' returns @(reportPath, runPath) and every
+        # caller that expects a single run-folder path (incl. Invoke-ScoutPipeline)
+        # breaks.
+        Export-Report -Renderer $r -Findings $scored -Collect $collect -OutputPath $runPath -Drift $drift | Out-Null
     }
     return $runPath
 }

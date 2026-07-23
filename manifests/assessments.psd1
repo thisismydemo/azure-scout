@@ -27,12 +27,12 @@
         # runs, an incomplete list here would silently starve Storage/Databases/Web/
         # Containers/Analytics/AI/Integration/Hybrid/IoT/Compute/Cost rules of data.
         Collect     = @('*')
-        Ingest      = @('AzGovViz', 'ArgQueryPack', 'AdvisorScores')
+        Ingest      = @('Governance', 'ArgQueryPack', 'AdvisorScores')
         Rules       = @('caf.*', 'waf.*')
         Frameworks  = @('CAF: all 8 design areas', 'WAF: all 5 pillars')
         Tags        = @('caf', 'waf', 'landing-zone')
         Benchmark   = 'alz-reference.json'
-        Reporters   = @('PowerBi', 'Html', 'Pptx')
+        Reporters   = @('PowerBi', 'Html', 'Pptx', 'React')
     }
     Estate = @{
         Description = 'Full digital estate inventory (no scoring)'
@@ -48,7 +48,7 @@
     # ---- per-category assessments (Epic AB#5056) ----
     Management = @{
         Description = 'Governance, policy, cost, backup, automation, update manager'
-        Category    = 'Management'; Collect = @('Management'); Ingest = @('AzGovViz', 'ArgQueryPack', 'AdvisorScores')
+        Category    = 'Management'; Collect = @('Management'); Ingest = @('Governance', 'ArgQueryPack', 'AdvisorScores')
         Rules = @('caf.governance', 'caf.management', 'caf.billing'); Frameworks = @('CAF: Governance', 'CAF: Management', 'CAF: Billing', 'WAF: Operational', 'WAF: Cost')
         Tags = @('caf', 'governance', 'management'); Reporters = @('Html', 'Excel')
     }
@@ -66,7 +66,7 @@
     }
     Identity = @{
         Description = 'Identity & access — PIM, Conditional Access, RBAC'
-        Category    = 'Identity'; Collect = @('Identity', 'Security'); Ingest = @('AzGovViz')
+        Category    = 'Identity'; Collect = @('Identity', 'Security'); Ingest = @('Governance')
         Rules = @('caf.identity'); Frameworks = @('CAF: Identity & access management', 'WAF: Security')
         Tags = @('caf', 'identity'); Reporters = @('Html', 'Excel')
     }
@@ -140,12 +140,12 @@
     # ---- finer sub-bundles inside a category ----
     Governance = @{
         Description = 'Management sub-bundle — policy assignments, locks, budgets'
-        Category    = 'Management'; Collect = @('Management'); Ingest = @('AzGovViz')
+        Category    = 'Management'; Collect = @('Management'); Ingest = @('Governance')
         Rules = @('caf.governance'); Frameworks = @('CAF: Governance'); Tags = @('caf', 'governance', 'sub-bundle'); Reporters = @('Html')
     }
     Policy = @{
         Description = 'Management sub-bundle — Azure Policy assignment/enforcement'
-        Category    = 'Management'; Collect = @('Management'); Ingest = @('AzGovViz')
+        Category    = 'Management'; Collect = @('Management'); Ingest = @('Governance')
         Rules = @('caf.governance'); Frameworks = @('CAF: Governance'); Tags = @('caf', 'policy', 'sub-bundle'); Reporters = @('Html')
     }
     UpdateManager = @{
