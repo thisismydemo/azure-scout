@@ -35,6 +35,9 @@ export default defineConfig({
         text: 'CAF/WAF Assessment',
         items: [
           { text: 'Assessment Platform', link: '/assessment' },
+          { text: 'Assessment Prerequisites', link: '/assessment-prerequisites' },
+          { text: 'Auth & Permissions per Scan Type', link: '/assessment-permissions' },
+          { text: 'Assessment Registry', link: '/design/assessment-registry' },
         ],
       },
       {

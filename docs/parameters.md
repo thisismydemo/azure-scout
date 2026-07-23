@@ -79,3 +79,37 @@ $result.Details      # Array of check results with remediation guidance
 ```
 
 See [Permissions](permissions.md) for the full list of required roles and API permissions.
+
+## Invoke-ScoutAssessment Parameters
+
+Entry point for the **CAF/WAF assessment platform** (v2.0.0) — a separate
+cmdlet from `Invoke-AzureScout`, with its own parameter set. Full run-mode
+examples: [Assessment guide](assessment.md#run-modes).
+
+| Parameter | Description |
+|-----------|-------------|
+| `-Assessment` | One, several, or `All` assessment names from `manifests/assessments.psd1` (default: `Estate`). See the [Assessment Registry](design/assessment-registry.md) for all 22. |
+| `-Scope` | `All` (default), `ArmOnly`, or `EntraOnly` — accepted and recorded, but currently does not change what the Collect layer queries; see [the caveat](assessment.md#-scope). |
+| `-Category` | Overrides the categories recorded for the run; does not change which rules are scored. See [the caveat](assessment.md#-category-override). |
+| `-OutputFormat` | `PowerBi`, `Html`, `Pptx`, `Excel`, `Json`, or `All` (default: `Html`) — accepts an array. |
+| `-OutputPath` | Base output directory (default: `./output`); each run writes to a `<OutputPath>/yyyyMMdd_HHmmss/` subfolder. |
+| `-PermissionAudit` | Switch — runs `Test-ScoutPermission` for the requested `-Assessment` set and returns before any collection happens. |
+| `-CollectOnly` | Switch — stop after Collect; returns the path to `collect.json`. |
+| `-FromCollect` | Path to an existing `collect.json` — skips Collect/Ingest and assesses/reports from it directly. |
+| `-ManagementGroupId` | Scopes the AzGovViz ingest for assessments that need it (`LandingZone`, `Management`, `Identity`, `Governance`, `Policy`). Does **not** scope the Resource Graph collect itself. |
+
+## Test-ScoutPermission Parameters
+
+Read-only permission pre-flight for the assessment platform — distinct from
+`Test-AZSCPermissions` above. Normally invoked via
+`Invoke-ScoutAssessment -PermissionAudit` rather than called directly.
+
+| Parameter | Description |
+|-----------|-------------|
+| `-Assessment` | The assessment name(s) to check permissions for. |
+| `-Manifest` | The imported `manifests/assessments.psd1` hashtable (passed automatically by `Invoke-ScoutAssessment`). |
+
+Returns an array of `[pscustomobject]` results (`Check`, `Ok`, `Fix`) — the
+ARM check's `Ok` is a live-validated `$true`/`$false`; the Graph checks'
+`Ok` is always `$null` (informational, not live-verified). Full explanation:
+[what `-PermissionAudit` actually verifies](assessment-permissions.md#what-permissionaudit-actually-verifies).

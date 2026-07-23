@@ -66,3 +66,20 @@ If the permission checker reports failures:
 1. For ARM: Ensure `Reader` role is assigned on target subscriptions
 2. For Graph: Grant the required Microsoft Graph API permissions to your app registration or user account
 3. Re-run with the appropriate credentials
+
+## A different, narrower model for the CAF/WAF assessment platform
+
+Everything above is the **v1 inventory** permission model
+(`Invoke-AzureScout` / `Test-AZSCPermissions`). The v2 **assessment platform**
+(`Invoke-ScoutAssessment` / `Test-ScoutPermission`) uses a different,
+narrower model — do not conflate the two:
+
+| | v1 inventory (`Test-AZSCPermissions`) | v2 assessment (`Test-ScoutPermission`) |
+|---|---|---|
+| ARM scope | `Reader` on each target **subscription** | `Reader` at the **tenant-root management group** |
+| Graph | Up to 9 permissions, required for `-Scope All`/`EntraOnly` | 4 permissions, required **only** for the 5 assessments that ingest AzGovViz (`LandingZone`, `Management`, `Identity`, `Governance`, `Policy`) |
+| Live-validated? | Yes — both ARM and Graph checks call live endpoints | ARM check is live; the 4 Graph permissions are listed as an **unverified checklist** (`Ok = $null`), not actually tested |
+
+Full matrix (every assessment, minimum RBAC, which need Graph, and the
+`PrivilegedAccess.Read.AzureResources` / Entra P2 nuance):
+[Auth & permissions per scan type](assessment-permissions.md).

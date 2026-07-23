@@ -93,3 +93,18 @@ Valid values: `AzureCloud` (default), `AzureUSGovernment`, `AzureChinaCloud`, `A
 
 The module checks for the `LoginExperienceV2` Az config setting.
 If enabled, it temporarily disables it to ensure compatibility, then restores the original value after login.
+
+## Authentication for the CAF/WAF assessment platform
+
+Everything above is `Connect-AZSCLoginSession`, used by the v1 inventory
+cmdlet (`Invoke-AzureScout`). The v2 assessment platform
+(`Invoke-ScoutAssessment`, `Test-ScoutPermission`) does **not** have its own
+sign-in flow — it reuses whatever `Get-AzContext` is already active (i.e.
+authenticate with `Connect-AzAccount`, any of the five methods above, or a
+managed identity, then run `Invoke-ScoutAssessment`). What differs is the
+**authorization** model, not the authentication mechanism: the identity you
+sign in as needs ARM `Reader` at the tenant-root management group for every
+assessment, and Microsoft Graph application permissions for 5 specific
+assessments. See [Auth & permissions per scan type](assessment-permissions.md)
+for the full breakdown and [Assessment Prerequisites](assessment-prerequisites.md)
+for the software/module prerequisites.
