@@ -12,9 +12,11 @@ Each assessment declares a `Collect` list in the manifest, and the value is
 recorded into `collect.json`'s `_meta.categories` for provenance — but the
 Collect layer (`Invoke-Collect.ps1`) currently runs its full, fixed set of
 Resource Graph queries on every run regardless of that value. What actually
-differs between assessments is: which third-party **ingestors** run
-(`Ingest`), and which **rule files** are scored (`Rules`) against the
-collected data. See [Assessment guide — Collect runs the full query set every time](../assessment.md#architecture-three-layers-json-on-disk)
+differs between assessments is: which **ingestors** run (`Ingest` —
+`Governance` (native, default for the 5 governance-data assessments),
+`ArgQueryPack`, `AdvisorScores`, or the opt-in third-party `AzGovViz`), and
+which **rule files** are scored (`Rules`) against the collected data. See
+[Assessment guide — Collect runs the full query set every time](../assessment.md#architecture-three-layers-json-on-disk)
 for the full explanation.
 :::
 

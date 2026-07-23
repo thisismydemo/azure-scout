@@ -14,5 +14,6 @@ AzureScout follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) form
 
 | Version | Highlights |
 |---------|------------|
+| **v2.1.0** (Unreleased) | Native governance collector (`Import-Governance`, no more AzGovViz dependency by default), unattended one-command pipeline (`Invoke-ScoutPipeline`), and a React report + cross-run drift tracking (`-OutputFormat React`, `Get-ScoutDrift`) |
 | **v2.0.0** | **CAF/WAF Assessment Platform** — read-only assessment engine (139 rules across 8 CAF design areas + 5 WAF pillars), ARG collect layer, AzGovViz/Advisor/ARG ingest, ALZ benchmark, tiered reporting (Power BI / HTML / OpenXML PowerPoint / Excel / JSON), per-domain analytics via `Invoke-ScoutAssessment`. Runtime-verified offline + live tenant. Breaking: `findings.json` contract; assessment requires PowerShell 7 |
 | **v1.0.0** | Full rename to AzureScout (AZSC prefix), 154 ARM modules, 17 Entra ID modules, Excel + JSON + Markdown + AsciiDoc output, draw.io diagrams, permission pre-flight, category filtering |

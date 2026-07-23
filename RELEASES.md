@@ -32,11 +32,23 @@ releases over time*.
 | **1.1.0** | _TBD_ | 🔵 | Quality & reliability — Pester suite, CI, throttling/retry, `-WhatIf`, non-destructive cache | AB#315–#352 |
 | **1.2.0** | _TBD_ | 🔵 | Collector depth — governance, networking, private-endpoint, and policy collectors | AB#353–#405 |
 | **2.0.0** | 2026-07-23 | ✅ | **CAF/WAF assessment platform** — assessment engine (139 rules), ARG collect layer, AzGovViz/Advisor/ARG ingest, ALZ benchmark, tiered reporting (Power BI / HTML / OpenXML PPTX / Excel / JSON); per-domain analytics foundation. Runtime-verified offline + live tenant. | **Epic AB#5023** (AB#5024, 5027, 5031, 5034, 5044) + **Epic AB#5056** (AB#5057–5060) |
-| **2.1.0** | _TBD_ | 🔵 | **Per-domain CAF/WAF analytics** — full per-category rule depth + unattended pipeline (AB#5050) and React report / drift tracking (AB#5053) | **Epic AB#5056** (Features AB#5061–#5075) |
+| **2.1.0** | _TBD_ | 🟡 | **Per-domain CAF/WAF analytics** — native governance collector (AB#5041), unattended pipeline (AB#5050), and React report / drift tracking (AB#5053) shipped; full per-category rule depth still in progress | **Epic AB#5023** (AB#5041, AB#5050, AB#5053) + **Epic AB#5056** (Features AB#5061–#5075) |
 
 > **2.0.0 is a major bump** because the reporting overhaul demotes Excel-first
 > output to an evidence tier and introduces the `findings.json` contract — a
 > breaking change to the output surface.
+
+---
+
+## 2.1.0 — Unreleased (TBD)
+
+Delivered on `main` in the current development line (not yet tagged or published):
+
+- **Native governance collector** (`src/ingest/Import-Governance.ps1`, AB#5041) — replaces the AzGovViz hard dependency as the default governance collector. Populates `collect.json`'s `governance` object natively from Azure Resource Graph (policy assignments, role assignments, management groups) plus ambient-token ARM REST (budgets, locks). Needs only Reader at the management-group root — no cloned repo, no `AzAPICall` install prompt, fully unattended. `AzGovViz` remains available as an opt-in `Ingest` value. Live-verified against the HCS tenant.
+- **Unattended pipeline** (`Invoke-ScoutPipeline`, AB#5050) — one command runs collect → assess → report headless into a single dated run folder, fully non-interactive, with a read-only permission pre-flight and a `PartialSuccess` degrade path on exporter failure. Writes `pipeline-summary.json` / `.md`.
+- **React report + cross-run drift** (`Export-React`, `Get-ScoutDrift`, AB#5053) — a new self-contained `report-react.html` (`-OutputFormat React`) with client-side filter/sort/search and a Drift tab, plus cross-run drift computation (New / Resolved / Regressed / Unchanged, weighted score delta) tracked in an append-only `.scout-history/findings-history.json`.
+
+Still open for 2.1.0: full per-category rule depth (Epic AB#5056, Features AB#5061–#5075).
 
 ---
 

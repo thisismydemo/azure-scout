@@ -22,7 +22,7 @@ live Azure tenant.
 | Capability | What shipped |
 |---|---|
 | Assessment engine | Declarative YAML rules (JSONPath + assert types), dual CAF/WAF scoring, prioritized gap list — **139 rules across 8 CAF design areas + 5 WAF pillars** |
-| Collect + ingest | Read-only ARG collect layer (`collect.json`); AzGovViz / ARG query pack / Advisor ingest |
+| Collect + ingest | Read-only ARG collect layer (`collect.json`); native governance collector (v2.1.0) / ARG query pack / Advisor ingest — AzGovViz retained as opt-in only |
 | ALZ benchmark | Live tenant diffed against a canonical ALZ reference |
 | Tiered reporting | Power BI, self-contained HTML, executive **PowerPoint (OpenXML SDK — no Python)**, Excel + JSON evidence |
 | Per-domain analytics | Every discovery category runnable + tagged: `Invoke-ScoutAssessment -Assessment <Category>` |
@@ -31,9 +31,10 @@ live Azure tenant.
 > **Breaking:** introduces the `findings.json` contract and demotes Excel-first
 > output to an evidence tier. Assessment features require PowerShell 7.
 
-Deferred to v2.1.0: full per-category rule depth (AB#5061–5075), the fully
-unattended pipeline (AB#5050), and the React report variant + cross-run drift
-tracking (AB#5053).
+Deferred to v2.1.0: full per-category rule depth (AB#5061–5075). The native
+governance collector (AB#5041), the fully unattended pipeline (AB#5050), and
+the React report variant + cross-run drift tracking (AB#5053) have since
+shipped on `main` — see **v2.1.0 (in development)** below.
 
 ## Previous Release — v1.0.0
 
@@ -111,11 +112,26 @@ Turned inventory into a **scored CAF/WAF landing-zone assessment**. Collection s
 |---|---|---|
 | Assessment engine | Declarative YAML rules (JSONPath + assert types), dual CAF/WAF scoring, prioritized gap list | :white_check_mark: Done (AB#5027, AB#5034) |
 | CAF/WAF rule content | 8 CAF design areas + 5 WAF pillars — 139 rules across 23 version-controlled files | :white_check_mark: Done (AB#5031, AB#5057) |
-| Ingest layer | Fold Azure Governance Visualizer, an ARG query pack, and Advisor into one `collect.json` | :white_check_mark: Done (AB#5037) |
-| ALZ benchmark diff | Compare the live tenant against a canonical ALZ reference (MG archetypes, required policies) | :white_check_mark: Done — engine; governance dataset pending an upstream AzGovViz fix (AB#5041) |
+| Ingest layer | Fold an ARG query pack and Advisor into one `collect.json`; governance now ingested natively by default (see v2.1.0 below) — Azure Governance Visualizer remains available as an opt-in ingestor | :white_check_mark: Done (AB#5037) |
+| ALZ benchmark diff | Compare the live tenant against a canonical ALZ reference (MG archetypes, required policies) | :white_check_mark: Done — engine + native governance collection, no upstream AzGovViz dependency (AB#5041, v2.1.0) |
 | Tiered reporting | Power BI (primary), self-contained HTML, executive PPTX (OpenXML SDK); Excel/JSON retained as evidence | :white_check_mark: Done (AB#5044) |
-| Module registry + entry point | `-Assessment` run one/some/all; read-only permission pre-flight | :white_check_mark: Done (AB#5024); unattended pipeline :blue_circle: Planned v2.1.0 (AB#5050) |
-| React report + drift tracking | Richer React report variant and cross-run score-drift tracking | :blue_circle: Planned v2.1.0 (AB#5053) |
+| Module registry + entry point | `-Assessment` run one/some/all; read-only permission pre-flight | :white_check_mark: Done (AB#5024); unattended one-command pipeline :white_check_mark: Done (AB#5050, v2.1.0) |
+| React report + drift tracking | Richer React report variant and cross-run score-drift tracking | :white_check_mark: Done (AB#5053, v2.1.0) |
+
+## Major — v2.1.0 — Platform Hardening (Epic AB#5023 carryover) — In Development
+
+Three more Epic AB#5023 capabilities have shipped on `main` ahead of the full
+per-domain analytics epic below. Not yet tagged/released — see
+[`RELEASES.md`](https://github.com/thisismydemo/azure-scout/blob/main/RELEASES.md)
+for status.
+
+| Capability | Description | Status |
+|---|---|---|
+| Native governance collector | `Import-Governance` replaces the AzGovViz hard dependency as the **default** governance collector — populates `collect.json`'s `governance` object natively from Azure Resource Graph and ambient-token ARM REST, needing only Reader at the management-group root. No cloned repo, no `AzAPICall` install prompt, fully unattended, StrictMode-safe. Live-verified against the HCS tenant. `AzGovViz` remains available as an opt-in `Ingest` value; nothing depends on it by default anymore. | :white_check_mark: Done (AB#5041) |
+| Unattended pipeline | `Invoke-ScoutPipeline` runs collect → assess → report headless into one dated run folder — non-interactive throughout, runs the read-only permission pre-flight first, and degrades to `PartialSuccess` (rather than losing output) if an exporter fails. Writes `pipeline-summary.json`/`.md`. | :white_check_mark: Done (AB#5050) |
+| React report + cross-run drift | `-OutputFormat React` renders a single self-contained `report-react.html` (client-side filter/sort/search, summary dashboard, Drift tab). `Get-ScoutDrift` computes cross-run New / Resolved / Regressed / Unchanged findings plus a weighted score delta, tracked in an append-only `.scout-history/findings-history.json`. | :white_check_mark: Done (AB#5053) |
+
+Not yet included in this dev line: full per-category rule depth (AB#5061–5075) — tracked below.
 
 ## Major — v2.1.0 — Per-Domain CAF/WAF Analytics (Epic AB#5056)
 

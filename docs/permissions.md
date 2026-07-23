@@ -86,7 +86,7 @@ narrower model — do not conflate the two:
 | | v1 inventory (`Test-AZSCPermissions`) | v2 assessment (`Test-ScoutPermission`) |
 |---|---|---|
 | ARM scope | `Reader` on each target **subscription** | `Reader` at the **tenant-root management group** |
-| Graph | Up to 9 permissions, required for `-Scope All`/`EntraOnly` | 4 permissions, required **only** for the 5 assessments that ingest AzGovViz (`LandingZone`, `Management`, `Identity`, `Governance`, `Policy`) |
+| Graph | Up to 9 permissions, required for `-Scope All`/`EntraOnly` | Not required by any assessment out of the box — governance data (`LandingZone`, `Management`, `Identity`, `Governance`, `Policy`) is collected natively via ARM/Resource Graph. 4 Graph permissions apply **only** if you opt one of those 5 into the legacy `AzGovViz` ingestor instead |
 | Live-validated? | Yes — both ARM and Graph checks call live endpoints | ARM check is live; the 4 Graph permissions are listed as an **unverified checklist** (`Ok = $null`), not actually tested |
 
 Full matrix (every assessment, minimum RBAC, which need Graph, and the

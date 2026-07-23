@@ -32,9 +32,34 @@ re-scanning.
 | Layer | What it does |
 |-------|--------------|
 | **Collect** | Read-only Azure Resource Graph queries produce a normalized `collect.json`, including a per-domain `domains.*` namespace. |
-| **Ingest** | Folds Azure Governance Visualizer, an ARG query pack, and Azure Advisor into the same `collect.json`. |
+| **Ingest** | Folds governance data (natively collected by default — see below), an ARG query pack, and Azure Advisor into the same `collect.json`. |
 | **Assess** | A declarative rule engine grades the collected data — **139 rules across 8 CAF design areas + 5 WAF pillars** — producing scored `findings.json` with a prioritized gap list. |
 | **Report** | Renders `findings.json` into tiered deliverables. |
+
+::: info Governance data is collected natively — no AzGovViz dependency
+`Import-Governance` (`src/ingest/Import-Governance.ps1`) is the **default**
+governance collector for the five assessments that need governance data
+(`LandingZone`, `Management`, `Identity`, `Governance`, `Policy` — their
+manifest `Ingest` value is `Governance`, not `AzGovViz`). It populates
+`collect.json`'s `governance` object natively from Azure Resource Graph
+(policy assignments, role assignments, management groups) plus ambient-token
+ARM REST calls (budgets, resource locks) — no cloned repo, no `AzAPICall`
+install prompt, fully unattended. It needs only **ARM Reader at the
+management-group root**, same as every other assessment — no additional
+Graph permission.
+
+The third-party Azure Governance Visualizer remains available as an **opt-in**
+`Ingest` value if you want it specifically, but nothing depends on it by
+default anymore. Live-verified against the HCS tenant: real policy/role
+assignments are collected, CAF governance/identity rules score real
+Pass/Fail, and the ALZ benchmark degrades to an explicit `Unknown` — not a
+false 0% — when management-group data isn't visible to the identity running
+the scan. Two datasets are intentionally always empty: `classicAdministrators`
+(a retired API — the CAF-IDN-03 rule asserts `notExists`, so empty is
+compliant) and `pimEligibility` (needs an Entra ID P2 license plus
+`PrivilegedAccess.Read.AzureResources`, which only the opt-in AzGovViz path
+ever requests).
+:::
 
 ::: info Collect is now actually scoped by category
 `Invoke-Collect.ps1`'s `-Categories` parameter (populated from each
@@ -108,6 +133,40 @@ Invoke-ScoutAssessment -Assessment All -OutputFormat All
 `-Assessment All` expands to every key in `manifests/assessments.psd1` —
 currently **22** assessments (see the [full registry](design/assessment-registry.md)).
 
+### Unattended, one-command run (`Invoke-ScoutPipeline`)
+
+```powershell
+Invoke-ScoutPipeline -Assessment LandingZone -OutputFormat All -OutputPath 'D:\Reports\Scout'
+```
+
+`Invoke-ScoutPipeline` (exported public cmdlet, `src/Invoke-ScoutPipeline.ps1`)
+runs collect → assess → report **headless** in one call, writing everything
+into a single dated run folder. It is non-interactive throughout — it forces
+`$ConfirmPreference = 'None'` and `$ProgressPreference = 'SilentlyContinue'`
+for the duration of the run. By default it runs the read-only permission
+pre-flight first (pass `-SkipPermissionAudit` to skip it), and it wraps the
+orchestrator in try/catch so a failure in one exporter degrades the run to
+`PartialSuccess` rather than losing the output that did succeed.
+
+It writes two summary files into the run folder alongside the usual report
+tiers:
+
+- `pipeline-summary.json` — CI-facing: `schemaVersion`, `startedOn` /
+  `finishedOn`, `elapsedSeconds`, `assessments`, `formats`,
+  `findingsByStatus`, `permissionAudit`, and `outcome` (one of `Success`,
+  `PartialSuccess`, `Failed`).
+- `pipeline-summary.md` — the human-readable equivalent.
+
+`Invoke-ScoutPipeline` returns the run-folder path. It only throws (and sets
+`$LASTEXITCODE = 1`) when `outcome` is `Failed` — a `PartialSuccess` outcome
+returns normally so a CI step can inspect `pipeline-summary.json` and decide
+what to do with a partial run.
+
+Parameters: `-Assessment`, `-OutputFormat` (default `All`), `-OutputPath`,
+`-ManagementGroupId`, `-Category`, `-SkipPermissionAudit` — the same run-mode
+semantics as `Invoke-ScoutAssessment` described throughout this page apply
+here too.
+
 ### Collect once, assess later (`-CollectOnly` / `-FromCollect`)
 
 ```powershell
@@ -137,18 +196,24 @@ for exactly what this does and does not verify.
 Invoke-ScoutAssessment -Assessment LandingZone -ManagementGroupId 'contoso-root-mg' -OutputFormat Html
 ```
 
-::: warning Scopes Collect too now — and still gates the AzGovViz ingest
-`-ManagementGroupId` is passed to **both** `Import-AzGovViz` (which needs it
-to invoke the Azure Governance Visualizer) **and** `Invoke-Collect` /
-`Invoke-ArgQueryPack`, which now pass it through as `Search-AzGraph
--ManagementGroup` on every Resource Graph query. Omit it and both layers keep
-the previous tenant-wide behavior (no `-ManagementGroup` filter is passed to
-`Search-AzGraph` at all — not an empty/wildcard scope, the parameter is left
-off entirely). For the 5 assessments that ingest AzGovViz (`LandingZone`,
-`Management`, `Identity`, `Governance`, `Policy`), omitting
-`-ManagementGroupId` still doesn't error — it silently skips the AzGovViz
-ingest and governance rules degrade to `Unknown`, same as before. See
-[Auth & permissions per scan type](assessment-permissions.md#-managementgroupid-and-the-azgovviz-only-assessments).
+::: warning Scopes Collect too now — and the benchmark still needs MG-root visibility
+`-ManagementGroupId` is passed to `Invoke-Collect` / `Invoke-ArgQueryPack`,
+which pass it through as `Search-AzGraph -ManagementGroup` on every Resource
+Graph query (and, if you've opted into the legacy `AzGovViz` ingestor, to
+`Import-AzGovViz` too). Omit it and Collect keeps tenant-wide behavior (no
+`-ManagementGroup` filter is passed to `Search-AzGraph` at all — not an
+empty/wildcard scope, the parameter is left off entirely).
+
+For the 5 assessments that ingest governance data (`LandingZone`,
+`Management`, `Identity`, `Governance`, `Policy`), the **native**
+`Import-Governance` collector (the default `Ingest = Governance`) runs
+regardless of whether `-ManagementGroupId` is supplied — it does not silently
+skip. What actually needs management-group visibility is the **ALZ benchmark
+diff**: if the identity running the scan doesn't have Reader at the
+management-group root (with or without `-ManagementGroupId` set), the
+benchmark degrades to an explicit `Unknown` — not a false 0% — rather than
+failing loudly. See [Auth & permissions per scan
+type](assessment-permissions.md#-managementgroupid-and-governance-data-collection).
 :::
 
 ### `-Scope`
@@ -205,10 +270,14 @@ Invoke-ScoutAssessment -Assessment LandingZone -OutputFormat Html
 Invoke-ScoutAssessment -Assessment LandingZone -OutputFormat Pptx
 Invoke-ScoutAssessment -Assessment LandingZone -OutputFormat Excel
 Invoke-ScoutAssessment -Assessment LandingZone -OutputFormat Json
-Invoke-ScoutAssessment -Assessment LandingZone -OutputFormat All     # PowerBi, Html, Pptx, Excel, Json
+Invoke-ScoutAssessment -Assessment LandingZone -OutputFormat React
+Invoke-ScoutAssessment -Assessment LandingZone -OutputFormat All     # PowerBi, Html, Pptx, Excel, Json, React
 ```
 
-`-OutputFormat` also accepts an array (`-OutputFormat Html,Pptx`).
+`-OutputFormat` also accepts an array (`-OutputFormat Html,Pptx`). `React`
+produces a single self-contained `report-react.html` — see
+[Report tiers](#report-tiers) below — and is also available on
+`Invoke-ScoutPipeline` via its own `-OutputFormat` parameter.
 
 ### `-OutputPath`
 
@@ -233,6 +302,19 @@ assessment lives in **[Auth & permissions per scan type](assessment-permissions.
 - `Unknown`/`Error` are surfaced, never silently dropped — a broken rule cannot inflate a score.
 - The **`Manual`** status intentionally hands the un-automatable checks to a human, with the collected evidence already attached.
 
+## Cross-run drift
+
+`Get-ScoutDrift` computes drift between the current run and the previous run
+for the same assessment: each finding is classified **New**, **Resolved**
+(`Fail`/`Partial` → `Pass`), **Regressed** (`Pass` → `Fail`/`Partial`), or
+**Unchanged**, plus an overall weighted score delta. History is kept in an
+append-only `findings-history.json` under a `.scout-history/` folder in the
+output root, keyed by run id — the first run for a given assessment becomes
+the baseline (nothing to diff against yet). `Invoke-ScoutAssessment` computes
+drift automatically after scoring and feeds it into the [React
+report](#report-tiers)'s Drift tab; a drift computation failure is non-fatal
+to the rest of the run.
+
 ## Report tiers
 
 | Tier | Output | Notes |
@@ -242,17 +324,27 @@ assessment lives in **[Auth & permissions per scan type](assessment-permissions.
 | PowerPoint | `assessment_deck.pptx` | Executive deck via the OpenXML SDK — **no Python dependency**. First use needs the `dotnet` SDK; see [Assessment Prerequisites](assessment-prerequisites.md#powerpoint-tier-net-sdk-not-python). |
 | Excel | `assessment_evidence.xlsx` | Evidence tier |
 | JSON | `findings.json` | The machine-readable contract |
+| React | `report-react.html` | Self-contained (CSS/JS inline, findings embedded as a JSON blob, no external/CDN requests). Client-side filter by Framework/Area/Severity/Status, sortable/searchable findings table, a summary dashboard, and a Drift tab showing cross-run drift (see [Cross-run drift](#cross-run-drift)). |
 
 ## Minimum auth per scan type
 
 - **Every assessment** needs **ARM `Reader` at the tenant-root management group**. No exceptions.
-- **Only 5 assessments** additionally need Microsoft Graph **application**
-  permissions — the ones whose `Ingest` includes `AzGovViz`: `LandingZone`,
-  `Management`, `Identity`, `Governance`, `Policy`.
-- All other 17 assessments need **ARM Reader only** — no Graph permission at all.
-- `PrivilegedAccess.Read.AzureResources` needs an **Entra ID P2 license** and
-  is currently never exercised anyway — `Import-AzGovViz.ps1` unconditionally
-  passes `-NoPIMEligibility`.
+- The 5 assessments that ingest governance data (`LandingZone`, `Management`,
+  `Identity`, `Governance`, `Policy`) use the **native** `Import-Governance`
+  collector by default — ARM Reader at the MG root is enough for them too; no
+  Graph permission is required by default. The ALZ benchmark specifically
+  needs that MG-root visibility to fully resolve; without it, it degrades to
+  an explicit `Unknown` rather than a false 0%.
+- Microsoft Graph **application** permissions are only needed if you opt one
+  of those 5 assessments into the legacy `AzGovViz` ingestor instead of the
+  native default — see [Auth & permissions per scan
+  type](assessment-permissions.md) for exactly which permissions and when.
+- `PrivilegedAccess.Read.AzureResources` needs an **Entra ID P2 license** and,
+  even on the opt-in `AzGovViz` path, is currently never exercised —
+  `Import-AzGovViz.ps1` unconditionally passes `-NoPIMEligibility`. The native
+  `Import-Governance` collector doesn't collect PIM-eligible role assignments
+  either (`pimEligibility` is intentionally always empty for the same
+  license/permission reason).
 
 Full matrix, the exact permissions list, and what `-PermissionAudit` does and
 does not verify: **[Auth & permissions per scan type](assessment-permissions.md)**.

@@ -83,15 +83,16 @@ azure-scout/
 │           └── Jobs/                   #     Background job orchestration (advisory, policy, sec center)
 ├── src/                                # CAF/WAF assessment platform (v2.0.0, Epic AB#5023/AB#5056)
 │   ├── collect/                        #   Read-only Azure Resource Graph collection -> collect.json
-│   ├── ingest/                         #   AzGovViz / ARG query pack / Advisor ingest into collect.json
+│   ├── ingest/                         #   Import-Governance (native, default) / opt-in AzGovViz / ARG query pack / Advisor ingest into collect.json
 │   ├── assess/                         #   Rule engine (JSONPath + assert types) -> findings.json
 │   │   ├── benchmarks/                 #     ALZ reference benchmark data
 │   │   ├── engine/                     #     Resolve-JsonPath, Invoke-Rule, Get-Score
 │   │   └── rules/                      #     23 version-controlled YAML rule files (139 rules)
-│   ├── report/                         #   Tiered report rendering (Power BI, HTML, PPTX, Excel, JSON)
-│   │   ├── renderers/
+│   ├── report/                         #   Tiered report rendering (Power BI, HTML, PPTX, Excel, JSON, React)
+│   │   ├── renderers/                  #     incl. Export-React.ps1 (v2.1.0, self-contained report-react.html)
 │   │   └── templates/
-│   └── Invoke-ScoutAssessment.ps1      #   Assessment platform entry point
+│   ├── Invoke-ScoutAssessment.ps1      #   Assessment platform entry point
+│   └── Invoke-ScoutPipeline.ps1        #   Unattended collect->assess->report pipeline (v2.1.0, AB#5050)
 ├── manifests/
 │   └── assessments.psd1                # Registry of all 22 assessments (Collect/Ingest/Rules/report tiers)
 ├── tests/                              # Pester test suites (34 files, offline/mock-driven)

@@ -150,10 +150,10 @@ Consolidated from the master plan, release ledger, assessment registry, and the
 | AB#5031 | Assess | CAF 8-area + WAF 5-pillar rule files |
 | AB#5034 | Assess | Assessment runner + dual CAF/WAF scoring |
 | AB#5037 | Ingest | AzGovViz + ARG query pack + Advisor → collect.json |
-| AB#5041 | Benchmark | ALZ benchmark diff |
+| AB#5041 | Benchmark | ALZ benchmark diff — **Delivered**: native `Import-Governance` collector is the default governance ingest; AzGovViz is opt-in only |
 | AB#5044 | Report | Tiered renderer engine (PowerBi/Html/Pptx/Excel/Json) |
-| AB#5050 | Platform | Permission pre-flight + unattended pipeline |
-| AB#5053 | Report | React report variant + cross-run drift tracking |
+| AB#5050 | Platform | Permission pre-flight + unattended pipeline — **Delivered**: `Invoke-ScoutPipeline` |
+| AB#5053 | Report | React report variant + cross-run drift tracking — **Delivered**: `Export-React` + `Get-ScoutDrift` |
 
 ## I. Epic AB#5056 — Per-Domain CAF/WAF Analytics (Release 2.1.0)
 
@@ -190,7 +190,7 @@ Consolidated from the master plan, release ledger, assessment registry, and the
 | AB#5081 | `Invoke-Collect` adapter missing — assessment can't run e2e | AB#5024 | 🔴 |
 | AB#5082 | Discovery↔assessment data-shape mismatch (flat vs nested) | AB#5024 | 🔴 |
 | AB#5083 | JSONPath `.length` unsupported + exception-as-Pass | AB#5027 | 🔴 |
-| AB#5084 | Benchmark silent all-Fail without governance data | AB#5041 | 🔴 |
+| AB#5084 | Benchmark silent all-Fail without governance data — **Fixed**: guard now keys off native `Import-Governance` collection, not AzGovViz | AB#5041 | 🔴 |
 | AB#5085 | `percentageAtLeast` zero-denom / value:0 always passes | AB#5027 | 🟡 |
 | AB#5086 | WAF-RE-05 no "where supported" zone qualifier | AB#5031 | 🟡 |
 | AB#5087 | `AreaWeight` dead / unweighted framework score | AB#5034 | 🔴 |

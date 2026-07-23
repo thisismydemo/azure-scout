@@ -13,7 +13,7 @@ description: Master design and delivery plan for Azure Scout — the single sour
 - **GitHub repo:** `thisismydemo/azure-scout`
 - **Working branch:** `claude/repo-access-wexuku`
 - **Governance:** HCS split source-of-truth — ADO masters Epic→Feature→Story→Task; GitHub masters Bug/Feature-request intake.
-- **Last updated:** 2026-07-23 (runtime + live-tenant verification complete; §8 corrected)
+- **Last updated:** 2026-07-23 (AB#5041/#5050/#5053 delivered — native governance collector, unattended pipeline, React report + drift; §5/§6/§8 corrected)
 
 ### Companion documents (source of record)
 
@@ -84,10 +84,10 @@ See [`src/README.md`](https://github.com/thisismydemo/azure-scout/blob/main/src/
 | AB#5031 | Assess | CAF 8-area + WAF 5-pillar rule files |
 | AB#5034 | Assess | Assessment runner + dual CAF/WAF scoring |
 | AB#5037 | Ingest | AzGovViz + ARG query pack + Advisor → `collect.json` |
-| AB#5041 | Benchmark | ALZ benchmark diff |
+| AB#5041 | Benchmark | ALZ benchmark diff — **Delivered**: native `Import-Governance` collector replaces the AzGovViz dependency as the default governance ingest (`Ingest = Governance`); AzGovViz retained as opt-in only. Live-verified against the HCS tenant. |
 | AB#5044 | Report | Tiered renderer engine (PowerBi/Html/Pptx/Excel/Json) |
-| AB#5050 | Platform | Permission pre-flight + unattended pipeline |
-| AB#5053 | Report | React report variant + cross-run drift tracking |
+| AB#5050 | Platform | Permission pre-flight + unattended pipeline — **Delivered**: `Invoke-ScoutPipeline` (headless collect→assess→report, `pipeline-summary.json`/`.md`, `PartialSuccess` degrade path) |
+| AB#5053 | Report | React report variant + cross-run drift tracking — **Delivered**: `Export-React` (`-OutputFormat React`) + `Get-ScoutDrift` (`.scout-history/findings-history.json`) |
 
 ### Epic AB#5056 — Per-domain CAF/WAF analytics across all categories
 Foundation + one Feature per Scout category (independently runnable, categorized, tagged).
@@ -130,7 +130,7 @@ Cross-layer correctness audit (2026-07-20). **All findings are now logged as aut
 | AB#5081 | `Invoke-Collect` adapter missing | AB#5024 |
 | AB#5082 | Discovery↔assessment data-shape mismatch | AB#5024 |
 | AB#5083 | JSONPath `.length` + exception-as-Pass | AB#5027 |
-| AB#5084 | Benchmark silent all-Fail w/o governance | AB#5041 |
+| AB#5084 | Benchmark silent all-Fail w/o governance | AB#5041 — **Fixed**: guard now keys off the presence of native `Import-Governance` data (not AzGovViz specifically); degrades to explicit `Unknown` when MG data isn't visible |
 | AB#5085 | `percentageAtLeast` zero-denom / value:0 | AB#5027 |
 | AB#5086 | WAF-RE-05 no "where supported" | AB#5031 |
 | AB#5087 | `AreaWeight` dead / unweighted framework score | AB#5034 |
@@ -158,7 +158,7 @@ Cross-layer correctness audit (2026-07-20). **All findings are now logged as aut
 | 🔴 | `Invoke-AzureScout.ps1:63` | `Invoke-Collect` (flat→nested adapter) does not exist — assessment can't run end-to-end | Build the adapter, or rewrite rule queries against the flat collector schema | AB#5024 |
 | 🔴 | rules vs `Modules/**` output | **Data-shape mismatch**: rules assume nested ARM tree (`$.networking.virtualNetworks[*].properties…`); collectors emit flat Excel-row objects → every query returns 0 → false Fail / vacuous Pass | Adapter or rule rewrite (same as above) | AB#5024/#5031 |
 | 🔴 | `caf.network.yaml:8`, `waf.reliability.yaml:8` | Newtonsoft JSONPath doesn't support `.length` in filters; exception swallowed → for `countEquals 0` reads as false **Pass** | Precompute scalar counts in adapter; make `Resolve-JsonPath` distinguish "threw" from "0 matches" | AB#5027/#5031 |
-| 🔴 | `Compare-Benchmark.ps1` | Silently all-Fail when `$Collect.governance` unset (AzGovViz not run) | Guard: return Unknown/skip when governance absent | AB#5041 |
+| 🔴 | `Compare-Benchmark.ps1` | Silently all-Fail when `$Collect.governance` unset | Guard: return Unknown/skip when governance absent — **Fixed**: now keys off native `Import-Governance` collection (default), not AzGovViz specifically | AB#5041 |
 | 🟡 | `Invoke-Rule.ps1:42` | `percentageAtLeast` zero-denominator → Fail instead of Unknown; `value:0` always passes | Treat 0-denom as Unknown | AB#5027 |
 | 🟡 | `waf.reliability.yaml` WAF-RE-05 | Zone rule has no "where supported" qualifier → false negatives | Scope to zone-eligible SKUs | AB#5031 |
 
@@ -195,7 +195,7 @@ Cross-layer correctness audit (2026-07-20). **All findings are now logged as aut
    - **Offline**: `tests/Assessment.Engine.Tests.ps1` 6/6 passing (was 0/6 — four StrictMode defects fixed in `Resolve-JsonPath`, `Get-Score`, `Invoke-Rule`, and an unguarded `$spec.Benchmark` in `Invoke-ScoutAssessment` that broke 21 of 22 manifest assessments). Full repo suite 1263 passed / 1 pre-existing unrelated failure (manifest author metadata) / 3 skipped. End-to-end `-FromCollect` against the new canonical fixture `tests/datadump/sample-collect.json`: all renderer tiers valid; all 22 manifest entries smoke-tested.
    - **Live** (HCS tenant, read-only SPN): full `collect → assess → report` — every ARG query succeeds, 140 findings, all five tiers rendered including the new OpenXML PPTX deck. Live-only bugs found and fixed: `Search-AzGraph -Skip 0` rejected on first page (both `Invoke-Collect` and `Invoke-ArgQueryPack`), `mv-expand kind=outer` unsupported by ARG, `kind` reserved-keyword collision, and `Import-AzGovViz` looping on interactive prompts when run without `-ManagementGroupId` (now guarded: skips with a warning; benchmark degrades to Unknown per the AB#5084 guard).
 9. **Still open:**
-   - AzGovViz/governance ingest has not run live — requires `-ManagementGroupId` plus Reader at MG root and read-only Graph app permissions for the SPN.
+   - ~~AzGovViz/governance ingest has not run live~~ — **Resolved (AB#5041)**: the native `Import-Governance` collector is now the default governance ingest and has been live-verified against the HCS tenant (real policy/role assignments collected, CAF governance/identity rules scored, ALZ benchmark degrading to explicit `Unknown` rather than a false 0% when MG data isn't visible). It needs only Reader at the MG root — no Graph app permissions. AzGovViz remains available as an opt-in ingestor for anyone who wants the third-party tool specifically, and that opt-in path still needs `-ManagementGroupId` + read-only Graph app permissions as before.
    - Optional: designer-authored `deck.pptx.template` to replace the programmatic slide master (extension point documented in `Export-Pptx.ps1` and the §9a decision record).
    - ADO board state updates for the items whose acceptance criteria the above verification now satisfies.
    - Tag-vocabulary standards PR (Platform Engineering PR #5) awaiting repo-owner approval.
@@ -239,7 +239,7 @@ Design Goal #4 requires **replacing Excel-first output with a better, tiered ren
 | PowerShell | 7.0.3+ | Whole module is PS7; 5.1 unsupported |
 | Az modules | Az.Accounts, Az.Resources, Az.ResourceGraph, **Az.Advisor**, **Az.Security** | Auth/tokens, resources/policy, bulk KQL, the one automated WAF signal (Advisor), Defender data |
 | YAML | powershell-yaml | Parses the CAF/WAF rule files — no parser, no rules |
-| Graph (ingest) | read-only app perms: User/Group/Application.Read.All, PrivilegedAccess.Read.AzureResources | AzGovViz ingest reads identity/PIM (read-only) |
+| Graph (ingest, opt-in only) | read-only app perms: User/Group/Application.Read.All, PrivilegedAccess.Read.AzureResources | Only needed if you opt an assessment into the legacy AzGovViz ingestor instead of the native `Import-Governance` collector (AB#5041), which needs ARM Reader only |
 | PPTX | .NET SDK (DocumentFormat.OpenXml 3.0.2, auto-acquired via NuGet on first use) | Executive deck (§9a decision implemented — no Python) |
 | Power BI | Power BI Desktop | Author the `.pbit` template once; tool emits CSVs |
 | Diagrams | draw.io export | Network topology (already in collection layer) |
@@ -268,3 +268,4 @@ See [`RELEASES.md`](https://github.com/thisismydemo/azure-scout/blob/main/RELEAS
 | 2026-07-21 | Carried in the three missing spec sections verbatim — §9 Build phases, §10 Dependencies, §11 Scope discipline — and added §9a: the reporting-solution design decision (evaluate python-pptx vs. OpenXML vs. native before building AB#5044). Renumbered Release plan to §12. |
 | 2026-07-23 | Full backlog implementation pass: collector extensions flipped 16 rules to automated (AB#5057); AB#5044 PPTX renderer rebuilt on DocumentFormat.OpenXml (python-pptx/`build_deck.py` removed); engine runtime-verified offline (Pester 6/6, fixture end-to-end, all 22 manifest entries) AND live against the HCS tenant (140 findings, all 5 tiers). Fixed 4 StrictMode engine defects + 4 live-only collect/ingest defects (ARG `-Skip 0`, `mv-expand kind=outer`, `kind` keyword, AzGovViz interactive-prompt hang). §8 rewritten to reflect delivered state. |
 | 2026-07-22 | Recorded the §9a reporting-solution decision: [`decisions/pptx-renderer.md`](decisions/pptx-renderer.md) recommends OpenXML SDK over python-pptx/COM, grounded in the current `Export-Pptx.ps1`/`build_deck.py` prototype and the `ubuntu-latest` CI agent. Flagged as a drafted recommendation pending repo owner sign-off — not a unilateral final call. §9a reframed from "open, blocks AB#5044" to "recorded, no longer blocking". |
+| 2026-07-23 | AB#5041, AB#5050, AB#5053 delivered: native `Import-Governance` collector replaces the AzGovViz hard dependency as the default governance ingest (AzGovViz retained as opt-in only, live-verified against the HCS tenant); `Invoke-ScoutPipeline` ships the unattended one-command collect→assess→report run; `Export-React` (`-OutputFormat React`) + `Get-ScoutDrift` ship the React report and cross-run drift tracking. §5 status annotated, §6 AB#5084 fix description corrected (guard keys off native collection, not AzGovViz specifically), §8 "still open" AzGovViz/governance item resolved. |

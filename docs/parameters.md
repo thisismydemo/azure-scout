@@ -91,12 +91,31 @@ examples: [Assessment guide](assessment.md#run-modes).
 | `-Assessment` | One, several, or `All` assessment names from `manifests/assessments.psd1` (default: `Estate`). See the [Assessment Registry](design/assessment-registry.md) for all 22. |
 | `-Scope` | `All` (default), `ArmOnly`, or `EntraOnly` — accepted and recorded, but currently does not change what the Collect layer queries; see [the caveat](assessment.md#-scope). |
 | `-Category` | Overrides the categories recorded for the run; does not change which rules are scored. See [the caveat](assessment.md#-category-override). |
-| `-OutputFormat` | `PowerBi`, `Html`, `Pptx`, `Excel`, `Json`, or `All` (default: `Html`) — accepts an array. |
+| `-OutputFormat` | `PowerBi`, `Html`, `Pptx`, `Excel`, `Json`, `React`, or `All` (default: `Html`) — accepts an array. `React` renders a self-contained `report-react.html` with client-side filter/sort/search and a cross-run Drift tab. |
 | `-OutputPath` | Base output directory (default: `./output`); each run writes to a `<OutputPath>/yyyyMMdd_HHmmss/` subfolder. |
 | `-PermissionAudit` | Switch — runs `Test-ScoutPermission` for the requested `-Assessment` set and returns before any collection happens. |
 | `-CollectOnly` | Switch — stop after Collect; returns the path to `collect.json`. |
 | `-FromCollect` | Path to an existing `collect.json` — skips Collect/Ingest and assesses/reports from it directly. |
-| `-ManagementGroupId` | Scopes the AzGovViz ingest for assessments that need it (`LandingZone`, `Management`, `Identity`, `Governance`, `Policy`). Does **not** scope the Resource Graph collect itself. |
+| `-ManagementGroupId` | Scopes the Resource Graph `Collect` layer (and the opt-in `AzGovViz` ingest, if selected instead of the native `Governance` default) for assessments that need it (`LandingZone`, `Management`, `Identity`, `Governance`, `Policy`). |
+
+## Invoke-ScoutPipeline Parameters
+
+Unattended, one-command wrapper (`src/Invoke-ScoutPipeline.ps1`, exported)
+that runs collect → assess → report headless into a single dated run folder.
+See [Assessment guide — unattended, one-command run](assessment.md#unattended-one-command-run-invoke-scoutpipeline).
+
+| Parameter | Description |
+|-----------|-------------|
+| `-Assessment` | Same as `Invoke-ScoutAssessment -Assessment` — one, several, or `All`. |
+| `-OutputFormat` | Same values as `Invoke-ScoutAssessment -OutputFormat`, including `React` (default: `All`). |
+| `-OutputPath` | Base output directory; each run writes to a dated subfolder. |
+| `-ManagementGroupId` | Same scoping behavior as `Invoke-ScoutAssessment -ManagementGroupId`. |
+| `-Category` | Same as `Invoke-ScoutAssessment -Category`. |
+| `-SkipPermissionAudit` | Switch — skips the read-only permission pre-flight that otherwise runs first. |
+
+Returns the run-folder path. Throws and sets `$LASTEXITCODE = 1` only when
+`pipeline-summary.json`'s `outcome` is `Failed`; an exporter failure degrades
+the run to `PartialSuccess` instead of losing the output that did succeed.
 
 ## Test-ScoutPermission Parameters
 

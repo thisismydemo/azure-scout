@@ -23,7 +23,7 @@ PowerShell 5.1, **`Invoke-ScoutAssessment` will not load under PowerShell
 | PowerShell | 7.0.3+ (source: [`docs/design/master-plan.md` §10](design/master-plan.md#10-dependencies-from-spec-10)) |
 | Operating System | Windows, Linux, or macOS — the platform is pure PowerShell/.NET |
 | .NET SDK | Required only for the PowerPoint (`Pptx`) report tier — see [below](#powerpoint-tier-net-sdk-not-python) |
-| `git` | Required only when an assessment ingests AzGovViz (see [Auth & permissions](assessment-permissions.md)) — used to shallow-clone the Azure Governance Visualizer tool at first use |
+| `git` | Required only if you opt an assessment into the legacy `AzGovViz` ingestor instead of the native `Governance` default (see [Auth & permissions](assessment-permissions.md)) — used to shallow-clone the Azure Governance Visualizer tool at first use. Not needed by any assessment out of the box. |
 
 ## Required PowerShell modules
 
