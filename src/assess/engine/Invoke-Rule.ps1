@@ -43,7 +43,19 @@ function Invoke-Rule {
         }
         $evidenceCount = $matches.Count
         $evidence = $matches | Select-Object -First 25    # cap evidence payload
-        $v = $Rule.assert.value
+        # ConvertFrom-Yaml returns `assert:` as a Hashtable (test fixtures often use a
+        # pscustomobject instead), and 'exists'/'notExists' rules legitimately omit a
+        # `value:` key. Accessing a missing key/property via dot-notation throws
+        # PropertyNotFoundException under Set-StrictMode -Version Latest, so only read
+        # .value when it's actually present — the exists/notExists cases below never
+        # reference $v. Handle both Hashtable and pscustomobject assert shapes.
+        $v = $null
+        if ($Rule.assert -is [hashtable]) {
+            if ($Rule.assert.ContainsKey('value')) { $v = $Rule.assert.value }
+        }
+        elseif ($Rule.assert.PSObject.Properties['value']) {
+            $v = $Rule.assert.value
+        }
 
         switch ($Rule.assert.type) {
             'countGreaterThan'  { $status = ($evidenceCount -gt  $v) ? 'Pass' : 'Fail' }

@@ -1,0 +1,613 @@
+{
+  "subscriptions": [
+    {
+      "id": "sub-0001",
+      "name": "sub-prod",
+      "state": "Enabled",
+      "tags": {
+        "Environment": "Production"
+      }
+    },
+    {
+      "id": "sub-0002",
+      "name": "sub-dev",
+      "state": "Enabled",
+      "tags": {
+        "Environment": "Dev"
+      }
+    },
+    {
+      "id": "sub-0003",
+      "name": "sub-sbx",
+      "state": "Enabled",
+      "tags": {}
+    }
+  ],
+  "tags": [
+    {
+      "key": "Environment",
+      "values": [
+        "Production",
+        "Dev"
+      ]
+    },
+    {
+      "key": "CostCenter",
+      "values": [
+        "CC-100"
+      ]
+    }
+  ],
+  "networking": {
+    "virtualNetworks": [
+      {
+        "name": "vnet-hub",
+        "resourceGroup": "rg-connectivity",
+        "subscriptionId": "sub-0001",
+        "peeringCount": 2,
+        "ddosEnabled": true
+      },
+      {
+        "name": "vnet-spoke1",
+        "resourceGroup": "rg-workload1",
+        "subscriptionId": "sub-0001",
+        "peeringCount": 1,
+        "ddosEnabled": false
+      },
+      {
+        "name": "vnet-isolated",
+        "resourceGroup": "rg-sandbox",
+        "subscriptionId": "sub-0003",
+        "peeringCount": 0,
+        "ddosEnabled": false
+      }
+    ],
+    "subnets": [
+      {
+        "vnet": "vnet-hub",
+        "subnet": "snet-fw",
+        "prefix": "10.0.0.0/26",
+        "total": 59,
+        "used": 26,
+        "ipUtilizationPct": 45.0
+      },
+      {
+        "vnet": "vnet-spoke1",
+        "subnet": "snet-app",
+        "prefix": "10.1.0.0/27",
+        "total": 27,
+        "used": 25,
+        "ipUtilizationPct": 92.0
+      },
+      {
+        "vnet": "vnet-spoke1",
+        "subnet": "snet-data",
+        "prefix": "10.1.1.0/26",
+        "total": 59,
+        "used": 35,
+        "ipUtilizationPct": 60.0
+      }
+    ],
+    "azureFirewalls": [
+      {
+        "name": "afw-hub",
+        "resourceGroup": "rg-connectivity",
+        "subscriptionId": "sub-0001",
+        "sku": "AZFW_VNet"
+      }
+    ],
+    "nsgPublicInbound": [
+      {
+        "nsg": "nsg-legacy",
+        "resourceGroup": "rg-workload1",
+        "rule": "Allow-RDP-Any",
+        "sourceAddressPrefix": "*",
+        "destinationPortRange": "3389"
+      }
+    ],
+    "privateEndpoints": [
+      {
+        "name": "pe-kv1",
+        "resourceGroup": "rg-workload1",
+        "targetProvider": "microsoft.keyvault",
+        "targetType": "vaults"
+      },
+      {
+        "name": "pe-oai1",
+        "resourceGroup": "rg-workload1",
+        "targetProvider": "microsoft.cognitiveservices",
+        "targetType": "accounts"
+      }
+    ],
+    "privateDnsZones": [
+      {
+        "name": "privatelink.vaultcore.azure.net",
+        "resourceGroup": "rg-connectivity",
+        "subscriptionId": "sub-0001"
+      }
+    ],
+    "vpnGateways": [
+      {
+        "name": "vpngw-hub",
+        "resourceGroup": "rg-connectivity",
+        "subscriptionId": "sub-0001",
+        "activeActive": false
+      }
+    ]
+  },
+  "compute": {
+    "virtualMachines": [
+      {
+        "name": "vm-app01",
+        "resourceGroup": "rg-workload1",
+        "zoneEligible": true,
+        "zoneRedundant": true
+      },
+      {
+        "name": "vm-app02",
+        "resourceGroup": "rg-workload1",
+        "zoneEligible": true,
+        "zoneRedundant": false
+      },
+      {
+        "name": "vm-app03",
+        "resourceGroup": "rg-sandbox",
+        "zoneEligible": false,
+        "zoneRedundant": false
+      }
+    ]
+  },
+  "management": {
+    "recoveryVaults": [
+      {
+        "name": "rsv-prod",
+        "resourceGroup": "rg-workload1",
+        "backupItems": [
+          {
+            "id": "item-vm-app01"
+          },
+          {
+            "id": "item-vm-app02"
+          }
+        ]
+      },
+      {
+        "name": "rsv-sbx",
+        "resourceGroup": "rg-sandbox",
+        "backupItems": []
+      }
+    ],
+    "deployments": [
+      {
+        "name": "dep-bicep-network",
+        "resourceGroup": "rg-connectivity",
+        "properties": {
+          "templateHash": "a1b2c3"
+        }
+      },
+      {
+        "name": "dep-bicep-app",
+        "resourceGroup": "rg-workload1",
+        "properties": {
+          "templateHash": "d4e5f6"
+        }
+      },
+      {
+        "name": "dep-portal-manual",
+        "resourceGroup": "rg-sandbox",
+        "properties": {}
+      }
+    ]
+  },
+  "security": {
+    "defenderPlans": [
+      {
+        "name": "VirtualMachines",
+        "properties": {
+          "pricingTier": "Standard"
+        }
+      },
+      {
+        "name": "StorageAccounts",
+        "properties": {
+          "pricingTier": "Free"
+        }
+      }
+    ]
+  },
+  "governance": {
+    "managementGroups": [
+      {
+        "name": "platform"
+      },
+      {
+        "name": "landingzones"
+      },
+      {
+        "name": "corp"
+      }
+    ],
+    "policyAssignments": [
+      {
+        "name": "pa1",
+        "properties": {
+          "displayName": "Deny-Public-IP",
+          "enforcementMode": "Default"
+        }
+      },
+      {
+        "name": "pa2",
+        "properties": {
+          "displayName": "Deploy-Diagnostics-LogAnalytics",
+          "enforcementMode": "Default",
+          "parameters": {
+            "logAnalyticsWorkspaceId": {
+              "value": "/subscriptions/sub-0001/resourceGroups/rg-management/providers/Microsoft.OperationalInsights/workspaces/law-prod"
+            }
+          }
+        }
+      },
+      {
+        "name": "pa3",
+        "properties": {
+          "displayName": "Legacy-Audit-Policy",
+          "enforcementMode": "DoNotEnforce"
+        }
+      }
+    ],
+    "roleAssignments": [
+      {
+        "properties": {
+          "principalType": "User"
+        }
+      },
+      {
+        "properties": {
+          "principalType": "User"
+        }
+      },
+      {
+        "properties": {
+          "principalType": "Group"
+        }
+      }
+    ],
+    "budgets": [
+      {
+        "name": "budget-sub-prod",
+        "amount": 5000
+      },
+      {
+        "name": "budget-sub-dev",
+        "amount": 1500
+      }
+    ],
+    "resourceLocks": [
+      {
+        "name": "lock-connectivity",
+        "level": "CanNotDelete",
+        "resourceGroup": "rg-connectivity"
+      }
+    ],
+    "pimEligibility": [
+      {
+        "principalId": "user-001",
+        "roleDefinitionName": "Contributor"
+      }
+    ],
+    "classicAdministrators": [
+      {
+        "emailAddress": "legacyadmin@contoso.onmicrosoft.com",
+        "role": "CoAdministrator"
+      }
+    ]
+  },
+  "costCleanup": {
+    "orphanedDisks": [
+      {
+        "name": "disk-orphan-1",
+        "resourceGroup": "rg-workload1",
+        "sizeGb": 128
+      },
+      {
+        "name": "disk-orphan-2",
+        "resourceGroup": "rg-sandbox",
+        "sizeGb": 32
+      }
+    ],
+    "orphanedPips": []
+  },
+  "opsPosture": {
+    "diagnosticCoverage": [
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "coveragePct": 85.0
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "coveragePct": 40.0
+      },
+      {
+        "type": "Microsoft.KeyVault/vaults",
+        "coveragePct": 0.0
+      }
+    ]
+  },
+  "domains": {
+    "storage": {
+      "storageAccounts": [
+        {
+          "name": "stgprod01",
+          "publicAccess": false,
+          "httpsOnly": true,
+          "minTls": "TLS1_2",
+          "networkDefaultDeny": true,
+          "sku": "Standard_ZRS"
+        },
+        {
+          "name": "stglegacy1",
+          "publicAccess": true,
+          "httpsOnly": false,
+          "minTls": "TLS1_0",
+          "networkDefaultDeny": false,
+          "sku": "Standard_LRS"
+        }
+      ]
+    },
+    "databases": {
+      "sqlServers": [
+        {
+          "name": "sql-prod01",
+          "publicNetworkAccess": "Disabled"
+        },
+        {
+          "name": "sql-legacy01",
+          "publicNetworkAccess": "Enabled"
+        }
+      ],
+      "sqlDatabases": [
+        {
+          "name": "sqldb-prod01",
+          "server": "sql-prod01",
+          "zoneRedundant": true
+        },
+        {
+          "name": "sqldb-dev01",
+          "server": "sql-legacy01",
+          "zoneRedundant": false
+        }
+      ]
+    },
+    "web": {
+      "webApps": [
+        {
+          "name": "app-prod01",
+          "httpsOnly": true,
+          "minTls": "1.2",
+          "vnetIntegrated": true,
+          "customDomainBound": true
+        },
+        {
+          "name": "app-legacy01",
+          "httpsOnly": false,
+          "minTls": "1.0",
+          "vnetIntegrated": false,
+          "customDomainBound": false
+        }
+      ]
+    },
+    "containers": {
+      "aksClusters": [
+        {
+          "name": "aks-prod01",
+          "privateCluster": true,
+          "rbacEnabled": true,
+          "allPoolsZoned": true,
+          "networkPolicyEnabled": true,
+          "aadIntegrated": true
+        },
+        {
+          "name": "aks-legacy01",
+          "privateCluster": false,
+          "rbacEnabled": false,
+          "allPoolsZoned": false,
+          "networkPolicyEnabled": false,
+          "aadIntegrated": false
+        }
+      ],
+      "containerRegistries": [
+        {
+          "name": "acrprod01",
+          "adminEnabled": false,
+          "publicAccess": "Disabled"
+        },
+        {
+          "name": "acrlegacy01",
+          "adminEnabled": true,
+          "publicAccess": "Enabled"
+        }
+      ]
+    },
+    "security": {
+      "keyVaults": [
+        {
+          "name": "kv-prod01",
+          "softDelete": true,
+          "purgeProtection": true
+        },
+        {
+          "name": "kv-prod02",
+          "softDelete": true,
+          "purgeProtection": false
+        },
+        {
+          "name": "kv-legacy01",
+          "softDelete": false,
+          "purgeProtection": false
+        }
+      ]
+    },
+    "ai": {
+      "cognitiveAccounts": [
+        {
+          "name": "oai-prod01",
+          "publicAccess": "Disabled",
+          "identityType": "SystemAssigned",
+          "cmkEnabled": true
+        },
+        {
+          "name": "oai-legacy01",
+          "publicAccess": "Enabled",
+          "identityType": "",
+          "cmkEnabled": false
+        }
+      ]
+    },
+    "hybrid": {
+      "arcServers": [
+        {
+          "name": "arc-svr01",
+          "status": "Connected",
+          "agentVersion": "1.45.02"
+        },
+        {
+          "name": "arc-svr02",
+          "status": "Connected",
+          "agentVersion": "1.45.02"
+        },
+        {
+          "name": "arc-svr03",
+          "status": "Disconnected",
+          "agentVersion": "1.30.00"
+        }
+      ],
+      "arcExtensions": [
+        {
+          "machine": "arc-svr01",
+          "extensionType": "AzureMonitorWindowsAgent"
+        },
+        {
+          "machine": "arc-svr02",
+          "extensionType": "AzureMonitorLinuxAgent"
+        }
+      ],
+      "azureLocalClusters": [
+        {
+          "name": "azl-cluster01",
+          "connectivityStatus": "Connected"
+        },
+        {
+          "name": "azl-cluster02",
+          "connectivityStatus": "Disconnected"
+        }
+      ]
+    },
+    "integration": {
+      "eventHubNamespaces": [
+        {
+          "name": "evhns-prod01",
+          "publicAccess": "Disabled",
+          "zoneRedundant": true,
+          "autoInflateEnabled": true
+        },
+        {
+          "name": "evhns-legacy01",
+          "publicAccess": "Enabled",
+          "zoneRedundant": false,
+          "autoInflateEnabled": false
+        }
+      ],
+      "apiManagement": [
+        {
+          "name": "apim-prod01",
+          "virtualNetworkType": "Internal",
+          "sku": "Premium"
+        },
+        {
+          "name": "apim-legacy01",
+          "virtualNetworkType": "None",
+          "sku": "Developer"
+        }
+      ],
+      "serviceBusNamespaces": [
+        {
+          "name": "sbns-prod01",
+          "publicAccess": "Disabled"
+        },
+        {
+          "name": "sbns-legacy01",
+          "publicAccess": "Enabled"
+        }
+      ]
+    },
+    "iot": {
+      "iotHubs": []
+    },
+    "analytics": {
+      "synapseWorkspaces": [
+        {
+          "name": "syn-prod01",
+          "publicAccess": "Disabled",
+          "managedVnetEnabled": true
+        },
+        {
+          "name": "syn-legacy01",
+          "publicAccess": "Enabled",
+          "managedVnetEnabled": false
+        }
+      ]
+    }
+  },
+  "advisor": [
+    {
+      "Category": "Security",
+      "Impact": "Medium",
+      "Recommendation": "Enable MFA for admin accounts"
+    },
+    {
+      "Category": "Security",
+      "Impact": "Medium",
+      "Recommendation": "Restrict management ports"
+    },
+    {
+      "Category": "Security",
+      "Impact": "Medium",
+      "Recommendation": "Enable disk encryption"
+    },
+    {
+      "Category": "Security",
+      "Impact": "Medium",
+      "Recommendation": "Rotate storage account keys"
+    },
+    {
+      "Category": "Security",
+      "Impact": "Medium",
+      "Recommendation": "Apply latest OS patches"
+    },
+    {
+      "Category": "Security",
+      "Impact": "Medium",
+      "Recommendation": "Enable JIT VM access"
+    },
+    {
+      "Category": "Cost",
+      "Impact": "High",
+      "Recommendation": "Right-size underutilized VM vm-app03"
+    },
+    {
+      "Category": "Cost",
+      "Impact": "Medium",
+      "Recommendation": "Buy reserved capacity for steady-state SQL"
+    },
+    {
+      "Category": "Cost",
+      "Impact": "Medium",
+      "Recommendation": "Shut down idle dev VMs after hours"
+    },
+    {
+      "Category": "Performance",
+      "Impact": "Medium",
+      "Recommendation": "Increase App Service plan tier for app-legacy01"
+    }
+  ]
+}

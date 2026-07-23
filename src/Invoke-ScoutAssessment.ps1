@@ -86,7 +86,12 @@ function Invoke-ScoutAssessment {
         $spec = $manifest[$name]
         if (-not $spec.Rules) { continue }        # inventory-only assessment
         $ruleSet   = Get-RuleSet -Patterns $spec.Rules
-        $benchmark = if ($spec.Benchmark) {
+        # $spec is a Hashtable straight out of assessments.psd1, and most assessment
+        # entries don't define a Benchmark key at all (only LandingZone does). Dot-
+        # accessing a Hashtable key that is entirely absent throws PropertyNotFound
+        # under Set-StrictMode -Version Latest, so check ContainsKey first rather
+        # than relying on truthiness of a property access that may never resolve.
+        $benchmark = if ($spec.ContainsKey('Benchmark') -and $spec.Benchmark) {
             Get-Content "$PSScriptRoot/assess/benchmarks/$($spec.Benchmark)" -Raw | ConvertFrom-Json -Depth 100
         } else { $null }
         $findings = Invoke-Assessment -Collect $collect -RuleSet $ruleSet -Benchmark $benchmark -Assessment $name

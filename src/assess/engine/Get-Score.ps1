@@ -32,12 +32,15 @@ function Get-Score {
             Area      = $_.Group[0].Area
             Weight    = $weight
             Score     = if ($den -gt 0) { [math]::Round($num / $den * 100, 0, [System.MidpointRounding]::AwayFromZero) } else { $null }
-            Pass      = ($_.Group | Where-Object Status -eq 'Pass').Count
-            Partial   = ($_.Group | Where-Object Status -eq 'Partial').Count
-            Fail      = ($_.Group | Where-Object Status -eq 'Fail').Count
-            Manual    = ($_.Group | Where-Object Status -eq 'Manual').Count
-            Unknown   = ($_.Group | Where-Object Status -eq 'Unknown').Count
-            Error     = ($_.Group | Where-Object Status -eq 'Error').Count
+            # @(...) wrap is load-bearing: a Where-Object match of zero items collapses
+            # to $null, and $null.Count throws PropertyNotFoundException under
+            # Set-StrictMode -Version Latest — @() forces a real (possibly empty) array.
+            Pass      = @($_.Group | Where-Object Status -eq 'Pass').Count
+            Partial   = @($_.Group | Where-Object Status -eq 'Partial').Count
+            Fail      = @($_.Group | Where-Object Status -eq 'Fail').Count
+            Manual    = @($_.Group | Where-Object Status -eq 'Manual').Count
+            Unknown   = @($_.Group | Where-Object Status -eq 'Unknown').Count
+            Error     = @($_.Group | Where-Object Status -eq 'Error').Count
         }
     }
 
@@ -54,18 +57,21 @@ function Get-Score {
     }
 
     # prioritized gap list: fails first, weighted by severity; unknown/missing severity sorts LAST.
+    # @(...) wraps below are load-bearing for the same reason as the Pass/Fail/etc.
+    # counters above: a pipeline that emits zero objects collapses to $null on
+    # assignment, and callers downstream expect a (possibly empty) collection.
     $sevRank = @{ high = 0; medium = 1; low = 2 }
-    $gaps = $Findings | Where-Object Status -eq 'Fail' |
+    $gaps = @($Findings | Where-Object Status -eq 'Fail' |
         Sort-Object @{ E = { if ($_.Severity -and $sevRank.ContainsKey($_.Severity)) { $sevRank[$_.Severity] } else { 99 } } }, Area |
-        Select-Object Id, Framework, Area, Severity, Title, Remediation
+        Select-Object Id, Framework, Area, Severity, Title, Remediation)
 
     [pscustomobject]@{
         GeneratedOn = (Get-Date).ToString('o')
-        Frameworks  = $frameworks
-        Areas       = $areas
+        Frameworks  = @($frameworks)
+        Areas       = @($areas)
         Gaps        = $gaps
-        Manual      = ($Findings | Where-Object Status -eq 'Manual')
-        Errors      = ($Findings | Where-Object Status -in 'Error', 'Unknown')
-        Findings    = $Findings
+        Manual      = @($Findings | Where-Object Status -eq 'Manual')
+        Errors      = @($Findings | Where-Object Status -in 'Error', 'Unknown')
+        Findings    = @($Findings)
     }
 }

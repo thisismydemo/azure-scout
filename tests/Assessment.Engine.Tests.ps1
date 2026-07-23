@@ -71,8 +71,16 @@ Describe 'Get-Score' {
 
 Describe 'Invoke-Rule' {
     It 'marks a rule Error (not Pass) when its query throws' {
+        # NB: `.length` inside a JSONPath filter (the historical AB#5083 example)
+        # does NOT throw under the Newtonsoft JSONPath engine that ships with
+        # PowerShell 7 — it silently evaluates to no matches, which is exactly
+        # the "collapses to a Pass on countEquals:0" failure mode AB#5083 warns
+        # about, just via a different path (Resolve-JsonPath legitimately
+        # returning zero results rather than throwing). Use a path that is
+        # actually malformed (unterminated filter) to exercise the throw ->
+        # Error contract this test targets.
         $rule = [pscustomobject]@{ id = 'E1'; title = 't'; severity = 'high'; manual = $false
-            query = '$.bad[?(@.x.length > 0)]'; assert = [pscustomobject]@{ type = 'countEquals'; value = 0 }; remediation = 'r' }
+            query = '$.bad[?(@.x.length'; assert = [pscustomobject]@{ type = 'countEquals'; value = 0 }; remediation = 'r' }
         $obj = [pscustomobject]@{ bad = @([pscustomobject]@{ x = @(1) }) }
         (Invoke-Rule -Rule $rule -Collect $obj -Area 'A' -Framework 'CAF').Status | Should -Be 'Error'
     }

@@ -16,7 +16,14 @@ function Resolve-JsonPath {
         [Parameter(Mandatory)] [AllowEmptyString()] [AllowNull()] [string] $Path
     )
     # A null/blank path is a legitimate "no query" (e.g. manual rules) -> empty set.
-    if ([string]::IsNullOrWhiteSpace($Path)) { return @() }
+    # NOTE: `return @()` collapses to $null once it crosses the function-return
+    # pipeline (a well-known PowerShell empty-array-unwrapping gotcha), which then
+    # blows up every `.Count` caller under Set-StrictMode. Write-Output -NoEnumerate
+    # preserves the (possibly empty) array identity across the return boundary.
+    if ([string]::IsNullOrWhiteSpace($Path)) {
+        Write-Output -NoEnumerate @()
+        return
+    }
 
     $json  = $InputObject | ConvertTo-Json -Depth 100
     $token = [Newtonsoft.Json.Linq.JToken]::Parse($json)
@@ -25,5 +32,5 @@ function Resolve-JsonPath {
     # empty result set — that would let a broken query score as a Pass on
     # countEquals:0 asserts (AB#5083). Rethrow so Invoke-Rule can mark it Error.
     $results = $token.SelectTokens($Path, $false)
-    return @($results)
+    Write-Output -NoEnumerate @($results)
 }
