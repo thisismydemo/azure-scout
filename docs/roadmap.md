@@ -145,6 +145,44 @@ Focus: extend CAF/WAF analytics to **every** Scout category, not just the landin
 
 See [`RELEASES.md`](https://github.com/thisismydemo/azure-scout/blob/main/RELEASES.md) for the build/release ledger.
 
+## Exploratory / Future — Served Web Portal (Epic AB#5093)
+
+> **Status: under evaluation — NOT committed.** This is a possible future direction, not
+> planned work, and it would be a **departure from the current "no portals" stance** in the
+> [Long-term Vision](#long-term-vision) below. Captured here so the direction is tracked and
+> can be decided deliberately rather than drifting into the backlog.
+
+A **served web-application** delivery model — fundamentally different from the PowerShell
+module AzureScout is today. Instead of generating static report files, it would run a local
+HTTP listener with a browser UI: background-runspace collection with live progress, an
+interactive vis.js network topology, in-browser PDF export, and browser-based config
+upload/download. It is weeks of net-new engineering (web server + JS front-end + IPC layer)
+and a genuine product fork.
+
+| Area | Web-only capability | Status |
+|---|---|---|
+| Server core | HTTP listener + background runspace, file-based progress IPC (client polls), named stages %, concurrent-collection guard, cached-inventory serving, runspace disposal, double-poll guard | :bulb: Exploratory (AB#381–385, 403, 404) |
+| Browser config I/O | WAF config hot-swap via upload, config download as JSON, hardcoded fallback when upload fails | :bulb: Exploratory (AB#373–375) |
+| In-browser PDF | html2canvas capture + jsPDF `addTable`/`addSubSection` helpers | :bulb: Exploratory (AB#379, 394, 395) |
+| Launchers | `start.cmd` / `start.sh` to launch the server | :bulb: Exploratory (AB#388) |
+
+### Reclassified to the module (Epic AB#5094)
+
+While scoping the portal, **~19 items originally sketched under it were actually PowerShell
+(PSGallery) module features, not web-server work** — moved to a dedicated module-enhancements
+epic so the two products stay cleanly separated (no feature lives in both):
+
+- **Report visuals** (extend the shipped React/HTML report, don't rebuild): vis.js VNet
+  topology + click-to-details + reset/fit controls, MG-hierarchy diagram, per-section
+  search/filter, clickable rows + side panel, 14 KPI cards, Azure Firewall drill-down,
+  Governance section (budgets/locks/tag chips), policy-enforcement badge, scope tooltips,
+  resources-only JSON evidence export (AB#376–378, 380, 386, 387, 389–393, 396). *Several
+  partially exist in the React report already.*
+- **Collector / pipeline resilience**: per-subscription try/catch/continue, MG role-requirement
+  hint, false RP-registration-error swallow, per-group firewall-parse-error logging,
+  empty-data guard, pipeline-`HadErrors` warning capture (AB#397–402).
+- **Terminal UX**: PwshSpectreConsole rich TUI progress — a CLI feature, not web (AB#405).
+
 ## Long-term Vision
 
 AzureScout aims to be the definitive open-source Azure visibility tool for:
