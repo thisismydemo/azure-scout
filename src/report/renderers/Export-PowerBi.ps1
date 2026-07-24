@@ -28,12 +28,33 @@ function Export-PowerBi {
         Select-Object @{n = 'AreaKey'; e = { New-AreaKey $_.Framework $_.Area } }, Id, Framework, Area, Severity, Status, EvidenceCount, Title, Remediation, Manual |
         Export-Csv "$pbiDir/fact_findings.csv" -NoTypeInformation
 
-    $tpl = "$PSScriptRoot/../templates/report.pbit"
-    if (Test-Path $tpl) { Copy-Item $tpl "$pbiDir/report.pbit" }
+    # Generate the Power BI Template (.pbit) bound to the star-schema CSVs above.
+    # Uses the schema-agnostic generator (New-AZSCPowerBITemplate), which builds the
+    # DataModelSchema and Power Query (M) directly from the CSV headers — so there is
+    # no static template to maintain or check in (AB#5046). Failure is non-fatal: the
+    # CSVs + README still let a user import the star schema by hand.
+    $pbitPath = Join-Path $pbiDir 'report.pbit'
+    $pbitMade = $false
+    try {
+        if (-not (Get-Command -Name New-AZSCPowerBITemplate -ErrorAction SilentlyContinue)) {
+            . "$PSScriptRoot/../../../Modules/Private/Reporting/New-AZSCPowerBITemplate.ps1"
+        }
+        New-AZSCPowerBITemplate -PowerBIDir $pbiDir -OutputFile $pbitPath | Out-Null
+        $pbitMade = Test-Path $pbitPath
+    }
+    catch {
+        Write-Warning ("Power BI .pbit generation skipped: {0}. The star-schema CSVs and README below are still available for manual import." -f $_.Exception.Message)
+    }
+
+    $pbitLine = if ($pbitMade) {
+        "Open report.pbit in Power BI Desktop and click Refresh when prompted (the model was built from a snapshot)."
+    } else {
+        "No report.pbit was generated; import the CSVs below manually in Power BI Desktop."
+    }
     @"
-Open report.pbit in Power BI Desktop.
-When prompted for the 'DataFolder' parameter, point it at:
+$pbitLine
+If the CSV folder has moved, re-point the FolderPath parameter to:
   $pbiDir
-Refresh. The model binds to the CSVs above (star schema: fact_findings + dim_gaps + fact_area_scores).
+The model is a star schema: fact_findings + dim_gaps + fact_area_scores + fact_framework, joined on AreaKey.
 "@ | Out-File "$pbiDir/README.txt"
 }
