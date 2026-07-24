@@ -393,10 +393,41 @@ resources | where type =~ "microsoft.operationalinsights/workspaces"
         catch { Write-Warning "Invoke-Collect: query '$k' failed: $_"; $r[$k] = @() }
     }
 
+    # ---- unique tag-key/value aggregation across subscriptions (AB#367) ----
+    # $r.subscriptions[*].tags is a per-subscription dynamic bag (the KQL `tags`
+    # column deserializes to a PSCustomObject keyed by tag name, or $null when a
+    # subscription has no tags). The old code just concatenated those raw bags
+    # (`ForEach-Object { $_.tags }`), which duplicated a value every time two
+    # subscriptions shared it and never actually rolled values up per key.
+    # Aggregate into one entry per distinct tag KEY with the deduplicated, sorted
+    # set of values seen for that key across every subscription instead.
+    $tagValuesByKey = [ordered]@{}
+    foreach ($sub in $r.subscriptions) {
+        $bag = $sub.tags
+        if ($null -eq $bag) { continue }
+        foreach ($prop in $bag.PSObject.Properties) {
+            $key = $prop.Name
+            $value = $prop.Value
+            if ($null -eq $value) { continue }
+            if (-not $tagValuesByKey.Contains($key)) {
+                $tagValuesByKey[$key] = [System.Collections.Generic.HashSet[string]]::new()
+            }
+            [void] $tagValuesByKey[$key].Add([string] $value)
+        }
+    }
+    $tags = @(
+        foreach ($key in ($tagValuesByKey.Keys | Sort-Object)) {
+            [pscustomobject]@{
+                key    = $key
+                values = @($tagValuesByKey[$key] | Sort-Object)
+            }
+        }
+    )
+
     # ---- shape into the canonical contract ----
     $collect = [pscustomobject]@{
         subscriptions = $r.subscriptions
-        tags          = @($r.subscriptions | ForEach-Object { $_.tags } | Where-Object { $_ })
+        tags          = $tags
         networking    = [pscustomobject]@{
             virtualNetworks  = $r.virtualNetworks
             subnets          = $r.subnets

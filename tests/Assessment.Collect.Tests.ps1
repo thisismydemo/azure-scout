@@ -78,6 +78,47 @@ Describe 'Invoke-Collect -Categories query filtering' {
     }
 }
 
+Describe 'Invoke-Collect tag aggregation (AB#367)' {
+    BeforeEach {
+        Mock Search-AzGraph {
+            if ($Query -match 'microsoft\.resources/subscriptions') {
+                return @(
+                    [pscustomobject]@{ id = 'sub-0001'; name = 'sub-prod-a'; state = 'Enabled'; tags = [pscustomobject]@{ Environment = 'Production'; CostCenter = 'CC-100' } }
+                    [pscustomobject]@{ id = 'sub-0002'; name = 'sub-prod-b'; state = 'Enabled'; tags = [pscustomobject]@{ Environment = 'Production' } }
+                    [pscustomobject]@{ id = 'sub-0003'; name = 'sub-dev'; state = 'Enabled'; tags = [pscustomobject]@{ Environment = 'Dev'; CostCenter = 'CC-200' } }
+                    [pscustomobject]@{ id = 'sub-0004'; name = 'sub-sbx'; state = 'Enabled'; tags = [pscustomobject]@{} }
+                    [pscustomobject]@{ id = 'sub-0005'; name = 'sub-notag'; state = 'Enabled'; tags = $null }
+                )
+            }
+            return @()
+        }
+    }
+
+    It 'produces one entry per distinct tag key with deduplicated, sorted values across all subscriptions' {
+        $result = Invoke-Collect -Categories @('*')
+
+        # Exactly one entry per distinct KEY (Environment, CostCenter) -- not one
+        # per subscription, and not a raw concatenation of per-subscription bags.
+        $result.tags.Count | Should -Be 2
+
+        $envEntry = $result.tags | Where-Object { $_.key -eq 'Environment' }
+        $envEntry | Should -Not -BeNullOrEmpty
+        # sub-0001 and sub-0002 both tag Environment=Production -- the shared value
+        # must collapse to one unique entry, not be double-counted.
+        @($envEntry.values).Count | Should -Be 2
+        @($envEntry.values) | Should -Be @('Dev', 'Production')
+
+        $ccEntry = $result.tags | Where-Object { $_.key -eq 'CostCenter' }
+        $ccEntry | Should -Not -BeNullOrEmpty
+        @($ccEntry.values).Count | Should -Be 2
+        @($ccEntry.values) | Should -Be @('CC-100', 'CC-200')
+    }
+
+    It 'does not error on subscriptions with empty ({}) or null tag bags' {
+        { Invoke-Collect -Categories @('*') } | Should -Not -Throw
+    }
+}
+
 Describe 'Invoke-Collect -ManagementGroupId scoping' {
     BeforeEach {
         Mock Search-AzGraph { return @() }
