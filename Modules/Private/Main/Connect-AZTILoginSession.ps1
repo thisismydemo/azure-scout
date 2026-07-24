@@ -45,6 +45,12 @@
     Authors: Claudio Merola, thisismydemo
 #>
 function Connect-AZSCLoginSession {
+    # The -Secret / -CertificatePassword parameters arrive as plain strings from
+    # CI env vars / headless callers, so ConvertTo-SecureString -AsPlainText is the
+    # only way to build the SecureString that Connect-AzAccount requires. There is
+    # no SecureString input path for these non-interactive service-principal flows.
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingConvertToSecureStringWithPlainText', '',
+        Justification = 'Headless SPN/cert auth: secret arrives as a plain string arg; no SecureString input path exists.')]
     [CmdletBinding()]
     param(
         [ValidateSet('AzureCloud', 'AzureUSGovernment', 'AzureChinaCloud', 'AzureGermanCloud')]

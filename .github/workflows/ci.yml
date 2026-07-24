@@ -1,0 +1,100 @@
+name: CI
+
+# Offline unit-test + lint CI. Runs the full Pester suite (tests/) and
+# PSScriptAnalyzer against the module source on every push/PR to main. No
+# Azure login, no secrets — live tenant runs are handled by
+# azure-inventory.yml (workflow_dispatch, service-principal auth).
+#
+# The module is Windows-targeted (Excel report customization uses a COM
+# object via Modules/Private/Reporting/StyleFunctions/Build-AZTIExcelComObject.ps1),
+# so this job runs on windows-latest using PowerShell 7 (pwsh).
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-lint:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Pester and PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Write-Host 'Installing Pester 5.x...'
+          Install-Module Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser -SkipPublisherCheck
+          Write-Host 'Installing PSScriptAnalyzer...'
+          Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+          Write-Host 'Installing ImportExcel (Excel report tests exercise this dependency)...'
+          Install-Module ImportExcel -Force -Scope CurrentUser
+
+      - name: Run Pester test suite
+        shell: pwsh
+        run: |
+          Import-Module Pester -RequiredVersion 5.7.1 -Force
+
+          $resultsDir = Join-Path $env:GITHUB_WORKSPACE 'test-results'
+          New-Item -ItemType Directory -Force -Path $resultsDir | Out-Null
+          $resultsPath = Join-Path $resultsDir 'pester-results.xml'
+
+          $config = New-PesterConfiguration
+          $config.Run.Path = './tests/'
+          $config.Run.PassThru = $true
+          $config.Output.Verbosity = 'Detailed'
+          $config.TestResult.Enabled = $true
+          $config.TestResult.OutputFormat = 'NUnitXml'
+          $config.TestResult.OutputPath = $resultsPath
+
+          $result = Invoke-Pester -Configuration $config
+
+          Write-Host "Pester: Total=$($result.TotalCount) Passed=$($result.PassedCount) Failed=$($result.FailedCount) Skipped=$($result.SkippedCount)"
+
+          if ($result.FailedCount -gt 0) {
+            Write-Host "::error::$($result.FailedCount) Pester test(s) failed."
+            exit 1
+          }
+
+      - name: Upload Pester test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pester-test-results
+          path: test-results/pester-results.xml
+          if-no-files-found: warn
+
+      - name: Run PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Import-Module PSScriptAnalyzer -Force
+
+          $paths = @('src', 'Modules') | Where-Object { Test-Path $_ }
+          $findings = foreach ($p in $paths) {
+            Invoke-ScriptAnalyzer -Path $p -Recurse -Severity Error, Warning
+          }
+
+          $errors   = @($findings | Where-Object { $_.Severity -eq 'Error' })
+          $warnings = @($findings | Where-Object { $_.Severity -eq 'Warning' })
+
+          foreach ($w in $warnings) {
+            Write-Host "::warning file=$($w.ScriptPath),line=$($w.Line)::[$($w.RuleName)] $($w.Message)"
+          }
+          foreach ($e in $errors) {
+            Write-Host "::error file=$($e.ScriptPath),line=$($e.Line)::[$($e.RuleName)] $($e.Message)"
+          }
+
+          Write-Host "PSScriptAnalyzer: $($errors.Count) error(s), $($warnings.Count) warning(s) (warnings are non-blocking)."
+
+          if ($errors.Count -gt 0) {
+            Write-Host "::error::PSScriptAnalyzer found $($errors.Count) Error-severity finding(s)."
+            exit 1
+          }
