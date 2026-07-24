@@ -124,10 +124,10 @@ Consolidated from the master plan, release ledger, assessment registry, and the
 | #24 | Automation mode cache writes to null path (Start-AZSCAutProcessJob missing $DefaultPath) | ✅ Fixed (AB#335) — `$DefaultPath` added to param + passed from orchestrator |
 | #25 | Progress bar always shows 0% in Build-AZSCCacheFiles ($ReportCounter undeclared) | ✅ Fixed (AB#336) — corrected to `$Counter` |
 | #26 | $JobNames never assigned in automation branch of Start-AZSCProcessOrchestration | ✅ Fixed (AB#337) — `$JobNames` now assigned after the automation Wait-Job |
-| #27 | $StorageContext null reference when using -StorageAccount without -Automation | Open |
+| #27 | $StorageContext null reference when using -StorageAccount without -Automation | ✅ Fixed (AB#338) — `$StorageContext` is now created and used entirely within the same `if ($StorageAccount)` guard (Invoke-AzureScout.ps1:440,660-685); no null path |
 | #28 | $VMQuotas undefined when -SkipVMDetails is passed | ✅ Fixed (AB#339) — initialised to `$null`; premature Remove-Variable dropped |
 | #29 | GitHub Actions azure-inventory.yml workflow is non-functional — pure simulation | ✅ Fixed (AB#340) — real SPN login + `Invoke-AzureScout` run + artifact upload |
-| #38 | **[HIGH]** Entra ID modules failing even with Global Admin permissions | Open (AB#347 — likely Graph-permission, not code) |
+| #38 | **[HIGH]** Entra ID modules failing even with Global Admin permissions | ✅ Resolved (AB#347) — root cause is Graph delegated-scope/consent, NOT code: Global Admin is a directory role, not a Graph API scope, and the token degrades gracefully per-endpoint (Start-AZTIEntraExtraction.ps1:237). Required scopes documented in docs/entra-modules.md |
 
 ## G. Maintenance / meta (ADO-tracked)
 

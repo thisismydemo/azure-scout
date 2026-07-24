@@ -55,6 +55,40 @@ The `Start-AZSCEntraExtraction` function calls `Invoke-AZSCGraphRequest` for eac
 | ServicePrincipals | `/servicePrincipals` | Enterprise applications and service principals |
 | Users | `/users` | All user accounts (members and guests) |
 
+## Required Microsoft Graph Permissions
+
+> **"I'm a Global Administrator but the Entra modules still fail with 403 — why?"**
+>
+> **Global Administrator is an Entra directory *role*, not a Microsoft Graph API *scope*.**
+> Entra extraction uses the Graph token that **Azure CLI** issues
+> (`az account get-access-token --resource https://graph.microsoft.com`). That token
+> only carries the **delegated Graph scopes the Azure CLI application has been consented**
+> for you — your directory role does **not** widen those scopes. So an endpoint whose
+> scope has not been consented returns `403 Forbidden` regardless of your role.
+
+To read every module above, the signed-in identity needs these **delegated** Microsoft
+Graph permissions consented for the Azure CLI app (or your own app if you authenticate
+with one):
+
+| Permission | Unlocks |
+|---|---|
+| `Directory.Read.All` | Users, Groups, Service Principals, App Registrations, Directory Roles, Admin Units, Domains, Licensing |
+| `Policy.Read.All` | Conditional Access, Named Locations, Security Defaults, Authorization Policy, Cross-Tenant Access |
+| `RoleManagement.Read.Directory` | PIM / directory role assignments |
+| `IdentityRiskyUser.Read.All` | Risky Users (Identity Protection — also requires Entra ID P2) |
+
+Grant/consent once (tenant admin), e.g.:
+
+```powershell
+# Consent the Azure CLI app to the delegated scopes, then re-login:
+az login --scope https://graph.microsoft.com/.default
+# (Or have a Global Admin grant admin-consent for the scopes above in the Entra portal.)
+```
+
+Endpoints requiring a licensing tier you don't have (e.g. Risky Users without Entra ID P2)
+will still 403 — that is expected and is handled by [Graceful Degradation](#graceful-degradation)
+below rather than aborting the run.
+
 ## Data Normalization
 
 All 17 Entra modules produce output in the same normalized shape:
