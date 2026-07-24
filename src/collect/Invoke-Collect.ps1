@@ -30,7 +30,7 @@ $ErrorActionPreference = 'Stop'
         costCleanup { orphanedDisks[], orphanedPips[] }
         opsPosture  { diagnosticCoverage[{type,coveragePct}] }
         domains     { storage{storageAccounts[{networkDefaultDeny}]},
-                      databases{sqlServers[],sqlDatabases[]},
+                      databases{sqlServers[],sqlDatabases[],sqlDefenderPricing[{pricingTier}]},
                       web{webApps[{vnetIntegrated,customDomainBound}]},
                       containers{aksClusters[{networkPolicyEnabled,aadIntegrated,allPoolsZoned}],
                                  containerRegistries[]},
@@ -40,8 +40,8 @@ $ErrorActionPreference = 'Stop'
                              azureLocalClusters[{connectivityStatus}]},
                       integration{eventHubNamespaces[{autoInflateEnabled}], apiManagement[],
                                   serviceBusNamespaces[{publicAccess}]},
-                      iot{iotHubs[]},
-                      analytics{synapseWorkspaces[{managedVnetEnabled}]} }   (per-category scalars, Epic AB#5056)
+                      iot{iotHubs[{disableLocalAuth}]},
+                      analytics{synapseWorkspaces[{managedVnetEnabled}], purviewAccounts[]} }   (per-category scalars, Epic AB#5056)
         advisor[]                                                                   (filled by ingest)
 
     Read-only throughout.
@@ -59,6 +59,18 @@ $ErrorActionPreference = 'Stop'
     rules/auditing/TDE, storage blob-service/management-policy settings, Synapse
     firewall rules, DPS enrollment groups) were deliberately left out; those rules
     stay manual.
+
+    AB#5068/5071/5075 follow-up (Databases/Analytics/IoT rule-depth pass): added
+    `sqlDefenderPricing` (Microsoft.Security/pricings, "SqlServers" plan — queried
+    from the `SecurityResources` ARG table, not the default `Resources` table),
+    `purviewAccounts` (Microsoft.Purview/accounts), and `iotHubs.disableLocalAuth`
+    (documented IotHubProperties field). Each was confirmed present in the Azure
+    Resource Graph supported-tables-and-resource-types reference before being added.
+    Still deliberately NOT ARG-collectable (confirmed absent from that same
+    reference) and left manual: SQL TDE/auditing/firewall-rules child resources,
+    Data Factory/Synapse pipeline linked-service definitions, Synapse workspace
+    firewall rules, DPS enrollment groups, per-device IoT credential type, and any
+    metric- or Monitor-backed signal (IoT Hub throughput right-sizing).
 
     Parameter wiring (this pass):
       - `-ManagementGroupId`, when supplied, is passed as `-ManagementGroup` to
@@ -204,6 +216,19 @@ resources | where type =~ "microsoft.sql/servers"
 | extend publicNetworkAccess = tostring(properties.publicNetworkAccess)
 | project name, resourceGroup, publicNetworkAccess
 '@
+        # AB#5068: Microsoft.Security/pricings ("SqlServers" plan) is the subscription-scoped
+        # Defender for SQL / Advanced Threat Protection toggle and IS indexed by Resource
+        # Graph — under the SecurityResources table, not the default Resources table
+        # (confirmed via the ARG supported-tables-and-resource-types reference). This is a
+        # coarse, subscription-wide signal (same tradeoff as security.defenderPlans /
+        # CAF-SEC-02), not a per-server property — Microsoft.Sql/servers/auditingSettings and
+        # .../extendedAuditingSettings (the "auditing" half of the old combined rule) are NOT
+        # in that reference list, so they stay manual (CAF-DB-07).
+        sqlDefenderPricing = @'
+SecurityResources
+| where type =~ "microsoft.security/pricings" and name =~ "sqlservers"
+| project subscriptionId, name, pricingTier = tostring(properties.pricingTier)
+'@
         webApps = @'
 resources | where type =~ "microsoft.web/sites"
 | extend httpsOnly = tobool(properties.httpsOnly)
@@ -284,7 +309,15 @@ resources | where type =~ "microsoft.servicebus/namespaces"
         iotHubs = @'
 resources | where type =~ "microsoft.devices/iothubs"
 | extend publicAccess = tostring(properties.publicNetworkAccess)
-| project name, resourceGroup, sku = tostring(sku.name), publicAccess
+// disableLocalAuth (documented IotHubProperties field) is true when SAS
+// tokens issued from the hub's own shared access policies are rejected,
+// forcing Microsoft Entra ID + RBAC for service-API access — CAF-IOT-06
+// (AB#5075). This is a hub-level *service-API* auth control, distinct from
+// per-device X.509/TPM-vs-symmetric-key credential choice (CAF-IOT-02, still
+// manual — that lives in the device registry, a data-plane store Resource
+// Graph does not index).
+| extend disableLocalAuth = tobool(properties.disableLocalAuth)
+| project name, resourceGroup, sku = tostring(sku.name), publicAccess, disableLocalAuth
 '@
         synapseWorkspaces = @'
 resources | where type =~ "microsoft.synapse/workspaces"
@@ -294,6 +327,19 @@ resources | where type =~ "microsoft.synapse/workspaces"
 // sub-resource — CAF-ANL-03 (AB#5057).
 | extend managedVnetEnabled = isnotempty(tostring(properties.managedVirtualNetwork))
 | project name, resourceGroup, publicAccess, managedVnetEnabled
+'@
+        # AB#5071: Microsoft.Purview/accounts IS indexed by Resource Graph (confirmed via the
+        # ARG supported-tables-and-resource-types reference), unlike Data Factory/Synapse
+        # pipeline linked services (CAF-ANL-04, still manual — linked services are a
+        # data-plane sub-object of the factory/pipeline payload, not a distinct ARM child
+        # resource) or Synapse workspace firewall rules (CAF-ANL-05, still manual — not in
+        # that reference list either). Existence-only signal, same coarse tradeoff as the
+        # VM zoneEligible / webApps customDomainBound heuristics above: a Purview account
+        # existing is evidence a governance foundation is in place, not proof the whole
+        # analytics estate is catalogued/classified — CAF-ANL-02.
+        purviewAccounts = @'
+resources | where type =~ "microsoft.purview/accounts"
+| project name, resourceGroup, subscriptionId
 '@
         arcExtensions = @'
 resources | where type =~ "microsoft.hybridcompute/machines/extensions"
@@ -343,6 +389,7 @@ resources | where type =~ "microsoft.operationalinsights/workspaces"
         sqlDatabases        = @('Databases')
         # waf.security (WAF-SE-03) filters domains.databases.sqlServers too.
         sqlServers          = @('Databases', 'Security')
+        sqlDefenderPricing  = @('Databases')
         webApps             = @('Web')
         aksClusters         = @('Containers')
         containerRegistries = @('Containers')
@@ -356,6 +403,7 @@ resources | where type =~ "microsoft.operationalinsights/workspaces"
         serviceBusNamespaces = @('Integration')
         iotHubs             = @('IoT')
         synapseWorkspaces   = @('Analytics')
+        purviewAccounts     = @('Analytics')
         logAnalyticsWorkspaces = @('Management', 'Monitor')
     }
 
@@ -453,7 +501,10 @@ resources | where type =~ "microsoft.operationalinsights/workspaces"
         # assessments in Epic AB#5056.
         domains       = [pscustomobject]@{
             storage      = [pscustomobject]@{ storageAccounts = $r.storageAccounts }
-            databases    = [pscustomobject]@{ sqlDatabases = $r.sqlDatabases; sqlServers = $r.sqlServers }
+            databases    = [pscustomobject]@{
+                sqlDatabases = $r.sqlDatabases; sqlServers = $r.sqlServers
+                sqlDefenderPricing = $r.sqlDefenderPricing
+            }
             web          = [pscustomobject]@{ webApps = $r.webApps }
             containers   = [pscustomobject]@{ aksClusters = $r.aksClusters; containerRegistries = $r.containerRegistries }
             security     = [pscustomobject]@{ keyVaults = $r.keyVaults }
@@ -467,7 +518,9 @@ resources | where type =~ "microsoft.operationalinsights/workspaces"
                 serviceBusNamespaces = $r.serviceBusNamespaces
             }
             iot          = [pscustomobject]@{ iotHubs = $r.iotHubs }
-            analytics    = [pscustomobject]@{ synapseWorkspaces = $r.synapseWorkspaces }
+            analytics    = [pscustomobject]@{
+                synapseWorkspaces = $r.synapseWorkspaces; purviewAccounts = $r.purviewAccounts
+            }
         }
         advisor       = @()
         _meta         = [pscustomobject]@{

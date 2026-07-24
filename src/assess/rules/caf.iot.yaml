@@ -12,6 +12,12 @@ rules:
   - id: CAF-IOT-02
     title: "Device authentication posture reviewed"
     severity: medium
+    # Per-device credential type (X.509/TPM cert vs. shared symmetric key) lives
+    # in the IoT Hub device registry / DPS enrollment groups — a data-plane
+    # store, not an ARM resource, so it's not in the Resource Graph reference
+    # and Resource Graph cannot see it (verified AB#5075). Stays manual.
+    # CAF-IOT-06 (below) is the ARG-collectable, hub-level *service-API* auth
+    # companion check (disableLocalAuth) — a related but distinct control.
     query: null
     assert: { type: manual }
     remediation: "Confirm per-device authentication (X.509/TPM) rather than shared keys."
@@ -46,4 +52,19 @@ rules:
     query: "$.networking.privateEndpoints[?(@.targetProvider == 'microsoft.devices' && @.targetType == 'iothubs')]"
     assert: { type: percentageAtLeast, value: 80, denominatorQuery: "$.domains.iot.iotHubs[*]" }
     remediation: "Confirm IoT Hubs handling sensitive telemetry have a dedicated private endpoint (publicNetworkAccess=Disabled alone is not sufficient evidence)."
+    manual: false
+  - id: CAF-IOT-06
+    title: "IoT Hub service-API access disables shared-key (local) authentication"
+    severity: medium
+    # disableLocalAuth is a documented IotHubProperties field (Invoke-Collect.ps1,
+    # AB#5075) — true rejects SAS tokens issued from the hub's own shared access
+    # policies, forcing Microsoft Entra ID + RBAC for service-API access. This
+    # checks HUB *service-API* auth, not per-device credential type (CAF-IOT-02,
+    # still manual — a different, data-plane concern). Hubs linked to a Device
+    # Provisioning Service currently require shared access policies to stay
+    # enabled (DPS only supports linking via shared access policies) — confirm
+    # DPS linkage before disabling on a hub that fails this check.
+    query: "$.domains.iot.iotHubs[?(@.disableLocalAuth != true)]"
+    assert: { type: countEquals, value: 0 }
+    remediation: "Disable shared access policies (disableLocalAuth) on production IoT Hubs not linked to a Device Provisioning Service, and require Microsoft Entra ID + RBAC for service-API access."
     manual: false

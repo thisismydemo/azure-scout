@@ -19,20 +19,32 @@ rules:
   - id: CAF-DB-03
     title: "Transparent Data Encryption confirmed"
     severity: high
+    # Microsoft.Sql/servers/databases/transparentDataEncryption is an RP child
+    # resource, not in the Resource Graph supported-tables-and-resource-types
+    # reference (verified AB#5068) — Resource Graph cannot see it. Stays manual.
     query: null
     assert: { type: manual }
     remediation: "Confirm TDE is enabled on all SQL databases (default on, verify no opt-outs)."
     manual: true
   - id: CAF-DB-04
-    title: "SQL auditing and Advanced Threat Protection enabled"
+    title: "Microsoft Defender for SQL (Advanced Threat Protection) enabled"
     severity: high
-    query: null
-    assert: { type: manual }
-    remediation: "Enable SQL Server/Database auditing to a storage account or Log Analytics workspace, and enable Microsoft Defender for SQL. collect.json does not yet capture auditing/threat-detection settings — verify via `az sql server audit-policy show` and `az sql server advanced-threat-protection-setting show`."
-    manual: true
+    # Microsoft.Security/pricings ("SqlServers" plan) IS Resource Graph-indexed
+    # (SecurityResources table) — see sqlDefenderPricing (Invoke-Collect.ps1,
+    # AB#5068). Subscription-wide, coarse signal only (same tradeoff as
+    # CAF-SEC-02/security.defenderPlans): confirms the Defender-for-SQL toggle,
+    # not per-server auditing — that half is split out to CAF-DB-07 (still
+    # manual) so this rule doesn't overstate what it verifies.
+    query: "$.domains.databases.sqlDefenderPricing[?(@.pricingTier == 'Standard')]"
+    assert: { type: exists }
+    remediation: "Enable Microsoft Defender for SQL (the Defender for Cloud 'SqlServers' plan) at Standard tier for every subscription hosting SQL servers/databases."
+    manual: false
   - id: CAF-DB-05
     title: "SQL database backup retention meets minimum policy"
     severity: medium
+    # Microsoft.Sql/servers/databases/backupShortTermRetentionPolicies (and the
+    # long-term retention equivalent) are RP child resources, not in the
+    # Resource Graph reference (verified AB#5068). Stays manual.
     query: null
     assert: { type: manual }
     remediation: "Confirm point-in-time restore retention (and long-term retention for compliance workloads) meets the org's minimum retention policy. collect.json does not yet capture backup retention settings — verify via `az sql db show-backup-short-term-retention-policy` / long-term retention policy."
@@ -40,7 +52,21 @@ rules:
   - id: CAF-DB-06
     title: "SQL server firewall rules exclude an 'allow all' entry"
     severity: high
+    # Microsoft.Sql/servers/firewallRules is an RP child resource, not in the
+    # Resource Graph reference (verified AB#5068). Stays manual.
     query: null
     assert: { type: manual }
     remediation: "Remove any firewall rule spanning 0.0.0.0-255.255.255.255 (or the 0.0.0.0-0.0.0.0 'Allow Azure services' rule left too broad) and scope rules to specific ranges or private endpoints. collect.json does not yet capture SQL server firewall rules — verify via `az sql server firewall-rule list`."
+    manual: true
+  - id: CAF-DB-07
+    title: "SQL Server/Database auditing enabled to a durable destination"
+    severity: high
+    # Split from the old combined CAF-DB-04 (AB#5068): Microsoft.Sql/servers/
+    # auditingSettings and .../extendedAuditingSettings are RP child resources,
+    # not in the Resource Graph reference — Resource Graph cannot see them, so
+    # this half of the original rule stays manual even though the
+    # Defender-for-SQL half (now CAF-DB-04) is ARG-collectable.
+    query: null
+    assert: { type: manual }
+    remediation: "Enable SQL Server/Database auditing to a storage account or Log Analytics workspace. collect.json does not yet capture auditing settings — verify via `az sql server audit-policy show`."
     manual: true

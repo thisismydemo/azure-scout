@@ -12,10 +12,18 @@ rules:
   - id: CAF-ANL-02
     title: "Data governance (Purview) coverage confirmed"
     severity: medium
-    query: null
-    assert: { type: manual }
-    remediation: "Confirm data estate is catalogued/classified in Microsoft Purview."
-    manual: true
+    # Microsoft.Purview/accounts IS Resource Graph-indexed (confirmed against
+    # the ARG supported-tables-and-resource-types reference, AB#5071) — see
+    # purviewAccounts (Invoke-Collect.ps1). Existence-only signal, same coarse
+    # tradeoff as the VM zoneEligible / webApps customDomainBound heuristics
+    # elsewhere in this collector: a Purview account existing is evidence a
+    # governance foundation is in place, it does NOT prove the whole analytics
+    # estate is actually catalogued/classified — treat a Pass here as
+    # "foundation present", not "fully governed".
+    query: "$.domains.analytics.purviewAccounts[*]"
+    assert: { type: exists }
+    remediation: "Provision a Microsoft Purview account and register the analytics estate (Synapse/Data Factory sources) for scanning and classification."
+    manual: false
   - id: CAF-ANL-03
     title: "Synapse workspaces use a managed virtual network"
     severity: medium
@@ -28,7 +36,12 @@ rules:
   - id: CAF-ANL-04
     title: "Data Factory / Synapse pipelines use private endpoints for linked services"
     severity: high
-    # No ADF/Synapse-pipeline collector exists in collect.json today.
+    # Microsoft.DataFactory/factories IS Resource Graph-indexed (AB#5071
+    # investigation), but pipeline linked-service definitions — where the
+    # private-endpoint connectivity this rule actually needs lives — are a
+    # data-plane sub-object embedded in the factory/Synapse pipeline JSON
+    # payload, not a distinct ARM child resource. Not in the Resource Graph
+    # reference; Resource Graph cannot see them. Stays manual.
     query: null
     assert: { type: manual }
     remediation: "Confirm pipeline linked services (storage, SQL, Key Vault) connect via managed private endpoints rather than public endpoints; add a Data Factory/Synapse linked-service collector before automating."
@@ -36,7 +49,10 @@ rules:
   - id: CAF-ANL-05
     title: "Synapse workspace firewall rules are scoped, not AllowAll"
     severity: medium
-    # collect.json's synapseWorkspaces producer does not project firewallRules.
+    # Microsoft.Synapse/workspaces/firewallRules is not in the Resource Graph
+    # supported-tables-and-resource-types reference (verified AB#5071, alongside
+    # bigDataPools/kustoPools/sqlPools which ARE indexed) — Resource Graph
+    # cannot see it. Stays manual.
     query: null
     assert: { type: manual }
     remediation: "Confirm workspace IP firewall rules do not include a 0.0.0.0-255.255.255.255 AllowAll entry and are scoped to known ranges; extend the synapseWorkspaces collector with the firewallRules child resource before automating."
