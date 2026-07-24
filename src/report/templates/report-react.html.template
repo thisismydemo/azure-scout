@@ -62,6 +62,56 @@ tr:nth-child(even){background:var(--mist)}
 .delta-flat{color:var(--gray);font-weight:700}
 .empty{color:var(--gray);font-style:italic;padding:12px 0}
 footer{padding:16px 28px;color:var(--gray);font-size:12px;border-top:1px solid #e2e2e2}
+.clickable-row{cursor:pointer}
+.clickable-row:hover{background:#e7f0fb !important}
+.truncate{cursor:help;border-bottom:1px dotted var(--gray)}
+.chip{display:inline-block;background:var(--mist);border:1px solid #d6e2f0;border-radius:12px;padding:3px 10px;margin:2px 6px 2px 0;font-size:12px;color:var(--navy)}
+.chip b{color:var(--ink)}
+.tag-row{margin-bottom:10px}
+.tag-key{font-weight:700;font-size:12px;color:var(--gray);text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px}
+.badge-enforced{background:var(--green)}
+.badge-notenforced{background:var(--gold)}
+.subsection-title{font-size:13px;font-weight:700;color:var(--navy);margin:20px 0 8px}
+/* ---- side panel (AB#377 / AB#387) ---- */
+.panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.15);opacity:0;pointer-events:none;transition:opacity .15s;z-index:40}
+.panel-overlay.open{opacity:1;pointer-events:auto}
+.panel{position:fixed;top:0;right:0;bottom:0;width:380px;max-width:92vw;background:var(--paper);box-shadow:-4px 0 18px rgba(0,0,0,.2);transform:translateX(105%);transition:transform .18s ease-out;z-index:41;display:flex;flex-direction:column}
+.panel.open{transform:translateX(0)}
+.panel-head{background:var(--navy);color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.panel-head h3{margin:0;font-size:15px;font-weight:700;word-break:break-word}
+.panel-close{background:transparent;border:none;color:#fff;font-size:20px;cursor:pointer;line-height:1;padding:0 4px}
+.panel-body{padding:14px 18px;overflow-y:auto;flex:1}
+.kv-row{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-bottom:1px solid #eee;font-size:13px}
+.kv-label{font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.03em}
+.kv-value{word-break:break-word}
+/* ---- topology (AB#376/377/378/390) ---- */
+.topo-toolbar{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.topo-toolbar button{padding:7px 14px;border:1px solid #ccc;border-radius:6px;background:#fff;cursor:pointer;font-size:12px;font-weight:600;color:var(--navy)}
+.topo-toolbar button:hover{background:var(--mist)}
+.topo-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--gray);margin-left:auto}
+.topo-legend span{display:inline-flex;align-items:center;gap:5px}
+.topo-legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.topo-viewport{border:1px solid #e2e2e2;border-radius:8px;background:#fbfdff;overflow:hidden;position:relative;height:460px;cursor:grab}
+.topo-viewport.dragging{cursor:grabbing}
+.topo-node rect{stroke-width:1.5;cursor:pointer}
+.topo-node text{font:12px -apple-system,Segoe UI,Roboto,sans-serif;fill:#fff;pointer-events:none}
+.topo-node.vnet rect{fill:var(--steel);stroke:var(--navy)}
+.topo-node.subnet rect{fill:#6a9cd0;stroke:var(--steel)}
+.topo-node.peer rect{fill:var(--paper);stroke:var(--gray);stroke-dasharray:4 3}
+.topo-node.peer text{fill:var(--gray)}
+.topo-node.vmgroup rect{fill:var(--paper);stroke:var(--green);stroke-dasharray:4 3}
+.topo-node.vmgroup text{fill:var(--green)}
+.topo-edge{stroke:#b7c6d9;stroke-width:1.5;fill:none}
+.topo-edge.dashed{stroke-dasharray:4 3}
+.topo-empty{padding:40px;text-align:center}
+/* ---- management-group hierarchy tree (AB#380) ---- */
+.mg-tree,.mg-tree ul{list-style:none;margin:0;padding-left:22px}
+.mg-tree{padding-left:0}
+.mg-tree li{position:relative;padding:6px 0 0 20px}
+.mg-tree li::before{content:'';position:absolute;left:0;top:0;bottom:8px;border-left:2px solid #d7e2ef}
+.mg-tree li::after{content:'';position:absolute;left:0;top:18px;width:14px;border-top:2px solid #d7e2ef}
+.mg-tree>li::before,.mg-tree>li::after{display:none}
+.mg-node{display:inline-block;padding:5px 12px;border:1px solid var(--steel);border-radius:6px;background:var(--mist);font-size:13px;font-weight:600;color:var(--navy)}
 </style></head>
 <body>
 <header>
@@ -73,6 +123,11 @@ footer{padding:16px 28px;color:var(--gray);font-size:12px;border-top:1px solid #
 </header>
 <nav class="tabs" id="tabs"></nav>
 <main id="view"></main>
+<div id="panel-overlay" class="panel-overlay"></div>
+<aside id="side-panel" class="panel" role="complementary" aria-label="Resource details">
+  <div class="panel-head"><h3 id="panel-title"></h3><button id="panel-close" class="panel-close" aria-label="Close details">&times;</button></div>
+  <div id="panel-body" class="panel-body"></div>
+</aside>
 <footer>Generated offline by Azure Scout (Export-React) — self-contained, no external network dependencies.</footer>
 <script>window.__SCOUT_DATA__ = /*__SCOUT_DATA__*/;</script>
 <script>
@@ -88,8 +143,78 @@ var Gaps = F.Gaps || [];
 var Manual = F.Manual || [];
 var AllFindings = F.Findings || [];
 
+// ---- environment data (AB#376-378, 380, 386-393) ----
+// Every array below may legitimately be null/undefined (an older collect.json,
+// a CollectOnly run before Import-Governance ran, or a -Categories scope that
+// skipped that query) — always fall back to [] and let each render function
+// hide its own section when the underlying array is genuinely absent.
+var NET = DATA.Networking || {};
+var COMPUTE = DATA.Compute || {};
+var GOV = DATA.Governance || {};
+var VNets = NET.VirtualNetworks || [];
+var Subnets = NET.Subnets || [];
+var Firewalls = NET.AzureFirewalls || [];
+var VpnGateways = NET.VpnGateways || [];
+var PrivateEndpoints = NET.PrivateEndpoints || [];
+var VMs = COMPUTE.VirtualMachines || [];
+var ManagementGroups = GOV.ManagementGroups || [];
+var PolicyAssignments = GOV.PolicyAssignments || [];
+var Budgets = GOV.Budgets || [];
+var ResourceLocks = GOV.ResourceLocks || [];
+var Tags = DATA.Tags || [];
+
+// A tab/section is only ever shown when the renderer actually embedded the
+// underlying array (not just "happens to be empty") — distinguishes "this
+// category was not collected" (hide) from "collected, zero found" (show,
+// empty state). NET/GOV/DATA.Tags are {}/[] fallbacks above, so test the
+// *source* payload fields directly here.
+var hasNetworkingData = !!(NET.VirtualNetworks || NET.Subnets || NET.AzureFirewalls || NET.VpnGateways || NET.PrivateEndpoints);
+var hasGovernanceData = !!(GOV.ManagementGroups || GOV.PolicyAssignments || GOV.Budgets || GOV.ResourceLocks || DATA.Tags);
+
 var esc = function(s){ return (s===null||s===undefined?'':String(s)).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); };
 var fmtDate = function(d){ if(!d) return 'unknown'; try{ return new Date(d).toLocaleString(); }catch(e){ return String(d); } };
+var esc2 = function(v){ return (v===null||v===undefined||v==='') ? '—' : v; };
+var truncateMiddle = function(s, max){
+  s = (s===null||s===undefined) ? '' : String(s);
+  if(!max) max = 40;
+  if(s.length <= max) return esc(s) || '—';
+  var head = Math.ceil((max-1)*0.6), tail = (max-1)-head;
+  return '<span class="truncate" title="'+esc(s)+'">'+esc(s.slice(0,head))+'…'+esc(s.slice(s.length-tail))+'</span>';
+};
+var enforcementBadge = function(mode){
+  var m = (mode===null||mode===undefined) ? '' : String(mode);
+  if(m === 'DoNotEnforce') return '<span class="badge badge-notenforced">Not enforced</span>';
+  if(m === 'Default' || m === '') return '<span class="badge badge-enforced">Enforced</span>';
+  return '<span class="badge badge-unchanged">'+esc(m)+'</span>';
+};
+// Governance sub-objects come from two different collectors (native ARG
+// project vs. an ARM REST `.value` passthrough), so a field may live at the
+// top level (test/sample fixtures, some REST payloads) or nested under
+// `.properties` (real ARM resource shape) — read whichever is present.
+var propOrTop = function(obj, name){
+  if(!obj) return null;
+  if(obj.properties && obj.properties[name] !== undefined && obj.properties[name] !== null) return obj.properties[name];
+  if(obj[name] !== undefined) return obj[name];
+  return null;
+};
+
+// ---- side panel (AB#377 / AB#387) ----
+function fld(label, value, rawHtml){ return [label, value, !!rawHtml]; }
+function openPanel(title, fields){
+  document.getElementById('panel-title').textContent = title;
+  var body = (fields||[]).map(function(f){
+    var val = (f[1]===null||f[1]===undefined||f[1]==='') ? '—' : f[1];
+    var html = f[2] ? val : esc(val);
+    return '<div class="kv-row"><div class="kv-label">'+esc(f[0])+'</div><div class="kv-value">'+html+'</div></div>';
+  }).join('') || '<div class="empty">No details available.</div>';
+  document.getElementById('panel-body').innerHTML = body;
+  document.getElementById('side-panel').classList.add('open');
+  document.getElementById('panel-overlay').classList.add('open');
+}
+function closePanel(){
+  document.getElementById('side-panel').classList.remove('open');
+  document.getElementById('panel-overlay').classList.remove('open');
+}
 
 function scoreBand(score){
   if(score===null||score===undefined) return 'none';
@@ -127,8 +252,14 @@ var state = {
   findingsFilter: { Framework:'', Area:'', Severity:'', Status:'' },
   findingsSearch: '',
   gapsSearch: '',
+  manualSearch: '',
   driftSort: { key: 'Id', dir: 1 },
-  driftFilter: ''
+  driftFilter: '',
+  govPolicySearch: '',
+  govBudgetsSearch: '',
+  govLocksSearch: '',
+  topo: { x: 40, y: 40, k: 1 },
+  topoDragging: false
 };
 
 function sortRows(rows, key, dir){
@@ -179,6 +310,29 @@ function renderDashboard(){
       '<div class="val">'+(a.Score===null||a.Score===undefined?'&mdash;':a.Score)+'</div></div>';
   }).join('') || '<div class="empty">No scored areas.</div>';
 
+  // ---- inventory KPI cards (AB#389) ----
+  // Only ever show a card for a category the Collect payload actually carried
+  // (see hasNetworkingData/hasGovernanceData plus the individual field
+  // checks below) — an omitted category degrades to no card, not a 0 card.
+  var invCards = [];
+  function invCard(label, arr, sourceField){
+    if(!sourceField) return;
+    invCards.push('<div class="card"><div class="label">'+esc(label)+'</div><div class="score">'+arr.length+'</div></div>');
+  }
+  invCard('Virtual networks', VNets, NET.VirtualNetworks);
+  invCard('Subnets', Subnets, NET.Subnets);
+  invCard('Virtual machines', VMs, COMPUTE.VirtualMachines);
+  invCard('Azure Firewalls', Firewalls, NET.AzureFirewalls);
+  invCard('VPN gateways', VpnGateways, NET.VpnGateways);
+  invCard('Private endpoints', PrivateEndpoints, NET.PrivateEndpoints);
+  invCard('Management groups', ManagementGroups, GOV.ManagementGroups);
+  invCard('Policy assignments', PolicyAssignments, GOV.PolicyAssignments);
+  invCard('Budgets', Budgets, GOV.Budgets);
+  invCard('Resource locks', ResourceLocks, GOV.ResourceLocks);
+  var inventorySection = invCards.length
+    ? '<div class="section-title">Environment inventory</div><div class="cards">'+invCards.join('')+'</div>'
+    : '';
+
   document.getElementById('view').innerHTML =
     '<div class="section-title">Framework scores</div>'+
     '<div class="cards">'+(cards || '<div class="empty">No frameworks scored.</div>')+'</div>'+
@@ -188,7 +342,8 @@ function renderDashboard(){
       '<div class="legend">'+legend+'</div>'+
     '</div>'+
     '<div class="section-title">Area scores</div>'+
-    '<div class="arealist">'+areaRows+'</div>';
+    '<div class="arealist">'+areaRows+'</div>'+
+    inventorySection;
 }
 
 // ---- Findings ----
@@ -237,8 +392,8 @@ function renderFindings(){
     '<table id="findings-table"><thead><tr>'+
       cols.map(function(c){ return '<th data-key="'+c[0]+'">'+c[1]+'<span class="arrow">'+arrow(c[0])+'</span></th>'; }).join('')+
       '<th>Remediation</th></tr></thead><tbody>'+
-      (rows.map(function(f){
-        return '<tr><td>'+esc(f.Id)+'</td><td>'+esc(f.Framework)+'</td><td>'+esc(f.Area)+'</td>'+
+      (rows.map(function(f, i){
+        return '<tr class="clickable-row" data-idx="'+i+'"><td>'+esc(f.Id)+'</td><td>'+esc(f.Framework)+'</td><td>'+esc(f.Area)+'</td>'+
           '<td class="'+sevClass(f.Severity)+'">'+esc(f.Severity||'')+'</td>'+
           '<td class="'+statusClass(f.Status)+'">'+esc(f.Status)+'</td>'+
           '<td>'+esc(f.Title)+'</td><td>'+(f.EvidenceCount===undefined?'':f.EvidenceCount)+'</td>'+
@@ -258,6 +413,18 @@ function renderFindings(){
       renderFindings();
     };
   });
+  // ---- clickable rows -> side panel (AB#387) ----
+  document.querySelectorAll('#findings-table tbody tr[data-idx]').forEach(function(tr){
+    tr.onclick = function(){
+      var f = rows[parseInt(tr.getAttribute('data-idx'), 10)];
+      if(!f) return;
+      openPanel(f.Id + ' — ' + f.Title, [
+        fld('Framework', f.Framework), fld('Area', f.Area), fld('Severity', f.Severity),
+        fld('Status', f.Status), fld('Evidence count', f.EvidenceCount),
+        fld('Remediation', f.Remediation)
+      ]);
+    };
+  });
 }
 
 // ---- Gaps ----
@@ -270,23 +437,429 @@ function renderGaps(){
   });
   document.getElementById('view').innerHTML =
     '<div class="filters"><input type="search" id="gaps-search" placeholder="Filter gaps..." value="'+esc(state.gapsSearch)+'"></div>'+
-    '<table><thead><tr><th>Severity</th><th>Area</th><th>Finding</th><th>Remediation</th></tr></thead><tbody>'+
-      (rows.map(function(g){
-        return '<tr><td class="'+sevClass(g.Severity)+'">'+esc(g.Severity||'')+'</td><td>'+esc(g.Area)+'</td>'+
+    '<table id="gaps-table"><thead><tr><th>Severity</th><th>Area</th><th>Finding</th><th>Remediation</th></tr></thead><tbody>'+
+      (rows.map(function(g, i){
+        return '<tr class="clickable-row" data-idx="'+i+'"><td class="'+sevClass(g.Severity)+'">'+esc(g.Severity||'')+'</td><td>'+esc(g.Area)+'</td>'+
           '<td>'+esc(g.Title)+'</td><td>'+esc(g.Remediation)+'</td></tr>';
       }).join('') || '<tr><td colspan="4" class="empty">No gaps.</td></tr>')+
     '</tbody></table>';
   document.getElementById('gaps-search').oninput = function(e){ state.gapsSearch = e.target.value; renderGaps(); };
+  document.querySelectorAll('#gaps-table tbody tr[data-idx]').forEach(function(tr){
+    tr.onclick = function(){
+      var g = rows[parseInt(tr.getAttribute('data-idx'), 10)];
+      if(!g) return;
+      openPanel((g.Id ? g.Id + ' — ' : '') + g.Title, [
+        fld('Framework', g.Framework), fld('Area', g.Area), fld('Severity', g.Severity), fld('Remediation', g.Remediation)
+      ]);
+    };
+  });
 }
 
 // ---- Manual review ----
 function renderManual(){
+  var q = state.manualSearch.toLowerCase();
+  var rows = Manual.filter(function(m){
+    if(!q) return true;
+    var hay = [m.Id, m.Title, m.Area, m.Framework, m.Remediation].join(' ').toLowerCase();
+    return hay.indexOf(q) !== -1;
+  });
   document.getElementById('view').innerHTML =
-    '<table><thead><tr><th>Area</th><th>Question</th><th>Evidence found</th><th>Guidance</th></tr></thead><tbody>'+
-      (Manual.map(function(m){
-        return '<tr><td>'+esc(m.Area)+'</td><td>'+esc(m.Title)+'</td><td>'+(m.EvidenceCount===undefined?0:m.EvidenceCount)+' item(s)</td><td>'+esc(m.Remediation)+'</td></tr>';
+    '<div class="filters"><input type="search" id="manual-search" placeholder="Filter manual-review items..." value="'+esc(state.manualSearch)+'"></div>'+
+    '<table id="manual-table"><thead><tr><th>Area</th><th>Question</th><th>Evidence found</th><th>Guidance</th></tr></thead><tbody>'+
+      (rows.map(function(m, i){
+        return '<tr class="clickable-row" data-idx="'+i+'"><td>'+esc(m.Area)+'</td><td>'+esc(m.Title)+'</td><td>'+(m.EvidenceCount===undefined?0:m.EvidenceCount)+' item(s)</td><td>'+esc(m.Remediation)+'</td></tr>';
       }).join('') || '<tr><td colspan="4" class="empty">No manual-review items.</td></tr>')+
     '</tbody></table>';
+  document.getElementById('manual-search').oninput = function(e){ state.manualSearch = e.target.value; renderManual(); };
+  document.querySelectorAll('#manual-table tbody tr[data-idx]').forEach(function(tr){
+    tr.onclick = function(){
+      var m = rows[parseInt(tr.getAttribute('data-idx'), 10)];
+      if(!m) return;
+      openPanel((m.Id ? m.Id + ' — ' : '') + m.Title, [
+        fld('Framework', m.Framework), fld('Area', m.Area), fld('Evidence count', m.EvidenceCount), fld('Guidance', m.Remediation)
+      ]);
+    };
+  });
+}
+
+// ---- Topology (AB#376, AB#377, AB#378, AB#390, AB#387) ----
+// Hand-rolled inline SVG (no vis.js/CDN — nothing to fetch, matches this
+// file's existing "no build step, no external UMD bundle" vanilla-JS model).
+// Coordinates are a deterministic per-VNet column layout, not a physics
+// layout: one column per VNet (subnets stacked below it, a dashed "peered
+// VNet(s)" ghost node above it when peeringCount > 0, and a dashed "VMs in
+// this resource group" aggregate node beside it when a VM shares the VNet's
+// resourceGroup+subscriptionId — collect.json does not carry a VM->subnet or
+// peering-target linkage, so both are drawn as honest aggregates/stubs
+// rather than fabricated precise edges).
+var topoNodes = [];   // rebuilt on every renderTopology() call; node.id -> full record for the panel + drag/zoom math
+function buildTopology(){
+  var nodes = []; var edges = [];
+  var colW = 300, colX0 = 40, vnetY = 140, vnetW = 170, vnetH = 54;
+  var vmGroupCounts = {};
+  VMs.forEach(function(vm){
+    var key = (vm.resourceGroup||'') + '|' + (vm.subscriptionId||'');
+    vmGroupCounts[key] = (vmGroupCounts[key] || 0) + 1;
+  });
+  VNets.forEach(function(v, i){
+    var colX = colX0 + i * colW;
+    var vnetId = 'vnet-' + i;
+    nodes.push({ id: vnetId, type: 'vnet', x: colX, y: vnetY, w: vnetW, h: vnetH,
+      label: v.name, data: v,
+      fields: [ fld('Name', v.name), fld('Resource group', v.resourceGroup), fld('Subscription', v.subscriptionId),
+        fld('Peering count', v.peeringCount), fld('DDoS protection', v.ddosEnabled === true ? 'Enabled' : (v.ddosEnabled === false ? 'Disabled' : null)) ] });
+
+    if(v.peeringCount){
+      var peerId = vnetId + '-peer';
+      nodes.push({ id: peerId, type: 'peer', x: colX, y: vnetY - 100, w: vnetW, h: 40,
+        label: v.peeringCount + ' peered VNet' + (v.peeringCount === 1 ? '' : 's'), data: v,
+        fields: [ fld('VNet', v.name), fld('Peering count', v.peeringCount),
+          fld('Note', 'Peered VNet identities are not collected (only the peering count) — this is an aggregate stub, not a specific target.') ] });
+      edges.push({ from: vnetId, to: peerId, dashed: true });
+    }
+
+    var rgKey = (v.resourceGroup||'') + '|' + (v.subscriptionId||'');
+    var vmCount = vmGroupCounts[rgKey];
+    if(vmCount){
+      var vmId = vnetId + '-vms';
+      nodes.push({ id: vmId, type: 'vmgroup', x: colX + vnetW + 20, y: vnetY, w: 130, h: vnetH,
+        label: vmCount + ' VM' + (vmCount === 1 ? '' : 's') + ' in RG', data: { resourceGroup: v.resourceGroup, subscriptionId: v.subscriptionId, count: vmCount },
+        fields: [ fld('Resource group', v.resourceGroup), fld('Subscription', v.subscriptionId), fld('VM count', vmCount),
+          fld('Note', 'Grouped by matching resource group — collect.json does not carry a VM-to-subnet mapping, so individual VM-to-subnet edges are not drawn.') ] });
+      edges.push({ from: vnetId, to: vmId, dashed: true });
+    }
+
+    var mySubnets = Subnets.filter(function(s){ return s.vnet === v.name; });
+    mySubnets.forEach(function(s, j){
+      var subnetId = vnetId + '-subnet-' + j;
+      nodes.push({ id: subnetId, type: 'subnet', x: colX, y: vnetY + 100 + j * 64, w: vnetW, h: 48,
+        label: s.subnet, data: s,
+        fields: [ fld('Subnet', s.subnet), fld('VNet', s.vnet), fld('Prefix', s.prefix),
+          fld('Total IPs', s.total), fld('Used', s.used), fld('Utilization %', s.ipUtilizationPct) ] });
+      edges.push({ from: vnetId, to: subnetId, dashed: false });
+    });
+  });
+  return { nodes: nodes, edges: edges };
+}
+
+function topoTransformStyle(){
+  return 'transform:translate('+state.topo.x+'px,'+state.topo.y+'px) scale('+state.topo.k+');transform-origin:0 0;';
+}
+function applyTopoTransform(){
+  var el = document.getElementById('topo-content');
+  if(el) el.setAttribute('style', topoTransformStyle());
+}
+function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
+
+function renderTopology(){
+  var topo = buildTopology();
+  topoNodes = topo.nodes;
+
+  var svgMarkup = '';
+  if(topo.nodes.length){
+    var maxX = 0, maxY = 0;
+    topo.nodes.forEach(function(n){ maxX = Math.max(maxX, n.x + n.w); maxY = Math.max(maxY, n.y + n.h); });
+    var byId = {}; topo.nodes.forEach(function(n){ byId[n.id] = n; });
+    var lines = topo.edges.map(function(e){
+      var a = byId[e.from], b = byId[e.to];
+      if(!a || !b) return '';
+      var x1 = a.x + a.w/2, y1 = a.y + a.h/2, x2 = b.x + b.w/2, y2 = b.y + b.h/2;
+      return '<line class="topo-edge'+(e.dashed?' dashed':'')+'" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'"></line>';
+    }).join('');
+    var nodeMarkup = topo.nodes.map(function(n){
+      return '<g class="topo-node '+n.type+'" data-node-id="'+esc(n.id)+'">'+
+        '<rect x="'+n.x+'" y="'+n.y+'" width="'+n.w+'" height="'+n.h+'" rx="6"></rect>'+
+        '<text x="'+(n.x+10)+'" y="'+(n.y+n.h/2+4)+'">'+esc(String(n.label).length > 22 ? String(n.label).slice(0,21)+'…' : n.label)+'</text>'+
+        '</g>';
+    }).join('');
+    svgMarkup = '<svg id="topo-content" width="'+(maxX+40)+'" height="'+(maxY+40)+'" style="'+topoTransformStyle()+'">'+lines+nodeMarkup+'</svg>';
+  }
+
+  function invTable(title, rows, cols, rowFn, note){
+    if(!rows) return '';
+    var head = '<tr>' + cols.map(function(c){ return '<th>'+esc(c)+'</th>'; }).join('') + '</tr>';
+    var body = rows.map(rowFn).join('') || ('<tr><td colspan="'+cols.length+'" class="empty">None found.</td></tr>');
+    return '<div class="subsection-title">'+esc(title)+'</div>'+
+      (note ? '<div class="empty">'+esc(note)+'</div>' : '')+
+      '<table class="topo-inv-table" data-title="'+esc(title)+'"><thead>'+head+'</thead><tbody>'+body+'</tbody></table>';
+  }
+
+  var firewallsHtml = invTable('Azure Firewalls', Firewalls, ['Name','Resource group','Subscription','SKU'], function(f, i){
+    return '<tr class="clickable-row" data-kind="fw" data-idx="'+i+'"><td>'+esc(f.name)+'</td><td>'+esc(f.resourceGroup)+'</td><td>'+truncateMiddle(f.subscriptionId,18)+'</td><td>'+esc(f.sku)+'</td></tr>';
+  }, Firewalls && Firewalls.length ? 'Rule-collection data (Microsoft.Network/firewallPolicies) is not collected in collect.json — showing firewall resource properties only. Click a row for details.' : null);
+
+  var vpnHtml = invTable('VPN gateways', VpnGateways, ['Name','Resource group','Type','SKU','Active-active'], function(v, i){
+    return '<tr class="clickable-row" data-kind="vpn" data-idx="'+i+'"><td>'+esc(v.name)+'</td><td>'+esc(v.resourceGroup)+'</td><td>'+esc(v.gatewayType)+'</td><td>'+esc(v.sku)+'</td><td>'+(v.activeActive===true?'Yes':(v.activeActive===false?'No':'—'))+'</td></tr>';
+  });
+
+  var peHtml = invTable('Private endpoints', PrivateEndpoints, ['Name','Resource group','Target provider','Target type'], function(p, i){
+    return '<tr class="clickable-row" data-kind="pe" data-idx="'+i+'"><td>'+esc(p.name)+'</td><td>'+esc(p.resourceGroup)+'</td><td>'+esc(p.targetProvider)+'</td><td>'+esc(p.targetType)+'</td></tr>';
+  });
+
+  document.getElementById('view').innerHTML =
+    '<div class="section-title">VNet topology</div>'+
+    '<div class="topo-toolbar">'+
+      '<button id="topo-reset">Reset view</button>'+
+      '<button id="topo-fit">Fit to screen</button>'+
+      '<div class="topo-legend">'+
+        '<span><i style="background:var(--steel)"></i>VNet</span>'+
+        '<span><i style="background:#6a9cd0"></i>Subnet</span>'+
+        '<span><i style="background:#fff;border:1px dashed var(--gray)"></i>Peered VNets (count only)</span>'+
+        '<span><i style="background:#fff;border:1px dashed var(--green)"></i>VMs (same resource group)</span>'+
+      '</div>'+
+    '</div>'+
+    '<div class="topo-viewport" id="topo-viewport">'+
+      (topo.nodes.length ? svgMarkup : '<div class="topo-empty empty">No virtual networks were collected.</div>')+
+    '</div>'+
+    firewallsHtml + vpnHtml + peHtml;
+
+  // ---- pan / zoom / reset / fit (AB#378) ----
+  var viewport = document.getElementById('topo-viewport');
+  if(viewport && topo.nodes.length){
+    var drag = null;
+    viewport.addEventListener('mousedown', function(e){
+      drag = { mx: e.clientX, my: e.clientY, tx: state.topo.x, ty: state.topo.y };
+      viewport.classList.add('dragging');
+    });
+    window.addEventListener('mousemove', function(e){
+      if(!drag) return;
+      state.topo.x = drag.tx + (e.clientX - drag.mx);
+      state.topo.y = drag.ty + (e.clientY - drag.my);
+      applyTopoTransform();
+    });
+    window.addEventListener('mouseup', function(){ drag = null; viewport.classList.remove('dragging'); });
+    viewport.addEventListener('wheel', function(e){
+      e.preventDefault();
+      var rect = viewport.getBoundingClientRect();
+      var mx = e.clientX - rect.left, my = e.clientY - rect.top;
+      var newK = clamp(state.topo.k * (e.deltaY < 0 ? 1.1 : 1/1.1), 0.3, 3);
+      state.topo.x = mx - (mx - state.topo.x) * (newK / state.topo.k);
+      state.topo.y = my - (my - state.topo.y) * (newK / state.topo.k);
+      state.topo.k = newK;
+      applyTopoTransform();
+    }, { passive: false });
+
+    document.getElementById('topo-reset').onclick = function(){
+      state.topo = { x: 40, y: 40, k: 1 };
+      applyTopoTransform();
+    };
+    document.getElementById('topo-fit').onclick = function(){
+      var minX = Infinity, minY = Infinity, maxX2 = -Infinity, maxY2 = -Infinity;
+      topo.nodes.forEach(function(n){
+        minX = Math.min(minX, n.x); minY = Math.min(minY, n.y);
+        maxX2 = Math.max(maxX2, n.x + n.w); maxY2 = Math.max(maxY2, n.y + n.h);
+      });
+      var bboxW = Math.max(1, maxX2 - minX), bboxH = Math.max(1, maxY2 - minY);
+      var vw = viewport.clientWidth, vh = viewport.clientHeight;
+      var k = clamp(Math.min(vw / bboxW, vh / bboxH) * 0.92, 0.15, 3);
+      state.topo.k = k;
+      state.topo.x = (vw - bboxW * k) / 2 - minX * k;
+      state.topo.y = (vh - bboxH * k) / 2 - minY * k;
+      applyTopoTransform();
+    };
+
+    // ---- click a topology node -> side panel (AB#377) ----
+    document.querySelectorAll('#topo-content .topo-node').forEach(function(g){
+      g.addEventListener('click', function(e){
+        e.stopPropagation();
+        var id = g.getAttribute('data-node-id');
+        var node = topoNodes.filter(function(n){ return n.id === id; })[0];
+        if(!node) return;
+        openPanel(node.label, node.fields);
+      });
+    });
+  }
+
+  // ---- clickable inventory-table rows -> side panel (AB#387, AB#390) ----
+  document.querySelectorAll('table.topo-inv-table[data-title="Azure Firewalls"] tbody tr[data-idx]').forEach(function(tr){
+    tr.onclick = function(){
+      var f = Firewalls[parseInt(tr.getAttribute('data-idx'), 10)];
+      if(!f) return;
+      openPanel('Azure Firewall — ' + f.name, [
+        fld('Name', f.name), fld('Resource group', f.resourceGroup), fld('Subscription', f.subscriptionId), fld('SKU', f.sku),
+        fld('Rule collections', 'Not collected — Microsoft.Network/firewallPolicies is not queried by collect.json today.')
+      ]);
+    };
+  });
+  document.querySelectorAll('table.topo-inv-table[data-title="VPN gateways"] tbody tr[data-idx]').forEach(function(tr){
+    tr.onclick = function(){
+      var v = VpnGateways[parseInt(tr.getAttribute('data-idx'), 10)];
+      if(!v) return;
+      openPanel('VPN gateway — ' + v.name, [
+        fld('Name', v.name), fld('Resource group', v.resourceGroup), fld('Gateway type', v.gatewayType),
+        fld('SKU', v.sku), fld('Active-active', v.activeActive), fld('BGP', v.bgp)
+      ]);
+    };
+  });
+  document.querySelectorAll('table.topo-inv-table[data-title="Private endpoints"] tbody tr[data-idx]').forEach(function(tr){
+    tr.onclick = function(){
+      var p = PrivateEndpoints[parseInt(tr.getAttribute('data-idx'), 10)];
+      if(!p) return;
+      openPanel('Private endpoint — ' + p.name, [
+        fld('Name', p.name), fld('Resource group', p.resourceGroup),
+        fld('Target provider', p.targetProvider), fld('Target type', p.targetType), fld('Target resource Id', p.targetResourceId)
+      ]);
+    };
+  });
+}
+
+// ---- Governance (AB#380, AB#391, AB#392, AB#393) ----
+function buildMgTree(mgs){
+  var byName = {};
+  mgs.forEach(function(m){ byName[m.name] = { name: m.name, id: m.id, displayName: m.displayName, parent: m.parent, children: [] }; });
+  var roots = [];
+  mgs.forEach(function(m){
+    var node = byName[m.name];
+    if(m.parent && byName[m.parent]){ byName[m.parent].children.push(node); }
+    else { roots.push(node); }
+  });
+  return { roots: roots, byName: byName };
+}
+function renderMgNode(node){
+  var label = esc(node.displayName || node.name);
+  var childHtml = node.children.length ? '<ul>'+node.children.map(renderMgNode).join('')+'</ul>' : '';
+  return '<li><span class="mg-node clickable-row" data-mg="'+esc(node.name)+'">'+label+'</span>'+childHtml+'</li>';
+}
+
+function renderGovernance(){
+  var sections = [];
+
+  // ---- management-group hierarchy (AB#380) ----
+  if(ManagementGroups.length){
+    var tree = buildMgTree(ManagementGroups);
+    sections.push('<div class="section-title">Management-group hierarchy</div>'+
+      '<ul class="mg-tree">'+tree.roots.map(renderMgNode).join('')+'</ul>');
+  }
+
+  // ---- tag chips (AB#391) ----
+  if(Tags.length){
+    var tagRows = Tags.map(function(t){
+      var chips = (t.values||[]).map(function(v){ return '<span class="chip">'+esc(v)+'</span>'; }).join('');
+      return '<div class="tag-row"><div class="tag-key">'+esc(t.key)+'</div>'+(chips || '<span class="empty">no values</span>')+'</div>';
+    }).join('');
+    sections.push('<div class="section-title">Tags</div>' + tagRows);
+  }
+
+  // ---- policy assignments: enforcement badge (AB#392) + scope tooltip (AB#393) ----
+  if(PolicyAssignments.length){
+    var polRows = PolicyAssignments.filter(function(p){
+      var q = state.govPolicySearch.toLowerCase();
+      if(!q) return true;
+      var dn = propOrTop(p, 'displayName') || '';
+      return (p.name||'').toLowerCase().indexOf(q) !== -1 || String(dn).toLowerCase().indexOf(q) !== -1;
+    });
+    var polBody = polRows.map(function(p, i){
+      var scope = propOrTop(p, 'scope') || p.id || '';
+      return '<tr class="clickable-row" data-idx="'+i+'"><td>'+esc(propOrTop(p, 'displayName') || p.name)+'</td>'+
+        '<td>'+enforcementBadge(propOrTop(p, 'enforcementMode'))+'</td>'+
+        '<td>'+truncateMiddle(scope, 44)+'</td></tr>';
+    }).join('') || '<tr><td colspan="3" class="empty">No policy assignments match the current filter.</td></tr>';
+    sections.push('<div class="section-title">Policy assignments</div>'+
+      '<div class="filters"><input type="search" id="gov-policy-search" placeholder="Filter policy assignments..." value="'+esc(state.govPolicySearch)+'"></div>'+
+      '<table id="gov-policy-table"><thead><tr><th>Display name</th><th>Enforcement</th><th>Scope</th></tr></thead><tbody>'+polBody+'</tbody></table>');
+  }
+
+  // ---- budgets table (AB#391) ----
+  if(Budgets.length){
+    var budgetRows = Budgets.filter(function(b){
+      var q = state.govBudgetsSearch.toLowerCase();
+      if(!q) return true;
+      return (b.name||'').toLowerCase().indexOf(q) !== -1;
+    });
+    var budgetBody = budgetRows.map(function(b, i){
+      return '<tr class="clickable-row" data-idx="'+i+'"><td>'+esc(b.name)+'</td><td>'+esc2(propOrTop(b, 'amount'))+'</td><td>'+esc2(propOrTop(b, 'category'))+'</td></tr>';
+    }).join('') || '<tr><td colspan="3" class="empty">No budgets match the current filter.</td></tr>';
+    sections.push('<div class="section-title">Budgets</div>'+
+      '<div class="filters"><input type="search" id="gov-budgets-search" placeholder="Filter budgets..." value="'+esc(state.govBudgetsSearch)+'"></div>'+
+      '<table id="gov-budgets-table"><thead><tr><th>Name</th><th>Amount</th><th>Category</th></tr></thead><tbody>'+budgetBody+'</tbody></table>');
+  }
+
+  // ---- resource locks table (AB#391) ----
+  if(ResourceLocks.length){
+    var lockRows = ResourceLocks.filter(function(l){
+      var q = state.govLocksSearch.toLowerCase();
+      if(!q) return true;
+      return (l.name||'').toLowerCase().indexOf(q) !== -1;
+    });
+    var lockBody = lockRows.map(function(l, i){
+      var scope = l.resourceGroup || l.id || '';
+      return '<tr class="clickable-row" data-idx="'+i+'"><td>'+esc(l.name)+'</td><td>'+esc2(propOrTop(l, 'level'))+'</td><td>'+truncateMiddle(scope, 44)+'</td></tr>';
+    }).join('') || '<tr><td colspan="3" class="empty">No resource locks match the current filter.</td></tr>';
+    sections.push('<div class="section-title">Resource locks</div>'+
+      '<div class="filters"><input type="search" id="gov-locks-search" placeholder="Filter locks..." value="'+esc(state.govLocksSearch)+'"></div>'+
+      '<table id="gov-locks-table"><thead><tr><th>Name</th><th>Level</th><th>Scope</th></tr></thead><tbody>'+lockBody+'</tbody></table>');
+  }
+
+  document.getElementById('view').innerHTML = sections.join('') || '<div class="empty">No governance data was collected.</div>';
+
+  // ---- wire up interactivity now that the markup above is in the DOM ----
+  var mgSearchEl; // no MG search box today (tree only) — placeholder kept out intentionally
+
+  document.querySelectorAll('#view .mg-node[data-mg]').forEach(function(el){
+    el.onclick = function(){
+      var tree = buildMgTree(ManagementGroups);
+      var node = tree.byName[el.getAttribute('data-mg')];
+      if(!node) return;
+      openPanel(node.displayName || node.name, [
+        fld('Name', node.name), fld('Display name', node.displayName), fld('Id', node.id), fld('Parent', node.parent)
+      ]);
+    };
+  });
+
+  var polSearchEl = document.getElementById('gov-policy-search');
+  if(polSearchEl){
+    polSearchEl.oninput = function(e){ state.govPolicySearch = e.target.value; renderGovernance(); };
+    var polRowsForClick = PolicyAssignments.filter(function(p){
+      var q = state.govPolicySearch.toLowerCase();
+      if(!q) return true;
+      var dn = propOrTop(p, 'displayName') || '';
+      return (p.name||'').toLowerCase().indexOf(q) !== -1 || String(dn).toLowerCase().indexOf(q) !== -1;
+    });
+    document.querySelectorAll('#gov-policy-table tbody tr[data-idx]').forEach(function(tr){
+      tr.onclick = function(){
+        var p = polRowsForClick[parseInt(tr.getAttribute('data-idx'), 10)];
+        if(!p) return;
+        openPanel('Policy assignment — ' + (propOrTop(p, 'displayName') || p.name), [
+          fld('Name', p.name), fld('Enforcement mode', propOrTop(p, 'enforcementMode') || 'Default'),
+          fld('Scope / Id', propOrTop(p, 'scope') || p.id)
+        ]);
+      };
+    });
+  }
+
+  var budgetsSearchEl = document.getElementById('gov-budgets-search');
+  if(budgetsSearchEl){
+    budgetsSearchEl.oninput = function(e){ state.govBudgetsSearch = e.target.value; renderGovernance(); };
+    var budgetRowsForClick = Budgets.filter(function(b){
+      var q = state.govBudgetsSearch.toLowerCase();
+      if(!q) return true;
+      return (b.name||'').toLowerCase().indexOf(q) !== -1;
+    });
+    document.querySelectorAll('#gov-budgets-table tbody tr[data-idx]').forEach(function(tr){
+      tr.onclick = function(){
+        var b = budgetRowsForClick[parseInt(tr.getAttribute('data-idx'), 10)];
+        if(!b) return;
+        openPanel('Budget — ' + b.name, [ fld('Name', b.name), fld('Amount', propOrTop(b, 'amount')), fld('Category', propOrTop(b, 'category')) ]);
+      };
+    });
+  }
+
+  var locksSearchEl = document.getElementById('gov-locks-search');
+  if(locksSearchEl){
+    locksSearchEl.oninput = function(e){ state.govLocksSearch = e.target.value; renderGovernance(); };
+    var lockRowsForClick = ResourceLocks.filter(function(l){
+      var q = state.govLocksSearch.toLowerCase();
+      if(!q) return true;
+      return (l.name||'').toLowerCase().indexOf(q) !== -1;
+    });
+    document.querySelectorAll('#gov-locks-table tbody tr[data-idx]').forEach(function(tr){
+      tr.onclick = function(){
+        var l = lockRowsForClick[parseInt(tr.getAttribute('data-idx'), 10)];
+        if(!l) return;
+        openPanel('Resource lock — ' + l.name, [ fld('Name', l.name), fld('Level', propOrTop(l, 'level')), fld('Scope / Id', l.resourceGroup || l.id) ]);
+      };
+    });
+  }
 }
 
 // ---- Drift ----
@@ -355,10 +928,19 @@ function renderDrift(){
   });
 }
 
-var ROUTES = { dashboard: renderDashboard, findings: renderFindings, gaps: renderGaps, manual: renderManual, drift: renderDrift };
+var ROUTES = {
+  dashboard: renderDashboard, findings: renderFindings, gaps: renderGaps, manual: renderManual,
+  topology: renderTopology, governance: renderGovernance, drift: renderDrift
+};
 
 function renderTabs(){
   var tabs = [['dashboard','Dashboard'],['findings','Findings'],['gaps','Gaps'],['manual','Manual review']];
+  // Topology/Governance tabs are hidden entirely when collect.json carried
+  // none of their underlying data (e.g. a CollectOnly run before
+  // Import-Governance ran, or a -Categories scope that skipped Networking) —
+  // "hide the section, no error" rather than rendering an all-empty tab.
+  if(hasNetworkingData){ tabs.push(['topology','Topology']); }
+  if(hasGovernanceData){ tabs.push(['governance','Governance']); }
   if(DRIFT){ tabs.push(['drift','Drift']); }
   document.getElementById('tabs').innerHTML = tabs.map(function(t){
     return '<div class="tab'+(state.tab===t[0]?' active':'')+'" data-t="'+t[0]+'">'+t[1]+'</div>';
@@ -373,6 +955,8 @@ function renderTabs(){
 }
 
 // ---- boot ----
+document.getElementById('panel-close').onclick = closePanel;
+document.getElementById('panel-overlay').onclick = closePanel;
 document.getElementById('hdr-ts').textContent = 'Generated ' + fmtDate(F.GeneratedOn);
 var metaBits = [];
 if(META.Scope) metaBits.push('Scope: ' + META.Scope);

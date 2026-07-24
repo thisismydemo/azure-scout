@@ -47,7 +47,15 @@ $ErrorActionPreference = 'Stop'
     [string] the full path to the written report-react.html file.
 
 .NOTES
-    Tracks ADO Story AB#5053.
+    Tracks ADO Story AB#5053. Also feeds the interactive-visuals feature trio
+    (AB#376-378, 380, 386-393): VNet topology, MG hierarchy, Governance
+    section (budgets/locks/tag chips/policy) and inventory KPI cards all need
+    a slice of the raw Collect object (networking/compute/governance/tags),
+    not just Findings — embedded below via the same StrictMode-safe optional
+    access `_meta` already used, so a Collect missing any of those keys (an
+    older collect.json, a CollectOnly run before Import-Governance ran, or a
+    scope that skipped a category) degrades to an empty/absent client-side
+    section instead of throwing.
 #>
 function Export-React {
     param(
@@ -61,28 +69,57 @@ function Export-React {
         New-Item -ItemType Directory -Path $OutputPath -Force | Out-Null
     }
 
-    # Safe property access — $Collect (and, defensively, $Findings) may be a
-    # plain deserialized PSCustomObject missing keys we don't require, and
-    # Set-StrictMode -Version Latest throws on a missing-property dot-access.
-    $metaSrc = $null
-    if ($null -ne $Collect) {
-        $metaProp = $Collect.PSObject.Properties['_meta']
-        if ($metaProp) { $metaSrc = $metaProp.Value }
+    # Safe nested property access — $Collect (and, defensively, $Findings) may
+    # be a plain deserialized PSCustomObject missing keys we don't require,
+    # and Set-StrictMode -Version Latest throws on a missing-property
+    # dot-access. Walks a dotted path one segment at a time, returning $null
+    # the moment any segment is absent instead of throwing.
+    function Get-ReactSafeProp {
+        param($Object, [string[]] $Path)
+        $cur = $Object
+        foreach ($seg in $Path) {
+            if ($null -eq $cur) { return $null }
+            $prop = $cur.PSObject.Properties[$seg]
+            if (-not $prop) { return $null }
+            $cur = $prop.Value
+        }
+        return $cur
     }
-    $scope = $null
-    $mgId  = $null
-    if ($null -ne $metaSrc) {
-        $scopeProp = $metaSrc.PSObject.Properties['scope']
-        if ($scopeProp) { $scope = $scopeProp.Value }
-        $mgIdProp = $metaSrc.PSObject.Properties['managementGroupId']
-        if ($mgIdProp) { $mgId = $mgIdProp.Value }
-    }
+
+    $metaSrc = Get-ReactSafeProp $Collect @('_meta')
+    $scope = Get-ReactSafeProp $metaSrc @('scope')
+    $mgId  = Get-ReactSafeProp $metaSrc @('managementGroupId')
     $meta = [pscustomobject]@{ Scope = $scope; ManagementGroupId = $mgId }
 
+    # Only the fields the client-side topology/governance/KPI visuals read —
+    # deliberately not the whole Collect object (keeps the embedded payload
+    # small and avoids leaking any raw data those visuals never surface).
+    $networking = [pscustomobject]@{
+        VirtualNetworks  = Get-ReactSafeProp $Collect @('networking', 'virtualNetworks')
+        Subnets          = Get-ReactSafeProp $Collect @('networking', 'subnets')
+        AzureFirewalls   = Get-ReactSafeProp $Collect @('networking', 'azureFirewalls')
+        VpnGateways      = Get-ReactSafeProp $Collect @('networking', 'vpnGateways')
+        PrivateEndpoints = Get-ReactSafeProp $Collect @('networking', 'privateEndpoints')
+    }
+    $compute = [pscustomobject]@{
+        VirtualMachines = Get-ReactSafeProp $Collect @('compute', 'virtualMachines')
+    }
+    $governance = [pscustomobject]@{
+        ManagementGroups  = Get-ReactSafeProp $Collect @('governance', 'managementGroups')
+        PolicyAssignments = Get-ReactSafeProp $Collect @('governance', 'policyAssignments')
+        Budgets           = Get-ReactSafeProp $Collect @('governance', 'budgets')
+        ResourceLocks     = Get-ReactSafeProp $Collect @('governance', 'resourceLocks')
+    }
+    $tags = Get-ReactSafeProp $Collect @('tags')
+
     $payload = [pscustomobject]@{
-        Findings = $Findings
-        Drift    = $Drift
-        Meta     = $meta
+        Findings   = $Findings
+        Drift      = $Drift
+        Meta       = $meta
+        Networking = $networking
+        Compute    = $compute
+        Governance = $governance
+        Tags       = $tags
     }
 
     # </script> inside embedded JSON would otherwise close the <script> tag early.
