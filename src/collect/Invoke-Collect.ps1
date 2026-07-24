@@ -19,7 +19,8 @@ $ErrorActionPreference = 'Stop'
     Canonical shape (top-level keys the rules query):
         subscriptions[], tags[]
         networking { virtualNetworks[{name,peeringCount,ddosEnabled}], subnets[{ipUtilizationPct}],
-                     azureFirewalls[], nsgPublicInbound[], privateDnsZones[], vpnGateways[],
+                     azureFirewalls[], firewallPolicyRuleGroups[{policyName,priority,ruleCollectionCount,ruleCount,parseError}],
+                     nsgPublicInbound[], privateDnsZones[], vpnGateways[],
                      privateEndpoints[{targetResourceId,targetProvider,targetType}] }
         compute    { virtualMachines[{name,zoneRedundant,zoneEligible}] }
         management { recoveryVaults[{backupItems[]}], deployments[],
@@ -85,6 +86,39 @@ $ErrorActionPreference = 'Stop'
         always collected (base data every rule set / the canonical shape needs). A
         `'*'` entry, an empty list, or omitting `-Categories` runs every query
         (unchanged full-collect behavior).
+
+    Collector/pipeline resilience (AB#397/398/399/400/401):
+      - `subscriptions` is always collected FIRST (regardless of hashtable
+        enumeration order) so its subscription-id list is available as a fallback
+        scope for every other query.
+      - AB#397: if a tenant/MG-wide batch query throws (DNS blip, expired token,
+        any other transient ARG/ARM error), it is retried ONE SUBSCRIPTION AT A
+        TIME using the subscription list above. A subscription that still fails on
+        retry logs a warning naming that subscription and is skipped — the OTHER
+        subscriptions' rows for that same query are still collected and returned.
+        Only a query that fails with no subscription list available at all (i.e.
+        the `subscriptions` query itself failed) degrades to an empty result for
+        that query, same as before this change.
+      - AB#398: an `AuthorizationFailed` error on a query scoped to
+        `-ManagementGroupId` gets a specific, actionable warning naming the
+        management-group Reader-role requirement, instead of a bare ARG exception.
+      - AB#399: a small set of documented, known-false ARG/ARM errors (a resource
+        provider reported as "not registered" on a subscription that Resource Graph
+        can still query successfully) are logged at Verbose and treated as
+        non-errors — no per-subscription retry, no warning noise.
+      - AB#400: `firewallPolicyRuleGroups`' nested rule-collection/rule structure is
+        walked in PowerShell (not KQL) with a try/catch PER GROUP — one malformed
+        group is recorded with `parseError` set and the run continues; it never
+        blanks out the other, well-formed rule-collection groups in the same run.
+      - AB#401: if literally every collected query returns zero rows, a diagnostic
+        warning is emitted suggesting the likely causes (missing Reader RBAC, wrong
+        subscription/tenant context, an empty/inaccessible `-ManagementGroupId`, or
+        a `-Categories` filter that matched nothing) instead of silently handing an
+        empty dataset to the report layer.
+      - AB#405: when `Write-ScoutProgress` (src/Write-ScoutProgress.ps1) is loaded in
+        the calling session, each query reports phase progress through it. The call
+        is guarded by `Get-Command` so Collect has zero hard dependency on that
+        helper — a session that never loaded it behaves exactly as before.
 #>
 function Invoke-Collect {
     [CmdletBinding()]
@@ -123,6 +157,17 @@ resources
         azureFirewalls = @'
 resources | where type =~ "microsoft.network/azurefirewalls"
 | project name, resourceGroup, subscriptionId, sku = tostring(properties.sku.name)
+'@
+        # AB#400: firewall policy rule-collection groups. The nested rule-collection/rule
+        # array is intentionally left as a dynamic column here (`ruleCollections`) rather
+        # than walked with KQL mv-expand — the PowerShell-side parse below handles a
+        # malformed/unexpected group's shape per-group instead of per-run (see NOTES).
+        firewallPolicyRuleGroups = @'
+resources
+| where type =~ "microsoft.network/firewallpolicies/rulecollectiongroups"
+| extend policyName = tostring(split(id, "/")[8])
+| project name, resourceGroup, subscriptionId, policyName,
+          priority = toint(properties.priority), ruleCollections = properties.ruleCollections
 '@
         vpnGateways = @'
 resources | where type =~ "microsoft.network/virtualnetworkgateways"
@@ -371,6 +416,7 @@ resources | where type =~ "microsoft.operationalinsights/workspaces"
         virtualNetworks     = @('Networking')
         subnets             = @('Networking', 'Compute')
         azureFirewalls      = @('Networking')
+        firewallPolicyRuleGroups = @('Networking', 'Security')
         vpnGateways         = @('Networking')
         # caf.security (CAF-SEC-03/06), caf.ai (CAF-AI-04), caf.iot (CAF-IOT-05)
         # all filter networking.privateEndpoints by target — those categories need
@@ -418,27 +464,176 @@ resources | where type =~ "microsoft.operationalinsights/workspaces"
         }
     }
 
-    function Invoke-Arg([string] $Query) {
+    function Invoke-Arg {
+        param([string] $Query, [string] $SubscriptionId, [switch] $OmitManagementGroup)
         $rows = @(); $skip = 0
         do {
             # Search-AzGraph rejects -Skip 0 (ValidateRange minimum is 1) — omit it on the first page.
             $params = @{ Query = $Query; First = 1000; ErrorAction = 'Stop' }
             if ($skip -gt 0) { $params.Skip = $skip }
-            # Scope the query to the requested management group when one was
-            # supplied; omit -ManagementGroup entirely otherwise (preserves the
-            # existing tenant-wide behavior of the authenticated context).
-            if ($ManagementGroupId) { $params.ManagementGroup = $ManagementGroupId }
+            # -ManagementGroup and -Subscription are DIFFERENT, mutually exclusive
+            # Search-AzGraph parameter sets (ManagementGroupScopedQuery vs.
+            # SubscriptionScopedQuery) — passing both throws an ambiguous-parameter-set
+            # error, so a per-subscription call (below, AB#397) always omits
+            # -ManagementGroup regardless of whether one was supplied for this run.
+            if ($ManagementGroupId -and -not $OmitManagementGroup) { $params.ManagementGroup = $ManagementGroupId }
+            if ($SubscriptionId) { $params.Subscription = @($SubscriptionId) }
             $batch = @(Search-AzGraph @params)
             $rows += $batch; $skip += 1000
         } while ($batch.Count -eq 1000)
         return , $rows
     }
 
+    # A small set of ARG/ARM errors are documented, KNOWN FALSE POSITIVES — most
+    # commonly a "resource provider not registered" condition reported for a
+    # subscription that Resource Graph can (and does) still query successfully
+    # (AB#399). These are noise, not a real collection gap: log at Verbose and move
+    # on without a warning or a per-subscription retry.
+    function Test-ScoutKnownNoiseError([string] $Message) {
+        return [bool]($Message -match '(?i)resource provider.*not\s+registered' -or
+                       $Message -match '(?i)MissingSubscriptionRegistration' -or
+                       $Message -match '(?i)SubscriptionNotRegistered')
+    }
+
+    function Invoke-CollectQuery {
+        param([string] $Key, [string] $Query, [string[]] $SubscriptionIds)
+        try {
+            return Invoke-Arg -Query $Query
+        }
+        catch {
+            $errText = $_.Exception.Message
+
+            # AB#399 — known noise: log at Verbose only, no retry, no warning.
+            if (Test-ScoutKnownNoiseError $errText) {
+                Write-Verbose "Invoke-Collect: query '$Key' hit the known false 'resource provider not registered' condition — ignoring (AB#399): $errText"
+                # `return @()` (without the leading comma) gets pipeline-UNROLLED to
+                # zero output objects -- the caller's `$r[$k] = Invoke-CollectQuery ...`
+                # would capture $null instead of an empty array. The unary comma
+                # prevents that (same idiom Invoke-Arg already uses for `$rows`).
+                return , @()
+            }
+
+            # AB#398 — an AuthorizationFailed error on an MG-scoped query is almost
+            # always a missing Reader assignment AT THE MANAGEMENT GROUP (a Reader
+            # role at subscription scope alone does not satisfy an MG-scoped ARG
+            # query), so surface that as an explicit, actionable hint.
+            if ($ManagementGroupId -and $errText -match '(?i)AuthorizationFailed') {
+                Write-Warning "Invoke-Collect: query '$Key' failed with AuthorizationFailed while scoped to management group '$ManagementGroupId'. Hint: assign the caller (user or service principal) the Reader role at the '$ManagementGroupId' management group scope — a Reader role assigned only at a subscription underneath it is not sufficient for a management-group-scoped Resource Graph query."
+            }
+            else {
+                Write-Warning "Invoke-Collect: query '$Key' failed: $errText"
+            }
+
+            # AB#397 — fall back to one query per known subscription instead of losing
+            # the whole dataset for this resource type: a single subscription with a
+            # transient/DNS/token problem must not blank out every OTHER
+            # subscription's data for the same query.
+            if (-not $SubscriptionIds -or @($SubscriptionIds).Count -eq 0) { return , @() }
+
+            $rows = @()
+            foreach ($subId in $SubscriptionIds) {
+                try { $rows += Invoke-Arg -Query $Query -SubscriptionId $subId -OmitManagementGroup }
+                catch {
+                    $subErrText = $_.Exception.Message
+                    if (Test-ScoutKnownNoiseError $subErrText) {
+                        Write-Verbose "Invoke-Collect: query '$Key' hit the known false 'resource provider not registered' condition for subscription '$subId' — ignoring (AB#399): $subErrText"
+                        continue
+                    }
+                    Write-Warning "Invoke-Collect: query '$Key' failed for subscription '$subId' — skipping this subscription and continuing with the rest (AB#397): $subErrText"
+                }
+            }
+            return , $rows
+        }
+    }
+
     $r = @{}
-    foreach ($k in $q.Keys) {
+
+    # Always collect `subscriptions` first, regardless of hashtable enumeration
+    # order, so its subscription-id list is available for the AB#397 per-subscription
+    # fallback used by every OTHER query below.
+    $subscriptionIds = @()
+    if ($selectedKeys -contains 'subscriptions') {
+        try {
+            $r['subscriptions'] = Invoke-Arg -Query $q['subscriptions']
+            $subscriptionIds = @($r['subscriptions'] | ForEach-Object {
+                    if ($_ -and $_.PSObject.Properties['id']) { $_.id }
+                } | Where-Object { $_ })
+        }
+        catch {
+            Write-Warning "Invoke-Collect: query 'subscriptions' failed: $_ — the per-subscription retry (AB#397) is unavailable for the rest of this run because the subscription list itself could not be collected."
+            $r['subscriptions'] = @()
+        }
+    }
+
+    $progressAvailable = [bool](Get-Command Write-ScoutProgress -ErrorAction SilentlyContinue)
+    $remainingKeys = @($q.Keys | Where-Object { $_ -ne 'subscriptions' })
+    $queryIndex = 0
+    foreach ($k in $remainingKeys) {
+        $queryIndex++
         if ($selectedKeys -notcontains $k) { $r[$k] = @(); continue }
-        try { $r[$k] = Invoke-Arg $q[$k] }
-        catch { Write-Warning "Invoke-Collect: query '$k' failed: $_"; $r[$k] = @() }
+        if ($progressAvailable) {
+            $pct = if (@($remainingKeys).Count -gt 0) { [Math]::Min(100, [Math]::Round(($queryIndex / @($remainingKeys).Count) * 100)) } else { -1 }
+            try { Write-ScoutProgress -Activity 'Scout Collect' -Status "Querying: $k" -PercentComplete $pct -Id 1 }
+            catch { Write-Verbose "Invoke-Collect: Write-ScoutProgress failed, continuing without progress UX: $_" }
+        }
+        $r[$k] = Invoke-CollectQuery -Key $k -Query $q[$k] -SubscriptionIds $subscriptionIds
+    }
+    if ($progressAvailable) {
+        try { Write-ScoutProgress -Activity 'Scout Collect' -Id 1 -Completed }
+        catch { Write-Verbose "Invoke-Collect: Write-ScoutProgress completion call failed: $_" }
+    }
+
+    # ---- firewall policy rule-collection group parsing (AB#400) ----
+    # properties.ruleCollections is a nested dynamic array (rule collections -> rules)
+    # that Resource Graph hands back as-is; walking it needs real conditional logic,
+    # not just KQL projection, so the walk happens here in PowerShell. A single
+    # malformed/unexpected-shape rule-collection group must not blank out every OTHER
+    # (perfectly fine) group from the same run, so each row gets its own try/catch —
+    # a parse error is logged per-group, not per-run, and collection continues with a
+    # placeholder entry that records what happened via `parseError`.
+    $firewallPolicyRuleGroups = @()
+    foreach ($group in $r['firewallPolicyRuleGroups']) {
+        if (-not $group) { continue }
+        try {
+            $ruleCollections = @($group.ruleCollections)
+            $ruleCount = 0
+            foreach ($rc in $ruleCollections) { $ruleCount += @($rc.rules).Count }
+            $firewallPolicyRuleGroups += [pscustomobject]@{
+                name                = $group.name
+                resourceGroup       = $group.resourceGroup
+                policyName          = $group.policyName
+                priority            = $group.priority
+                ruleCollectionCount = $ruleCollections.Count
+                ruleCount           = $ruleCount
+                parseError          = $null
+            }
+        }
+        catch {
+            Write-Warning "Invoke-Collect: firewall policy rule-collection group '$($group.name)' (policy '$($group.policyName)') failed to parse — skipping this group and continuing (AB#400): $($_.Exception.Message)"
+            $firewallPolicyRuleGroups += [pscustomobject]@{
+                name                = $group.name
+                resourceGroup       = $group.resourceGroup
+                policyName          = $group.policyName
+                priority            = $group.priority
+                ruleCollectionCount = 0
+                ruleCount           = 0
+                parseError          = $_.Exception.Message
+            }
+        }
+    }
+
+    # ---- empty-data guard (AB#401) ----
+    # A collect that returns literally nothing across every requested query is a
+    # strong signal something is mis-configured (missing Reader RBAC, the wrong
+    # tenant/subscription selected in the current Az context, an empty or
+    # inaccessible -ManagementGroupId, or a -Categories filter that matched nothing)
+    # rather than a genuinely empty estate — surface a diagnostic hint instead of
+    # silently handing an empty dataset to the assess/report layers.
+    $totalRows = 0
+    foreach ($k in $r.Keys) { $totalRows += @($r[$k]).Count }
+    if ($totalRows -eq 0) {
+        $scopeHint = if ($ManagementGroupId) { "management group '$ManagementGroupId'" } else { 'the current subscription/tenant context' }
+        Write-Warning ("Invoke-Collect: no resources were returned for any collected query, scoped to {0}. This usually means (1) the signed-in identity is missing the Reader role at that scope, (2) the wrong tenant/subscription is selected in the current Az context, (3) -ManagementGroupId points at an empty or inaccessible management group, or (4) -Categories filtered out every query that would otherwise have run — verify RBAC and scope before treating this as a genuinely empty estate." -f $scopeHint)
     }
 
     # ---- unique tag-key/value aggregation across subscriptions (AB#367) ----
@@ -477,13 +672,14 @@ resources | where type =~ "microsoft.operationalinsights/workspaces"
         subscriptions = $r.subscriptions
         tags          = $tags
         networking    = [pscustomobject]@{
-            virtualNetworks  = $r.virtualNetworks
-            subnets          = $r.subnets
-            azureFirewalls   = $r.azureFirewalls
-            vpnGateways      = $r.vpnGateways
-            privateEndpoints = $r.privateEndpoints
-            privateDnsZones  = $r.privateDnsZones
-            nsgPublicInbound = $r.nsgPublicInbound
+            virtualNetworks          = $r.virtualNetworks
+            subnets                  = $r.subnets
+            azureFirewalls           = $r.azureFirewalls
+            firewallPolicyRuleGroups = $firewallPolicyRuleGroups
+            vpnGateways              = $r.vpnGateways
+            privateEndpoints         = $r.privateEndpoints
+            privateDnsZones          = $r.privateDnsZones
+            nsgPublicInbound         = $r.nsgPublicInbound
         }
         compute       = [pscustomobject]@{ virtualMachines = $r.virtualMachines }
         management    = [pscustomobject]@{

@@ -98,6 +98,23 @@ $ErrorActionPreference = 'Stop'
     return contract is a single run-folder path, not a per-assessment result, so every
     requested assessment name is reported with the same overall status (Completed /
     Error) rather than an independently-verified one.
+
+    AB#402: the permission audit and the collect/assess/report call are each wrapped
+    with an `$Error.Count` before/after delta (`$Error` records EVERY error the
+    session sees, including ones a nested try/catch already caught and handled) --
+    a non-zero delta on an otherwise-non-throwing step means something was swallowed
+    internally (most commonly Invoke-Collect's own AB#397/399/400 per-query
+    resilience kicking in) and is surfaced two ways: `pipeline-summary.json`'s
+    `permissionAudit.HadNonTerminatingErrors` / top-level `hadNonTerminatingErrors`
+    fields, and a Write-Warning at the point it was detected. Either flag alone is
+    enough to force the run's overall `outcome` to `PartialSuccess` even when
+    nothing actually threw.
+
+    AB#405: reports coarse phase-level progress through `Write-ScoutProgress`
+    (src/Write-ScoutProgress.ps1) when that function is loaded in the calling
+    session. Every call is guarded with `Get-Command ... -ErrorAction
+    SilentlyContinue`, so this is a soft dependency only -- a session that never
+    loaded that helper behaves exactly as it did before progress reporting existed.
 #>
 function Invoke-ScoutPipeline {
     [CmdletBinding()]
@@ -126,15 +143,27 @@ function Invoke-ScoutPipeline {
     # orchestrator had already created before it failed.
     $priorRunFolders = @(Get-ChildItem -Path $OutputPath -Directory -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name)
 
+    if (Get-Command Write-ScoutProgress -ErrorAction SilentlyContinue) {
+        try { Write-ScoutProgress -Activity 'Scout Pipeline' -Status 'Permission audit' -PercentComplete 0 -Id 1 }
+        catch { Write-Verbose "Invoke-ScoutPipeline: Write-ScoutProgress failed, continuing without progress UX: $_" }
+    }
+
     # ---- permission pre-flight (never fatal to the pipeline) ----
     $permissionAudit = [ordered]@{
-        Skipped = [bool]$SkipPermissionAudit
-        Ran     = $false
-        Ok      = $null
-        Checks  = @()
-        Error   = $null
+        Skipped                  = [bool]$SkipPermissionAudit
+        Ran                      = $false
+        Ok                       = $null
+        Checks                   = @()
+        Error                    = $null
+        HadNonTerminatingErrors  = $false
     }
     if (-not $SkipPermissionAudit) {
+        # AB#402: $Error accumulates every error PowerShell records for the session,
+        # INCLUDING ones a nested try/catch already caught and handled -- so a delta
+        # across this call surfaces problems the audit swallowed internally (e.g. a
+        # Graph/ARG cmdlet that logged a non-terminating error but still completed)
+        # without changing the audit's own non-fatal-by-design outcome.
+        $errCountBeforeAudit = $Error.Count
         try {
             $auditResult = Invoke-ScoutAssessment -Assessment $Assessment -PermissionAudit
             $permissionAudit.Ran = $true
@@ -156,6 +185,10 @@ function Invoke-ScoutPipeline {
             $permissionAudit.Error = $_.Exception.Message
             Write-Warning "Invoke-ScoutPipeline: permission audit failed (non-fatal): $($_.Exception.Message)"
         }
+        $permissionAudit.HadNonTerminatingErrors = ($Error.Count -gt $errCountBeforeAudit)
+        if ($permissionAudit.HadNonTerminatingErrors -and -not $permissionAudit.Error) {
+            Write-Warning "Invoke-ScoutPipeline: the permission audit completed but recorded $($Error.Count - $errCountBeforeAudit) non-terminating error(s) along the way (AB#402) -- see the warning/verbose output above for detail."
+        }
     }
 
     # ---- collect / assess / report ----
@@ -167,6 +200,17 @@ function Invoke-ScoutPipeline {
     if ($ManagementGroupId) { $assessParams.ManagementGroupId = $ManagementGroupId }
     if ($Category)          { $assessParams.Category          = $Category }
 
+    if (Get-Command Write-ScoutProgress -ErrorAction SilentlyContinue) {
+        try { Write-ScoutProgress -Activity 'Scout Pipeline' -Status 'Collect / assess / report' -PercentComplete 50 -Id 1 }
+        catch { Write-Verbose "Invoke-ScoutPipeline: Write-ScoutProgress failed, continuing without progress UX: $_" }
+    }
+
+    # AB#402: same $Error-delta technique as the permission audit above -- surfaces
+    # non-terminating errors the orchestrator (or, transitively, Invoke-Collect's own
+    # AB#397/399/400 per-query resilience) swallowed internally while still completing,
+    # so a run that degraded some datasets without hard-failing is visible as such
+    # instead of looking identical to a fully clean run.
+    $errCountBeforeAssess = $Error.Count
     $runFolder       = $null
     $assessmentError = $null
     try {
@@ -179,6 +223,10 @@ function Invoke-ScoutPipeline {
         # findings.json / reports were already written stay on disk and get reported on.
         $assessmentError = $_.Exception.Message
         Write-Warning "Invoke-ScoutPipeline: Invoke-ScoutAssessment failed: $assessmentError"
+    }
+    $assessmentHadNonTerminatingErrors = ($Error.Count -gt $errCountBeforeAssess)
+    if ($assessmentHadNonTerminatingErrors -and -not $assessmentError) {
+        Write-Warning "Invoke-ScoutPipeline: the collect/assess/report run completed but recorded $($Error.Count - $errCountBeforeAssess) non-terminating error(s) along the way (AB#402) -- see the warning/verbose output above for detail."
     }
 
     if (-not $runFolder) {
@@ -223,25 +271,36 @@ function Invoke-ScoutPipeline {
     # to report on. Anything with at least a collect.json/findings.json on disk is at
     # worst PartialSuccess (a permission-audit hard failure also forces PartialSuccess
     # even on an otherwise-clean run, since some datasets may be silently degraded).
+    # AB#402: a step that recorded non-terminating errors it otherwise swallowed
+    # (e.g. Invoke-Collect's own AB#397/399/400 per-query resilience kicking in) also
+    # forces PartialSuccess -- a run that degraded some datasets without hard-failing
+    # must not look identical to a fully clean run in the summary.
+    $hadNonTerminatingErrors = $permissionAudit.HadNonTerminatingErrors -or $assessmentHadNonTerminatingErrors
     $outcome =
-        if (-not $runFolder -or (-not $collectExists -and -not $findingsExist)) { 'Failed' }
-        elseif ($assessmentError -or ($permissionAudit.Ok -eq $false))          { 'PartialSuccess' }
-        else                                                                     { 'Success' }
+        if (-not $runFolder -or (-not $collectExists -and -not $findingsExist))                          { 'Failed' }
+        elseif ($assessmentError -or ($permissionAudit.Ok -eq $false) -or $hadNonTerminatingErrors)       { 'PartialSuccess' }
+        else                                                                                               { 'Success' }
+
+    if (Get-Command Write-ScoutProgress -ErrorAction SilentlyContinue) {
+        try { Write-ScoutProgress -Activity 'Scout Pipeline' -Status "Done ($outcome)" -Id 1 -Completed }
+        catch { Write-Verbose "Invoke-ScoutPipeline: Write-ScoutProgress completion call failed: $_" }
+    }
 
     $summary = [ordered]@{
-        schemaVersion     = $schemaVersion
-        startedOn         = $startedOn.ToString('o')
-        finishedOn        = $finishedOn.ToString('o')
-        elapsedSeconds    = [math]::Round(($finishedOn - $startedOn).TotalSeconds, 1)
-        assessments       = @($Assessment)
-        formats           = @($OutputFormat)
-        managementGroupId = $ManagementGroupId
-        runFolder         = $runFolder
-        assessmentStatus  = $assessmentStatus
-        findingsByStatus  = $findingsByStatus
-        permissionAudit   = $permissionAudit
-        assessmentError   = $assessmentError
-        outcome           = $outcome
+        schemaVersion           = $schemaVersion
+        startedOn               = $startedOn.ToString('o')
+        finishedOn              = $finishedOn.ToString('o')
+        elapsedSeconds          = [math]::Round(($finishedOn - $startedOn).TotalSeconds, 1)
+        assessments             = @($Assessment)
+        formats                 = @($OutputFormat)
+        managementGroupId       = $ManagementGroupId
+        runFolder               = $runFolder
+        assessmentStatus        = $assessmentStatus
+        findingsByStatus        = $findingsByStatus
+        permissionAudit         = $permissionAudit
+        assessmentError         = $assessmentError
+        hadNonTerminatingErrors = $hadNonTerminatingErrors
+        outcome                 = $outcome
     }
 
     if ($runFolder) {
@@ -263,6 +322,9 @@ function Invoke-ScoutPipeline {
         }
         elseif ($permissionAudit.Skipped) {
             $md.Add('- Permission audit: skipped (-SkipPermissionAudit)')
+        }
+        if ($hadNonTerminatingErrors) {
+            $md.Add('- Non-terminating errors: yes (AB#402 -- see warning/verbose output for detail; the run still completed)')
         }
         if ($findingsByStatus.Count -gt 0) {
             $md.Add('')

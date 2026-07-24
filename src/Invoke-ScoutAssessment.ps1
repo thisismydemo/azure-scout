@@ -45,6 +45,13 @@ $ErrorActionPreference = 'Stop'
     `-Category` (or each assessment's manifest `Collect` list) now actually
     filters which Resource Graph queries `Invoke-Collect` runs, instead of
     always collecting the full ~25-query set.
+
+    AB#405: reports coarse phase-level progress (collect, each ingestor, each
+    assessment being scored, each report renderer) through `Write-ScoutProgress`
+    (src/Write-ScoutProgress.ps1) when that function is loaded in the calling
+    session. Every call is guarded with `Get-Command ... -ErrorAction
+    SilentlyContinue`, so this is a soft dependency only -- a session that never
+    loaded that helper runs exactly as it did before progress reporting existed.
 #>
 function Invoke-ScoutAssessment {
     [CmdletBinding()]
@@ -53,7 +60,7 @@ function Invoke-ScoutAssessment {
         [ValidateSet('All', 'ArmOnly', 'EntraOnly')]
         [string]   $Scope = 'All',              # EntraOnly throws -- ARM/ARG collect only, no Entra path here
         [string[]] $Category,                    # existing category filter still works
-        [ValidateSet('PowerBi', 'Html', 'Pptx', 'Excel', 'Json', 'React', 'All')]
+        [ValidateSet('PowerBi', 'Html', 'Pptx', 'Excel', 'Json', 'JsonEvidence', 'React', 'Pdf', 'All')]
         [string[]] $OutputFormat = @('Html'),
         [string]   $OutputPath = './output',
         [switch]   $PermissionAudit,
@@ -65,6 +72,21 @@ function Invoke-ScoutAssessment {
     $runId   = Get-Date -Format 'yyyyMMdd_HHmmss'
     $runPath = Join-Path $OutputPath $runId
     New-Item -ItemType Directory -Path $runPath -Force | Out-Null
+
+    # AB#405: soft dependency -- every call below is skipped entirely when this
+    # helper isn't loaded in the session, so Invoke-ScoutAssessment has zero hard
+    # dependency on it.
+    $scoutProgressAvailable = [bool](Get-Command Write-ScoutProgress -ErrorAction SilentlyContinue)
+    function Write-ScoutAssessmentProgress {
+        param([string] $Status, [int] $PercentComplete = -1, [switch] $Completed)
+        if (-not $scoutProgressAvailable) { return }
+        try {
+            $params = @{ Activity = 'Scout Assessment'; Id = 1 }
+            if ($Completed) { $params.Completed = $true } else { $params.Status = $Status; $params.PercentComplete = $PercentComplete }
+            Write-ScoutProgress @params
+        }
+        catch { Write-Verbose "Invoke-ScoutAssessment: Write-ScoutProgress failed, continuing without progress UX: $_" }
+    }
 
     $manifest = Import-PowerShellDataFile "$PSScriptRoot/../manifests/assessments.psd1"
     if ($Assessment -contains 'All') { $Assessment = @($manifest.Keys) }
@@ -89,11 +111,13 @@ function Invoke-ScoutAssessment {
         }
         $categories = $Assessment | ForEach-Object { $manifest[$_].Collect } | Select-Object -Unique
         if ($Category) { $categories = $Category }
+        Write-ScoutAssessmentProgress -Status 'Collecting Azure resource data' -PercentComplete 5
         $collect = Invoke-Collect -Categories $categories -Scope $Scope -ManagementGroupId $ManagementGroupId
 
         # ingest third-party collectors declared by the chosen assessments
         $ingestors = $Assessment | ForEach-Object { $manifest[$_].Ingest } | Select-Object -Unique
         foreach ($i in $ingestors) {
+            Write-ScoutAssessmentProgress -Status "Ingesting: $i" -PercentComplete 20
             switch ($i) {
                 # Native governance collector (AB#5041) — ARG + ambient-token ARM
                 # REST, no AzGovViz dependency. Default for every assessment that
@@ -112,7 +136,10 @@ function Invoke-ScoutAssessment {
 
     # ---- ASSESS ----
     $allFindings = @()
+    $assessmentIndex = 0
     foreach ($name in $Assessment) {
+        $assessmentIndex++
+        Write-ScoutAssessmentProgress -Status "Assessing: $name" -PercentComplete (35 + [Math]::Min(30, [Math]::Round(($assessmentIndex / [Math]::Max(1, @($Assessment).Count)) * 30)))
         $spec = $manifest[$name]
         if (-not $spec.Rules) { continue }        # inventory-only assessment
         $ruleSet   = Get-RuleSet -Patterns $spec.Rules
@@ -146,8 +173,11 @@ function Invoke-ScoutAssessment {
     }
 
     # ---- REPORT ----
-    $reporters = if ($OutputFormat -contains 'All') { @('PowerBi', 'Html', 'Pptx', 'Excel', 'Json', 'React') } else { $OutputFormat }
+    $reporters = if ($OutputFormat -contains 'All') { @('PowerBi', 'Html', 'Pptx', 'Excel', 'Json', 'JsonEvidence', 'React', 'Pdf') } else { $OutputFormat }
+    $reporterIndex = 0
     foreach ($r in $reporters) {
+        $reporterIndex++
+        Write-ScoutAssessmentProgress -Status "Rendering: $r" -PercentComplete (70 + [Math]::Min(29, [Math]::Round(($reporterIndex / [Math]::Max(1, @($reporters).Count)) * 29)))
         # Pipe to Out-Null: some renderers (Export-React) RETURN the path they
         # wrote, and that must not leak into this function's output stream — the
         # only thing Invoke-ScoutAssessment returns is $runPath. Without this,
@@ -156,5 +186,6 @@ function Invoke-ScoutAssessment {
         # breaks.
         Export-Report -Renderer $r -Findings $scored -Collect $collect -OutputPath $runPath -Drift $drift | Out-Null
     }
+    Write-ScoutAssessmentProgress -Completed
     return $runPath
 }
