@@ -119,15 +119,15 @@ Consolidated from the master plan, release ledger, assessment registry, and the
 
 ## F. Open bugs (ADO-tracked)
 
-| GH# | Bug |
-|---|---|
-| #24 | Automation mode cache writes to null path (Start-AZSCAutProcessJob missing $DefaultPath) |
-| #25 | Progress bar always shows 0% in Build-AZSCCacheFiles ($ReportCounter undeclared) |
-| #26 | $JobNames never assigned in automation branch of Start-AZSCProcessOrchestration |
-| #27 | $StorageContext null reference when using -StorageAccount without -Automation |
-| #28 | $VMQuotas undefined when -SkipVMDetails is passed |
-| #29 | GitHub Actions azure-inventory.yml workflow is non-functional — pure simulation |
-| #38 | **[HIGH]** Entra ID modules failing even with Global Admin permissions |
+| GH# | Bug | Status |
+|---|---|---|
+| #24 | Automation mode cache writes to null path (Start-AZSCAutProcessJob missing $DefaultPath) | ✅ Fixed (AB#335) — `$DefaultPath` added to param + passed from orchestrator |
+| #25 | Progress bar always shows 0% in Build-AZSCCacheFiles ($ReportCounter undeclared) | ✅ Fixed (AB#336) — corrected to `$Counter` |
+| #26 | $JobNames never assigned in automation branch of Start-AZSCProcessOrchestration | ✅ Fixed (AB#337) — `$JobNames` now assigned after the automation Wait-Job |
+| #27 | $StorageContext null reference when using -StorageAccount without -Automation | Open |
+| #28 | $VMQuotas undefined when -SkipVMDetails is passed | ✅ Fixed (AB#339) — initialised to `$null`; premature Remove-Variable dropped |
+| #29 | GitHub Actions azure-inventory.yml workflow is non-functional — pure simulation | ✅ Fixed (AB#340) — real SPN login + `Invoke-AzureScout` run + artifact upload |
+| #38 | **[HIGH]** Entra ID modules failing even with Global Admin permissions | Open (AB#347 — likely Graph-permission, not code) |
 
 ## G. Maintenance / meta (ADO-tracked)
 

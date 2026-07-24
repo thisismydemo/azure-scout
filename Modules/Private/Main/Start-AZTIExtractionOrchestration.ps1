@@ -34,6 +34,7 @@ function Start-AZSCExtractionOrchestration {
     $PolicyDef = $null
     $PolicySetDef = $null
     $Costs = $null
+    $VMQuotas = $null
 
     # ── ARM Extraction (skip when Scope = EntraOnly) ──
     if ($Scope -ne 'EntraOnly') {
@@ -77,7 +78,9 @@ function Start-AZSCExtractionOrchestration {
 
                 $Resources += $VMQuotas
 
-                Remove-Variable -Name VMQuotas -ErrorAction SilentlyContinue
+                # NOTE: $VMQuotas is intentionally NOT removed here — it is returned
+                # separately as the 'Quotas' field of $ReturnData below. Removing it
+                # (as the original code did) left 'Quotas' permanently null.
 
                 Write-Host 'Gathering VM Extra Details: ' -NoNewline
                 Write-Host 'Size SKU' -ForegroundColor Cyan

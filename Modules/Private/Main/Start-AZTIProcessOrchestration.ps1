@@ -35,7 +35,7 @@ function Start-AZSCProcessOrchestration {
             {
                 Write-Output ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Processing Resources in Automation Mode')
 
-                Start-AZSCAutProcessJob -Resources $Resources -Retirements $Retirements -Subscriptions $Subscriptions -Heavy $Heavy -InTag $InTag -Unsupported $Unsupported -Category $Category
+                Start-AZSCAutProcessJob -Resources $Resources -Retirements $Retirements -Subscriptions $Subscriptions -Heavy $Heavy -InTag $InTag -Unsupported $Unsupported -Category $Category -DefaultPath $DefaultPath
             }
         else
             {
@@ -52,6 +52,7 @@ function Start-AZSCProcessOrchestration {
             {
                 Write-Output ((get-date -Format 'yyyy-MM-dd_HH_mm_ss')+' - '+'Waiting for Resource Jobs to Complete in Automation Mode')
                 Get-Job | Where-Object {$_.name -like 'ResourceJob_*'} | Wait-Job
+                $JobNames = (Get-Job | Where-Object {$_.name -like 'ResourceJob_*'}).Name
             }
         else
             {

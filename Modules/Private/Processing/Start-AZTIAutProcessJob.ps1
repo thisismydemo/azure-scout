@@ -18,7 +18,7 @@ Authors: Claudio Merola
 #>
 
 function Start-AZSCAutProcessJob {
-    Param($Resources, $Retirements, $Subscriptions, $Heavy, $InTag, $Unsupported, $Category)
+    Param($Resources, $Retirements, $Subscriptions, $Heavy, $InTag, $Unsupported, $Category, $DefaultPath)
 
     $ParentPath = (get-item $PSScriptRoot).parent.parent
     $InventoryModulesPath = Join-Path $ParentPath 'Public' 'InventoryModules'

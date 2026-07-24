@@ -27,7 +27,7 @@ function Build-AZSCCacheFiles {
 
     Foreach ($Job in $JobNames)
         {
-            $c = (($ReportCounter / $Lops) * 100)
+            $c = (($Counter / $Lops) * 100)
             $c = [math]::Round($c)
             Write-Progress -Id 1 -activity "Building Cache Files" -Status "$c% Complete." -PercentComplete $c
 
