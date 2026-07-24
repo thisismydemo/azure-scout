@@ -145,7 +145,13 @@ Focus: extend CAF/WAF analytics to **every** Scout category, not just the landin
 
 See [`RELEASES.md`](https://github.com/thisismydemo/azure-scout/blob/main/RELEASES.md) for the build/release ledger.
 
-## Exploratory / Future — Served Web Portal (Epic AB#5093)
+## Far-future — Web version of Azure Scout (Epic AB#5093)
+
+> A **web-UI version with the same capabilities as the PowerShell version** — same engine,
+> browser instead of terminal. **Far-future, not scheduled.** Only the web-only plumbing
+> (server, runspace, progress polling, launchers) is unique to it. The actual product features
+> are **buildable in the PowerShell version now** (Epic AB#5094) and the web version inherits them.
+
 
 > **Status: under evaluation — NOT committed.** This is a possible future direction, not
 > planned work, and it would be a **departure from the current "no portals" stance** in the
