@@ -152,36 +152,40 @@ See [`RELEASES.md`](https://github.com/thisismydemo/azure-scout/blob/main/RELEAS
 > [Long-term Vision](#long-term-vision) below. Captured here so the direction is tracked and
 > can be decided deliberately rather than drifting into the backlog.
 
-A **served web-application** delivery model — fundamentally different from the PowerShell
-module AzureScout is today. Instead of generating static report files, it would run a local
-HTTP listener with a browser UI: background-runspace collection with live progress, an
-interactive vis.js network topology, in-browser PDF export, and browser-based config
-upload/download. It is weeks of net-new engineering (web server + JS front-end + IPC layer)
-and a genuine product fork.
+A **served web-application** as a **second delivery surface** for the same engine — not a
+different product. It would run a local HTTP listener with a browser UI (background-runspace
+collection with live progress, interactive vis.js topology, in-browser PDF export, config
+upload/download). **The web portal must reach FEATURE PARITY with the PowerShell version** —
+every product feature is available through both surfaces; neither has a feature the other
+lacks. Only the *delivery plumbing* below is web-specific. It is weeks of net-new engineering
+(web server + JS front-end + IPC layer).
 
-| Area | Web-only capability | Status |
+**Web delivery surface — plumbing only (Epic AB#5093, exploratory):**
+
+| Area | Web-surface plumbing (no PowerShell equivalent) | Status |
 |---|---|---|
 | Server core | HTTP listener + background runspace, file-based progress IPC (client polls), named stages %, concurrent-collection guard, cached-inventory serving, runspace disposal, double-poll guard | :bulb: Exploratory (AB#381–385, 403, 404) |
-| Browser config I/O | WAF config hot-swap via upload, config download as JSON, hardcoded fallback when upload fails | :bulb: Exploratory (AB#373–375) |
-| In-browser PDF | html2canvas capture + jsPDF `addTable`/`addSubSection` helpers | :bulb: Exploratory (AB#379, 394, 395) |
 | Launchers | `start.cmd` / `start.sh` to launch the server | :bulb: Exploratory (AB#388) |
 
-### Reclassified to the module (Epic AB#5094)
+### Feature parity — shared across both surfaces (Epic AB#5094)
 
-While scoping the portal, **~19 items originally sketched under it were actually PowerShell
-(PSGallery) module features, not web-server work** — moved to a dedicated module-enhancements
-epic so the two products stay cleanly separated (no feature lives in both):
+The product **features** below are **not web-only or PowerShell-only — they belong to both
+surfaces**. They live in the core product and are surfaced through the PowerShell module (CLI +
+static/React reports) *and* the web portal. Same capability, per-surface delivery:
 
-- **Report visuals** (extend the shipped React/HTML report, don't rebuild): vis.js VNet
+- **Report visuals** (in the React/HTML report today, and the web portal later): vis.js VNet
   topology + click-to-details + reset/fit controls, MG-hierarchy diagram, per-section
   search/filter, clickable rows + side panel, 14 KPI cards, Azure Firewall drill-down,
   Governance section (budgets/locks/tag chips), policy-enforcement badge, scope tooltips,
   resources-only JSON evidence export (AB#376–378, 380, 386, 387, 389–393, 396). *Several
-  partially exist in the React report already.*
-- **Collector / pipeline resilience**: per-subscription try/catch/continue, MG role-requirement
-  hint, false RP-registration-error swallow, per-group firewall-parse-error logging,
-  empty-data guard, pipeline-`HadErrors` warning capture (AB#397–402).
-- **Terminal UX**: PwshSpectreConsole rich TUI progress — a CLI feature, not web (AB#405).
+  partially exist in the React report already — extend them.*
+- **WAF config load/save + report PDF export** (PowerShell via parameters/file output; web via
+  browser upload/download + in-browser render) (AB#373–375, 379, 394, 395).
+- **Collector / pipeline resilience** (shared engine): per-subscription try/catch/continue, MG
+  role-requirement hint, false RP-registration-error swallow, per-group firewall-parse-error
+  logging, empty-data guard, pipeline-`HadErrors` warning capture (AB#397–402).
+- **Live-progress UX** — same feature, per-surface delivery: Spectre.Console TUI in the CLI,
+  browser progress in the web portal (AB#405).
 
 ## Long-term Vision
 
