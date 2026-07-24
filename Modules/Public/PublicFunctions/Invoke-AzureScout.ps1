@@ -435,6 +435,26 @@ Function Invoke-AzureScout {
             $SkipAPIs = $true
         }
 
+    # --- Auth status banner: signed-in identity + active subscription (AB#349) ---
+    # Non-fatal: a missing/oddly-shaped context must never abort a run.
+    try {
+        $AuthCtx = Get-AzContext -ErrorAction SilentlyContinue
+        if ($AuthCtx -and $AuthCtx.Account) {
+            $AuthUpn = $AuthCtx.Account.Id
+            $AuthSub = if ($AuthCtx.Subscription -and $AuthCtx.Subscription.Name) {
+                "$($AuthCtx.Subscription.Name) ($($AuthCtx.Subscription.Id))"
+            } else { 'none selected' }
+            Write-Host ''
+            Write-Host '  Signed in as : ' -NoNewline -ForegroundColor DarkGray; Write-Host $AuthUpn -ForegroundColor Cyan
+            Write-Host '  Subscription : ' -NoNewline -ForegroundColor DarkGray; Write-Host $AuthSub -ForegroundColor Cyan
+            Write-Host '  Tenant       : ' -NoNewline -ForegroundColor DarkGray; Write-Host $TenantID -ForegroundColor Cyan
+            Write-Host ''
+        }
+    }
+    catch {
+        Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + ' - Auth banner skipped: ' + $_.Exception.Message)
+    }
+
     if ($StorageAccount)
         {
             $StorageContext = New-AzStorageContext -StorageAccountName $StorageAccount -UseConnectedAccount
