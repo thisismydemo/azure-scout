@@ -20,6 +20,13 @@ function Export-Report {
         'Excel'   { Export-Excel   -Findings $Findings -Collect $Collect -OutputPath $OutputPath }
         'React'   { Export-React   -Findings $Findings -Collect $Collect -OutputPath $OutputPath -Drift $Drift }
         'Json'    { $Findings | ConvertTo-Json -Depth 100 | Out-File "$OutputPath/findings.json" }
+        # AB#396: resources-only evidence export (raw Collect only -- no assessment
+        # metadata/scores/findings; see Export-JsonEvidence.ps1's own header for why).
+        'JsonEvidence' { Export-JsonEvidence -Findings $Findings -Collect $Collect -OutputPath $OutputPath }
+        # AB#379/394/395: hand-rolled, dependency-free .pdf renderer (cover, exec
+        # summary, per-area findings table with repeating header, gaps, manual
+        # review). See Export-Pdf.ps1's own header for the offline-PDF design.
+        'Pdf' { Export-Pdf -Findings $Findings -Collect $Collect -OutputPath $OutputPath }
         default   { Write-Warning "Unknown renderer '$Renderer' — skipped." }
     }
 }
