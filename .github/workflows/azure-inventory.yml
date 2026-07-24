@@ -1,78 +1,131 @@
 name: Azure Scout
 
+# Runs a real, headless Azure Scout inventory against a subscription using a
+# service-principal (client-secret) login and uploads the generated reports as
+# build artifacts.
+#
+# Required repository secrets (Settings → Secrets and variables → Actions):
+#   AZURE_TENANT_ID        - Entra tenant (directory) ID
+#   AZURE_CLIENT_ID        - App registration (service principal) client ID
+#   AZURE_CLIENT_SECRET    - Client secret for that service principal
+#   AZURE_SUBSCRIPTION_ID  - Subscription to inventory (optional; omit to scan all
+#                            subscriptions the SPN can read)
+#
+# The service principal needs at least Reader on the target scope. No secret is
+# ever echoed; -Secret is passed straight into the module's non-interactive login.
+
 on:
   workflow_dispatch:
     inputs:
       subscriptionId:
-        description: 'Specific subscription ID (optional)'
+        description: 'Subscription ID to inventory (blank = all readable subscriptions)'
         required: false
-        default: '00000000-0000-0000-0000-000000000000'
+        default: ''
       resourceGroup:
-        description: 'Specific resource group (optional)'
+        description: 'Limit to a single resource group (optional)'
         required: false
-        default: 'test-rg'
+        default: ''
       reportName:
-        description: 'Custom report name (optional)'
+        description: 'Report name prefix'
         required: false
-        default: 'TestInventory'
+        default: 'AzureScout'
+  # Uncomment to run on a schedule (first of every month, 06:00 UTC):
+  # schedule:
+  #   - cron: '0 6 1 * *'
+
+permissions:
+  contents: read
 
 jobs:
   run-inventory:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # For local testing, we'll simulate the Azure login step
-      - name: Simulate Azure Login
-        run: |
-          echo "Azure login simulated for local testing"
-
-      # For local testing with act, we'll simulate the module installation and AZSC execution
-      - name: Simulate AZSC Installation and Run
+      - name: Verify Azure credentials are configured
         shell: bash
+        env:
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
         run: |
-          echo "Installing AZSC modules (simulation for testing)"
-          echo "Running Invoke-AzureScout with parameters:"
-          echo "- ReportName: ${{ github.event.inputs.reportName }}"
-          echo "- SubscriptionID: ${{ github.event.inputs.subscriptionId }}"
-          echo "- ResourceGroup: ${{ github.event.inputs.resourceGroup }}"
-          
-          # Create dummy report files
-          mkdir -p AZSC-Reports
-          echo "This is a test Excel report" > AZSC-Reports/test_report.xlsx
-          echo "This is a test diagram file" > AZSC-Reports/test_diagram.drawio
-          
-          # List the created files
-          echo "Created files:"
-          ls -la AZSC-Reports/
-          
-          echo "Workflow execution completed successfully"
+          missing=0
+          for v in AZURE_TENANT_ID AZURE_CLIENT_ID AZURE_CLIENT_SECRET; do
+            if [ -z "${!v}" ]; then
+              echo "::error::Required secret $v is not set. See the header of this workflow for setup."
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then exit 1; fi
+          echo "Azure service-principal credentials present."
 
-      # Optional: Upload to Azure Storage
+      - name: Install Az and Azure Scout modules
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Write-Host 'Installing Az.Accounts, Az.ResourceGraph, Az.Resources...'
+          Install-Module Az.Accounts, Az.ResourceGraph, Az.Resources -Scope CurrentUser -Force -AllowClobber
+          Write-Host 'Installing AzureScout from PSGallery...'
+          Install-Module AzureScout -Scope CurrentUser -Force
+
+      - name: Run Azure Scout inventory
+        shell: pwsh
+        env:
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $reportDir = Join-Path $env:GITHUB_WORKSPACE 'AzureScout-Reports'
+          New-Item -ItemType Directory -Force -Path $reportDir | Out-Null
+
+          $params = @{
+            TenantID          = $env:AZURE_TENANT_ID
+            AppId             = $env:AZURE_CLIENT_ID
+            Secret            = $env:AZURE_CLIENT_SECRET
+            ReportName        = '${{ github.event.inputs.reportName }}'
+            ReportDir         = $reportDir
+            SkipDiagram       = $true
+            SkipPermissionCheck = $true
+          }
+
+          # Prefer the workflow input, then the secret, else scan all readable subs.
+          $subId = '${{ github.event.inputs.subscriptionId }}'
+          if ([string]::IsNullOrWhiteSpace($subId)) { $subId = $env:AZURE_SUBSCRIPTION_ID }
+          if (-not [string]::IsNullOrWhiteSpace($subId)) { $params.SubscriptionID = $subId }
+
+          $rg = '${{ github.event.inputs.resourceGroup }}'
+          if (-not [string]::IsNullOrWhiteSpace($rg)) { $params.ResourceGroup = $rg }
+
+          Import-Module AzureScout
+          Invoke-AzureScout @params
+
+          Write-Host 'Generated files:'
+          Get-ChildItem -Path $reportDir -Recurse | Select-Object FullName, Length | Format-Table -AutoSize
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: azure-scout-reports
+          path: AzureScout-Reports/
+          if-no-files-found: warn
+
+      # Optional: upload to Azure Storage (uncomment and provide a storage account
+      # the service principal can write to).
       # - name: Upload to Azure Storage
       #   shell: pwsh
+      #   env:
+      #     AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      #     AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      #     AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       #   run: |
-      #     $storageAccount = "yourstorageaccount"
-      #     $container = "AZSC-Reports"
-      #     
-      #     # Create the storage context
-      #     $ctx = New-AzStorageContext -StorageAccountName $storageAccount -UseConnectedAccount
-      #     
-      #     # Upload files to Azure Storage
-      #     Get-ChildItem -Path "$env:GITHUB_WORKSPACE/AZSC-Reports" -File | ForEach-Object {
-      #       Set-AzStorageBlobContent -File $_.FullName -Container $container -Blob $_.Name -Context $ctx -Force
+      #     $sec = ConvertTo-SecureString $env:AZURE_CLIENT_SECRET -AsPlainText -Force
+      #     $cred = [pscredential]::new($env:AZURE_CLIENT_ID, $sec)
+      #     Connect-AzAccount -ServicePrincipal -Tenant $env:AZURE_TENANT_ID -Credential $cred | Out-Null
+      #     $ctx = New-AzStorageContext -StorageAccountName 'yourstorageaccount' -UseConnectedAccount
+      #     Get-ChildItem -Path "$env:GITHUB_WORKSPACE/AzureScout-Reports" -File | ForEach-Object {
+      #       Set-AzStorageBlobContent -File $_.FullName -Container 'azurescout-reports' -Blob $_.Name -Context $ctx -Force
       #     }
-
-      # Optional: Send email notification
-      # - name: Send Email Notification
-      #   uses: dawidd6/action-send-mail@v3
-      #   with:
-      #     server_address: smtp.gmail.com
-      #     server_port: 465
-      #     username: ${{ secrets.EMAIL_USERNAME }}
-      #     password: ${{ secrets.EMAIL_PASSWORD }}
-      #     subject: Azure Scout Report
-      #     body: Azure Scout has completed. Reports are attached.
-      #     to: recipient@example.com
-      #     from: Azure Inventory <sender@example.com> 
