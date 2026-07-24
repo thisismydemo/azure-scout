@@ -48,6 +48,21 @@ foreach ($directory in @('modules\Private', '.\modules\Public\PublicFunctions'))
     Get-ChildItem -Path "$PSScriptRoot\$directory\*.ps1" -Recurse | ForEach-Object { . $_.FullName }
 }
 
+#region — Update check (AB#369)
+# Auto-UPDATE counterpart to the auto-INSTALL dependency bootstrap above: on import,
+# surface (never silently apply) a newer AzureScout release from PSGallery. The guts of
+# the check (throttle, CI detection, Find-Module lookup, notify-vs-update opt-in) live in
+# Test-AZSCModuleUpdate (Modules\Private\Main) so they can be unit-tested with Pester
+# mocks -- see that function's comment-based help for the full design rationale. This
+# outer try/catch is a second, redundant safety net so a missing/broken function can
+# never fail module import either.
+try {
+    Test-AZSCModuleUpdate
+} catch {
+    Write-Verbose "[AzureScout] Update check failed to run: $_"
+}
+#endregion
+
 # Assessment platform (Epics AB#5023 / AB#5056) — collect, engine, ingest,
 # benchmark, report, orchestrator. Loaded after the inventory modules so the
 # assessment layer can call into collection when needed (AB#5024).
