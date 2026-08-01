@@ -39,6 +39,13 @@ jobs:
           Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
           Write-Host 'Installing ImportExcel (Excel report tests exercise this dependency)...'
           Install-Module ImportExcel -Force -Scope CurrentUser
+          # powershell-yaml is a hard #requires on six test files -- every one that loads a
+          # rule file through Get-RuleSet. Without it Pester fails at DISCOVERY, not at run
+          # time, so the affected files reported as errored rather than failed and the real
+          # cause ("the module cannot be found") was buried under a stack trace. It was never
+          # installed here, so those six have never actually run in CI.
+          Write-Host 'Installing powershell-yaml (the rule engine parses YAML rule files)...'
+          Install-Module powershell-yaml -Force -Scope CurrentUser
 
       - name: Validate declarative collector definitions
         shell: pwsh
