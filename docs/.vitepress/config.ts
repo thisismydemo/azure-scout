@@ -69,7 +69,9 @@ export default defineConfig({
           // it collect" — now each have one generated page that cannot drift from the product.
           { text: 'Catalogues index', link: '/reference/' },
           { text: 'Assessment Catalogue', link: '/reference/assessment-catalogue' },
+          { text: 'Framework Coverage', link: '/reference/framework-coverage' },
           { text: 'ARM Modules (collectors)', link: '/reference/arm-modules' },
+          { text: 'Collector Fields', link: '/reference/collector-fields' },
           { text: 'Entra ID Modules', link: '/reference/entra-modules' },
           { text: 'Coverage Table', link: '/reference/coverage-table' },
           { text: 'Category Structure', link: '/reference/category-structure' },

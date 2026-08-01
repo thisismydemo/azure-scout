@@ -355,48 +355,38 @@ pillars, and default report tiers, generated from
 **[Assessment Registry](../design/assessment-registry.md)**. Minimum auth per
 assessment lives in **[Auth & permissions per scan type](./assessment-permissions.md)**.
 
-::: warning 46 registry entries is not 46 independent assessments
-`manifests/assessments.psd1` has **46 keys**, but that is a count of registry
-*entries*, not of distinct things Scout scores. **`LandingZone` is the one
-real roll-up assessment** — it pulls in every CAF design-area and WAF-pillar
-rule file. Many of the other entries are narrower *views* over that same
-rule set, not separate assessments:
+::: warning What the 46 registry entries actually are
+`manifests/assessments.psd1` has **46 keys**. They are not 46 unrelated products, and they
+are no longer mostly views over one roll-up — the AB#6746 restructure turned the per-pillar
+and per-design-area assessments into real scored entries. They group as:
 
-- **15 are the `Assess: ` category slices** (`Assess: Compute`, `Assess:
-  Security`, …) — a category filter over `LandingZone`'s rule set, one per
-  Scout inventory category. They collided with Scout's fifteen **inventory**
-  category names — `Compute` filters what gets *collected*, `Assess: Compute`
-  filters what gets *scored* — so they're now prefixed `Assess: ` to stop the
-  two different things sitting side by side under one label
-  (`-Assessment 'Assess: Compute'`, quoted — the name has a colon and a
-  space). **The old unprefixed name still works**: `Resolve-ScoutAssessmentName`
-  maps it to the prefixed one and prints a warning telling you what to
-  change. This is a stopgap, not the end state — a future release retires
-  these fifteen once genuine per-pillar and per-design-area assessments exist
-  to replace them (see [Roadmap](../project/roadmap.md#caf-waf-assessment-programme)).
-- **4 are sub-bundles** narrower still than a category (`Governance`,
-  `Policy`, `UpdateManager`, `Monitoring`). `Governance` and `Policy` are
-  presently byte-identical — same `Category`/`Collect`/`Ingest`/`Rules` — a
-  known duplicate, not two different assessments.
-- **`Estate` is not an assessment at all.** Its `Rules` list is empty, so it
-  scores nothing — it is a full inventory pull that happens to sit in the
-  assessment registry.
+- **11 Cloud Adoption Framework** — one per design area (`CAF: Governance`, `CAF: Security`,
+  `CAF: Network topology and connectivity`, …) plus the `LandingZone` roll-up, which pulls in
+  every CAF and WAF rule file at once.
+- **9 Well-Architected Framework** — one per pillar (`WAF: Reliability`, `WAF: Security`, …),
+  plus `WAF: Azure Local` and `WAF: Maturity Model`.
+- **19 `Assess: ` service-category slices** — a category filter over the shared rule set, one
+  per Scout inventory category. `Compute` filters what gets *collected*; `Assess: Compute`
+  filters what gets *scored*, which is why they carry the prefix. The old unprefixed name
+  still resolves, with a warning telling you what to change.
+- **7 specialised and workload** — `AVS Workload`, `AVS Landing Zone`, `CASA`,
+  `DevOps Capability Assessment`, `FinOps Review`, `SMART` and `Assess: Compliance`.
 
-What's left after subtracting those: `LandingZone` (the roll-up), `Cost` (a
-targeted cost/TCO pull), `CrossResource` (findings that need two datasets
-correlated), and `SMART` (the migration-readiness assessment, scored against
-its own enumerated source — see [SMART's framework page](../frameworks/smart-question-set.md)).
-**Four genuinely distinct things, not 24.**
+A few legacy sub-bundles still sit inside those groups — `Governance`, `Monitoring` and
+`UpdateManager`, each a narrower cut of a broader entry. Two earlier entries are gone:
+`Policy` (byte-identical to `Governance`) and `Estate` (declared no rules, so it scored
+nothing) were both removed under AB#6795 rather than left to return a misleading
+"no findings".
 
-**The interactive wizard does not list `Estate`**, and does not list any
-entry whose declared rule-file glob matches no file on disk — an entry that
-would run and silently return zero findings reads as "nothing wrong" rather
-than "nothing was checked," so it is left off rather than shown. You can
-still run `Estate` directly — `-Assessment Estate` — since the wizard's
-filtering is a menu courtesy, not an authorization check. Every other entry
-has at least one matching rule file, so the wizard's rule-file filter admits
-**23 of the 24**; `SMART` is then further gated separately, at the wizard
-level, on whether the current estate actually has migration data to score.
+**The full list, with the rule files and the automated-versus-manual split behind each, is on
+one generated page: [Assessment Catalogue](../reference/assessment-catalogue.md).** Prefer it
+to any count written in prose here — it is generated from the registry and cannot drift.
+
+**The interactive wizard hides any entry whose rule-file glob matches no file on disk.** An
+entry that runs and silently returns zero findings reads as "nothing wrong" rather than
+"nothing was checked", so it is left off the menu rather than shown. You can still run one
+directly with `-Assessment <Name>` — the filter is a menu courtesy, not an authorization
+check. `SMART` is gated separately, on whether the estate actually has migration data to score.
 :::
 
 ## Scoring

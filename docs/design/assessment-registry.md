@@ -5,17 +5,19 @@ description: The catalogue of every Azure Scout assessment — description, cate
 # Assessment Registry
 
 `manifests/assessments.psd1` has **46 entries**, categorized and tagged. Run
-one with `Invoke-AzureScout -Assessment <Name>`. **46 registry entries is not
-46 independent assessments** — read the warning below before treating that number as a
-coverage claim.
+one with `Invoke-AzureScout -Assessment <Name>`.
+
+The full list, with the rule files and the automated-versus-manual split behind each, is on the
+generated **[Assessment Catalogue](../reference/assessment-catalogue.md)** — prefer it to any
+count written in prose. This page explains how the entries are *structured*.
 
 ::: warning What those entries actually break down into
-**`LandingZone` is the one real roll-up assessment** — every other entry is a
-narrower view over the same rule set, a genuinely separate small assessment,
-or not an assessment at all:
+Since the AB#6746 restructure the per-pillar and per-design-area entries are **real scored
+assessments in their own right**, not views over a single roll-up. `LandingZone` remains the
+roll-up that pulls in every CAF and WAF rule file at once. What is left to explain is the rest:
 
-- **15 per-category slices**, prefixed `Assess: ` (`Assess: Compute`,
-  `Assess: Security`, …). They collided with Scout's fifteen **inventory**
+- **19 per-category slices**, prefixed `Assess: ` (`Assess: Compute`,
+  `Assess: Security`, …). They collided with Scout's **inventory**
   category names — `Compute` filters what gets *collected*, `Assess: Compute`
   filters what gets *scored* — so they're now prefixed to stop the two
   different things sitting side by side under one label (quote the value —
