@@ -14,12 +14,12 @@ export default defineConfig({
 
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Guide', link: '/guide/overview' },
-      { text: 'Assessment', link: '/assessment/assessment' },
-      { text: 'Reference', link: '/reference/arm-modules' },
+      { text: 'Guide', link: '/guide/' },
+      { text: 'Assessment', link: '/assessment/' },
+      { text: 'Catalogues', link: '/reference/' },
+      { text: 'Automation', link: '/automation-guide/' },
       { text: 'Frameworks', link: '/frameworks/' },
-      { text: 'Design', link: '/design/assessment-registry' },
-      { text: 'Project', link: '/project/roadmap' },
+      { text: 'Project', link: '/project/' },
     ],
 
     sidebar: [
@@ -27,6 +27,7 @@ export default defineConfig({
         text: 'Getting Started',
         collapsed: false,
         items: [
+          { text: 'Guide index', link: '/guide/' },
           { text: 'Overview', link: '/guide/overview' },
           { text: 'Prerequisites & Required Modules', link: '/guide/prerequisites' },
           { text: 'Authentication', link: '/guide/authentication' },
@@ -42,6 +43,7 @@ export default defineConfig({
         text: 'Unattended Execution',
         collapsed: true,
         items: [
+          { text: 'Automation index', link: '/automation-guide/' },
           { text: 'Azure Automation Account', link: '/automation-guide/automation' },
           { text: 'GitHub Actions', link: '/automation-guide/github-actions' },
           { text: 'Azure DevOps', link: '/automation-guide/azure-devops' },
@@ -51,6 +53,7 @@ export default defineConfig({
         text: 'CAF/WAF Assessment',
         collapsed: false,
         items: [
+          { text: 'Assessment index', link: '/assessment/' },
           { text: 'Assessment Platform', link: '/assessment/assessment' },
           { text: 'Assessment Prerequisites', link: '/assessment/assessment-prerequisites' },
           { text: 'Auth & Permissions per Scan Type', link: '/assessment/assessment-permissions' },
@@ -62,6 +65,7 @@ export default defineConfig({
         items: [
           // The two questions every reader asks first — "what does it assess" and "what does
           // it collect" — now each have one generated page that cannot drift from the product.
+          { text: 'Catalogues index', link: '/reference/' },
           { text: 'Assessment Catalogue', link: '/reference/assessment-catalogue' },
           { text: 'ARM Modules (collectors)', link: '/reference/arm-modules' },
           { text: 'Entra ID Modules', link: '/reference/entra-modules' },
@@ -114,6 +118,7 @@ export default defineConfig({
         text: 'Project',
         collapsed: true,
         items: [
+          { text: 'Project index', link: '/project/' },
           { text: 'Roadmap', link: '/project/roadmap' },
           { text: 'Changelog', link: '/project/changelog' },
           { text: 'Repository Structure', link: '/project/folder-structure' },

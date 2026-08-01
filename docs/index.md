@@ -1,81 +1,81 @@
 ---
-description: See everything. Own your cloud. A PowerShell module for comprehensive Azure + Entra ID discovery and inventory.
+layout: home
+description: See everything. Own your cloud. A PowerShell module for comprehensive Azure + Entra ID discovery, inventory, and CAF/WAF assessment.
+
+hero:
+  name: AzureScout
+  text: See everything. Own your cloud.
+  tagline: One PowerShell command that inventories your entire Azure estate — and scores it against CAF and WAF. Read-only, offline-capable, no agents.
+  image:
+    src: /images/azurescout-banner.svg
+    alt: AzureScout
+  actions:
+    - theme: brand
+      text: Get started
+      link: /guide/
+    - theme: alt
+      text: What it assesses
+      link: /reference/assessment-catalogue
+    - theme: alt
+      text: View on GitHub
+      link: https://github.com/thisismydemo/azure-scout
+
+features:
+  - title: Two modes, one command
+    details: Run bare for a wide inventory of everything in the tenant. Add -Assessment for a scored CAF/WAF review. Run with no parameters at all and a guided wizard walks you through it.
+    link: /guide/overview
+    linkText: How the modes differ
+  - title: 242 collectors, 18 categories
+    details: Every one of Microsoft's eighteen published service categories, from AI and Analytics through to Storage and Web — plus Entra ID identity objects via Microsoft Graph.
+    link: /reference/arm-modules
+    linkText: Browse the collectors
+  - title: 46 assessments
+    details: CAF design areas, WAF pillars, workload reviews, FinOps, DevOps and compliance — each backed by declarative rule files with published automated-versus-manual counts.
+    link: /reference/assessment-catalogue
+    linkText: Browse the assessments
+  - title: Read-only, always
+    details: Scout never creates, modifies or deletes anything in your tenant. Reader at the root management group is enough, and a pre-flight audit tells you exactly what you can and cannot collect before you run.
+    link: /guide/permissions
+    linkText: Permissions required
+  - title: Reports in the format you need
+    details: Excel workbooks, Word, PowerPoint, PDF, self-contained HTML, React, Power BI and JSON evidence — generated offline, with no service dependency.
+    link: /guide/output
+    linkText: Output formats
+  - title: Unattended by design
+    details: Azure Automation runbooks, GitHub Actions, or Azure DevOps pipelines. Managed identity or service principal, writing straight to blob storage.
+    link: /automation-guide/
+    linkText: Automation options
 ---
 
-# AzureScout
-
-![AzureScout — See everything. Own your cloud.](images/azurescout-banner.svg)
-
-*See everything. Own your cloud.*
-
-## Overview
-
-**AzureScout** (AZSC) is a PowerShell module that discovers and inventories everything in your Azure environment — ARM resources, Entra ID objects, costs, security posture, policies, and more. Reports are generated as Excel workbooks, JSON, Markdown, or AsciiDoc.
-
-::: tip Inventory vs Assessment — two tools, one module
-AzureScout is **one command**, `Invoke-AzureScout`, with two modes. By default it builds a wide **inventory** of everything in your tenant; add `-Assessment` and it runs a scored **CAF/WAF assessment**. Run it with no parameters at all and it opens a guided wizard. Start with the [Overview](./guide/overview.md).
-:::
-
-| Feature | Description |
-|---------|-------------|
-| **ARM Resource Discovery** | 242 collector definitions across 18 Microsoft Azure categories (AI + machine learning, Analytics, Compute, Containers, Databases, DevOps, General, Hybrid + multicloud, Identity, Integration, IoT, Management and governance, Migration, Monitor, Networking, Security, Storage, Web) |
-| **Entra ID Inventory** | 17 identity modules — Users, Groups, Applications, Service Principals, Conditional Access, PIM, Administrative Units, Named Locations, Domains, Identity Providers, Security Defaults, and more |
-| **Excel Reports** | Rich multi-worksheet workbooks with charts, pivot tables, and conditional formatting |
-| **JSON Output** | Machine-readable normalized output for automation pipelines |
-| **Markdown & AsciiDoc** | Export reports as `.md` or `.adoc` for documentation pipelines and PDF generation |
-| **Network Diagrams** | Auto-generated draw.io topology diagrams |
-| **Category Filtering** | Run only the categories you need: `-Category Compute,Security,Networking` |
-| **Permission Audit** | Pre-flight ARM + Graph access checker with role remediation guidance |
-
-### Quick Start
+## Quick start
 
 ```powershell
-# Install from PSGallery
+# Install from the PowerShell Gallery
 Install-Module -Name AzureScout
 
-# Import from local clone
-Import-Module ./AzureScout.psd1
-
-# Full discovery (ARM only, uses current Azure context)
+# Guided wizard — no parameters needed
 Invoke-AzureScout
 
-# ARM + Entra ID
+# Full inventory, ARM + Entra ID
 Invoke-AzureScout -Scope All
 
-# ARM-only scan with JSON output
-Invoke-AzureScout -Scope ArmOnly -OutputFormat Json
+# Scored CAF/WAF assessment
+Invoke-AzureScout -Assessment LandingZone
 
-# Specific categories only
-Invoke-AzureScout -Category Compute,Security,Networking
-
-# Permission pre-flight check
+# Check what you have access to, before running anything
 Invoke-AzureScout -PermissionAudit
 ```
 
-::: tip
-If you're already logged in via `Connect-AzAccount`, AzureScout uses your existing session — no additional flags needed.
-:::
+Already signed in with `Connect-AzAccount`? Scout uses that session — no extra flags.
 
-## Documentation
+## Where to go next
 
-| Page | Description |
-|------|-------------|
-| [Overview](./guide/overview.md) | One command, two modes — the wizard, the switches, and which mode you need |
-| [Authentication](./guide/authentication.md) | Five authentication methods (interactive, device-code, SPN+secret, SPN+cert, managed identity) |
-| [Usage Guide](./guide/usage.md) | Scope, OutputFormat, Category filtering, and examples |
-| [Permissions](./guide/permissions.md) | Required ARM RBAC roles and Microsoft Graph API permissions |
-| [Category Filtering](./guide/category-filtering.md) | Run targeted scans using Microsoft's 15 Azure categories |
-| [Category Reference](./reference/category-reference.md) | Every report section heading mapped to its category, aliases, and collector folder |
-| [Azure Automation Account](./automation-guide/automation.md) | Scheduled unattended runs from a runbook, writing to blob storage |
-| [GitHub Actions](./automation-guide/github-actions.md) | Generate inventory from a CI pipeline with the composite action |
-| [Azure DevOps](./automation-guide/azure-devops.md) | Inventory projects, pipelines, service connections, repos, and agent pools |
-| [ARM Modules](./reference/arm-modules.md) | 242 collector definitions across all 18 Azure service categories |
-| [Entra Modules](./reference/entra-modules.md) | 17 Entra ID identity modules |
-| [Validation Matrix](./reference/validation-matrix.md) | Per-check automated vs live-tenant verification coverage |
-| [Repository Structure](./project/folder-structure.md) | Directory layout and module loading |
-| [Contributing](./project/contributing.md) | How to add new inventory modules |
-| [Credits](./project/credits.md) | Attribution and acknowledgments |
-| [Changelog](./project/changelog.md) | Version history |
-| [Assessment Platform](./assessment/assessment.md) | CAF/WAF landing-zone assessment — architecture, run modes, and the assessment registry |
-| [Assessment Prerequisites](./assessment/assessment-prerequisites.md) | Software, module, and .NET SDK prerequisites specific to assessment mode (`-Assessment`) |
-| [Assessment Permissions](./assessment/assessment-permissions.md) | Minimum RBAC and Graph permissions per assessment, and `-PermissionAudit` |
+| If you want to… | Start here |
+|---|---|
+| Understand the two modes and pick one | [Overview](./guide/overview.md) |
+| Install and run it for the first time | [Guide](./guide/) |
+| Know what it can assess | [Assessment Catalogue](./reference/assessment-catalogue.md) |
+| Know what it collects | [ARM Modules](./reference/arm-modules.md) |
+| Work out which permissions to request | [Permissions](./guide/permissions.md) |
+| Run it on a schedule | [Automation](./automation-guide/) |
+| Add a collector or contribute | [Contributing](./project/contributing.md) |
