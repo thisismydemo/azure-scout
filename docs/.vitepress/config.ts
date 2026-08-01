@@ -57,10 +57,13 @@ export default defineConfig({
         ],
       },
       {
-        text: 'Module Reference',
-        collapsed: true,
+        text: 'Catalogues & Reference',
+        collapsed: false,
         items: [
-          { text: 'ARM Modules', link: '/reference/arm-modules' },
+          // The two questions every reader asks first — "what does it assess" and "what does
+          // it collect" — now each have one generated page that cannot drift from the product.
+          { text: 'Assessment Catalogue', link: '/reference/assessment-catalogue' },
+          { text: 'ARM Modules (collectors)', link: '/reference/arm-modules' },
           { text: 'Entra ID Modules', link: '/reference/entra-modules' },
           { text: 'Coverage Table', link: '/reference/coverage-table' },
           { text: 'Category Structure', link: '/reference/category-structure' },

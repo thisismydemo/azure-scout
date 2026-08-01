@@ -18,7 +18,7 @@ AzureScout is **one command**, `Invoke-AzureScout`, with two modes. By default i
 
 | Feature | Description |
 |---------|-------------|
-| **ARM Resource Discovery** | 240 collector definitions across 18 Microsoft Azure categories (AI + machine learning, Analytics, Compute, Containers, Databases, DevOps, General, Hybrid + multicloud, Identity, Integration, IoT, Management and governance, Migration, Monitor, Networking, Security, Storage, Web) |
+| **ARM Resource Discovery** | 242 collector definitions across 18 Microsoft Azure categories (AI + machine learning, Analytics, Compute, Containers, Databases, DevOps, General, Hybrid + multicloud, Identity, Integration, IoT, Management and governance, Migration, Monitor, Networking, Security, Storage, Web) |
 | **Entra ID Inventory** | 17 identity modules — Users, Groups, Applications, Service Principals, Conditional Access, PIM, Administrative Units, Named Locations, Domains, Identity Providers, Security Defaults, and more |
 | **Excel Reports** | Rich multi-worksheet workbooks with charts, pivot tables, and conditional formatting |
 | **JSON Output** | Machine-readable normalized output for automation pipelines |
@@ -69,7 +69,7 @@ If you're already logged in via `Connect-AzAccount`, AzureScout uses your existi
 | [Azure Automation Account](./automation-guide/automation.md) | Scheduled unattended runs from a runbook, writing to blob storage |
 | [GitHub Actions](./automation-guide/github-actions.md) | Generate inventory from a CI pipeline with the composite action |
 | [Azure DevOps](./automation-guide/azure-devops.md) | Inventory projects, pipelines, service connections, repos, and agent pools |
-| [ARM Modules](./reference/arm-modules.md) | 240 collector definitions across all 18 Azure service categories |
+| [ARM Modules](./reference/arm-modules.md) | 242 collector definitions across all 18 Azure service categories |
 | [Entra Modules](./reference/entra-modules.md) | 17 Entra ID identity modules |
 | [Validation Matrix](./reference/validation-matrix.md) | Per-check automated vs live-tenant verification coverage |
 | [Repository Structure](./project/folder-structure.md) | Directory layout and module loading |

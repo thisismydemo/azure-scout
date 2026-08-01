@@ -50,7 +50,7 @@ re-scanning.
 |-------|--------------|
 | **Collect** | Read-only Azure Resource Graph queries produce a normalized `collect.json`, including a per-domain `domains.*` namespace. |
 | **Ingest** | Folds governance data (natively collected by default — see below) and Azure Advisor into the same `collect.json`. |
-| **Assess** | A declarative rule engine grades the collected data — **139 rules across 8 CAF design areas + 5 WAF pillars** — producing scored `findings.json` with a prioritized gap list. |
+| **Assess** | A declarative rule engine grades the collected data — **395 rules across 44 rule files** (170 evaluated automatically, 225 requiring manual confirmation) — producing scored `findings.json` with a prioritized gap list. |
 | **Report** | Renders `findings.json` into tiered deliverables. |
 
 ::: info Governance data is collected natively — no AzGovViz dependency
@@ -169,7 +169,7 @@ Invoke-AzureScout -Assessment All -OutputFormat All
 ```
 
 `-Assessment All` expands to every key in `manifests/assessments.psd1` —
-currently **24 registry entries**. Most are not distinct assessments — see
+currently **46 registry entries** (see the generated [Assessment Catalogue](../reference/assessment-catalogue.md)). Most are not distinct assessments — see
 [the registry entries section below](#all-24-registry-entries-and-what-the-wizard-actually-offers)
 and the [full registry](../design/assessment-registry.md) for what that number
 actually breaks down into.
@@ -346,7 +346,7 @@ Invoke-AzureScout -Assessment LandingZone -OutputPath 'D:\Reports\Scout'
 
 Each run writes into a timestamped subfolder (`<OutputPath>/yyyyMMdd_HHmmss/`).
 
-## All 24 registry entries — and what the wizard actually offers
+## All 46 registry entries — and what the wizard actually offers
 
 The full catalogue — description, `Collect`/`Ingest`, CAF areas / WAF
 pillars, and default report tiers, generated from
@@ -354,11 +354,11 @@ pillars, and default report tiers, generated from
 **[Assessment Registry](../design/assessment-registry.md)**. Minimum auth per
 assessment lives in **[Auth & permissions per scan type](./assessment-permissions.md)**.
 
-::: warning 24 registry entries is not 24 assessments
-`manifests/assessments.psd1` has **24 keys**, but that is a count of registry
+::: warning 46 registry entries is not 46 independent assessments
+`manifests/assessments.psd1` has **46 keys**, but that is a count of registry
 *entries*, not of distinct things Scout scores. **`LandingZone` is the one
 real roll-up assessment** — it pulls in every CAF design-area and WAF-pillar
-rule file. Most of the other 23 entries are narrower *views* over that same
+rule file. Many of the other entries are narrower *views* over that same
 rule set, not separate assessments:
 
 - **15 are the `Assess: ` category slices** (`Assess: Compute`, `Assess:

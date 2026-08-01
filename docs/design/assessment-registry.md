@@ -4,12 +4,12 @@ description: The catalogue of every Azure Scout assessment — description, cate
 
 # Assessment Registry
 
-`manifests/assessments.psd1` has **23 entries**, categorized and tagged. Run
-one with `Invoke-AzureScout -Assessment <Name>`. **23 registry entries is not
-23 assessments** — read the warning below before treating that number as a
+`manifests/assessments.psd1` has **46 entries**, categorized and tagged. Run
+one with `Invoke-AzureScout -Assessment <Name>`. **46 registry entries is not
+46 independent assessments** — read the warning below before treating that number as a
 coverage claim.
 
-::: warning What 23 entries actually breaks down into
+::: warning What those entries actually break down into
 **`LandingZone` is the one real roll-up assessment** — every other entry is a
 narrower view over the same rule set, a genuinely separate small assessment,
 or not an assessment at all:

@@ -99,7 +99,13 @@
     'Assess: Storage' = @{
         Description = 'Storage public access, TLS, encryption, redundancy'
         Category    = 'Storage'; Collect = @('Storage'); Ingest = @()
-        Rules = @('caf.storage', 'waf.storage'); Frameworks = @('CAF: Security', 'WAF: Reliability')
+        # 'waf.storage' was removed here, not replaced: waf.storage.yaml was deleted in the
+        # AB#6746 restructure and its five rules redistributed into the real pillar files
+        # (waf.reliability / waf.security / waf.cost), which are their own assessments. The
+        # dangling glob matched nothing and silently contributed zero rules while the
+        # Frameworks line still advertised WAF coverage. Build-AssessmentCatalog.ps1 -Check
+        # now fails on a dangling pattern so this cannot recur.
+        Rules = @('caf.storage'); Frameworks = @('CAF: Security')
         Tags = @('caf', 'waf', 'storage'); Reporters = @('Html', 'Excel')
     }
     'Assess: Databases' = @{
