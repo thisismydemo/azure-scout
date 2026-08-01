@@ -133,10 +133,13 @@ export default defineConfig({
         ],
       },
       {
-        // Six release-note pages that shipped in the repo and were reachable from nothing.
-        text: 'Release Notes',
+        // Per-release detail for the v3.0.x line only. Everything from v3.1.0 onward is
+        // written up in the Roadmap instead, so this is labelled for what it actually is —
+        // a section titled "Release Notes" that stops at v3.0.5 implies the product does too.
+        text: 'Release Notes (v3.0.x)',
         collapsed: true,
         items: [
+          { text: 'v3.1.0 onward → Roadmap', link: '/project/roadmap' },
           { text: 'v3.0.5', link: '/project/releases/v3.0.5' },
           { text: 'v3.0.4', link: '/project/releases/v3.0.4' },
           { text: 'v3.0.3', link: '/project/releases/v3.0.3' },

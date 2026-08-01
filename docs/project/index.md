@@ -10,9 +10,9 @@ How AzureScout is built, tested, released, and contributed to.
 
 | Page | Contents |
 |---|---|
-| [Roadmap](./roadmap.md) | Release history and what is planned, newest first |
-| [Changelog](./changelog.md) | Version summary table |
-| [Release notes](./releases/v3.0.5.md) | Per-release detail for the v3.0.x line |
+| [Roadmap](./roadmap.md) | Release history and what is planned, newest first — **including the full write-up for every release from v3.1.0 onward** |
+| [Changelog](./changelog.md) | Version summary table, current release at the top |
+| [Release notes](./releases/v3.0.5.md) | Standalone per-release pages, **v3.0.x only** — later releases are documented in the Roadmap rather than here |
 
 ## Working on it
 
