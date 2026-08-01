@@ -5,6 +5,17 @@ export default defineConfig({
   description: 'See everything. Own your cloud. A PowerShell module for comprehensive Azure + Entra ID discovery and inventory.',
   base: '/azure-scout/',
 
+  // Assets referenced by an ABSOLUTE path — themeConfig.logo, the home hero image — are
+  // served from docs/public, which VitePress maps to the site root and rewrites for `base`.
+  // They previously lived in docs/images, which VitePress does not publish at all: only
+  // assets reached through a RELATIVE markdown link get processed and bundled. The old home
+  // page happened to use `![](images/…)`, so the banner survived by accident; the nav logo,
+  // which has always been absolute, did not, and the hero broke the moment the home page
+  // moved to the `layout: home` frontmatter form.
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/azure-scout/images/azurescout-icon.svg' }],
+  ],
+
   // Project-management artefacts (audits, plans, the enhancement spec, the generated
   // task list) live in /pmo at the repo root and are deliberately NOT published here.
   // They are internal programme records, not product documentation.
