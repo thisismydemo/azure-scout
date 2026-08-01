@@ -103,6 +103,11 @@ foreach ($name in ($Registry.Keys | Sort-Object)) {
             Tags        = @(Get-Entry $entry 'Tags' @())
             Benchmark   = "$(Get-Entry $entry 'Benchmark' '')"
             Compliance  = [bool](Get-Entry $entry 'Compliance' $false)
+            # Governance ingest decides the ARM scope an assessment needs: these require Reader
+            # at the tenant-root management group to resolve fully, and degrade to an explicit
+            # Unknown without it. Five separate pages hand-claimed "5 assessments" long after
+            # the real number reached 26, so it is generated here rather than written anywhere.
+            Governance  = (@(Get-Entry $entry 'Ingest' @()) -contains 'Governance')
         })
 }
 
@@ -116,6 +121,7 @@ function Get-Family {
 }
 
 $Total = ($Rows | Measure-Object).Count
+$GovCount = @($Rows | Where-Object { $_.Governance }).Count
 $TotalRules = ($RuleStats.Values | Measure-Object -Property Total -Sum).Sum
 $TotalManual = ($RuleStats.Values | Measure-Object -Property Manual -Sum).Sum
 
@@ -144,6 +150,11 @@ $sb = [System.Text.StringBuilder]::new()
 [void]$sb.AppendLine('fails the build if the committed page and a fresh regeneration disagree. Do not hand-edit it.')
 [void]$sb.AppendLine(':::')
 [void]$sb.AppendLine()
+[void]$sb.AppendLine("**$GovCount of the $Total assessments ingest governance data** and therefore need ARM ``Reader``")
+[void]$sb.AppendLine('at the **tenant-root management group** to resolve fully; below that scope they degrade to an')
+[void]$sb.AppendLine('explicit `Unknown` rather than a false zero. They are marked **Gov** in the tables below.')
+[void]$sb.AppendLine('See [Auth & permissions per scan type](../assessment/assessment-permissions.md).')
+[void]$sb.AppendLine()
 [void]$sb.AppendLine('::: warning Manual rules are not failures')
 [void]$sb.AppendLine('A manual rule is one no collected data can decide — a process control, or a source Azure')
 [void]$sb.AppendLine('does not expose. Manual rules are excluded from every score rather than counted as failures,')
@@ -158,15 +169,16 @@ foreach ($family in 'Cloud Adoption Framework', 'Well-Architected Framework', 'S
 
     [void]$sb.AppendLine("## $family ($($group.Count))")
     [void]$sb.AppendLine()
-    [void]$sb.AppendLine('| Assessment | What it covers | Rules | Automated | Manual | Rule files |')
-    [void]$sb.AppendLine('|---|---|--:|--:|--:|---|')
+    [void]$sb.AppendLine('| Assessment | What it covers | Rules | Automated | Manual | Gov | Rule files |')
+    [void]$sb.AppendLine('|---|---|--:|--:|--:|:-:|---|')
     foreach ($r in $group) {
         $desc = if ($r.Description) { $r.Description } elseif ($r.Frameworks.Count -gt 0) { $r.Frameworks -join '; ' } else { '—' }
         $files = if ($r.RuleFiles.Count -gt 0) { (($r.RuleFiles | ForEach-Object { "``$_``" }) -join '<br>') } else { '—' }
         $rules = if ($r.RuleCount -gt 0) { $r.RuleCount } else { '—' }
         $auto = if ($r.RuleCount -gt 0) { $r.Automated } else { '—' }
         $man = if ($r.RuleCount -gt 0) { $r.ManualCount } else { '—' }
-        [void]$sb.AppendLine("| **$($r.Name)** | $desc | $rules | $auto | $man | $files |")
+        $gov = if ($r.Governance) { '**Gov**' } else { '' }
+        [void]$sb.AppendLine("| **$($r.Name)** | $desc | $rules | $auto | $man | $gov | $files |")
     }
     [void]$sb.AppendLine()
 }

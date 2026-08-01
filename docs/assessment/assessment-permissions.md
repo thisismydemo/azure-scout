@@ -15,7 +15,7 @@ Source of truth: `src/assess/Test-ScoutPermission.ps1`,
 `src/ingest/Import-AzGovViz.ps1` (the opt-in third-party collector).
 
 ::: info Governance data is native by default — no Graph permission required for it
-As of the native governance collector (AB#5041), the five assessments whose
+As of the native governance collector (AB#5041), the 26 assessments whose
 `Ingest` used to be `AzGovViz` (`LandingZone`, `Management`, `Identity`,
 `Governance`, `Policy`) now use `Ingest = Governance` by default —
 `Import-Governance` populates `collect.json`'s `governance` object from
@@ -90,7 +90,7 @@ disabled, `Microsoft.CostManagement/query` returns empty regardless of role assi
 
 ## Per-assessment matrix
 
-"Governance data" marks the 5 assessments that collect governance data —
+"Governance data" marks the 26 assessments that collect governance data —
 **by default** via the native `Import-Governance` collector (ARM Reader
 only, same as every other row). "Graph (opt-in `AzGovViz`)" is only **Yes**
 if you've explicitly switched that assessment's `Ingest` back to the legacy

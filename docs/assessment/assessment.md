@@ -55,7 +55,7 @@ re-scanning.
 
 ::: info Governance data is collected natively — no AzGovViz dependency
 `Import-Governance` (`src/ingest/Import-Governance.ps1`) is the **default**
-governance collector for the five assessments that need governance data
+governance collector for the 26 assessments that need governance data
 (`LandingZone`, `Management`, `Identity`, `Governance`, `Policy` — their
 manifest `Ingest` value is `Governance`, not `AzGovViz`). It populates
 `collect.json`'s `governance` object natively from Azure Resource Graph
@@ -258,8 +258,9 @@ Graph query (and, if you've opted into the legacy `AzGovViz` ingestor, to
 `-ManagementGroup` filter is passed to `Search-AzGraph` at all — not an
 empty/wildcard scope, the parameter is left off entirely).
 
-For the 5 assessments that ingest governance data (`LandingZone`,
-`Management`, `Identity`, `Governance`, `Policy`), the **native**
+For the **26 assessments that ingest governance data** — every one marked **Gov** in the
+[Assessment Catalogue](../reference/assessment-catalogue.md), including `LandingZone`,
+every `CAF:` design area and every `WAF:` pillar — the **native**
 `Import-Governance` collector (the default `Ingest = Governance`) runs
 regardless of whether `-ManagementGroupId` is supplied — it does not silently
 skip. What actually needs management-group visibility is the **ALZ benchmark
@@ -405,152 +406,36 @@ level, on whether the current estate actually has migration data to score.
 - `Unknown`/`Error` are surfaced, never silently dropped — a broken rule cannot inflate a score.
 - The **`Manual`** status intentionally hands the un-automatable checks to a human, with the collected evidence already attached.
 
-## Cross-run drift
 
-`Get-ScoutDrift` computes drift between the current run and the previous run
-for the same assessment: each finding is classified **New**, **Resolved**
-(`Fail`/`Partial` → `Pass`), **Regressed** (`Pass` → `Fail`/`Partial`), or
-**Unchanged**, plus an overall weighted score delta. History is kept in an
-append-only `findings-history.json` under a `.scout-history/` folder in the
-output root, keyed by run id — the first run for a given assessment becomes
-the baseline (nothing to diff against yet). Assessment mode computes
-drift automatically after scoring and feeds it into the [React
-report](#report-tiers)'s Drift tab; a drift computation failure is non-fatal
-to the rest of the run.
+## Permissions
 
-## Cross-run resource (inventory) drift
+Every assessment needs **ARM `Reader` at the tenant-root management group**. There are no
+exceptions, and a narrower scope degrades results to an explicit `Unknown` rather than a
+false zero.
 
-`Get-ScoutInventoryDrift` (AB#326) is the resource-level counterpart to
-`Get-ScoutDrift` above: `Get-ScoutDrift` tracks how each **rule** scored across
-runs, while `Get-ScoutInventoryDrift` tracks what actually changed in the
-**collected Azure estate itself** — independent of how any rule scored it.
-It is not wired into assessment mode automatically; call it yourself
-with the same `collect.json` and a caller-controlled run id:
-
-```powershell
-$collect = Get-Content ./output/20260724_101500/collect.json -Raw | ConvertFrom-Json
-Get-ScoutInventoryDrift -Collect $collect -HistoryPath ./output/.scout-history -RunId '20260724_101500'
-```
-
-Each resource gets a stable id built from whichever recognized identity
-fields it carries (falling back to a content hash so nothing is silently
-dropped), then compared against the previous run's snapshot: **Added**,
-**Removed**, **Changed** (with a per-field before/after diff), or
-**Unchanged** (rolled into the summary count only). The first-ever run for a
-given `-HistoryPath` returns an explicit baseline (`IsBaseline = $true`)
-rather than reporting every resource as Added. History is appended to
-`inventory-history.json`, alongside `Get-ScoutDrift`'s
-`findings-history.json`, under the same `.scout-history/` folder.
-
-## Cost anomaly detection
-
-`Get-ScoutCostAnomaly` (AB#324) is an offline analysis function — it never
-calls Azure. Point it at an already-collected cost dataset (the raw
-`Get-AZSCCostInventory` shape, or a pre-normalized array of cost records) and
-it flags outliers using three independent techniques: a sudden month-over-month
-spike, a z-score check, and an IQR (Tukey) check, grouped by `-GroupBy`
-(default `Scope`, `ResourceType`). It also always returns the top movers by
-absolute dollar swing, independent of whether anything crossed a threshold.
-
-```powershell
-Get-ScoutCostAnomaly -CostData $costData -ZScoreThreshold 2.5 -SpikeThresholdPct 75
-```
-
-::: tip Needs more than the default 2-month lookback for z-score/IQR
-The z-score and IQR techniques need at least `-MinDataPoints` (default 4)
-periods per group; the default `Get-AZSCCostInventory` lookback is only 2
-months, so only spike detection reliably fires unless you collect cost data
-with a longer `-Days` window first.
-:::
-
-## IaC gap detection
-
-`Get-ScoutIacGap` (AB#325) is an offline analysis function — it never calls
-Azure. It compares resources discovered in `collect.json` against a folder of
-`.bicep`/ARM-JSON templates (best-effort text/JSON parsing — no `bicep build`
-or other external dependency) and reports resources that exist in Azure but
-aren't represented in any template (`Unmanaged`).
-
-```powershell
-Get-ScoutIacGap -CollectData $collect -TemplatePath ./infra -IncludeTemplatedButMissing
-```
-
-Matching is exact on a normalized (Type, Name) pair — it does not currently
-account for a resource being deployed to a different resource group/
-subscription than its template declares.
-
-## IoT deep coverage
-
-The Collect layer's IoT queries (`Invoke-Collect`, AB#330) now go beyond IoT
-Hub device registries to include **Device Provisioning Service** (DPS) and
-**Azure Digital Twins** instances, scored by the `caf.iot` rule file — so
-`-Assessment 'Assess: IoT'` (and `LandingZone`) picks up DPS/Digital Twins findings
-without any extra configuration.
-
-## Assessment config load/save
-
-`Import-ScoutConfig` / `Export-ScoutConfig` (AB#373–375) let you save and
-reload the effective assessment config — an alternative benchmark,
-rule-selection glob patterns, and per-rule threshold overrides — as a single
-JSON file, mirroring exactly what the engine already consumes (no new schema
-invented):
-
-```powershell
-# Load a config (falls back to the built-in ALZ reference benchmark if the
-# file is absent, missing, or unparsable -- never throws)
-$config = Import-ScoutConfig -ConfigPath ./my-config.json
-
-# Round-trip: save the effective config back out
-Export-ScoutConfig -Config $config -Path ./my-config.json -Force
-```
-
-Every key (`benchmark`, `rulePatterns`, `ruleOverrides`) is optional and
-independently overridable. A missing/invalid `-ConfigPath` degrades to
-"run with defaults" with a `Write-Warning` rather than aborting the
-assessment.
-
-## Report tiers
-
-| Tier | Output | Notes |
-|------|--------|-------|
-| Power BI | `powerbi/*.csv` + `.pbit` | Primary analytics tier (star schema); the `.pbit` template is bound to the CSVs so it opens pre-wired in Power BI Desktop. |
-| HTML | `report.html` | Self-contained, single file |
-| PowerPoint | `assessment_deck.pptx` | Executive deck via the OpenXML SDK — **no Python dependency**. First use needs the `dotnet` SDK; see [Assessment Prerequisites](./assessment-prerequisites.md#powerpoint-tier-net-sdk-not-python). |
-| Excel | `assessment_evidence.xlsx` | Evidence tier, plus pivot-chart visual dashboard tabs (Findings-by-Severity, Score-by-Area, Pass-Fail-Manual, Resource-Counts) generated with `ImportExcel` — each tab is omitted when its underlying data is empty. |
-| JSON | `findings.json` | The machine-readable contract — full assessment metadata, scores, and findings. |
-| JSON evidence | `evidence.json` (`Export-JsonEvidence`) | Resources-only export of the raw `collect.json` data (**AB#396**) — no assessment metadata, scores, or findings. For callers that just want the discovered resources as JSON. |
-| React | `report-react.html` | Self-contained (CSS/JS inline, findings embedded as a JSON blob, no external/CDN requests). A vis.js VNet topology diagram with click-to-details and reset/fit controls, an MG-hierarchy diagram, 14 KPI cards, an Azure Firewall drill-down, a Governance section (budgets/locks/tag chips), a policy-enforcement badge, per-section search/filter, clickable rows with a side panel, scope tooltips, client-side filter by Framework/Area/Severity/Status, a sortable/searchable findings table, and a Drift tab showing cross-run drift (see [Cross-run drift](#cross-run-drift)). |
-| Word | `assessment_report.docx` (`Export-Word`) | Self-contained `.docx` via the OpenXML SDK — **no Python dependency**, same NuGet-on-first-use pattern as the PowerPoint tier (**AB#333**). Falls back to a plain HTML file (clearly labeled, not a renamed `.docx`) if generation fails. |
-| ECharts dashboard | `assessment_dashboard.html` (`Export-EChartsDashboard`) | Self-contained offline HTML dashboard — Apache ECharts is inlined into the file, no CDN/external requests (**AB#344**). |
-| PDF | `assessment_report.pdf` (`Export-Pdf`) | Hand-rolled, dependency-free PDF renderer — cover page, executive summary, per-area findings table with a repeating header, prioritized gaps, and the manual-review worklist (**AB#379/394/395**). Falls back to an HTML file with print-to-PDF instructions if generation fails. |
-
-## Minimum auth per scan type
-
-- **Every assessment** needs **ARM `Reader` at the tenant-root management group**. No exceptions.
-- The 5 assessments that ingest governance data (`LandingZone`, `Management`,
-  `Identity`, `Governance`, `Policy`) use the **native** `Import-Governance`
-  collector by default — ARM Reader at the MG root is enough for them too; no
-  Graph permission is required by default. The ALZ benchmark specifically
-  needs that MG-root visibility to fully resolve; without it, it degrades to
-  an explicit `Unknown` rather than a false 0%.
-- Microsoft Graph **application** permissions are only needed if you opt one
-  of those 5 assessments into the legacy `AzGovViz` ingestor instead of the
-  native default — see [Auth & permissions per scan
-  type](./assessment-permissions.md) for exactly which permissions and when.
-- `PrivilegedAccess.Read.AzureResources` needs an **Entra ID P2 license** and,
-  even on the opt-in `AzGovViz` path, is currently never exercised —
-  `Import-AzGovViz.ps1` unconditionally passes `-NoPIMEligibility`. The native
-  `Import-Governance` collector doesn't collect PIM-eligible role assignments
-  either (`pimEligibility` is intentionally always empty for the same
-  license/permission reason).
-
-Full matrix, the exact permissions list, and what `-PermissionAudit` does and
-does not verify: **[Auth & permissions per scan type](./assessment-permissions.md)**.
+The full story — the per-assessment matrix, when Microsoft Graph permissions are actually
+required, and precisely what `-PermissionAudit` does and does not verify — lives on one
+page: **[Auth & permissions per scan type](./assessment-permissions.md)**.
 
 ```powershell
 # Pre-flight before any collection runs
 Invoke-AzureScout -Assessment LandingZone -PermissionAudit
 ```
+
+::: tip Why this section is short
+This page used to restate the permissions model in full, giving three separate
+descriptions of it across the documentation — this page, the assessment permissions page,
+and the inventory [Permissions](../guide/permissions.md) page. They drifted, as three
+copies of anything do. The detail now lives in one place and the other two link to it.
+:::
+
+## More on assessment
+
+| Page | Contents |
+|---|---|
+| [Analysis features](./analysis-features.md) | Cross-run drift, cost anomaly detection, IaC gap detection, IoT deep coverage |
+| [Configuration and report tiers](./configuration.md) | Saving and loading a config, and what each output tier produces |
+| [Assessment Catalogue](../reference/assessment-catalogue.md) | All 46 assessments, their rule files, and the automated-versus-manual split |
 
 ## Design reference
 

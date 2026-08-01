@@ -55,6 +55,8 @@ export default defineConfig({
         items: [
           { text: 'Assessment index', link: '/assessment/' },
           { text: 'Assessment Platform', link: '/assessment/assessment' },
+          { text: 'Analysis Features', link: '/assessment/analysis-features' },
+          { text: 'Configuration & Report Tiers', link: '/assessment/configuration' },
           { text: 'Assessment Prerequisites', link: '/assessment/assessment-prerequisites' },
           { text: 'Auth & Permissions per Scan Type', link: '/assessment/assessment-permissions' },
         ],
