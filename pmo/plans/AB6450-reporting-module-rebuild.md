@@ -145,7 +145,8 @@ report's figures are.
 
 Take the BECU Word/PPTX/XLSX apart section by section and write down, per section: the data it
 needs, whether Scout can supply it today, and what it would take. This converts "make it
-better" into a checklist. Partially done in `docs/design/reporting-engine-v2.md` §2 — finish it.
+better" into a checklist. A partial teardown exists on the unmerged `feat/ab6450-reporting-v2`
+branch (`pmo/plans/reporting-engine-v2.md` §2) — carry it across and finish it.
 
 ## 5. One report per assessment — the structural change
 
