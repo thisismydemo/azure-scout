@@ -134,4 +134,20 @@ $ResUCount = 1
     }
 
     SourceCollector = 'src/collect/ConvertTo-ScoutArcSiteResource.ps1'
+
+    # This definition was hand-authored for AB#6801 against Microsoft.Edge/sites, NOT lifted
+    # from a v2 collector -- see this file's header. ConvertTo-ScoutArcSiteResource.ps1 is the
+    # REST projection helper the pipeline calls, not a Standard-contract collector, so
+    # ConvertTo-ScoutCollectorDefinition.ps1 cannot regenerate a definition from it: it looks
+    # for a `$Task -eq 'Processing'` branch that a converter has no reason to contain.
+    #
+    # The drift check therefore threw on every run and failed the whole gate. It has been red
+    # on main since at least the v3.2.0 release, blocking every pull request in the repo --
+    # a check nobody can make pass stops being a gate and starts being a tax.
+    #
+    # Declaring the exemption is the mechanism Test-ScoutCollectorDefinition.ps1 already
+    # provides for exactly this case: it prints "Manual conversion drift exemption" with this
+    # reason rather than silently skipping, so the exemption stays visible in the log.
+    # SourceCollector is retained as provenance for where the projection logic lives.
+    ManualConversionReason = 'Hand-authored for AB#6801 against Microsoft.Edge/sites. SourceCollector names the REST projection helper, which is not a Standard-contract collector and cannot be mechanically re-converted; the committed golden output is the behavioural evidence instead.'
 }
