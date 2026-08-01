@@ -7,7 +7,7 @@ This document was written during the AB#5648 inversion, while the collector tree
 live `Modules/Private/...` shim layer alongside the new `src/collect/` functions. As of v3.0.0
 that shim layer — every `Modules/Private/...` path named below — **no longer exists in the
 repository**; the retired collector-script tree and imperative fallback were deleted outright
-(see [`docs/changelog.md`](../changelog.md) v3.0.0, and [`docs/ari-differences.md`](../ari-differences.md#engine-rewrite-ari-shipped-none-of-this)).
+(see [`docs/changelog.md`](../project/changelog.md) v3.0.0, and [`docs/ari-differences.md`](../project/ari-differences.md#engine-rewrite-ari-shipped-none-of-this)).
 The query counts and call-site *purposes* below are still the right mental model — the
 `src/collect/` half of every row is current — but any `Modules/Private/...` path is historical,
 not a file you can open today. **`src/ingest/Invoke-ArgQueryPack.ps1`, listed as a call site

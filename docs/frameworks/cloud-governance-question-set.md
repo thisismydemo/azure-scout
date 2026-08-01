@@ -8,11 +8,11 @@ documentation it is built from carry no release number. The extraction date abov
 version, per `docs/frameworks/README.md`; re-date this line when this file is next re-verified.
 
 This is the AB#6811 enumeration for target #8 in the audit's fourteen-assessment programme
-(`docs/audits/AZURE-SCOUT-AUDIT.md` §14): *"Cloud Governance — policy data already collected …
+(`pmo/audits/AZURE-SCOUT-AUDIT.md` §14): *"Cloud Governance — policy data already collected …
 Policy compliance state is collected and scored by nothing."* The audit's §8 Table 3 identifies this
 as the **CAF Govern methodology** — a different axis from the "Governance" *design area* that
 `caf.governance.yaml` already scores (that design area is part of Ready, covered in
-`docs/audits/AZURE-SCOUT-AUDIT.md` §8 Table 2, not this document). Per DQ12, no `caf.govern.yaml` (or
+`pmo/audits/AZURE-SCOUT-AUDIT.md` §8 Table 2, not this document). Per DQ12, no `caf.govern.yaml` (or
 similarly named methodology file) is written until this enumeration exists.
 
 ## What Cloud Governance is

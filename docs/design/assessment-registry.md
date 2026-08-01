@@ -25,7 +25,7 @@ or not an assessment at all:
   named stopgap: a future release retires these fifteen once per-WAF-pillar
   and per-CAF-design-area assessments exist to replace them (see the
   14-target programme on the
-  [Roadmap](../roadmap.md#caf-waf-assessment-programme)).
+  [Roadmap](../project/roadmap.md#caf-waf-assessment-programme)).
 - **3 sub-bundles**, narrower still than a category (`Governance`,
   `UpdateManager`, `Monitoring`). `UpdateManager` and `Monitoring` are each a
   strict subset of a broader entry above (`Assess: Management` and
@@ -70,7 +70,7 @@ or the opt-in third-party `AzGovViz`), and which **rule files** are scored
 (`Rules`) against the collected data. `ArgQueryPack` is retired — a manifest
 entry that still names it in `Ingest` is now silently ignored, not run. See
 [Assessment guide — Collect is now actually scoped by
-category](../assessment.md#architecture-three-layers-json-on-disk) for the
+category](../assessment/assessment.md#architecture-three-layers-json-on-disk) for the
 full explanation.
 :::
 
@@ -78,7 +78,7 @@ Source of truth: [`manifests/assessments.psd1`](https://github.com/thisismydemo/
 Tracks Epic **AB#5056** (foundation **AB#5057**).
 
 Minimum auth per assessment (ARM Reader vs. the AzGovViz-only Graph
-permissions): [Auth & permissions per scan type](../assessment-permissions.md).
+permissions): [Auth & permissions per scan type](../assessment/assessment-permissions.md).
 
 ## Cross-category roll-ups
 

@@ -107,7 +107,7 @@ from nothing.
   Python provisioning — the Linux Microsoft-hosted agent already has the
   .NET runtime PowerShell 7 itself needs; nothing extra to add for this
   tier.
-- **`docs/design/enhancement-spec.md` §6.4 and §10 stay as historical
+- **`pmo/enhancement-spec.md` §6.4 and §10 stay as historical
   record** (the spec is "verbatim source of record," per its own
   frontmatter) — they are not edited to reflect this decision. The
   divergence from the spec's python-pptx default is captured here instead.

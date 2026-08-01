@@ -8,7 +8,7 @@ scenario documentation it is built from carry no release number. The extraction 
 is the version, per `docs/frameworks/README.md`; re-date this line when this file is next re-verified.
 
 This is the AB#6810 enumeration for target #7 in the audit's fourteen-assessment programme
-(`docs/audits/AZURE-SCOUT-AUDIT.md` §14): *"Azure VMware Solution Landing Zone Assessment Review —
+(`pmo/audits/AZURE-SCOUT-AUDIT.md` §14): *"Azure VMware Solution Landing Zone Assessment Review —
 pairs with #6 [WAF AVS workload] — platform readiness rather than workload."* No rule file exists
 against this framework yet; that is deliberate — per DQ12, a rule file is not written until its
 source is enumerated here first.

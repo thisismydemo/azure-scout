@@ -27,13 +27,13 @@ Tags: PowerShell, Azure, Inventory, Entra ID, Excel Report, JSON
 
 > **v3.0.0 architecture:** inventory collectors are declarative definitions in
 > `manifests/collectors`; AzureScout no longer ships or executes a per-collector PowerShell
-> fallback tree. See the [v3.0.0 release notes](docs/v3.0.0.md).
+> fallback tree. See the [v3.0.0 release notes](./docs/project/releases/v3.0.0.md).
 
 > **Built on [Azure Resource Inventory (ARI)](https://github.com/microsoft/ARI)**
 >
 > AzureScout is a fork of Microsoft's [Azure Resource Inventory](https://github.com/microsoft/ARI) (ARI) v3.6.11, created by **[Claudio Merola](https://github.com/Claudio-Merola)** and **[Renato Gregio](https://github.com/RenatoGregio)**. The ARI project provided the entire foundation — 154 ARM inventory modules, draw.io diagram engine, Excel reporting pipeline, and Azure Automation support — that AzureScout builds upon. We are deeply grateful for their work.
 >
-> See [CREDITS.md](CREDITS.md) for full attribution and [Differences from ARI](docs/ari-differences.md) for what AzureScout has changed.
+> See [CREDITS.md](./docs/project/credits.md) for full attribution and [Differences from ARI](./docs/project/ari-differences.md) for what AzureScout has changed.
 
 ## Key Features
 - ARM and Entra ID inventory
@@ -129,32 +129,43 @@ names; Microsoft's portal long names are accepted as aliases.
 `Monitoring`, and that `DevOps` and `Migration` are canonical categories in their own right as
 of v3.1.0 — they no longer alias to `Management`. Matching is case-insensitive. The complete
 mapping — every alias, manifest definition, and the resource types behind each heading — is in
-the [Category Reference](docs/category-reference.md).
+the [Category Reference](./docs/reference/category-reference.md).
 
 ## Documentation
 
 For detailed guides, module catalog, parameters, permissions, troubleshooting, testing, and contributing, see:
 
-- [Full Documentation](docs/index.md)
-- [Prerequisites & Required Modules](docs/prerequisites.md)
-- [Authentication](docs/authentication.md)
-- [Usage Guide](docs/usage.md)
-- [Parameters Reference](docs/parameters.md)
-- [Permissions](docs/permissions.md)
-- [Category Filtering](docs/category-filtering.md)
-- [Category Reference](docs/category-reference.md)
-- [Output Files & Formats](docs/output.md)
-- [Troubleshooting](docs/troubleshooting.md)
-- [Azure Automation Account](docs/automation.md)
-- [GitHub Actions](docs/github-actions.md)
-- [Azure DevOps](docs/azure-devops.md)
-- [Validation Matrix](docs/validation-matrix.md)
-- [ARM Modules](docs/arm-modules.md)
-- [Entra Modules](docs/entra-modules.md)
-- [Testing](docs/testing.md)
-- [v3.0.0 release notes](docs/v3.0.0.md)
-- [Contributing](docs/contributing.md)
-- [Credits & Attribution](docs/credits.md)
+- [Full Documentation](./docs/index.md)
+- [Prerequisites & Required Modules](./docs/guide/prerequisites.md)
+- [Authentication](./docs/guide/authentication.md)
+- [Usage Guide](./docs/guide/usage.md)
+- [Parameters Reference](./docs/guide/parameters.md)
+- [Permissions](./docs/guide/permissions.md)
+- [Category Filtering](./docs/guide/category-filtering.md)
+- [Category Reference](./docs/reference/category-reference.md)
+- [Output Files & Formats](./docs/guide/output.md)
+- [Troubleshooting](./docs/guide/troubleshooting.md)
+- [Azure Automation Account](./docs/automation-guide/automation.md)
+- [GitHub Actions](./docs/automation-guide/github-actions.md)
+- [Azure DevOps](./docs/automation-guide/azure-devops.md)
+- [Validation Matrix](./docs/reference/validation-matrix.md)
+- [ARM Modules](./docs/reference/arm-modules.md)
+- [Entra Modules](./docs/reference/entra-modules.md)
+- [Testing](./docs/project/testing.md)
+- [v3.0.0 release notes](./docs/project/releases/v3.0.0.md)
+- [Contributing](./docs/project/contributing.md)
+- [Credits & Attribution](./docs/project/credits.md)
+
+### Project management
+
+Programme records — audits, plans, the enhancement spec and the generated task list — live in
+[`pmo/`](./pmo/README.md). They are internal working documents and are deliberately not
+published to the documentation site.
+
+- [Azure Scout Audit](./pmo/audits/AZURE-SCOUT-AUDIT.md) — findings, decisions and the release plan
+- [Master Design & Plan](./pmo/plans/master-plan.md)
+- [Enhancement Spec](./pmo/enhancement-spec.md) — the original requirement document
+- [Task List](./pmo/task-list.md) — generated from the live ADO board
 
 ## License
 

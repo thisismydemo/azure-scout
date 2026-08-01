@@ -12,7 +12,7 @@ in it must cite an item number from the tables below.
 
 Microsoft ships an **"Azure VMware Solution Well-Architected Assessment Tool"**
 (announced in the AVS "What's new" for August 2023, pointing to `https://aka.ms/avswafdocs`) — §14,
-item 6 of `docs/audits/AZURE-SCOUT-AUDIT.md` names this as a target. Verification for this file
+item 6 of `pmo/audits/AZURE-SCOUT-AUDIT.md` names this as a target. Verification for this file
 attempted to locate a published, five-pillar WAF service guide for AVS analogous to the Azure Local
 one (`azure/well-architected/service-guides/azure-local`).
 

@@ -8,7 +8,7 @@ it is built from carry no release number. The extraction date above (2026-08-01)
 `docs/frameworks/README.md`; re-date this line when this file is next re-verified.
 
 This is the AB#6812 enumeration for target #13 in the audit's fourteen-assessment programme
-(`docs/audits/AZURE-SCOUT-AUDIT.md` §14): *"Cloud Adoption Security Assessment (CASA) — Aligned to
+(`pmo/audits/AZURE-SCOUT-AUDIT.md` §14): *"Cloud Adoption Security Assessment (CASA) — Aligned to
 the CAF Secure methodology, which Scout does not model at all."* Per §9 note in that same document,
 this assessment depends on RBAC assignments and Key Vault child collectors. `manifests/collectors/
 Identity/RoleAssignments.psd1` and `manifests/collectors/Security/KeyVaultSecrets.psd1` /

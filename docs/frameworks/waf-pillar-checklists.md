@@ -18,7 +18,7 @@ AB#6454). It exists so rule files under `src/assess/rules/waf.*.yaml` cite a rea
 number instead of a pillar name and a vibe. The audit's DQ12 explains why this matters: *"Writing
 rules against a framework you have not enumerated is how `waf.storage.yaml` happened"* — a rule
 file scoring a WAF pillar that does not exist (storage is a WAF *service guide*, not a pillar; see
-`docs/audits/AZURE-SCOUT-AUDIT.md` §8).
+`pmo/audits/AZURE-SCOUT-AUDIT.md` §8).
 
 ## What this is
 

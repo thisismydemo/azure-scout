@@ -12,7 +12,7 @@ in it must cite an item number from the tables below.
 
 Microsoft's **Azure Well-Architected Framework AI workload assessment**
 (<https://learn.microsoft.com/en-us/assessments/ea306cce-c7fa-4a2b-89a6-bfefba6a9cf4>) is one of
-Microsoft's per-workload specialised reviews (§14, item 4 of `docs/audits/AZURE-SCOUT-AUDIT.md`).
+Microsoft's per-workload specialised reviews (§14, item 4 of `pmo/audits/AZURE-SCOUT-AUDIT.md`).
 Unlike Azure Local, AVD, and most other workloads, the AI workload is **not organised by the five
 WAF pillars** — it's organised into **ten "AI workload design areas"** described at
 [AI workloads on Azure](https://learn.microsoft.com/en-us/azure/well-architected/ai/get-started#ai-workload-design-areas),

@@ -15,7 +15,7 @@ BeforeAll {
     $script:Spec = Import-PowerShellDataFile -Path (Join-Path $script:RepoRoot 'manifests/specs/service-collectors.psd1')
 
     # Microsoft's eighteen published service categories (portal -> All services, captured
-    # 2026-07-31 and recorded in docs/audits/AZURE-SCOUT-AUDIT.md §2).
+    # 2026-07-31 and recorded in pmo/audits/AZURE-SCOUT-AUDIT.md §2).
     $script:PortalCategories = @(
         'AI', 'Analytics', 'Compute', 'Containers', 'Databases', 'DevOps', 'General', 'Hybrid',
         'Identity', 'Integration', 'IoT', 'Management', 'Migration', 'Monitor', 'Networking',

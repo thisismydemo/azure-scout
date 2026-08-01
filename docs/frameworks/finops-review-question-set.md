@@ -8,7 +8,7 @@ number. The extraction date above (2026-08-01) is the version, per `docs/framewo
 re-date this line when this file is next re-verified.
 
 This is the AB#6814 enumeration for target #9 in the audit's fourteen-assessment programme
-(`docs/audits/AZURE-SCOUT-AUDIT.md` §14): *"FinOps Review — Cost surface exists … `waf.cost` (6
+(`pmo/audits/AZURE-SCOUT-AUDIT.md` §14): *"FinOps Review — Cost surface exists … `waf.cost` (6
 rules) + `caf.billing` (misnamed, holds cost rules)."* Neither existing file scores against the
 FinOps Framework itself — they score WAF's Cost Optimization pillar and (mislabelled) cost-cleanup
 rules respectively. Per DQ12, no FinOps-Framework-shaped rule file is written until this enumeration

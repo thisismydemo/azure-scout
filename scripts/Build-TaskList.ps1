@@ -1,7 +1,7 @@
 #Requires -Version 7.0
 <#
 .SYNOPSIS
-    Regenerates docs/design/task-list.md from the live Azure DevOps board and GitHub issues.
+    Regenerates pmo/task-list.md from the live Azure DevOps board and GitHub issues.
 
 .DESCRIPTION
     Azure DevOps and GitHub are the source of truth for Azure Scout work tracking. The task list
@@ -14,7 +14,7 @@
     PAT is required or stored. Run `az login` and `gh auth login` first.
 
 .PARAMETER OutputPath
-    Where to write the generated Markdown. Defaults to docs/design/task-list.md in the repo.
+    Where to write the generated Markdown. Defaults to pmo/task-list.md in the repo.
 
 .PARAMETER Organization
     Azure DevOps organization URL.
@@ -30,7 +30,7 @@
 .EXAMPLE
     ./scripts/Build-TaskList.ps1
 
-    Regenerates docs/design/task-list.md from the live board.
+    Regenerates pmo/task-list.md from the live board.
 
 .EXAMPLE
     ./scripts/Build-TaskList.ps1 -OutputPath ./task-list-preview.md
@@ -39,7 +39,7 @@
 #>
 [CmdletBinding()]
 param(
-    [string] $OutputPath   = (Join-Path $PSScriptRoot '..' 'docs' 'design' 'task-list.md'),
+    [string] $OutputPath   = (Join-Path $PSScriptRoot '..' 'pmo' 'task-list.md'),
     [string] $Organization = 'https://dev.azure.com/hybridcloudsolutions',
     [string] $ProjectId    = '85b6e47e-a666-4a38-8c43-de87dd21aa56',
     [string] $Repository   = 'thisismydemo/azure-scout'

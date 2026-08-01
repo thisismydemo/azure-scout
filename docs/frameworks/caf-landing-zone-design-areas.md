@@ -18,7 +18,7 @@
 **Enumerated 2026-08-01.** This is the source-framework enumeration required by AB#6745 (Epic
 AB#6454), covering the Cloud Adoption Framework's Ready/landing-zone design areas — the axis
 `src/assess/rules/caf.*.yaml` scores today (see `docs/frameworks/smart-question-set.md` for why an
-enumeration has to exist before a rule file cites it, and `docs/audits/AZURE-SCOUT-AUDIT.md` §8
+enumeration has to exist before a rule file cites it, and `pmo/audits/AZURE-SCOUT-AUDIT.md` §8
 Table 3 for why "CAF" in Scout means this one methodology, Ready, not the seven CAF methodologies).
 
 ## What this is
@@ -699,10 +699,13 @@ pages. This count matches the audit's verified figure exactly.
 ## Platform automation and DevOps — `CAF-AUT-*` (52 items, 8 of ~10 pages)
 
 Source pages (all under `https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/considerations/`
-unless noted): [`automation`](automation), [`devops-teams-topologies`](devops-teams-topologies),
-[`development-strategy-development-lifecycle`](development-strategy-development-lifecycle),
-[`environments`](environments), [`security-considerations-overview`](security-considerations-overview),
-[`security-considerations-tools`](security-considerations-tools).
+unless noted):
+[`automation`](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/considerations/automation),
+[`devops-teams-topologies`](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/considerations/devops-teams-topologies),
+[`development-strategy-development-lifecycle`](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/considerations/development-strategy-development-lifecycle),
+[`environments`](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/considerations/environments),
+[`security-considerations-overview`](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/considerations/security-considerations-overview),
+[`security-considerations-tools`](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/considerations/security-considerations-tools).
 Two child pages carry no actionable recommendation content and are excluded: `devops-principles-and-practices`
 (a definitions/metrics/toolchain-selection guide, no imperative list) and
 `development-strategy-test-driven-development` (a process methodology walkthrough, no imperative list).

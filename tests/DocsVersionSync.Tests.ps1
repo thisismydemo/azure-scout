@@ -24,8 +24,8 @@ BeforeAll {
 
     $script:Changelog   = Get-Content (Join-Path $script:Root 'CHANGELOG.md') -Raw
     $script:Releases    = Get-Content (Join-Path $script:Root 'RELEASES.md') -Raw
-    $script:DocsRoadmap = Get-Content (Join-Path $script:Root 'docs/roadmap.md') -Raw
-    $script:DocsChange  = Get-Content (Join-Path $script:Root 'docs/changelog.md') -Raw
+    $script:DocsRoadmap = Get-Content (Join-Path $script:Root 'docs/project/roadmap.md') -Raw
+    $script:DocsChange  = Get-Content (Join-Path $script:Root 'docs/project/changelog.md') -Raw
 }
 
 Describe 'Documentation states the shipping version (AB#5630)' {
@@ -41,13 +41,13 @@ Describe 'Documentation states the shipping version (AB#5630)' {
         $m.Groups[1].Value | Should -Be $script:Version
     }
 
-    It 'docs/roadmap.md names the manifest version as the Current Release' {
+    It 'docs/project/roadmap.md names the manifest version as the Current Release' {
         $m = [regex]::Match($script:DocsRoadmap, '(?m)^##\s*Current Release\s*[—-]\s*v(\d+\.\d+\.\d+)')
         $m.Success | Should -BeTrue -Because 'the roadmap must declare a Current Release'
         $m.Groups[1].Value | Should -Be $script:Version
     }
 
-    It 'docs/changelog.md summary table leads with the manifest version' {
+    It 'docs/project/changelog.md summary table leads with the manifest version' {
         # The first version row in the table is the newest release.
         $m = [regex]::Match($script:DocsChange, '\|\s*\*\*v(\d+\.\d+\.\d+)\*\*')
         $m.Success | Should -BeTrue -Because 'the docs changelog must have a version row'

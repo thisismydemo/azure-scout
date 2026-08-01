@@ -27,7 +27,7 @@ weight(area) = recommendation_count(area) / mean(recommendation_count across all
 ```
 
 Recommendation counts are the **verified** figures from
-[`docs/audits/AZURE-SCOUT-AUDIT.md` §8 Table 2](../audits/AZURE-SCOUT-AUDIT.md), which were
+[`pmo/audits/AZURE-SCOUT-AUDIT.md` §8 Table 2](https://github.com/thisismydemo/azure-scout/blob/main/pmo/audits/AZURE-SCOUT-AUDIT.md), which were
 produced by fetching all 43 Microsoft Learn pages across the eight design areas on 2026-07-30 and
 counting top-level bullets under each page's `## Design recommendations` heading (or the
 area-specific equivalent, e.g. "Management group recommendations"). That table also documents

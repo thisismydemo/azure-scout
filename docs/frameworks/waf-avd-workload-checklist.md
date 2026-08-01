@@ -12,7 +12,7 @@ in it must cite an item number from the table below.
 
 Microsoft's **Azure Well-Architected Framework Azure Virtual Desktop workload assessment**
 (<https://learn.microsoft.com/en-us/assessments/1ef67c4e-b8d1-4193-b850-d192089ae33d/>) is one of
-Microsoft's per-workload specialised reviews (§14, item 5 of `docs/audits/AZURE-SCOUT-AUDIT.md`).
+Microsoft's per-workload specialised reviews (§14, item 5 of `pmo/audits/AZURE-SCOUT-AUDIT.md`).
 
 ## Source — and a scope correction made during verification
 

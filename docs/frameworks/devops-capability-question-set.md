@@ -8,7 +8,7 @@ release number. The extraction date above (2026-08-01) is the version, per
 `docs/frameworks/README.md`; re-date this line when this file is next re-verified.
 
 This is the AB#6815 enumeration for target #10 in the audit's fourteen-assessment programme
-(`docs/audits/AZURE-SCOUT-AUDIT.md` §14): *"DevOps Capability Assessment — 5 DevOps collectors exist
+(`pmo/audits/AZURE-SCOUT-AUDIT.md` §14): *"DevOps Capability Assessment — 5 DevOps collectors exist
 via the ADO REST API … `caf.platformauto` (6 rules, ~8% coverage)."* `caf.platformauto.yaml` scores
 the CAF Ready methodology's **Platform automation and DevOps design area** (§8 Table 2 — 30
 recommendations, largely CI/CD process guidance ARM telemetry can't observe). This document is

@@ -1,10 +1,10 @@
 #Requires -Version 7.0
 <#
 .SYNOPSIS
-    Regenerate docs/arm-modules.md from the shipped collector manifests (AB#6741).
+    Regenerate docs/reference/arm-modules.md from the shipped collector manifests (AB#6741).
 
 .DESCRIPTION
-    `docs/arm-modules.md` claims in its own tip box that its counts are "generated from the module
+    `docs/reference/arm-modules.md` claims in its own tip box that its counts are "generated from the module
     files under manifests/collectors/". They were not — the page was hand-maintained, and by the
     time AB#6741 touched it the header read "159 ARM inventory modules organized into 15
     categories" against a tree holding 174 across 15, with several per-category tables out of date
@@ -19,7 +19,7 @@
     regeneration disagree.
 
 .PARAMETER OutputPath
-    Defaults to docs/arm-modules.md.
+    Defaults to docs/reference/arm-modules.md.
 
 .PARAMETER Check
     Compare against the committed file and exit non-zero on a difference, writing nothing.
@@ -34,7 +34,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $RepoRoot = Split-Path -Parent $PSScriptRoot
-if ([string]::IsNullOrWhiteSpace($OutputPath)) { $OutputPath = Join-Path $RepoRoot 'docs' 'arm-modules.md' }
+if ([string]::IsNullOrWhiteSpace($OutputPath)) { $OutputPath = Join-Path $RepoRoot 'docs' 'reference' 'arm-modules.md' }
 
 . (Join-Path $RepoRoot 'src' 'pipeline' 'Get-ScoutCollectorDefinition.ps1')
 
@@ -142,7 +142,7 @@ $Footer = @(
 
 $Content = (@($Header) + @($Sections) + @($Footer)) -join "`n"
 
-# --- docs/coverage-table.md ---------------------------------------------------------------------
+# --- docs/reference/coverage-table.md ---------------------------------------------------------------------
 # The same tree, sliced by worksheet instead of by resource type. It was a SECOND hand-maintained
 # copy of the same facts, and had drifted to the same 2016-era numbers; generating both from one
 # pass is the only way they stay consistent with each other as well as with the manifests.
@@ -205,7 +205,7 @@ if ($Check) {
         }
     }
     if ($Failed) { exit 1 }
-    Write-Host '[Build-ArmModuleCatalog] docs/arm-modules.md and docs/coverage-table.md are current.'
+    Write-Host '[Build-ArmModuleCatalog] docs/reference/arm-modules.md and docs/reference/coverage-table.md are current.'
     exit 0
 }
 

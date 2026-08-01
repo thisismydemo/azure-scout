@@ -126,7 +126,7 @@ version, and proves the assertion is not vacuous by constructing a rule file wit
 **Cadence: every 90 days**, or immediately whenever a rule file that depends on an enumeration is
 touched. Ninety days matches the pace the audit actually observed — Microsoft rewriting CAF
 pages and shipping new CIS/NIST initiative versions is not an annual event — while staying loose
-enough that a quarterly documentation pass, not a CI job, can carry it. `docs/audits/AZURE-SCOUT-AUDIT.md`
+enough that a quarterly documentation pass, not a CI job, can carry it. `pmo/audits/AZURE-SCOUT-AUDIT.md`
 §8 is the log of what a full recheck has found before; keep adding to it rather than starting a
 parallel record.
 

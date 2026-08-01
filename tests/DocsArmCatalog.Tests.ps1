@@ -1,7 +1,7 @@
 #Requires -Modules @{ ModuleName = 'Pester'; ModuleVersion = '5.0.0' }
 
 <#
-    docs/arm-modules.md told readers it was generated from manifests/collectors/ while being
+    docs/reference/arm-modules.md told readers it was generated from manifests/collectors/ while being
     hand-maintained, and drifted 15 collectors and 3 categories out of date without anything
     noticing (AB#6741). It is generated now, and this is what keeps it that way.
 #>
@@ -10,7 +10,7 @@ BeforeAll {
     $script:Root = Split-Path -Parent $PSScriptRoot
 }
 
-Describe 'docs/arm-modules.md is generated, not hand-written' {
+Describe 'docs/reference/arm-modules.md is generated, not hand-written' {
 
     It 'matches a fresh regeneration from the collector manifests (both catalog pages)' {
         $Script = Join-Path $script:Root 'scripts/Build-ArmModuleCatalog.ps1'
@@ -23,7 +23,7 @@ Describe 'docs/arm-modules.md is generated, not hand-written' {
         # (it compares the page against the generator's own output). This compares the page
         # against the filesystem.
         $Expected = @(Get-ChildItem -LiteralPath (Join-Path $script:Root 'manifests/collectors') -Recurse -Filter '*.psd1' -File).Count
-        $Page = Get-Content -LiteralPath (Join-Path $script:Root 'docs/arm-modules.md') -Raw
+        $Page = Get-Content -LiteralPath (Join-Path $script:Root 'docs/reference/arm-modules.md') -Raw
         $Page | Should -Match "\*\*$Expected collector definitions\*\*"
     }
 }

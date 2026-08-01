@@ -11,7 +11,7 @@ every rule in it must cite an item number from the table below.
 ## What this assessment is
 
 Microsoft's **Azure Local \| Well-Architected Review** is one of Microsoft's per-workload
-specialised reviews (§14, item 3 of `docs/audits/AZURE-SCOUT-AUDIT.md`) — the Well-Architected
+specialised reviews (§14, item 3 of `pmo/audits/AZURE-SCOUT-AUDIT.md`) — the Well-Architected
 Framework applied to the specific technology scope of Azure Local (platform, 2311 and later) and
 Azure Local VMs (workload). It sits alongside the "Core Well-Architected Review" rather than
 replacing it.
