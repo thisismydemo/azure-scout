@@ -207,6 +207,18 @@ function New-CollectorManifestText {
         $null = $Builder.AppendLine('    AdditionalRowLoops = @(')
         foreach ($Loop in $RowLoops) {
             $null = $Builder.AppendLine('        @{')
+            # A row loop may carry a `Comment`, emitted verbatim above its Variable. This exists
+            # because tests/Collector.VanishingParent.Tests.ps1 requires the AB#6845 decision to be
+            # recorded NEXT TO THE LOOP in the generated manifest -- deliberately, so the reasoning
+            # cannot drift away from the code into a commit message nobody reads again. Without
+            # this the rationale could only live in the spec, and regenerating would strip it out
+            # of the very file the test reads.
+            if ($Loop.ContainsKey('Comment') -and $Loop.Comment) {
+                foreach ($Line in @([string]$Loop.Comment -split "`r?`n")) {
+                    if ([string]::IsNullOrWhiteSpace($Line)) { $null = $Builder.AppendLine('            #') }
+                    else { $null = $Builder.AppendLine("            # $Line") }
+                }
+            }
             $null = $Builder.AppendLine("            Variable = $(ConvertTo-PsdSingleQuoted -Value ([string]$Loop.Variable))")
             $null = $Builder.AppendLine("            Source = $(ConvertTo-PsdSingleQuoted -Value ([string]$Loop.Source))")
             $null = $Builder.AppendLine("            Preamble = ''")

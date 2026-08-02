@@ -168,27 +168,38 @@ $Subnet = if(![string]::IsNullOrEmpty($data.virtualSubnetId)){Get-AZSCIdSegment 
                 @{ Name = 'Subscription'; Expression = '$Loc.Subscription' }
                 @{ Name = 'Location';     Expression = '$Loc.Location' }
             )
-            # AB#6845 decision: BOTH loops are deliberately UNGUARDED -- the parent must NOT
-            # become a row.
-            #
-            # $Loc: this collector's "parent" is not an Azure resource at all, it is the synthetic
-            # AZSC/VM/Quotas envelope the engine builds to carry quota data, and every column on
-            # this worksheet except Resource U is read off $Loc or $Usage. An envelope with no
-            # locations would therefore emit a row that is entirely blank -- a phantom line item
-            # in a report about quota headroom, stating nothing and inviting the reader to wonder
-            # which subscription it belongs to.
-            #
-            # $Usage: the ROW IS THE CHILD. One row per usage line is the unit this worksheet
-            # inventories, so a location envelope carrying no usage data has nothing to state and
-            # must not manufacture a row to say so.
-            #
-            # The behaviour is asserted, not merely skipped, in
-            # tests/Collector.VanishingParent.Tests.ps1. This rationale lives here rather than in
-            # the generated manifest because the generator does not emit row-loop comments and a
-            # hand-patch to manifests/collectors/General/Quotas.psd1 is dropped on regeneration.
+            # Both loops are deliberately UNGUARDED. The per-loop `Comment` is emitted into the
+            # generated manifest next to the loop it describes, because
+            # tests/Collector.VanishingParent.Tests.ps1 requires the decision to be recorded there
+            # rather than only here -- the reasoning must not drift away from the code.
             AdditionalRowLoops = @(
-                @{ Variable = 'Loc';   Source = '$data' }
-                @{ Variable = 'Usage'; Source = '$Loc.Data' }
+                @{
+                    Variable = 'Loc'
+                    Source   = '$data'
+                    Comment  = @'
+AB#6845 decision ($Loc): deliberately UNGUARDED -- the parent must NOT become a row.
+
+This collector's "parent" is not an Azure resource at all: it is the synthetic
+AZSC/VM/Quotas envelope the engine builds to carry quota data, and every column on
+this worksheet except Resource U is read off $Loc or $Usage. An envelope with no
+locations would therefore emit a row that is entirely blank -- a phantom line item
+in a report about quota headroom, stating nothing and inviting the reader to wonder
+which subscription it belongs to.
+
+The behaviour is asserted, not merely skipped, in
+tests/Collector.VanishingParent.Tests.ps1.
+'@
+                }
+                @{
+                    Variable = 'Usage'
+                    Source   = '$Loc.Data'
+                    Comment  = @'
+AB#6845 decision ($Usage): deliberately UNGUARDED -- the ROW IS THE CHILD. One row
+per usage line is the unit this worksheet inventories, so a location envelope
+carrying no usage data has nothing to state and must not manufacture a row to say
+so.
+'@
+                }
             )
             TagLoop = $null
             Fields = @(
