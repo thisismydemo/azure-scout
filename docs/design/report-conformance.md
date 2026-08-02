@@ -4,7 +4,9 @@
 AB#6450.
 **Work item:** Feature AB#6887; the test is Story AB#6888.
 **Enforced by:** `tests/Report.Conformance.Tests.ps1` (not yet written — Story AB#6888).
-**Derived from:** [`pmo/research/R4-reference-deliverable-teardown.md`](../../pmo/research/R4-reference-deliverable-teardown.md).
+**Derived from:** `pmo/research/R4-reference-deliverable-teardown.md` in the repository. Not
+linked: `/pmo` holds internal programme records and is deliberately not published to this site,
+so a relative link out of `docs/` is a dead link at build time.
 
 ---
 
