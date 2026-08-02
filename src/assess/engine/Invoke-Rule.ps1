@@ -35,6 +35,12 @@ function Invoke-Rule {
 
     $status = 'Unknown'; $evidenceCount = 0; $evidence = @()
 
+    # AB#6892. Initialised here, not at the point of use, because the early `return`s below
+    # (gate failure, query failure, not-assessed) build their own finding object and every one of
+    # them must still be able to say what it was going to look for. $null means "not applicable
+    # to this rule", which is distinct from 0.
+    $denominator = $null
+
     # ---- AB#6826: optional gate, checked before manual/query evaluation ----
     $gatePath = $null
     if ($Rule.assert -is [hashtable]) {
@@ -144,6 +150,10 @@ function Invoke-Rule {
             'notExists'         { $status = ($evidenceCount -eq   0) ? 'Pass' : 'Fail' }
             'percentageAtLeast' {
                 $denom = (Resolve-JsonPath -InputObject $Collect -Path $Rule.assert.denominatorQuery).Count
+                # AB#6892: surfaced on the finding so a renderer can say "17 of 198", which is the
+                # supporting number the reference deliverable carries on every risk row. Without
+                # it the reader gets a percentage with nothing behind it.
+                $denominator = $denom
                 # No denominator = nothing collected for this dimension -> Unknown,
                 # NOT a 0% Fail, which would be misleading (AB#5085).
                 if ($denom -le 0) { $status = 'Unknown' }
@@ -159,6 +169,23 @@ function Invoke-Rule {
         }
     }
 
+    # AB#6892 -- WHAT WAS SEARCHED, always, even when nothing was found.
+    #
+    # Phase 0 measured that 42 of 57 FAILING controls carried zero evidence, and no report named a
+    # single Azure resource across three real tenants. That is not a renderer defect. An `exists`
+    # rule fails precisely BECAUSE its query returned nothing, so its evidence list is empty by
+    # construction -- there is no resource to name, and there never will be.
+    #
+    # What makes such a finding actionable is not a resource list but the SCOPE: what was looked
+    # for, where, and how many candidates existed. "No Purview account was found in any of the 9
+    # subscriptions scanned" is actionable. "Data governance coverage: Fail" is decoration.
+    #
+    # So every finding now carries the query it ran and the assertion it applied, and the
+    # percentage rules carry their denominator. Renderers can state the scope of a nil result
+    # instead of rendering an empty table.
+    $searchedPath = if ($hasJoin) { '(join)' } else { [string]$Rule.query }
+    $assertType = if ($Rule.assert) { [string]$Rule.assert.type } else { $null }
+
     [pscustomobject]@{
         Id            = $Rule.id
         Title         = $Rule.title
@@ -168,6 +195,9 @@ function Invoke-Rule {
         Status        = $status
         EvidenceCount = $evidenceCount
         Evidence      = $evidence
+        SearchedPath  = $searchedPath
+        AssertType    = $assertType
+        Denominator   = $denominator
         Remediation   = $Rule.remediation
         Manual        = [bool]$Rule.manual
     }
