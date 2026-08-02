@@ -118,13 +118,20 @@ slide**, the highest-value slide in the reference set · `P-05` FAIL (10 slides,
 
 ## 5. Workbook — `assessment_evidence.xlsx`
 
-39 sheets, and this is where it looks better than it is.
+39 sheets — **35 visible, 4 hidden**.
 
-**Eight of them are internal scaffolding leaked to the user**: `_dash_src_severity`,
-`_dash_src_area_score`, `_dash_src_pass_fail_manual`, `_dash_src_resource_counts` and their
-chart partners. A consultant would have to delete these before sending the file.
+> **CORRECTION, 2026-08-02.** An earlier revision of this section claimed *"eight internal
+> `_dash_src_*` scaffolding sheets are leaked to the user"* and that a consultant would have to
+> delete them before sending the file. **That was wrong on both counts.** There are **four**, and
+> **all four are hidden** — `Export-Excel.ps1` already passes `HideSheet` when it builds each
+> pivot. Hidden pivot-source sheets are normal practice and are not a defect.
+>
+> The error came from reading the sheet list out of `xl/workbook.xml` without checking each
+> sheet's `state` attribute — a hidden sheet is still listed there. `AB#6891` was raised on this
+> mistake and is closed as not-a-defect. The other finding in this section, `AB#6890`, was
+> re-verified against `state` and **is** real: those tabs are genuinely visible.
 
-The remaining tabs are **one per assessment area** — `AI_governance___security`, `AVD_workload__Azure_Local_`,
+The visible tabs are **one per assessment area** — `AI_governance___security`, `AVD_workload__Azure_Local_`,
 `Azure_VMware_Solution_Landing_Z`, `IoT_security` … Two problems:
 
 1. They are named for the **rule area**, not the gap. `X-02` requires one tab per *gap class*,

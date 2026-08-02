@@ -80,16 +80,24 @@ that cannot be actioned is decoration.
 4. **`W-01`/`W-02` remain the keystone** for the document itself — styles unlock the navigation
    pane, TOC, numbering and rebranding in one move.
 
-## Two defects found here that were not in the plan
+## One defect found here that was not in the plan
 
-Both are now tracked:
+**AB#6890 — rule-glob leakage into the report surface.** The evidence workbook carries **visible**
+tabs for assessments that were never selected — `AI_governance___security`, `AI_workload`,
+`AVD_workload__Azure_Local_`, `IoT_security` — in a run of LandingZone + Cloud Governance. A tab
+named for an assessment tells the reader that assessment was performed. Verified against each
+sheet's `state` attribute: 35 of the 39 sheets are visible, and these are among them.
 
-1. **AB#6890 — rule-glob leakage into the report surface.** The evidence workbook carries tabs for
-   assessments that were never selected — `AVS_Landing_Zone`, `AVD_workload__Azure_Local_`,
-   `IoT_security` — in a run of LandingZone + Cloud Governance. It invites the reader to believe
-   those areas were assessed.
-2. **AB#6891 — internal scaffolding ships to the client.** Eight `_dash_src_*` sheets are present in the
-   39-sheet workbook.
+### A second "defect" that was my error — AB#6891, closed as not-a-defect
+
+An earlier revision of this page claimed eight internal `_dash_src_*` scaffolding sheets shipped
+to the client. **There are four, and all four are hidden.** `Export-Excel.ps1` already passes
+`HideSheet` when it builds each pivot; hidden pivot-source sheets are normal practice.
+
+The mistake was reading the sheet list out of `xl/workbook.xml` without checking each sheet's
+`state` attribute — a hidden sheet is still listed there. Recorded rather than quietly deleted,
+because the same shortcut would produce the same false finding next time. **Check `state` before
+calling a sheet visible.**
 
 ## Scope caveat, to be stated on the epic
 
