@@ -211,7 +211,16 @@ function Invoke-ScoutAssessmentCore {
     if ($CollectOnly) { return "$runPath/collect.json" }
 
     # ---- ASSESS ----
+    # AB#6879 (Feature AB#6878, clause R-01). Findings are accumulated BOTH into the flat
+    # $allFindings -- which the roll-up and every existing caller still read -- and into
+    # $findingsByAssessment, keyed by assessment name, so the report phase can render one
+    # detailed set PER ASSESSMENT.
+    #
+    # Phase 0 measured what the single merged document costs: a run selecting LandingZone and
+    # Cloud Governance emitted ONE assessment_report.docx, and three unrelated tenants produced
+    # documents within 258 bytes of each other. See pmo/research/baseline/.
     $allFindings = @()
+    $findingsByAssessment = [ordered]@{}
     $assessmentIndex = 0
     foreach ($name in $Assessment) {
         $assessmentIndex++
@@ -227,6 +236,7 @@ function Invoke-ScoutAssessmentCore {
         if ($spec.ContainsKey('Compliance') -and $spec.Compliance) {
             $findings = Invoke-ScoutComplianceAssessment -Collect $collect -Assessment $name
             $allFindings += $findings
+            $findingsByAssessment[$name] = @($findings)
             continue
         }
         $ruleSet   = Get-RuleSet -Patterns $spec.Rules
@@ -240,6 +250,7 @@ function Invoke-ScoutAssessmentCore {
         } else { $null }
         $findings = Invoke-Assessment -Collect $collect -RuleSet $ruleSet -Benchmark $benchmark -Assessment $name
         $allFindings += $findings
+        $findingsByAssessment[$name] = @($findings)
     }
     $scored = Get-Score -Findings $allFindings
     $scored | ConvertTo-Json -Depth 100 | Out-File "$runPath/findings.json"
@@ -273,6 +284,46 @@ function Invoke-ScoutAssessmentCore {
         # breaks.
         Export-Report -Renderer $r -Findings $scored -Collect $collect -OutputPath $runPath -Drift $drift | Out-Null
     }
+
+    # ---- PER-ASSESSMENT REPORTS (AB#6879, clause R-01/R-02) ----
+    # The run root keeps the merged set, unchanged, so every existing caller and test that reads
+    # $runPath/assessment_report.docx still finds it. Alongside it, each selected assessment now
+    # gets its OWN complete report set under assessments/<slug>/.
+    #
+    # Only when there is more than one: a single-assessment run would otherwise write the same
+    # documents twice, which is noise, not a deliverable.
+    if (@($findingsByAssessment.Keys).Count -gt 1) {
+        $assessmentRoot = Join-Path $runPath 'assessments'
+        foreach ($name in $findingsByAssessment.Keys) {
+            $perFindings = @($findingsByAssessment[$name])
+            if ($perFindings.Count -eq 0) { continue }
+
+            # Slug: lowercase, non-alphanumerics collapsed to a single dash. 'Assess: Cloud
+            # Governance' -> 'assess-cloud-governance'. Folder names must not carry ':' on Windows.
+            $slug = ($name.ToLowerInvariant() -replace '[^a-z0-9]+', '-').Trim('-')
+            $perPath = Join-Path $assessmentRoot $slug
+            $null = New-Item -ItemType Directory -Path $perPath -Force
+
+            # Scored INDEPENDENTLY. A per-assessment report must show that assessment's own score,
+            # not the run-wide one -- reusing $scored would print the same number in every folder
+            # and defeat the point of splitting them.
+            $perScored = Get-Score -Findings $perFindings
+            $perScored | ConvertTo-Json -Depth 100 | Out-File "$perPath/findings.json"
+
+            Write-ScoutAssessmentProgress -Status "Rendering: $name"
+            foreach ($r in $reporters) {
+                # Never fatal. One assessment's renderer failing must not cost the operator the
+                # other assessments' reports, nor the merged set already written above.
+                try {
+                    Export-Report -Renderer $r -Findings $perScored -Collect $collect -OutputPath $perPath -Drift $drift | Out-Null
+                }
+                catch {
+                    Write-Warning "Invoke-ScoutAssessmentCore: '$r' failed for assessment '$name': $($_.Exception.Message)"
+                }
+            }
+        }
+    }
+
     Write-ScoutAssessmentProgress -Completed
     return $runPath
 }
