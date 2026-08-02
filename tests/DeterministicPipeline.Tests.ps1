@@ -483,7 +483,11 @@ Describe 'Excel reporting only invokes collectors that have data' {
     }
 
     It 'has no collector using the retired registration contract' {
-        $Roots = @('src', 'Modules') | ForEach-Object { Join-Path $script:RepoRoot $_ }
+        # `Modules/` was the imperative collector root and no longer exists. Scanning a path that
+        # is gone must not throw -- the whole point of this gate is that its ABSENCE is the pass.
+        $Roots = @('src', 'Modules') |
+            ForEach-Object { Join-Path $script:RepoRoot $_ } |
+            Where-Object { Test-Path -LiteralPath $_ }
         $Users = @($Roots | ForEach-Object {
             Get-ChildItem -LiteralPath $_ -Filter '*.ps1' -Recurse -File |
                 Where-Object { (Get-Content $_.FullName -Raw) -match 'Register-AZSCInventoryModule' }

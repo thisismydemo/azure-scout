@@ -21,8 +21,8 @@ $ResUCount = 1
                 $data = $1.PROPERTIES
                 $sub1 = $SUB | Where-Object { $_.id -eq $1.subscriptionId }
                 $KeyName = if([string]::IsNullOrEmpty($1.name)){$null}else{(([string]$1.name) -split '/')[-1]}
-                $Expires = if($null -eq $data.attributes.exp){''}else{[string]([datetime]'1970-01-01Z').AddSeconds([double]$data.attributes.exp).ToString('yyyy-MM-dd')}
-                $DaysToExpiry = if($null -eq $data.attributes.exp){$null}else{[math]::Floor(((([datetime]'1970-01-01Z').AddSeconds([double]$data.attributes.exp)) - $ScoutRunTime).TotalDays)}
+                $Expires = if($null -eq $data.attributes.exp){''}else{[string]([datetime]::UnixEpoch).AddSeconds([double]$data.attributes.exp).ToString('yyyy-MM-dd')}
+                $DaysToExpiry = if($null -eq $data.attributes.exp){$null}else{[math]::Floor(((([datetime]::UnixEpoch).AddSeconds([double]$data.attributes.exp)) - $ScoutRunTime).TotalDays)}
                 $ExpiryStatus = if($null -eq $DaysToExpiry){'No expiry set'}elseif($DaysToExpiry -lt 0){'EXPIRED'}elseif($DaysToExpiry -le 30){'Expires within 30 days'}elseif($DaysToExpiry -le 90){'Expires within 90 days'}else{'OK'}
 '@
 

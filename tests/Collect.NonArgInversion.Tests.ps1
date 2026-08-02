@@ -630,8 +630,19 @@ Describe 'AB#5648 — API resources: the shim and the retired implementation agr
 
         # queryStartTime carries a timestamp computed at call time; normalise it away.
         $normalise = { param($c) $c -replace 'queryStartTime=.*$', 'queryStartTime=<now-6m>' }
+
+        # DELIBERATE DIVERGENCE (AB#6801): the current implementation issues one call the retired
+        # v1 never did -- `Microsoft.Edge/sites`, the re-sourced Hybrid/ArcSites collector. The
+        # retired implementation predates that resource type entirely, so byte-equality against it
+        # is not the contract any more. Drop that one call and assert the rest still matches in
+        # order, which is what this gate actually protects: no OTHER call was added, removed or
+        # reordered while ArcSites was being wired in.
+        $arcSites = @($actualCalls | Where-Object { $_ -match 'Microsoft\.Edge/sites' })
+        $arcSites.Count | Should -Be @($script:Subs).Count -Because 'ArcSites is issued exactly once per subscription'
+
+        $comparableActual = @($actualCalls | Where-Object { $_ -notmatch 'Microsoft\.Edge/sites' })
         @($referenceCalls | ForEach-Object { & $normalise $_ }) -join "`n" |
-            Should -Be (@($actualCalls | ForEach-Object { & $normalise $_ }) -join "`n")
+            Should -Be (@($comparableActual | ForEach-Object { & $normalise $_ }) -join "`n")
     }
 
     It 'degrades one failing endpoint to $null for that subscription only, exactly as v1 did' {
@@ -722,9 +733,16 @@ Describe 'AB#5648 — VM quotas: the shim and the retired implementation agree' 
 
     It 'restores the caller original subscription context' {
         $restored = [System.Collections.Generic.List[string]]::new()
+        # Record BOTH spellings. Get-ScoutVmQuotas restores with `-Subscription <id>`, which is
+        # the parameter Az actually exposes (it takes a name OR an id); a stub that watched only
+        # -SubscriptionId saw nothing and reported "never restored" against correct code. The
+        # sweep itself also calls -Subscription per subscription, so this list holds the visited
+        # subscriptions followed by the restored one -- 'original-sub' being present is the
+        # contract, not the list being a single element.
         function global:Set-AzContext {
-            param($Subscription, $SubscriptionId, $ErrorAction, $WarningAction, $InformationAction, $Debug)
-            if ($SubscriptionId) { $restored.Add($SubscriptionId) }
+            param($Subscription, $SubscriptionId, $Tenant, $ErrorAction, $WarningAction, $InformationAction, $Debug)
+            if ($SubscriptionId) { $restored.Add([string]$SubscriptionId) }
+            elseif ($Subscription) { $restored.Add([string]$Subscription) }
         }
         Get-AZSCVMQuotas -Subscriptions $script:Subs -Resources (Get-FixtureMixedResources) | Out-Null
         $restored | Should -Contain 'original-sub'

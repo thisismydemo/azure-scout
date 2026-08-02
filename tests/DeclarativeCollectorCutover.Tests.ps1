@@ -19,9 +19,10 @@ Describe 'v3 declarative collector cutover' {
         # four governance collectors (role assignments, policy assignments, locks, budgets); 241
         # after AB#6801 re-created Hybrid/ArcSites against the confirmed-real, non-RG-indexed
         # `Microsoft.Edge/sites` type (Hybrid/VirtualMachines was re-sourced under AB#6802 without
-        # a count change -- it already existed). The number is pinned rather than derived so that a
-        # collector silently DISAPPEARING is a failure, not an invisible regression.
-        $Collectors.Count | Should -Be 241
+        # a count change -- it already existed); 242 after AB#6829 added the owned-reservation
+        # utilization collector. The number is pinned rather than derived so that a collector
+        # silently DISAPPEARING is a failure, not an invisible regression.
+        $Collectors.Count | Should -Be 242
         @($Collectors | Where-Object { -not $_.HasDeclarativeDefinition }).Count | Should -Be 0
         @($Collectors | Where-Object { $_.Path }).Count | Should -Be 0
     }

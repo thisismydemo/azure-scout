@@ -22,6 +22,14 @@ function Invoke-Assessment {
         # One satisfied path is enough: a tenant part-way through a migration legitimately has
         # projects but no Data Box, and that partial state is a finding, not a blocker.
         $Required = @(if ($set.PSObject.Properties['Requires']) { @($set.Requires) } else { @() })
+
+        # Both of these are OPTIONAL rule-set metadata: a rule file need not declare `weight:` or
+        # `frameworkVersion:`, and several do not. Reading an absent property throws under
+        # Set-StrictMode -Version Latest, and because these are read on the Add-Member chain that
+        # decorates EVERY finding, one rule set missing one key took down the entire assessment
+        # rather than degrading that one field to $null. Resolve them once, defensively, here.
+        $SetWeight = if ($set.PSObject.Properties['Weight']) { $set.Weight } else { $null }
+        $SetFrameworkVersion = if ($set.PSObject.Properties['FrameworkVersion']) { $set.FrameworkVersion } else { $null }
         $Missing = @()
         if ($Required.Count -gt 0) {
             $Satisfied = $false
@@ -50,8 +58,8 @@ function Invoke-Assessment {
                         Remediation   = "Not assessed: none of this rule set's required datasets returned any rows ($($Missing -join '; ')). Collect them before reading a score from this area."
                         Manual        = [bool]$rule.manual
                     } | Add-Member -NotePropertyName Assessment -NotePropertyValue $Assessment -PassThru |
-                        Add-Member -NotePropertyName AreaWeight -NotePropertyValue $set.Weight -PassThru |
-                        Add-Member -NotePropertyName FrameworkVersion -NotePropertyValue $set.FrameworkVersion -PassThru
+                        Add-Member -NotePropertyName AreaWeight -NotePropertyValue $SetWeight -PassThru |
+                        Add-Member -NotePropertyName FrameworkVersion -NotePropertyValue $SetFrameworkVersion -PassThru
                 }
                 continue
             }
@@ -60,8 +68,8 @@ function Invoke-Assessment {
         foreach ($rule in $set.Rules) {
             $f = Invoke-Rule -Rule $rule -Collect $Collect -Area $set.Area -Framework $set.Framework
             $f | Add-Member -NotePropertyName Assessment -NotePropertyValue $Assessment -PassThru |
-                 Add-Member -NotePropertyName AreaWeight -NotePropertyValue $set.Weight -PassThru |
-                 Add-Member -NotePropertyName FrameworkVersion -NotePropertyValue $set.FrameworkVersion -PassThru
+                 Add-Member -NotePropertyName AreaWeight -NotePropertyValue $SetWeight -PassThru |
+                 Add-Member -NotePropertyName FrameworkVersion -NotePropertyValue $SetFrameworkVersion -PassThru
         }
     }
     if ($Benchmark) { $findings += Compare-Benchmark -Collect $Collect -Benchmark $Benchmark }

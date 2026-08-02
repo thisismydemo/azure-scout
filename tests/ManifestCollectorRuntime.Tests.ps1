@@ -16,7 +16,7 @@ Describe 'Manifest collector runtime catalog' {
         $Actual = @(Get-ScoutCollector -DefinitionRoot $DefinitionRoot)
 
         $Actual.Count | Should -Be $Expected.Count
-        $Actual.Count | Should -Be 240   # 174 through v3.0.9, +68 from AB#6741, -6 retired by AB#6767/AB#6842, +4 from AB#6779
+        $Actual.Count | Should -Be 242   # 174 through v3.0.9, +68 from AB#6741, -6 retired by AB#6767/AB#6842, +4 from AB#6779, +1 ArcSites (AB#6801), +1 ReservationUtilization (AB#6829)
         @($Actual | Where-Object {
             -not $_.HasDeclarativeDefinition -or
             [string]::IsNullOrWhiteSpace($_.DefinitionPath) -or

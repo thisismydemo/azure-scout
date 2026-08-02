@@ -100,7 +100,9 @@ Describe 'Cost dependency stays opt-in' {
     }
 
     It 'documents Az.CostManagement as an optional prerequisite instead' {
-        $Prereq = Get-Content -Raw -Path (Join-Path $script:RepoRoot 'docs/prerequisites.md')
+        # Moved under docs/guide/ by the site reorganisation; the old top-level path no longer
+        # exists, so this test was failing on a missing file rather than on missing content.
+        $Prereq = Get-Content -Raw -Path (Join-Path $script:RepoRoot 'docs/guide/prerequisites.md')
         $Prereq | Should -Match 'Az\.CostManagement'
         $Prereq | Should -Match 'IncludeCosts'
     }

@@ -133,10 +133,15 @@ Describe 'AB#6755 / AB#6759 — the measured cost of the narrowed sweep' {
         function Start-Sleep { param([Parameter(ValueFromRemainingArguments)] $Rest) }
     }
 
-    It 'issues seven calls per subscription for a full sweep and two for -DefinitionsOnly' {
+    It 'issues eight calls per subscription for a full sweep and two for -DefinitionsOnly' {
         # The exact numbers are the point of AB#6759: this is the per-subscription REST cost the
         # assessment path now pays that it did not pay before. If either count moves, the number
         # recorded on the work item is stale and this test says so.
+        #
+        # Was seven through AB#6759. AB#6801 added the eighth -- `Microsoft.Edge/sites` for the
+        # re-sourced Hybrid/ArcSites collector, which is not ARG-indexed and so has to be listed
+        # per subscription. -DefinitionsOnly still pays two, because ArcSites is inventory data,
+        # not a policy definition, and is skipped alongside the other four.
         $subs = @([pscustomobject]@{ id = 'sub-1'; name = 'Sub One' })
 
         $null = Get-ScoutApiResources -Subscriptions $subs
@@ -146,7 +151,7 @@ Describe 'AB#6755 / AB#6759 — the measured cost of the narrowed sweep' {
         $null = Get-ScoutApiResources -Subscriptions $subs -DefinitionsOnly
         $definitionsOnly = $script:Uris.Count
 
-        $full | Should -Be 7
+        $full | Should -Be 8
         $definitionsOnly | Should -Be 2
         ($script:Uris -join ' ') | Should -Match 'policyDefinitions'
         ($script:Uris -join ' ') | Should -Match 'policySetDefinitions'

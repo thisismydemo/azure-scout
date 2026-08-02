@@ -168,6 +168,24 @@ $Subnet = if(![string]::IsNullOrEmpty($data.virtualSubnetId)){Get-AZSCIdSegment 
                 @{ Name = 'Subscription'; Expression = '$Loc.Subscription' }
                 @{ Name = 'Location';     Expression = '$Loc.Location' }
             )
+            # AB#6845 decision: BOTH loops are deliberately UNGUARDED -- the parent must NOT
+            # become a row.
+            #
+            # $Loc: this collector's "parent" is not an Azure resource at all, it is the synthetic
+            # AZSC/VM/Quotas envelope the engine builds to carry quota data, and every column on
+            # this worksheet except Resource U is read off $Loc or $Usage. An envelope with no
+            # locations would therefore emit a row that is entirely blank -- a phantom line item
+            # in a report about quota headroom, stating nothing and inviting the reader to wonder
+            # which subscription it belongs to.
+            #
+            # $Usage: the ROW IS THE CHILD. One row per usage line is the unit this worksheet
+            # inventories, so a location envelope carrying no usage data has nothing to state and
+            # must not manufacture a row to say so.
+            #
+            # The behaviour is asserted, not merely skipped, in
+            # tests/Collector.VanishingParent.Tests.ps1. This rationale lives here rather than in
+            # the generated manifest because the generator does not emit row-loop comments and a
+            # hand-patch to manifests/collectors/General/Quotas.psd1 is dropped on regeneration.
             AdditionalRowLoops = @(
                 @{ Variable = 'Loc';   Source = '$data' }
                 @{ Variable = 'Usage'; Source = '$Loc.Data' }
@@ -945,12 +963,12 @@ $SentinelWorkspace = if(![string]::IsNullOrEmpty($data.sentinelWorkspaceResource
 $sub1 = $SUB | Where-Object { $_.id -eq $1.subscriptionId }
 $SecretName = if([string]::IsNullOrEmpty($1.name)){$null}else{(([string]$1.name) -split '/')[-1]}
 $Kind = if($data.contentType -match 'x-pkcs12|x-pem-file'){'Certificate'}else{'Secret'}
-$Expires = if($null -eq $data.attributes.exp){''}else{[string]([datetime]'1970-01-01Z').AddSeconds([double]$data.attributes.exp).ToString('yyyy-MM-dd')}
-$DaysToExpiry = if($null -eq $data.attributes.exp){$null}else{[math]::Floor(((([datetime]'1970-01-01Z').AddSeconds([double]$data.attributes.exp)) - $ScoutRunTime).TotalDays)}
+$Expires = if($null -eq $data.attributes.exp){''}else{[string]([datetime]::UnixEpoch).AddSeconds([double]$data.attributes.exp).ToString('yyyy-MM-dd')}
+$DaysToExpiry = if($null -eq $data.attributes.exp){$null}else{[math]::Floor(((([datetime]::UnixEpoch).AddSeconds([double]$data.attributes.exp)) - $ScoutRunTime).TotalDays)}
 $ExpiryStatus = if($null -eq $DaysToExpiry){'No expiry set'}elseif($DaysToExpiry -lt 0){'EXPIRED'}elseif($DaysToExpiry -le 30){'Expires within 30 days'}elseif($DaysToExpiry -le 90){'Expires within 90 days'}else{'OK'}
-$NotBefore = if($null -eq $data.attributes.nbf){''}else{[string]([datetime]'1970-01-01Z').AddSeconds([double]$data.attributes.nbf).ToString('yyyy-MM-dd')}
-$Created = if($null -eq $data.attributes.created){''}else{[string]([datetime]'1970-01-01Z').AddSeconds([double]$data.attributes.created).ToString('yyyy-MM-dd')}
-$Updated = if($null -eq $data.attributes.updated){''}else{[string]([datetime]'1970-01-01Z').AddSeconds([double]$data.attributes.updated).ToString('yyyy-MM-dd')}
+$NotBefore = if($null -eq $data.attributes.nbf){''}else{[string]([datetime]::UnixEpoch).AddSeconds([double]$data.attributes.nbf).ToString('yyyy-MM-dd')}
+$Created = if($null -eq $data.attributes.created){''}else{[string]([datetime]::UnixEpoch).AddSeconds([double]$data.attributes.created).ToString('yyyy-MM-dd')}
+$Updated = if($null -eq $data.attributes.updated){''}else{[string]([datetime]::UnixEpoch).AddSeconds([double]$data.attributes.updated).ToString('yyyy-MM-dd')}
 '@
         }
         @{
@@ -979,8 +997,8 @@ $Updated = if($null -eq $data.attributes.updated){''}else{[string]([datetime]'19
             Preamble = @'
 $sub1 = $SUB | Where-Object { $_.id -eq $1.subscriptionId }
 $KeyName = if([string]::IsNullOrEmpty($1.name)){$null}else{(([string]$1.name) -split '/')[-1]}
-$Expires = if($null -eq $data.attributes.exp){''}else{[string]([datetime]'1970-01-01Z').AddSeconds([double]$data.attributes.exp).ToString('yyyy-MM-dd')}
-$DaysToExpiry = if($null -eq $data.attributes.exp){$null}else{[math]::Floor(((([datetime]'1970-01-01Z').AddSeconds([double]$data.attributes.exp)) - $ScoutRunTime).TotalDays)}
+$Expires = if($null -eq $data.attributes.exp){''}else{[string]([datetime]::UnixEpoch).AddSeconds([double]$data.attributes.exp).ToString('yyyy-MM-dd')}
+$DaysToExpiry = if($null -eq $data.attributes.exp){$null}else{[math]::Floor(((([datetime]::UnixEpoch).AddSeconds([double]$data.attributes.exp)) - $ScoutRunTime).TotalDays)}
 $ExpiryStatus = if($null -eq $DaysToExpiry){'No expiry set'}elseif($DaysToExpiry -lt 0){'EXPIRED'}elseif($DaysToExpiry -le 30){'Expires within 30 days'}elseif($DaysToExpiry -le 90){'Expires within 90 days'}else{'OK'}
 '@
         }
