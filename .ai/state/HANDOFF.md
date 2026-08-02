@@ -2,107 +2,139 @@
 
 ## Session 2026-08-02 — Epic AB#6450 "Enhance the reporting engine with new formats"
 
-Picked up with the epic plan in DRAFT, `pmo/research/` empty, and **CI red on `main` since
-v3.2.0**. Nothing could merge, so that came first.
+Started with the epic plan in DRAFT, `pmo/research/` empty, and **CI red on `main` since v3.2.0**.
+Ended with **six PRs merged, `main` green at 2745/0, and Phase 0 complete.**
 
-### 1. CI is green again — PR #210, awaiting review
-
-`main` had **15 failures**, five distinct causes. One was a real product defect.
-
-| Cause | Fix |
+| PR | What |
 |---|---|
-| **Key Vault dates were rendered in LOCAL time** | `[datetime]'1970-01-01Z'` resolves to local. A key's `Expires`/`Created`/`Updated`/`NotBefore` shifted by a day depending on the machine's timezone, and `Days To Expiry` shifted with it — the same tenant scanned from Chicago and from London disagreed about when a key expires. Now `[datetime]::UnixEpoch` (Kind=Utc) at all seven spec sites. Verified identical under `UTC`, `America/Chicago`, `Asia/Tokyo`. **This is also why the goldens passed locally and failed in CI** — they were captured in a negative-offset zone. |
-| Collector count pinned at 241/240 | AB#6829 added `General/ReservationUtilization` → **242** |
-| `Modules/` (retired imperative root) is gone | the gate asserting its *absence* threw on a missing path instead of passing |
-| AB#6801 added a per-subscription `Microsoft.Edge/sites` call | the equivalence gate compares against a frozen copy of retired v1 which predates that type; the call is now asserted explicitly and excluded from the ordering comparison. REST cost **7 → 8**; `-DefinitionsOnly` unchanged at 2 |
-| `docs/prerequisites.md` moved to `docs/guide/` | test was failing on a missing file, not missing content |
+| #210 | CI recovery + a real UTC date defect |
+| #211 | Site logos |
+| #212 | Quality bar, reference teardown, board structure |
+| #213 | **Phase 0 — three real tenants measured** |
+| #214 | **Clause R-01 — a report set per assessment** |
+| #215 | Correction of a false Phase 0 finding |
 
-Plus a second real defect found on the way: `Invoke-Assessment` read `$set.Weight` and
-`$set.FrameworkVersion` unguarded. Both are optional rule-set metadata read on the
-`Add-Member` chain that decorates **every** finding, so one rule file without a
-`frameworkVersion:` key threw under StrictMode and took down the whole assessment.
+---
 
-**Result: 2745 passed, 0 failed.**
+### 1. CI recovery (#210)
 
-### 2. The site logos — PR #211, awaiting review
+15 failures, five causes. One was a **real product defect**: `[datetime]'1970-01-01Z'` resolves to
+**local** time, so Key Vault `Expires`/`Created`/`Updated`/`NotBefore` shifted by a day with the
+running machine's timezone — the same tenant scanned from Chicago and London disagreed about when
+a key expires. Fixed to `[datetime]::UnixEpoch` at all seven spec sites; verified identical under
+UTC / America/Chicago / Asia/Tokyo. It is also why the goldens passed locally and failed in CI.
 
-Both logo slots pointed at the 640x160 wordmark. The navbar slot is 24px tall so it rendered
-~96x24 and was unreadable; the home hero caps `.image-src` at 192/256/320px, sizing for a
-square app icon, so the 4:1 banner was pinned by its **width** at 320x80.
+Second real defect: `Invoke-Assessment` read `$set.Weight` and `$set.FrameworkVersion` unguarded
+on the `Add-Member` chain decorating **every** finding, so one rule file without a
+`frameworkVersion:` key took down the whole assessment under StrictMode.
 
-Navbar now uses `azurescout-icon.svg`. The hero drops the icon-shaped circular `.image-bg`
-halo and the square cap, giving 320/420/480px — **480x120 against the previous 320x80**.
-Needed a custom theme (`docs/.vitepress/theme/`), which the site did not have. Overrides win
-on source order at equal specificity, verified against the built bundle, so no `!important`.
+The rest were stale contracts (collector count 241→242, the retired `Modules/` root, AB#6801's
+added ArcSites call, `docs/prerequisites.md` moving under `docs/guide/`).
 
-### 3. Epic AB#6450 — board built and the quality bar written
+### 2. Phase 0 — the result that reframes the epic (#213)
 
-Branch `feat/ab6450-reporting-rebuild`.
+Three real tenants, one identical command, every format.
 
-**The board.** AB#6450 and AB#6449 were the only two report items with **no description at
-all**, which is how this drifted. Both backfilled. Created **7 Features and 18 Stories**:
+| | `tppoc` | `hcs` | `ptlmgmt` |
+|---|--:|--:|--:|
+| Subscriptions | **9** | **2** | **8** |
+| Run time | 27.9 min | 9.1 min | 15.1 min |
+| Findings | 304 | 304 | 304 |
+| **Word paragraphs** | **1,803** | **1,803** | **1,803** |
+| **Word tables** | **36** | **36** | **36** |
+| Findings with evidence | 36 | 36 | **9** |
 
-| Feature | Theme |
-|---|---|
-| AB#6865 | Baseline and critique — Phase 0 real-tenant runs (Stories 6866–6868: tppoc, hcs, ptlmgmt) |
-| AB#6869 | Research spikes R1–R4 (6870–6873) — **includes the AzViz/AzGovViz/D2 evaluation that was never a work item** |
-| AB#6874 | Report identity and template system (6875–6877) |
-| AB#6878 | Per-assessment output contract (6879–6880) |
-| AB#6881 | Diagram engine + rasterisation (6882–6883); Related-linked to the blocking AB#6737 and AB#379 |
-| AB#6884 | Power BI PBIP/TMDL (6885–6886) |
-| AB#6887 | Quality bar and conformance test (6888–6889) |
+**Three unrelated estates produce documents within 258 bytes of each other.** The scoring
+underneath differs correctly per tenant, so the engine works — the document renders the **rule
+set**, not the estate.
 
-Every one carries acceptance criteria bound to a clause id. **No child may close on "a file
-came out"** — that is the failure mode that let 103 report items close green.
+Measured on `word/document.xml`: **0** `/subscriptions/<guid>`, **0** `resourceGroups/` in every
+report. **Not one Azure resource is named anywhere.**
 
-**R4 teardown** (`pmo/research/R4-reference-deliverable-teardown.md`) — done, and it is the
-one spike that is genuinely complete. The reference `.docx`/`.pptx`/`.xlsx` packages were read
-directly; every count is measured, not estimated. 5,643 paragraphs, **43 tables, 9 figures**
-mapped to sections; 11 slides and 13 workbook tabs inventoried.
+**Zero automatic conformance clauses pass.** The `.docx` package has **three parts**; **0 of
+1,803 paragraphs carry a style**. `report.pbit` is 4,689 B and its authored `Report/Layout` is
+**2,190 B**.
 
-> **The load-bearing finding:** all seven chapters have the *identical* shape — chapter-level
-> scorecard table → Current State → 1–3 findings tables → ≤1 figure. That is a shape a renderer
-> can emit, and it **is** the per-assessment unit. Plan §5's "a detailed report for each" is this
-> chapter template instantiated per assessment, with the Executive Summary becoming the roll-up.
-> Also: the conclusion comes **first** (exec summary precedes chapter 1; Scout orders by area
-> and has no conclusion anywhere).
+Full critique: `pmo/research/baseline/`.
 
-**The quality bar** (`docs/design/report-conformance.md`) — 46 numbered clauses across Word,
-PowerPoint, Excel, diagrams, Power BI and the run output contract, each marked `automatic` or
-`judged`. Most automatic clauses are properties of the emitted **package**, so they are
-verifiable offline against a fixture — no tenant, CI-enforceable.
+### 3. Clause R-01 shipped (#214)
 
-### Blockers
+`Invoke-ScoutAssessmentCore` now accumulates `$findingsByAssessment` alongside `$allFindings` and
+renders each selected assessment into `assessments/<slug>/` with its own format set. Merged
+run-root set **kept**; each assessment **scored independently**; only splits when >1 assessment
+ran; renderer failure contained per assessment. `tests/Report.PerAssessmentContract.Tests.ps1`,
+14 tests.
 
-- **PRs #210 and #211 need an approving review.** `main` requires 1, I cannot self-approve, and
-  repo-level auto-merge is disabled (`enablePullRequestAutoMerge` not allowed). Nothing else
-  lands until #210 does.
-- `feat/ab6450-reporting-rebuild` is based on pre-fix `main`, so its own CI will show the old 15
-  failures until #210 merges. Rebase after.
+### 4. A finding I got wrong, and corrected (#215)
 
-### Next, in order
+I reported eight `_dash_src_*` sheets shipping visible to clients. **There are four and all four
+are hidden** — `Export-Excel.ps1` already passes `HideSheet`. AB#6891 closed as not-a-defect.
 
-1. Merge #210, then #211, then rebase the epic branch.
-2. **AB#6865 Phase 0** — the real-tenant baselines. Everything below is blocked on it by the
-   plan's own rule that nothing may be designed against imagination. Azure tokens come from the
-   HCS MCP `get_auth_token -provider azure -scope <alias>`; verified working for `tppoc`.
-3. AB#6888 — write the conformance test. Expect it red at first; that is the point.
-4. `feat/ab6450-reporting-v2` (8 commits, unmerged) carries the report model and narrative
-   engine. Its docs commits already landed via #207, so **rebase onto main to drop them**. It is
-   scaffolding, not the deliverable — keep it only if the Phase 0 critique supports it.
+Cause: I read the sheet list from `xl/workbook.xml` **without checking each sheet's `state`
+attribute**. Hidden sheets are still listed there. **Check `state` before calling a sheet
+visible.** AB#6890 was re-verified the same way and **is** real — 35 of 39 sheets are visible and
+the unselected-assessment tabs are among them.
 
-### Gotchas found this session
+---
 
-- `Select-Object -Unique` returns a **scalar** for a one-element result; `$x.Count` then throws
+## Board
+
+Epic AB#6450 now has **7 Features and 18 Stories** (AB#6865–6889); AB#6450 and AB#6449 had no
+description at all and were backfilled. Every item carries acceptance criteria bound to a clause
+id in `docs/design/report-conformance.md`. **No child may close on "a file came out"** — that is
+the failure mode that let 103 report items close green.
+
+Done: AB#6865/6866/6867/6868 (Phase 0), AB#6873 (R4 teardown), AB#6879 (R-01).
+Open bug: **AB#6890**. Closed not-a-defect: AB#6891.
+
+## Next, in the order Phase 0 argues for
+
+1. **Evidence projection at resource grain** — *this outranks the template work.* Only 9–36 of
+   304 findings carry evidence, so no renderer can name a resource in a table that has none.
+   Needs a new Feature; the useful code is on the unmerged `feat/ab6450-reporting-v2` branch
+   (`Build-ScoutReportModel.ps1`, gap register, triage verdicts).
+2. **AB#6880** — the cross-assessment executive roll-up (`R-03`).
+3. **AB#6874** — styles/cover/headers (`W-01`…`W-09`). `W-01`/`W-02` are the keystone: styles
+   unlock nav pane, TOC, numbering and rebranding in one move.
+4. **AB#6888** — write `tests/Report.Conformance.Tests.ps1`. Expect red at first; that is the point.
+5. **AB#6890** — rule-glob leakage into the workbook.
+6. R1/R2/R3 spikes (AB#6870–6872), incl. the AzViz/AzGovViz/D2 evaluation.
+
+## Scope caveat to state on the epic
+
+~60% of every report is `Manual` or `Unknown` (141–148 Manual, 31–45 Unknown of 304). That is the
+225-of-395 `manual: true` ceiling, owned by **Epic AB#6454**. Clause `W-17` requires a conformant
+report to say "Not assessed" plainly, so this is correct behaviour — AB#6450 must not be judged
+against a bar its inputs cannot reach.
+
+## Gotchas found this session
+
+- **`Az.Accounts 5.5.0` declares `-AccessToken` as `[String]`.** Passing a `SecureString`
+  stringifies to `System.Security.SecureString`; Az then warns *"The access token is invalid"* and
+  reports **0 subscriptions** — indistinguishable from a permissions failure. Verify the token
+  against ARM REST before believing a permissions story.
+- **`Select-Object -Unique` returns a scalar** for a one-element result; `.Count` then throws
   under StrictMode. Wrap in `@()`.
-- The ADO work-item create API rejects the literal project name as `System.AreaPath` when the
-  URL uses the **project GUID**. Omit AreaPath/IterationPath — they default to the project root.
-- `scripts/Build-ScoutServiceCollector.ps1` regenerates from the spec and **strips any comment
-  hand-added to a generated manifest**. `tests/Collector.VanishingParent.Tests.ps1` requires the
-  AB#6845 decision comment to sit *next to its loop in the manifest*, so the generator now emits
-  a per-loop `Comment` from the spec. Moving rationale to the spec alone is not sufficient.
-- The GitHub App installation token expires in ~1h. Re-mint via HCS MCP `get_auth_token`, and
-  push by temporarily rewriting the remote to `https://x-access-token:<tok>@github.com/...`.
-- Locally the suite shows ~56 failures against CI's 15: ~40 are the **installed** AzureScout
-  module colliding with the repo copy ("Multiple script or manifest modules named 'AzureScout'"),
-  and 7 more are a live Az context. Neither reproduces in CI. Judge against CI, not local.
+- **The collector generator strips comments hand-added to a generated manifest.**
+  `Collector.VanishingParent.Tests.ps1` requires the AB#6845 decision comment *next to its loop in
+  the manifest*, so the generator now emits a per-loop `Comment` from the spec.
+- **ADO rejects `System.AreaPath`** when the create URL uses the project GUID. Omit AreaPath and
+  IterationPath — they default to the project root.
+- **VitePress resolves relative links at build time**; `/pmo` is unpublished, so a link out of
+  `docs/` into it fails the docs build. Run `npm run docs:build` after adding any docs page.
+- **Local suite ≠ CI.** Locally ~56 failures vs CI's 15: ~40 are the *installed* AzureScout module
+  colliding with the repo copy, 7 more are a live Az context. Judge against CI; reproduce a CI
+  failure by running the single test file in isolation.
+- **GitHub App tokens expire in ~1h.** Re-mint via HCS MCP `get_auth_token`; push by temporarily
+  rewriting the remote to `https://x-access-token:<tok>@github.com/...`.
+
+## How to re-run a baseline
+
+Runner script lives in the session scratchpad (`baseline-run.ps1`). Env: `SCOUT_REPO`,
+`SCOUT_TENANT`, `SCOUT_APPID` (the token's `appid` claim), `SCOUT_OUT`, `SCOUT_TOKEN` from
+HCS MCP `get_auth_token -provider azure -scope <alias>`. It issues:
+
+```powershell
+Invoke-AzureScout -TenantID $t -InventoryAndAssessment `
+  -Assessment 'LandingZone','Assess: Cloud Governance' -OutputFormat All -ReportDir $out
+```
