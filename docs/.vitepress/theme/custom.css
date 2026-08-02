@@ -1,0 +1,54 @@
+/*
+  Home hero: let the wordmark be a wordmark.
+
+  VitePress sizes the hero image for a SQUARE app icon — `.image-src` is capped at
+  192/256/320px across the three breakpoints, and a blurred circular `.image-bg` blob sits
+  behind it. Scout's hero asset is `azurescout-banner.svg`, a 640x160 (4:1) wordmark, so the
+  max-WIDTH cap decided its size: at the widest breakpoint it rendered 320x80 and read as a
+  small logo on an otherwise full-width landing page. The circular glow behind a wide
+  rectangle was wrong for the same reason — it was drawn to halo an icon.
+
+  So: drop the circle, drop the square cap, and let the banner take the width of its column.
+  Height stays implicit at the SVG's own 4:1 ratio, so nothing is stretched.
+*/
+
+.VPHero .image-container {
+  width: 100%;
+  height: auto;
+}
+
+/* The circular halo is sized and positioned for a square icon. */
+.VPHero .image-bg {
+  display: none;
+}
+
+/*
+  The default rule absolutely-positions the image and centres it with a translate, which only
+  makes sense against the fixed-size container above. With the container now auto-height, the
+  image flows normally instead.
+*/
+.VPHero .image-src {
+  position: static;
+  transform: none;
+  width: 100%;
+  max-width: 320px;
+  max-height: none;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .VPHero .image-src {
+    max-width: 420px;
+  }
+}
+
+@media (min-width: 960px) {
+  .VPHero .image-container {
+    /* Cancel the default's icon-centring nudge; the banner is centred by its own margin. */
+    transform: none;
+  }
+
+  .VPHero .image-src {
+    max-width: 480px;
+  }
+}

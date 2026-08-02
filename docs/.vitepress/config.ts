@@ -21,7 +21,11 @@ export default defineConfig({
   // They are internal programme records, not product documentation.
 
   themeConfig: {
-    logo: '/images/azurescout-banner.svg',
+    // The SQUARE icon, not the banner. The navbar logo slot is 24px tall, so the 640x160
+    // wordmark rendered there collapsed to ~96x24 and was illegible; the 200x200 icon is the
+    // asset drawn for this size. The banner is a wordmark and belongs on the home hero, where
+    // it has the width to be read.
+    logo: '/images/azurescout-icon.svg',
 
     nav: [
       { text: 'Home', link: '/' },
