@@ -1,7 +1,7 @@
 # Azure Scout — Reporting Module Rebuild
 
 **Epic:** AB#6450 — Enhance the reporting engine with new formats
-**Status:** DRAFT — plan under construction, not approved
+**Status:** ACTIVE — board structure created 2026-08-02 (Features AB#6865, AB#6869, AB#6874, AB#6878, AB#6881, AB#6884, AB#6887)
 **Author:** drafted 2026-08-01
 
 ---
