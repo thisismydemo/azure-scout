@@ -449,7 +449,9 @@ function Add-ScoutPdfTableHeader {
     param($Ctx, [double[]]$ColX)
     ScoutPdfEnsureSpace $Ctx 18
     Add-ScoutPdfRect $Ctx $Ctx.Margin ($Ctx.Y - 2) (612 - 2 * $Ctx.Margin) 16 $Script:ScoutPdfNavy
-    $labels = @('ID', 'Severity', 'Status', 'Title')
+    # AB#6862/AB#6892, clause W-14. 'Evidence' is the supporting number for the row; see
+    # Get-ScoutPdfEvidenceSummary for why the zero case renders text rather than staying blank.
+    $labels = @('ID', 'Severity', 'Status', 'Title', 'Evidence')
     for ($i = 0; $i -lt $labels.Count; $i++) {
         Add-ScoutPdfText $Ctx ($ColX[$i] + 2) ($Ctx.Y + 2) $labels[$i] 9 'F2' $Script:ScoutPdfWhite
     }
@@ -475,8 +477,46 @@ function Add-ScoutPdfTableRow {
     Add-ScoutPdfText $Ctx ($ColX[1] + 2) $Ctx.Y (Get-ScoutPdfSeverityLabel $sev) 9 'F1' (Get-ScoutPdfSeverityColor $sev)
     Add-ScoutPdfDot $Ctx ($ColX[2] + 5) ($Ctx.Y + 3) 3.2 (Get-ScoutPdfStatusColor $status)
     Add-ScoutPdfText $Ctx ($ColX[2] + 12) $Ctx.Y (Get-ScoutPdfStatusLabel $status) 9 'F1' $Script:ScoutPdfInk
-    Add-ScoutPdfText $Ctx ($ColX[3] + 2) $Ctx.Y (ScoutPdfTruncate $title 58) 9 'F1' $Script:ScoutPdfInk
+    # Title truncation drops 58 -> 42 chars: the column is narrower now that Evidence sits to its
+    # right, and an untruncated title would overprint it.
+    Add-ScoutPdfText $Ctx ($ColX[3] + 2) $Ctx.Y (ScoutPdfTruncate $title 42) 9 'F1' $Script:ScoutPdfInk
+    Add-ScoutPdfText $Ctx ($ColX[4] + 2) $Ctx.Y (Get-ScoutPdfEvidenceSummary $Finding) 9 'F1' $Script:ScoutPdfSteel
     $Ctx.Y -= 14
+}
+
+function Get-ScoutPdfEvidenceSummary {
+    <#
+    .SYNOPSIS
+        The supporting number for one finding, as a short PDF cell string.
+
+    .DESCRIPTION
+        AB#6862/AB#6892, clause W-14. Mirrors the Word and PPTX helpers.
+
+        The hard case is a finding with NO evidence -- Phase 0 found it on 42 of 57 failing
+        controls. An `exists` rule fails precisely BECAUSE its query matched nothing, so there is
+        no resource to name and there never will be. The row still owes the reader the scope, so
+        it says "None found"; a blank reads as a rule that never ran.
+    #>
+    [OutputType([string])]
+    param($Finding)
+
+    $count = Get-ScoutPdfProp $Finding 'EvidenceCount' $null
+    $denom = Get-ScoutPdfProp $Finding 'Denominator' $null
+
+    if ($null -eq $count) { return '' }
+
+    $n = 0
+    try { $n = [int]$count } catch { return '' }
+
+    if ($null -ne $denom) {
+        $m = 0
+        try { $m = [int]$denom } catch { $m = 0 }
+        if ($m -gt 0) { return "$n of $m" }
+    }
+
+    if ($n -eq 0) { return 'None found' }
+    if ($n -eq 1) { return '1 resource' }
+    return "$n resources"
 }
 
 #endregion
@@ -783,7 +823,9 @@ function Export-Pdf {
         # ==== Findings by area (AB#394 header repeat lives here) ====
         Start-ScoutPdfPage $ctx
         Add-ScoutPdfSubsection $ctx 'Findings by Area'
-        $colX = @($ctx.Margin, $ctx.Margin + 65, $ctx.Margin + 140, $ctx.Margin + 215)
+        # Title narrowed from 215.. to 215..375 to make room for the evidence column (AB#6862).
+        # US Letter is 612pt wide, so with the default margin the last column still fits.
+        $colX = @($ctx.Margin, $ctx.Margin + 65, $ctx.Margin + 140, $ctx.Margin + 215, $ctx.Margin + 445)
         $ctx.HeaderRepeat = { param($c) Add-ScoutPdfTableHeader $c $colX }
         Add-ScoutPdfTableHeader $ctx $colX
 

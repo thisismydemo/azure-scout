@@ -446,6 +446,42 @@ function Get-ScoutSeverityRank {
     return 99
 }
 
+function Get-ScoutPptxEvidenceSummary {
+    <#
+    .SYNOPSIS
+        The supporting number for one finding, as a short table cell.
+
+    .DESCRIPTION
+        AB#6862/AB#6892, clause W-14. Mirrors Get-ScoutDocxEvidenceSummary in Export-Word.ps1.
+
+        The hard case is a finding with NO evidence, which Phase 0 found on 42 of 57 failing
+        controls. Those are not renderer failures: an `exists` rule fails precisely BECAUSE its
+        query matched nothing, so there is no resource to name and there never will be. The row
+        still owes the reader the scope, so it says "None found" -- an empty cell reads as a rule
+        that never ran.
+    #>
+    [OutputType([string])]
+    param($Gap)
+
+    $count = Get-ScoutProp $Gap 'EvidenceCount'
+    $denom = Get-ScoutProp $Gap 'Denominator'
+
+    if ($null -eq $count) { return '' }
+
+    $n = 0
+    try { $n = [int]$count } catch { return '' }
+
+    if ($null -ne $denom) {
+        $m = 0
+        try { $m = [int]$denom } catch { $m = 0 }
+        if ($m -gt 0) { return "$n of $m" }
+    }
+
+    if ($n -eq 0) { return 'None found' }
+    if ($n -eq 1) { return '1 resource' }
+    return "$n resources"
+}
+
 function Get-ScoutSeverityLabel {
     # AB#5089 companion: always renders a label, never crashes on null/blank.
     param($Severity)
@@ -942,10 +978,13 @@ function New-ScoutGapsSlides {
         $capturedChunk = $chunk
         New-ScoutContentSlide -Shell $Shell -Title $title -PageNum $PageCounter.Value -TotalPages $TotalPages -BodyShapeBuilder {
             param($tree)
-            $colW = @(1.3, 2.6, 7.0)
+            # AB#6862/AB#6892, clause W-14 applied to the deck. Same defect the Word renderer had:
+            # Severity | Area | Gap and nothing else, so every row was a verdict with no
+            # supporting number. See Get-ScoutPptxEvidenceSummary for why the zero case matters.
+            $colW = @(1.3, 2.4, 5.6, 1.6)
             $rowsList = New-ScoutList
             $headerCells = New-ScoutList
-            foreach ($h in 'Severity', 'Area', 'Gap') {
+            foreach ($h in 'Severity', 'Area', 'Gap', 'Evidence') {
                 $headerCells.Add((New-ScoutTableCell -Text $h -SizePt 12 -Hex $Script:Paper -Bold $true -FillHex $Script:Navy))
             }
             $rowsList.Add((New-ScoutTableRow -HeightIn 0.38 -Cells $headerCells))
@@ -960,6 +999,7 @@ function New-ScoutGapsSlides {
                 $cells.Add((New-ScoutTableCell -Text $sevLabel -Bold $true -Hex $Script:Paper -FillHex $sevColor))
                 $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutProp $gap 'Area')" -Hex $Script:Ink -FillHex $bg -Align 'l'))
                 $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutProp $gap 'Title')" -Hex $Script:Ink -FillHex $bg -Align 'l'))
+                $cells.Add((New-ScoutTableCell -Text (Get-ScoutPptxEvidenceSummary $gap) -SizePt 11 -Hex $Script:Ink -FillHex $bg -Align 'l'))
                 $rowsList.Add((New-ScoutTableRow -HeightIn 0.4 -Cells $cells))
             }
 
