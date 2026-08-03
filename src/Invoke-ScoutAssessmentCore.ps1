@@ -85,8 +85,17 @@ function Invoke-ScoutAssessmentCore {
         [string]   $TenantID
     )
 
+    # AB#6902: two runs started within the same second must not share a folder --
+    # the second would overwrite the first's artefacts, and Get-ScoutDrift would
+    # replace the prior history record (same RunId) instead of appending one.
     $runId   = Get-Date -Format 'yyyyMMdd_HHmmss'
     $runPath = Join-Path $OutputPath $runId
+    $suffix  = 1
+    while (Test-Path $runPath) {
+        $runPath = Join-Path $OutputPath ('{0}_{1:d2}' -f $runId, $suffix)
+        $suffix++
+    }
+    $runId = Split-Path $runPath -Leaf
     New-Item -ItemType Directory -Path $runPath -Force | Out-Null
 
     # AB#405: soft dependency -- every call below is skipped entirely when this
