@@ -286,3 +286,39 @@ Describe 'Get-ScoutDocxSeverityLabel / Get-ScoutDocxSeverityRank (unit)' {
         Get-ScoutDocxSeverityRank 'low' | Should -Be 2
     }
 }
+
+Describe 'AB#6862/AB#6892 -- the gaps table carries its supporting number (clause W-14)' {
+
+    BeforeAll {
+        . (Join-Path (Split-Path -Parent $PSScriptRoot) 'src/report/renderers/Export-Word.ps1')
+    }
+
+    It 'says "<Expected>" for EvidenceCount=<Count>, Denominator=<Denom>' -ForEach @(
+        # The case Phase 0 found on 42 of 57 FAILING controls. An `exists` rule fails precisely
+        # because its query matched nothing, so there is no resource to name -- but an empty cell
+        # is indistinguishable from a rule that never ran.
+        @{ Count = 0;  Denom = $null; Expected = 'None found' }
+        @{ Count = 1;  Denom = $null; Expected = '1 resource' }
+        @{ Count = 7;  Denom = $null; Expected = '7 resources' }
+        # The reference deliverable's defining property: "60 of 198 storage accounts".
+        @{ Count = 17; Denom = 198;   Expected = '17 of 198' }
+        # Denominator 0 is not a usable ratio -- fall back rather than print "3 of 0".
+        @{ Count = 3;  Denom = 0;     Expected = '3 resources' }
+    ) {
+        $Gap = [pscustomobject]@{ EvidenceCount = $Count; Denominator = $Denom }
+        Get-ScoutDocxEvidenceSummary $Gap | Should -Be $Expected
+    }
+
+    It 'returns empty, without throwing, for a finding carrying no EvidenceCount' {
+        # Older findings.json files and hand-built fixtures predate AB#6892.
+        $Gap = [pscustomobject]@{ Title = 'no count here' }
+        { Get-ScoutDocxEvidenceSummary $Gap } | Should -Not -Throw
+        Get-ScoutDocxEvidenceSummary $Gap | Should -Be ''
+    }
+
+    It 'declares Evidence as the fourth column of the prioritized gaps table' {
+        $Source = Get-Content -LiteralPath (Join-Path (Split-Path -Parent $PSScriptRoot) 'src/report/renderers/Export-Word.ps1') -Raw
+        $Source | Should -Match "foreach \(\`$h in 'Severity', 'Area', 'Gap', 'Evidence'\)"
+        $Source | Should -Match 'Get-ScoutDocxEvidenceSummary \$gap'
+    }
+}

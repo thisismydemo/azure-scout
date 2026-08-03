@@ -602,6 +602,46 @@ function New-ScoutDocxAreaFindingsSection {
     }
 }
 
+function Get-ScoutDocxEvidenceSummary {
+    <#
+    .SYNOPSIS
+        The supporting number for one finding, as a short cell string.
+
+    .DESCRIPTION
+        AB#6862/AB#6892, clause W-14. The hard case is a finding with NO evidence, which Phase 0
+        found on 42 of 57 failing controls. Those are not renderer failures: an `exists` rule
+        fails precisely BECAUSE its query matched nothing, so there is no resource to name and
+        there never will be.
+
+        What such a row still owes the reader is the SCOPE -- what was looked for. "None found"
+        beats an empty cell, because an empty cell is indistinguishable from a rule that never
+        ran. Where the engine supplied a denominator (AB#6892), the row states "N of M", which is
+        the reference deliverable's defining property.
+    #>
+    [OutputType([string])]
+    param($Gap)
+
+    $count = Get-ScoutDocxProp $Gap 'EvidenceCount'
+    $denom = Get-ScoutDocxProp $Gap 'Denominator'
+
+    if ($null -eq $count) { return '' }
+
+    $n = 0
+    try { $n = [int]$count } catch { return '' }
+
+    # "17 of 198" -- only when the engine actually resolved a denominator. $null means the rule
+    # has no denominator concept; 0 would be a claim that no candidates exist, which is different.
+    if ($null -ne $denom) {
+        $m = 0
+        try { $m = [int]$denom } catch { $m = 0 }
+        if ($m -gt 0) { return "$n of $m" }
+    }
+
+    if ($n -eq 0) { return 'None found' }
+    if ($n -eq 1) { return '1 resource' }
+    return "$n resources"
+}
+
 function New-ScoutDocxGapsSection {
     param($Body, $Gaps)
 
@@ -617,10 +657,17 @@ function New-ScoutDocxGapsSection {
         return
     }
 
+    # AB#6862/AB#6892, clause W-14. The table was Severity | Area | Gap and nothing else, so a
+    # reader got a verdict with no supporting number and no resource to act on. Phase 0 measured
+    # the consequence: 0 ARM ids in the whole document across three real tenants, and three
+    # unrelated estates producing documents within 258 bytes of each other.
+    #
+    # The fourth column is the reference deliverable's defining property -- "60 of 198 storage
+    # accounts", never "storage accounts are misconfigured".
     $rows = New-ScoutDocxList
     $header = New-ScoutDocxList
-    foreach ($h in 'Severity', 'Area', 'Gap') {
-        $w = switch ($h) { 'Severity' { 1.1 } 'Area' { 1.7 } default { 3.7 } }
+    foreach ($h in 'Severity', 'Area', 'Gap', 'Evidence') {
+        $w = switch ($h) { 'Severity' { 1.0 } 'Area' { 1.4 } 'Gap' { 2.6 } default { 1.5 } }
         $header.Add((New-ScoutDocxCell -Text $h -WidthIn $w -Hex $Script:ScoutDocxPaper -Bold $true -FillHex $Script:ScoutDocxNavy))
     }
     $rows.Add((New-ScoutDocxRow -Cells $header -Header $true))
@@ -632,12 +679,13 @@ function New-ScoutDocxGapsSection {
         $sevLabel = Get-ScoutDocxSeverityLabel (Get-ScoutDocxProp $gap 'Severity')
         $sevColor = Get-ScoutDocxSeverityColor (Get-ScoutDocxProp $gap 'Severity')
         $cells = New-ScoutDocxList
-        $cells.Add((New-ScoutDocxCell -Text $sevLabel -WidthIn 1.1 -Bold $true -Hex $Script:ScoutDocxPaper -FillHex $sevColor -Align 'center'))
-        $cells.Add((New-ScoutDocxCell -Text "$(Get-ScoutDocxProp $gap 'Area')" -WidthIn 1.7 -FillHex $bg))
-        $cells.Add((New-ScoutDocxCell -Text "$(Get-ScoutDocxProp $gap 'Title')" -WidthIn 3.7 -FillHex $bg))
+        $cells.Add((New-ScoutDocxCell -Text $sevLabel -WidthIn 1.0 -Bold $true -Hex $Script:ScoutDocxPaper -FillHex $sevColor -Align 'center'))
+        $cells.Add((New-ScoutDocxCell -Text "$(Get-ScoutDocxProp $gap 'Area')" -WidthIn 1.4 -FillHex $bg))
+        $cells.Add((New-ScoutDocxCell -Text "$(Get-ScoutDocxProp $gap 'Title')" -WidthIn 2.6 -FillHex $bg))
+        $cells.Add((New-ScoutDocxCell -Text (Get-ScoutDocxEvidenceSummary $gap) -WidthIn 1.5 -FillHex $bg -SizePt 9))
         $rows.Add((New-ScoutDocxRow -Cells $cells))
     }
-    $Body.Append((New-ScoutDocxTable -ColWidthsIn @(1.1, 1.7, 3.7) -Rows $rows))
+    $Body.Append((New-ScoutDocxTable -ColWidthsIn @(1.0, 1.4, 2.6, 1.5) -Rows $rows))
 
     $truncated = @($sorted).Count - $top.Count
     if ($truncated -gt 0) {
