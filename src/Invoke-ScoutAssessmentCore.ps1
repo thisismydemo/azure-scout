@@ -322,6 +322,44 @@ function Invoke-ScoutAssessmentCore {
                 }
             }
         }
+
+        # ---- EXECUTIVE ROLL-UP (AB#6880, clause R-03) ----
+        # "Here is your estate, and here is how it scored across every framework assessed."
+        # Scout has never produced this artefact, and it is the one an executive actually reads:
+        # the per-assessment reports answer "how did Landing Zone do", but nobody was answering
+        # "how did we do overall, and which of these is the worst".
+        #
+        # It renders from the SAME merged $scored the run root uses -- this is a roll-up, not a
+        # re-assessment -- into executive/, next to the per-assessment folders. Deck and PDF only:
+        # the roll-up is the read-in-ten-minutes artefact, and shipping a full workbook and Power
+        # BI project beside it would bury the point.
+        $execPath = Join-Path $runPath 'executive'
+        $null = New-Item -ItemType Directory -Path $execPath -Force
+
+        $execScores = foreach ($name in $findingsByAssessment.Keys) {
+            $af = @($findingsByAssessment[$name])
+            if ($af.Count -eq 0) { continue }
+            $s = Get-Score -Findings $af
+            [pscustomobject]@{
+                Assessment = $name
+                Score      = (Get-AZSCSafeProperty -InputObject $s -Path 'Score')
+                Findings   = $af.Count
+                Failed     = @($af | Where-Object { $_.Status -eq 'Fail' }).Count
+                Manual     = @($af | Where-Object { $_.Status -eq 'Manual' }).Count
+            }
+        }
+        @($execScores) | ConvertTo-Json -Depth 20 | Out-File "$execPath/rollup.json"
+
+        Write-ScoutAssessmentProgress -Status 'Rendering: executive roll-up'
+        foreach ($r in @('Pptx', 'Pdf')) {
+            if ($reporters -notcontains $r) { continue }
+            try {
+                Export-Report -Renderer $r -Findings $scored -Collect $collect -OutputPath $execPath -Drift $drift | Out-Null
+            }
+            catch {
+                Write-Warning "Invoke-ScoutAssessmentCore: '$r' failed for the executive roll-up: $($_.Exception.Message)"
+            }
+        }
     }
 
     Write-ScoutAssessmentProgress -Completed

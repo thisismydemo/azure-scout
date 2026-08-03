@@ -108,3 +108,61 @@ Describe 'AB#6879 -- the slug is a valid folder name' {
         $Slug | Should -Not -Match '[:\\/<>"|?*]'
     }
 }
+
+Describe 'AB#6880 -- the cross-assessment executive roll-up (clause R-03)' {
+
+    It 'writes the roll-up under executive/' {
+        $script:Source | Should -Match "Join-Path \`$runPath 'executive'"
+    }
+
+    It 'renders the roll-up from the MERGED score, not a re-assessment' {
+        # It is a roll-up: "here is your estate, here is how it scored across every framework
+        # assessed". Re-scoring here would invent a third number that matches neither the run
+        # root nor any per-assessment folder.
+        $Block = [regex]::Match(
+            $script:Source,
+            "Join-Path \`$runPath 'executive'.*?\z",
+            [System.Text.RegularExpressions.RegexOptions]::Singleline).Value
+
+        $Block | Should -Match 'Export-Report -Renderer \$r -Findings \$scored'
+    }
+
+    It 'emits a rollup.json carrying per-assessment score, failed and manual counts' {
+        # The roll-up's whole value is the COMPARISON across assessments -- which of these is
+        # worst. That needs each assessment's own numbers side by side.
+        $script:Source | Should -Match 'rollup\.json'
+        foreach ($Field in 'Assessment', 'Score', 'Findings', 'Failed', 'Manual') {
+            $script:Source | Should -Match "$Field\s*=" -Because "the roll-up compares assessments on $Field"
+        }
+    }
+
+    It 'restricts the roll-up to the deck and the PDF' {
+        # The read-in-ten-minutes artefact. A workbook and a Power BI project beside it would
+        # bury the point.
+        $script:Source | Should -Match "foreach \(\`$r in @\('Pptx', 'Pdf'\)\)"
+    }
+
+    It 'honours -OutputFormat -- no roll-up deck when the caller did not ask for Pptx' {
+        $script:Source | Should -Match '\$reporters -notcontains \$r'
+    }
+
+    It 'contains a roll-up renderer failure without losing the reports already written' {
+        $Block = [regex]::Match(
+            $script:Source,
+            "Join-Path \`$runPath 'executive'.*?\z",
+            [System.Text.RegularExpressions.RegexOptions]::Singleline).Value
+
+        $Block | Should -Match 'catch'
+        $Block | Should -Match 'failed for the executive roll-up'
+    }
+
+    It 'only produces a roll-up when more than one assessment ran' {
+        # Nested inside the same >1 guard as the per-assessment folders: a roll-up over a single
+        # assessment is that assessment.
+        $GuardIndex = $script:Source.IndexOf('@($findingsByAssessment.Keys).Count -gt 1')
+        $ExecIndex = $script:Source.IndexOf("Join-Path `$runPath 'executive'")
+
+        $GuardIndex | Should -BeGreaterThan 0
+        $ExecIndex | Should -BeGreaterThan $GuardIndex
+    }
+}
