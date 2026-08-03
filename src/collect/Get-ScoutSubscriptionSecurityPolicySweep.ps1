@@ -84,9 +84,14 @@ function Get-ScoutSubscriptionSecurityPolicySweep {
             }
             catch {
                 $message = $_.Exception.Message
+                # 'Please register to Microsoft.Security in order to view your security status' is
+                # the phrasing Azure actually uses for an unregistered provider on this endpoint
+                # (observed live, AB#6900) -- it says "register to", never "not registered", so the
+                # original patterns missed it and the quiet Unavailable path fell through to a
+                # raw Write-Warning on every collect against a subscription without Defender.
                 $providerUnavailable =
                     $ProviderRegistrationIsUnavailable -and
-                    $message -match '(?i)MissingSubscriptionRegistration|SubscriptionNotRegistered|not registered.+Microsoft\.Security|Microsoft\.Security.+not registered'
+                    $message -match '(?i)MissingSubscriptionRegistration|SubscriptionNotRegistered|not registered.+Microsoft\.Security|Microsoft\.Security.+not registered|register to Microsoft\.Security'
 
                 if ($providerUnavailable) {
                     return [pscustomobject]@{
