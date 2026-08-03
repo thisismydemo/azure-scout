@@ -1152,6 +1152,17 @@ resources | where type =~ "microsoft.azureplaywrightservice/accounts"
     $r['arcSites'] = if ($inventoryShaped.ContainsKey('arcSites')) { @($inventoryShaped['arcSites']) } else { @() }
     $r['azureLocalVirtualMachineInstances'] = if ($inventoryShaped.ContainsKey('azureLocalVirtualMachineInstances')) { @($inventoryShaped['azureLocalVirtualMachineInstances']) } else { @() }
 
+    # AB#6896. `recoveryVaults` is the SAME case and was missed: AB#6895 taught
+    # ConvertFrom-ScoutInventory to shape Recovery Services vaults out of the raw `resources`
+    # rows, but gave it no `$q` entry (there is no typed KQL for it) -- so the copy loop above,
+    # which walks `$q.Keys` and nothing else, never visited the key and the shaped vaults were
+    # dropped on the floor. The AB#6895 fix was therefore a no-op in production: vaults still
+    # reported zero on every run while `backupProtectedItems` returned rows, which is the
+    # vanishing-parent class (AB#6845) it was supposed to close.
+    # `Collect.ShapedDatasetsReachTheResult.Tests.ps1` now fails if any shaped dataset is left
+    # without a `$q` entry and without an explicit copy here, so the next one cannot go unnoticed.
+    $r['recoveryVaults'] = if ($inventoryShaped.ContainsKey('recoveryVaults')) { @($inventoryShaped['recoveryVaults']) } else { @() }
+
     # ---- firewall policy rule-collection group parsing (AB#400) ----
     # properties.ruleCollections is a nested dynamic array (rule collections -> rules)
     # that Resource Graph hands back as-is; walking it needs real conditional logic,
@@ -1402,7 +1413,11 @@ resources | where type =~ "microsoft.azureplaywrightservice/accounts"
             #
             # Read defensively: the typed-query path has no such key, and a dot-access would throw
             # PropertyNotFound under StrictMode.
-            recoveryVaults = @(if ($r.PSObject.Properties['recoveryVaults']) { $r.recoveryVaults } else { @() })
+            # `$r` is a HASHTABLE. `$r.PSObject.Properties['x']` is the dictionary adapter's member
+            # list -- Keys, Values, Count -- and never the keys themselves, so that guard was
+            # unconditionally false and this read returned `@()` on every run regardless of what
+            # had been collected (AB#6896). `ContainsKey` is the only correct test here.
+            recoveryVaults = @(if ($r.ContainsKey('recoveryVaults')) { $r['recoveryVaults'] } else { @() })
             deployments = $r.deployments
             logAnalyticsWorkspaces = $r.logAnalyticsWorkspaces
             # The right-hand side of XR-BKP-01/02 (AB#6835). Filed under management because that

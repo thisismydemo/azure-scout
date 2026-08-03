@@ -44,6 +44,105 @@ $ErrorActionPreference = 'Stop'
         be counted twice and inflate every existence-count rule.
 #>
 
+function ConvertFrom-ScoutTokenValue {
+    <#
+    .SYNOPSIS
+        Normalise a Newtonsoft JToken to the native PowerShell value it represents.
+
+    .NOTES
+        AB#6899. Resource Graph hands dynamic columns (`properties`, `sku`, `identity`, ...)
+        back as Newtonsoft `JObject`/`JArray`/`JValue`, not as PSCustomObject. A `JValue`
+        stringifies acceptably but is not a `[bool]`, so `ConvertTo-ScoutBool` on one used to
+        fall through to its string parse; unwrapping to `.Value` here restores the CLR type the
+        rest of this file assumes.
+
+        A `JObject` is deliberately returned AS-IS: it is still walkable by
+        `Get-ScoutChildValue` below, and converting the whole bag eagerly would cost a deep copy
+        of every resource's full ARM properties on every read.
+    #>
+    param([AllowNull()] $Value)
+    if ($null -eq $Value) { return $null }
+
+    # EVERY return below carries the unary comma. A bare `return $Value` on an array-valued leaf
+    # emits its ELEMENTS, so a one-element array reconstitutes at the call site as the element
+    # itself and a zero-element array as $null -- both of which corrupt the very distinction the
+    # array walkers below exist to preserve.
+    $out = switch ($Value.GetType().FullName) {
+        'Newtonsoft.Json.Linq.JValue' { $Value.Value; break }
+        'Newtonsoft.Json.Linq.JArray' { , @(foreach ($item in $Value) { ConvertFrom-ScoutTokenValue $item }); break }
+        default { , $Value }
+    }
+    return , $out
+}
+
+function Get-ScoutChildValue {
+    <#
+    .SYNOPSIS
+        Read ONE named child off a value of any shape a Resource Graph row can carry.
+
+    .NOTES
+        AB#6899. `Get-ScoutProp` walked every segment with
+        `$wrapped.PSObject.Properties[$segment]`, which resolves a PSCustomObject's members and
+        NOTHING ELSE. It silently returned $null — no error, no warning — for two other shapes
+        a caller can reach these walkers with:
+
+          * `IDictionary` — PowerShell's dictionary adapter exposes `Keys`/`Values`/`Count` as
+            members, never the keys themselves.
+          * `Newtonsoft.Json.Linq.JObject` — `PSObject.Properties` on one is EMPTY. Not "missing
+            the key": empty. There is no member to find, so every nested read looked exactly
+            like an absent property.
+
+        SCOPE, measured rather than assumed. The path Scout runs today is NOT affected:
+        `Search-AzGraph` (Az.ResourceGraph 1.3.0, SearchAzureRmGraph) converts rows through
+        `JTokenExtensions.ToPsObject`, which builds a PSCustomObject RECURSIVELY, so `properties`
+        arrives as a PSCustomObject and the old walk handled it. Verified live — the pre-fix and
+        post-fix code shape the same tenant into the same 5 VNets and 8 subnets. This is
+        hardening plus a real fix for the dictionary shape, not a fix for an observed production
+        failure, and it should not be described as one.
+
+        Dictionaries are tested BEFORE the PSObject path, deliberately: a dictionary would
+        otherwise match `AsPSObject` and resolve `Keys` as if it were the caller's segment name.
+    #>
+    param([AllowNull()] $InputObject, [Parameter(Mandatory)] [string] $Name)
+    if ($null -eq $InputObject) { return $null }
+
+    # Resolved in ONE place and returned once, with a unary comma. A plain `return $value` on an
+    # array leaf pipeline-unrolls it, and on a genuinely-present-but-EMPTY array that means zero
+    # output objects -- $null, indistinguishable from absent. `Get-ScoutPropArray` exists
+    # precisely to tell those apart (AB#6820), so this helper must not destroy the difference
+    # before it gets there.
+    $raw = $null
+    $found = $false
+
+    if ($InputObject -is [System.Collections.IDictionary]) {
+        foreach ($key in $InputObject.Keys) {
+            # KQL column names are case-sensitive but the ARM properties bag is not consistently
+            # cased across providers, so match the way the rule engine's JSONPath does.
+            if ([string] $key -ieq $Name) { $raw = $InputObject[$key]; $found = $true; break }
+        }
+    }
+    # Duck-typed rather than `-is [Newtonsoft.Json.Linq.JObject]`: this file is dot-sourced in
+    # contexts (tests, offline renders from a banked collect.json) where Newtonsoft is not
+    # loaded, and naming the type in a type literal would fail to load the whole file there.
+    elseif ($InputObject.GetType().FullName -eq 'Newtonsoft.Json.Linq.JObject') {
+        $raw = $InputObject[$Name]
+        if ($null -eq $raw) {
+            foreach ($jprop in $InputObject.Properties()) {
+                if ($jprop.Name -ieq $Name) { $raw = $jprop.Value; break }
+            }
+        }
+        $found = $null -ne $raw
+    }
+    else {
+        $property = [System.Management.Automation.PSObject]::AsPSObject($InputObject).PSObject.Properties[$Name]
+        if ($property) { $raw = $property.Value; $found = $true }
+    }
+
+    if (-not $found) { return $null }
+    $value = ConvertFrom-ScoutTokenValue $raw
+    return , $value
+}
+
 function Get-ScoutProp {
     <#
     .SYNOPSIS
@@ -68,13 +167,17 @@ function Get-ScoutProp {
     $current = $InputObject
     foreach ($segment in $Path.Split('.')) {
         if ($null -eq $current) { return $null }
-        if ($current -isnot [System.Management.Automation.PSObject] -and $current -isnot [pscustomobject]) {
-            $wrapped = [System.Management.Automation.PSObject]::AsPSObject($current)
-        }
-        else { $wrapped = $current }
-        $property = $wrapped.PSObject.Properties[$segment]
-        if (-not $property) { return $null }
-        $current = $property.Value
+        $current = Get-ScoutChildValue -InputObject $current -Name $segment
+    }
+    # An array leaf still unrolls -- that is this function's documented contract above, and every
+    # existing caller wraps the result in `Measure-ScoutArray`, which relies on it. A non-array
+    # IEnumerable leaf must NOT: a Newtonsoft JObject enumerates over its JProperties, so a bare
+    # return would hand the caller the object's members in place of the object (AB#6899).
+    if ($null -ne $current -and
+        $current -isnot [System.Array] -and
+        $current -isnot [string] -and
+        $current -is [System.Collections.IEnumerable]) {
+        return , $current
     }
     return $current
 }
@@ -95,13 +198,7 @@ function Get-ScoutPropArray {
     $current = $InputObject
     foreach ($segment in $Path.Split('.')) {
         if ($null -eq $current) { return $null }
-        if ($current -isnot [System.Management.Automation.PSObject] -and $current -isnot [pscustomobject]) {
-            $wrapped = [System.Management.Automation.PSObject]::AsPSObject($current)
-        }
-        else { $wrapped = $current }
-        $property = $wrapped.PSObject.Properties[$segment]
-        if (-not $property) { return $null }
-        $current = $property.Value
+        $current = Get-ScoutChildValue -InputObject $current -Name $segment
     }
     if ($null -eq $current) { return $null }
     return , @($current)
