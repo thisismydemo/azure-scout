@@ -4,7 +4,7 @@ framework: CAF
 # 30 / 45.625 = 0.66.
 weight: 0.66
 # guidance version/date this file was last verified against (AB#6799/AB#6817):
-frameworkversion: "CAF landing zone design area: Platform automation and DevOps, learn.microsoft.com/azure/cloud-adoption-framework/ready/landing-zone/design-area/platform-automation-and-devops, verified 2026-08-01"
+frameworkversion: "CAF landing zone design area: Platform automation and DevOps, learn.microsoft.com/azure/cloud-adoption-framework/ready/landing-zone/design-area/platform-automation-devops, verified 2026-08-03"
 rules:
   - id: CAF-AUT-01
     title: "Infrastructure managed as code (IaC deployments present)"
