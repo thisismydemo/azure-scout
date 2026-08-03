@@ -64,12 +64,19 @@ function Import-Governance {
     # ---- ARG helper: paged, scoped to the management group when one is supplied ----
     # Mirrors Invoke-Collect's paging: Search-AzGraph rejects -Skip 0
     # (ValidateRange minimum is 1), so omit it on the first page.
-    function Invoke-GovArg([string] $Query) {
+    function Invoke-GovArg([string] $Query, [switch] $UseTenantScope) {
         $rows = @(); $skip = 0
         do {
             $params = @{ Query = $Query; First = 1000; ErrorAction = 'Stop' }
             if ($skip -gt 0) { $params.Skip = $skip }
-            if ($ManagementGroupId) { $params.ManagementGroup = $ManagementGroupId }
+            # AB#6901 -- management groups are TENANT-level containers, invisible to a default
+            # (subscription-scoped) Resource Graph call: proven live, 0 rows default vs 18 with
+            # -UseTenantScope, same SPN, same tenant. The two scope parameters are mutually
+            # exclusive on Search-AzGraph, and an explicit -ManagementGroupId run is already
+            # scoped to the subtree the caller asked for, so tenant scope only applies when no
+            # management group was supplied.
+            if ($UseTenantScope -and -not $ManagementGroupId) { $params.UseTenantScope = $true }
+            elseif ($ManagementGroupId) { $params.ManagementGroup = $ManagementGroupId }
             # AB#6779. `@(Search-AzGraph @params)` collects the PSResourceGraphResponse WRAPPER as
             # a single element rather than the rows -- always, not only when the result is empty.
             # That made $batch.Count permanently 1, so this loop's `-eq 1000` condition could NEVER
@@ -92,17 +99,29 @@ function Import-Governance {
         return , $rows
     }
 
-    # 1) management groups (Compare-Benchmark matches archetype names against .name)
-    $mgs = @()
-    try {
-        $mgs = Invoke-GovArg @'
+    # 1) management groups (Compare-Benchmark matches archetype names against .name).
+    #    -UseTenantScope is REQUIRED here (AB#6901): without it the query returned zero rows on
+    #    every run in the product's history -- empty in all eight reference tenants across both
+    #    corpus runs -- so archetype matching and the MG-hierarchy rules always scored an estate
+    #    with no management groups at all.
+    $mgQuery = @'
 resourcecontainers
 | where type =~ "microsoft.management/managementgroups"
 | project name, id, displayName = tostring(properties.displayName),
           parent = tostring(properties.details.parent.name)
 '@
+    $mgs = @()
+    try {
+        $mgs = Invoke-GovArg $mgQuery -UseTenantScope
     }
-    catch { Write-Warning "Import-Governance: management-group query failed: $($_.Exception.Message)" }
+    catch {
+        # Tenant scope needs a tenant-level read the caller may not hold (Reader at root MG). The
+        # default-scope retry keeps the old behavior as the floor rather than trading one empty
+        # result for a new hard failure.
+        Write-Verbose "Import-Governance: tenant-scoped management-group query failed, retrying at default scope (AB#6901): $($_.Exception.Message)"
+        try { $mgs = Invoke-GovArg $mgQuery }
+        catch { Write-Warning "Import-Governance: management-group query failed: $($_.Exception.Message)" }
+    }
 
     # ---- what the collect pass already handed over (AB#6779) ----------------------------------
     # Four of the six datasets below are now collected by Get-ScoutRawInventory, because the four
