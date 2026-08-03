@@ -117,10 +117,11 @@ foreach ($t in $creds) {
     try {
         Clear-AzContext -Scope Process -Force -ErrorAction SilentlyContinue | Out-Null
         if ($t.PSObject.Properties['token'] -and $t.token) {
-            # Bearer-token fallback. `.Trim()` matters: a BOM or trailing newline in the token
-            # makes Connect-AzAccount fail with the unhelpful 'The access token is invalid'.
-            $secure = ConvertTo-SecureString ([string]$t.token).Trim() -AsPlainText -Force
-            Connect-AzAccount -AccessToken $secure -AccountId $t.clientId -Tenant $t.tenantId -WarningAction SilentlyContinue | Out-Null
+            # Bearer-token fallback. TWO traps behind the same 'The access token is invalid'
+            # message: (1) -AccessToken is a PLAIN [string] parameter -- a SecureString gets
+            # stringified to 'System.Security.SecureString' and rejected; (2) a BOM or trailing
+            # newline in the token has the same effect, hence the Trim.
+            Connect-AzAccount -AccessToken ([string]$t.token).Trim() -AccountId $t.clientId -Tenant $t.tenantId -WarningAction SilentlyContinue | Out-Null
         }
         else {
             $cred = [pscredential]::new($t.clientId, (ConvertTo-SecureString $t.secret -AsPlainText -Force))

@@ -41,7 +41,19 @@ All collector definitions, source retirement, strict runtime contracts, and repo
 complete. The remaining release steps are package validation, broad test-suite completion, tag, and
 publication. Historical v2 entries below are retained as release history rather than current status.
 
-## Current Release — v3.2.0 — Deep governance and compliance analytics
+## Current Release — v3.3.2 — Field fixes from real tenant runs
+
+Released 3 August 2026. Every fix in this release came from running Scout against live estates.
+Advisor ingestion is contained per subscription instead of failing tenant-wide on one unregistered
+`Microsoft.Advisor` provider; Entra ID P2-gated Graph features report `NOT LICENSED` instead of a
+misleading `DENIED`; Recovery Services vaults are collected instead of hardcoded to an empty
+array; the LandingZone assessment scores its own 13 areas instead of sweeping in every workload
+rule set; `GovernanceReport` is reachable from `-OutputFormat All`; and evidence truncation is
+visible in every renderer. The v3.3 line (3.3.0 → 3.3.2) delivered the reporting rebuild of Epic
+AB#6450: conformance-gated Word/Excel/PowerPoint/PDF deliverables, managed-code figure
+rasterisation, and a Power BI PBIP project with a TMDL model and bound visuals.
+
+## Previous Release — v3.2.0 — Deep governance and compliance analytics
 
 Released 31 July 2026. Scout modelled fifteen of Microsoft's eighteen published service
 categories; it now models all eighteen. `Migration` went from zero collectors to all five of its
