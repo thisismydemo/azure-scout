@@ -419,7 +419,15 @@ function New-ScoutTable {
 
 #region Data helpers (safe property access, score/severity bands, pagination)
 
-function Get-ScoutProp {
+function Get-ScoutPptxProp {
+    # Was `Get-ScoutProp` -- the same name as the collect layer's dotted-path walker in
+    # ConvertFrom-ScoutInventory.ps1. The module loader dot-sources src/ sorted by path, so
+    # report/renderers loaded AFTER collect and this single-name, default-returning version
+    # SHADOWED the collect walker in module scope: every dotted read in the shaper
+    # ('properties.enableDdosProtection', 'sku.name') looked up a literal property of that name,
+    # found nothing, and returned $null -- silently nulling most of what the rules score on every
+    # module-imported collect run (AB#6897). Same failure class as the ImportExcel Export-Excel
+    # collision (AB#6883); Module.FunctionNameCollisions.Tests.ps1 now bans duplicates outright.
     param($Obj, [Parameter(Mandatory)][string]$Name, $Default = $null)
     if ($null -eq $Obj) { return $Default }
     $p = $Obj.PSObject.Properties[$Name]
@@ -463,8 +471,8 @@ function Get-ScoutPptxEvidenceSummary {
     [OutputType([string])]
     param($Gap)
 
-    $count = Get-ScoutProp $Gap 'EvidenceCount'
-    $denom = Get-ScoutProp $Gap 'Denominator'
+    $count = Get-ScoutPptxProp $Gap 'EvidenceCount'
+    $denom = Get-ScoutPptxProp $Gap 'Denominator'
 
     if ($null -eq $count) { return '' }
 
@@ -994,19 +1002,19 @@ function New-ScoutExecSummarySlide {
         } else {
             foreach ($fw in @($Frameworks)) {
                 $x = $startX + ($i * ($cardW + $gap))
-                $label = "$(Get-ScoutProp $fw 'Framework') Alignment Score"
-                Add-ScoutScoreCard -Tree $tree -X $x -Y 1.25 -Cx $cardW -Cy 1.7 -Label $label -Score (Get-ScoutProp $fw 'Score')
+                $label = "$(Get-ScoutPptxProp $fw 'Framework') Alignment Score"
+                Add-ScoutScoreCard -Tree $tree -X $x -Y 1.25 -Cx $cardW -Cy 1.7 -Label $label -Score (Get-ScoutPptxProp $fw 'Score')
                 $i++
             }
         }
 
         $areaArr = @($Areas)
-        $passSum = ($areaArr | ForEach-Object { Get-ScoutProp $_ 'Pass' 0 } | Measure-Object -Sum).Sum
-        $partialSum = ($areaArr | ForEach-Object { Get-ScoutProp $_ 'Partial' 0 } | Measure-Object -Sum).Sum
-        $failSum = ($areaArr | ForEach-Object { Get-ScoutProp $_ 'Fail' 0 } | Measure-Object -Sum).Sum
+        $passSum = ($areaArr | ForEach-Object { Get-ScoutPptxProp $_ 'Pass' 0 } | Measure-Object -Sum).Sum
+        $partialSum = ($areaArr | ForEach-Object { Get-ScoutPptxProp $_ 'Partial' 0 } | Measure-Object -Sum).Sum
+        $failSum = ($areaArr | ForEach-Object { Get-ScoutPptxProp $_ 'Fail' 0 } | Measure-Object -Sum).Sum
         $manualCount = @($Manual).Count
         $errorCount = @($Errors).Count
-        $highGaps = (@($Gaps) | Where-Object { (Get-ScoutSeverityLabel (Get-ScoutProp $_ 'Severity')) -eq 'HIGH' } | Measure-Object).Count
+        $highGaps = (@($Gaps) | Where-Object { (Get-ScoutSeverityLabel (Get-ScoutPptxProp $_ 'Severity')) -eq 'HIGH' } | Measure-Object).Count
 
         $lines = @(
             "Areas assessed: $($areaArr.Count)"
@@ -1061,17 +1069,17 @@ function New-ScoutAreaTableSlides {
             foreach ($area in $capturedChunk) {
                 $r++
                 $bg = if ($r % 2 -eq 0) { $Script:Mist } else { $Script:Paper }
-                $score = Get-ScoutProp $area 'Score'
+                $score = Get-ScoutPptxProp $area 'Score'
                 $scoreColor = Get-ScoutScoreColor $score
                 $scoreText = if ($null -eq $score) { '—' } else { "$score" }
                 $cells = New-ScoutList
-                $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutProp $area 'Framework')" -Hex $Script:Ink -FillHex $bg))
-                $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutProp $area 'Area')" -Hex $Script:Ink -FillHex $bg -Align 'l'))
+                $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutPptxProp $area 'Framework')" -Hex $Script:Ink -FillHex $bg))
+                $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutPptxProp $area 'Area')" -Hex $Script:Ink -FillHex $bg -Align 'l'))
                 $cells.Add((New-ScoutTableCell -Text $scoreText -Bold $true -Hex $scoreColor -FillHex $bg))
-                $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutProp $area 'Pass' 0)" -Hex $Script:Ink -FillHex $bg))
-                $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutProp $area 'Partial' 0)" -Hex $Script:Ink -FillHex $bg))
-                $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutProp $area 'Fail' 0)" -Hex $Script:Ink -FillHex $bg))
-                $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutProp $area 'Manual' 0)" -Hex $Script:Ink -FillHex $bg))
+                $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutPptxProp $area 'Pass' 0)" -Hex $Script:Ink -FillHex $bg))
+                $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutPptxProp $area 'Partial' 0)" -Hex $Script:Ink -FillHex $bg))
+                $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutPptxProp $area 'Fail' 0)" -Hex $Script:Ink -FillHex $bg))
+                $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutPptxProp $area 'Manual' 0)" -Hex $Script:Ink -FillHex $bg))
                 $rowsList.Add((New-ScoutTableRow -HeightIn 0.32 -Cells $cells))
             }
 
@@ -1089,7 +1097,7 @@ function New-ScoutGapsSlides {
     # Get-Score's own sort. Both @(...) wraps are load-bearing: a Sort-Object/
     # Select-Object over zero input collapses the bare assignment to $null, and
     # $null.Count throws PropertyNotFoundException under Set-StrictMode -Version Latest.
-    $sorted = @(@($Gaps) | Sort-Object @{ Expression = { Get-ScoutSeverityRank (Get-ScoutProp $_ 'Severity') } }, Area)
+    $sorted = @(@($Gaps) | Sort-Object @{ Expression = { Get-ScoutSeverityRank (Get-ScoutPptxProp $_ 'Severity') } }, Area)
     $top = @($sorted | Select-Object -First $MaxGaps)
 
     if ($top.Count -eq 0) {
@@ -1125,12 +1133,12 @@ function New-ScoutGapsSlides {
             foreach ($gap in $capturedChunk) {
                 $r++
                 $bg = if ($r % 2 -eq 0) { $Script:Mist } else { $Script:Paper }
-                $sevLabel = Get-ScoutSeverityLabel (Get-ScoutProp $gap 'Severity')
-                $sevColor = Get-ScoutSeverityColor (Get-ScoutProp $gap 'Severity')
+                $sevLabel = Get-ScoutSeverityLabel (Get-ScoutPptxProp $gap 'Severity')
+                $sevColor = Get-ScoutSeverityColor (Get-ScoutPptxProp $gap 'Severity')
                 $cells = New-ScoutList
                 $cells.Add((New-ScoutTableCell -Text $sevLabel -Bold $true -Hex $Script:Paper -FillHex $sevColor))
-                $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutProp $gap 'Area')" -Hex $Script:Ink -FillHex $bg -Align 'l'))
-                $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutProp $gap 'Title')" -Hex $Script:Ink -FillHex $bg -Align 'l'))
+                $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutPptxProp $gap 'Area')" -Hex $Script:Ink -FillHex $bg -Align 'l'))
+                $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutPptxProp $gap 'Title')" -Hex $Script:Ink -FillHex $bg -Align 'l'))
                 $cells.Add((New-ScoutTableCell -Text (Get-ScoutPptxEvidenceSummary $gap) -SizePt 11 -Hex $Script:Ink -FillHex $bg -Align 'l'))
                 $rowsList.Add((New-ScoutTableRow -HeightIn 0.4 -Cells $cells))
             }
@@ -1176,8 +1184,8 @@ function New-ScoutManualSlide {
             $r++
             $bg = if ($r % 2 -eq 0) { $Script:Mist } else { $Script:Paper }
             $cells = New-ScoutList
-            $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutProp $m 'Area')" -Hex $Script:Ink -FillHex $bg -Align 'l'))
-            $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutProp $m 'Title')" -Hex $Script:Ink -FillHex $bg -Align 'l'))
+            $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutPptxProp $m 'Area')" -Hex $Script:Ink -FillHex $bg -Align 'l'))
+            $cells.Add((New-ScoutTableCell -Text "$(Get-ScoutPptxProp $m 'Title')" -Hex $Script:Ink -FillHex $bg -Align 'l'))
             $rowsList.Add((New-ScoutTableRow -HeightIn 0.36 -Cells $cells))
         }
         $tree.Append((New-ScoutTable -Name 'ManualTable' -X 0.55 -Y 1.25 -ColWidthsIn $colW -Rows $rowsList))
@@ -1240,7 +1248,7 @@ function New-ScoutActFirstSlide {
     #>
     param($Shell, $Gaps, [ref]$PageCounter, [int]$TotalPages)
 
-    $sorted = @(@($Gaps) | Sort-Object @{ Expression = { Get-ScoutSeverityRank (Get-ScoutProp $_ 'Severity') } }, Area)
+    $sorted = @(@($Gaps) | Sort-Object @{ Expression = { Get-ScoutSeverityRank (Get-ScoutPptxProp $_ 'Severity') } }, Area)
     $top = $sorted | Select-Object -First 1
 
     New-ScoutContentSlide -Shell $Shell -Title 'Act on this first' -PageNum $PageCounter.Value -TotalPages $TotalPages -BodyShapeBuilder {
@@ -1252,14 +1260,14 @@ function New-ScoutActFirstSlide {
             )
         }
         else {
-            $sev = Get-ScoutSeverityLabel (Get-ScoutProp $top 'Severity')
-            $area = "$(Get-ScoutProp $top 'Area')"
-            $title = "$(Get-ScoutProp $top 'Title')"
+            $sev = Get-ScoutSeverityLabel (Get-ScoutPptxProp $top 'Severity')
+            $area = "$(Get-ScoutPptxProp $top 'Area')"
+            $title = "$(Get-ScoutPptxProp $top 'Title')"
             $evidence = Get-ScoutPptxEvidenceSummary $top
             $lines = @(
                 "$title"
                 "Area: $area   ·   Severity: $sev$(if ($evidence) { "   ·   Scope: $evidence" })"
-                "$(Get-ScoutProp $top 'Remediation')"
+                "$(Get-ScoutPptxProp $top 'Remediation')"
                 'This is the highest-severity gap in the run. It is one item, on purpose — a deck with five priorities has none.'
             )
         }
@@ -1314,19 +1322,19 @@ function Export-Pptx {
     $outFile = Join-Path $OutputPath 'assessment_deck.pptx'
     New-Item -ItemType Directory -Path $OutputPath -Force -ErrorAction SilentlyContinue | Out-Null
 
-    $frameworks = @(Get-ScoutProp $Findings 'Frameworks')
-    $areas = @(Get-ScoutProp $Findings 'Areas')
-    $gaps = @(Get-ScoutProp $Findings 'Gaps')
-    $manual = @(Get-ScoutProp $Findings 'Manual')
-    $errors = @(Get-ScoutProp $Findings 'Errors')
-    $allFindings = @(Get-ScoutProp $Findings 'Findings')
-    $generatedOn = Get-ScoutProp $Findings 'GeneratedOn'
+    $frameworks = @(Get-ScoutPptxProp $Findings 'Frameworks')
+    $areas = @(Get-ScoutPptxProp $Findings 'Areas')
+    $gaps = @(Get-ScoutPptxProp $Findings 'Gaps')
+    $manual = @(Get-ScoutPptxProp $Findings 'Manual')
+    $errors = @(Get-ScoutPptxProp $Findings 'Errors')
+    $allFindings = @(Get-ScoutPptxProp $Findings 'Findings')
+    $generatedOn = Get-ScoutPptxProp $Findings 'GeneratedOn'
     $generatedText = if ($generatedOn) {
         try { ([datetime]$generatedOn).ToString('yyyy-MM-dd') } catch { "$generatedOn" }
     } else { (Get-Date).ToString('yyyy-MM-dd') }
 
-    $scope = Get-ScoutProp (Get-ScoutProp $Collect '_meta') 'scope'
-    $mgId = Get-ScoutProp (Get-ScoutProp $Collect '_meta') 'managementGroupId'
+    $scope = Get-ScoutPptxProp (Get-ScoutPptxProp $Collect '_meta') 'scope'
+    $mgId = Get-ScoutPptxProp (Get-ScoutPptxProp $Collect '_meta') 'managementGroupId'
     $metaParts = New-Object System.Collections.Generic.List[string]
     $metaParts.Add("Generated $generatedText")
     if ($scope) { $metaParts.Add("Scope: $scope") }
