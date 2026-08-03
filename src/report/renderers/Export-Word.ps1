@@ -140,6 +140,90 @@ function New-ScoutDocxList {
     return , ([System.Collections.Generic.List[object]]::new())
 }
 
+function Add-ScoutDocxStyleDefinitions {
+    <#
+    .SYNOPSIS
+        Create the StyleDefinitionsPart and declare the named styles the document uses.
+
+    .DESCRIPTION
+        AB#6874, clauses W-01 and W-02. Phase 0 measured that the generated .docx contained
+        THREE package parts -- _rels/.rels, [Content_Types].xml, word/document.xml -- and that
+        0 of its 1,803 paragraphs carried a pStyle. Every heading was direct run formatting, so
+        Word had no idea any line was a heading.
+
+        That single fact explains four separate symptoms at once: no navigation pane, no possible
+        TOC field (a TOC collects heading STYLES, and there were none), no cross-references, and
+        nothing a partner could restyle to their brand.
+
+        Sizes here are half-points (w:sz), which is why they are double the point size used by
+        the direct-formatting helpers.
+    #>
+    param([Parameter(Mandatory)]$MainPart)
+
+    # PowerShell 7 generic-method syntax. `AddNewPart([type])` binds to no overload -- AddNewPart
+    # is generic over the part type, not a parameter taking one.
+    $stylePart = $MainPart.AddNewPart[DocumentFormat.OpenXml.Packaging.StyleDefinitionsPart]()
+    $styles = New-ScoutDocxEl "$Script:ScoutDocxWNs.Styles"
+
+    # Heading 1-3 carry the built-in style IDs Word looks for. A custom ID would render
+    # identically and still produce no navigation pane, because Word keys the outline off these.
+    $spec = @(
+        @{ Id = 'Heading1'; Name = 'heading 1'; SizeHalfPt = 44; Outline = 0; Before = 240; After = 120 }
+        @{ Id = 'Heading2'; Name = 'heading 2'; SizeHalfPt = 32; Outline = 1; Before = 200; After = 100 }
+        @{ Id = 'Heading3'; Name = 'heading 3'; SizeHalfPt = 26; Outline = 2; Before = 160; After = 80 }
+    )
+
+    foreach ($s in $spec) {
+        $style = New-ScoutDocxEl "$Script:ScoutDocxWNs.Style"
+        $style.Type = [DocumentFormat.OpenXml.Wordprocessing.StyleValues]::Paragraph
+        $style.StyleId = $s.Id
+        # PrimaryStyle marks it as one Word offers in the styles gallery, which is also what
+        # makes it available as a TOC source in the UI.
+        $style.CustomStyle = $false
+
+        $name = New-ScoutDocxEl "$Script:ScoutDocxWNs.StyleName"
+        $name.Val = $s.Name
+        $style.Append($name)
+
+        # CHILD ORDER IS PART OF THE SCHEMA, not a style choice. CT_PPrBase fixes the sequence
+        # keepNext -> spacing -> outlineLvl, and CT_RPr fixes rFonts -> b -> color -> sz.
+        # Appending them in any other order produces a package Word still opens but that fails
+        # Sch_UnexpectedElementContentExpectingComplex under the SDK validator -- which the
+        # Report.Word suite gates on.
+        $pPr = New-ScoutDocxEl "$Script:ScoutDocxWNs.StyleParagraphProperties"
+        $keepNext = New-ScoutDocxEl "$Script:ScoutDocxWNs.KeepNext"
+        $pPr.Append($keepNext)
+        $spacing = New-ScoutDocxEl "$Script:ScoutDocxWNs.SpacingBetweenLines"
+        $spacing.Before = [string]$s.Before
+        $spacing.After = [string]$s.After
+        $pPr.Append($spacing)
+        $outline = New-ScoutDocxEl "$Script:ScoutDocxWNs.OutlineLevel"
+        $outline.Val = [int]$s.Outline
+        $pPr.Append($outline)
+        $style.Append($pPr)
+
+        $rPr = New-ScoutDocxEl "$Script:ScoutDocxWNs.StyleRunProperties"
+        $fonts = New-ScoutDocxEl "$Script:ScoutDocxWNs.RunFonts"
+        $fonts.Ascii = 'Segoe UI Semibold'
+        $fonts.HighAnsi = 'Segoe UI Semibold'
+        $rPr.Append($fonts)
+        $bold = New-ScoutDocxEl "$Script:ScoutDocxWNs.Bold"
+        $rPr.Append($bold)
+        $color = New-ScoutDocxEl "$Script:ScoutDocxWNs.Color"
+        $color.Val = $Script:ScoutDocxNavy
+        $rPr.Append($color)
+        $sz = New-ScoutDocxEl "$Script:ScoutDocxWNs.FontSize"
+        $sz.Val = [string]$s.SizeHalfPt
+        $rPr.Append($sz)
+        $style.Append($rPr)
+
+        $styles.Append($style)
+    }
+
+    $stylePart.Styles = $styles
+    return $stylePart
+}
+
 function ScoutDocxDxa {
     # Twentieths of a point ("dxa") — the unit w:tblGrid/w:tcW/w:pgSz/w:pgMar all use.
     # 1440 dxa per inch.
@@ -264,7 +348,27 @@ function Add-ScoutDocxHeading {
     $runs = New-ScoutDocxList
     $runs.Add((New-ScoutDocxRun -Text $Text -SizePt $sizePt -Hex $Script:ScoutDocxNavy -Bold $true -Font 'Segoe UI Semibold'))
     $spaceBefore = if ($Level -eq 1) { 12 } else { 8 }
-    $Body.Append((New-ScoutDocxPara -Runs $runs -SpaceBeforePt $spaceBefore -SpaceAfterPt 6 -KeepNext $true))
+    $para = New-ScoutDocxPara -Runs $runs -SpaceBeforePt $spaceBefore -SpaceAfterPt 6 -KeepNext $true
+
+    # AB#6874, clause W-02. The pStyle is what makes this a HEADING rather than large bold text.
+    # Without it Word builds no navigation pane and a TOC field collects nothing, which is
+    # exactly what Phase 0 measured: 0 of 1,803 paragraphs styled.
+    #
+    # The direct formatting above is deliberately KEPT alongside it. The style supplies the
+    # outline level and the semantics; the direct run properties guarantee the document still
+    # looks right in a reader that ignores the style part, and they render identically because
+    # both describe the same Segoe UI Semibold navy.
+    $pStyle = New-ScoutDocxEl "$Script:ScoutDocxWNs.ParagraphStyleId"
+    $pStyle.Val = "Heading$([Math]::Min([Math]::Max($Level, 1), 3))"
+    # Generic, like AddNewPart above -- `GetFirstChild([type])` binds to no overload.
+    $pPr = $para.GetFirstChild[DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties]()
+    if ($null -eq $pPr) {
+        $pPr = New-ScoutDocxEl "$Script:ScoutDocxWNs.ParagraphProperties"
+        $para.InsertAt($pPr, 0)
+    }
+    $pPr.InsertAt($pStyle, 0)
+
+    $Body.Append($para)
 }
 
 function Add-ScoutDocxParagraph {
@@ -798,6 +902,10 @@ function Export-Word {
 
         $doc = [DocumentFormat.OpenXml.Packaging.WordprocessingDocument]::Create($outFile, [DocumentFormat.OpenXml.WordprocessingDocumentType]::Document)
         $mainPart = $doc.AddMainDocumentPart()
+        # AB#6874 (W-01). Added BEFORE the body is populated so every heading emitted below has a
+        # style to reference. Phase 0 measured the absence of this part as the root formatting
+        # defect -- no styles means no navigation pane, no TOC field, and no rebranding.
+        $null = Add-ScoutDocxStyleDefinitions -MainPart $mainPart
         $mainPart.Document = New-ScoutDocxEl "$Script:ScoutDocxWNs.Document"
         $body = New-ScoutDocxEl "$Script:ScoutDocxWNs.Body"
         $mainPart.Document.Append($body)

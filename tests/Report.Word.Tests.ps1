@@ -322,3 +322,72 @@ Describe 'AB#6862/AB#6892 -- the gaps table carries its supporting number (claus
         $Source | Should -Match 'Get-ScoutDocxEvidenceSummary \$gap'
     }
 }
+
+Describe 'AB#6874 -- the document has real Word styles (clauses W-01, W-02)' {
+
+    BeforeAll {
+        $script:StyleDir = Join-Path ([System.IO.Path]::GetTempPath()) ("scout-styles-" + [guid]::NewGuid().ToString('N'))
+        $null = New-Item -ItemType Directory -Path $script:StyleDir -Force
+        # The suite's shared fixture, built in the top-level BeforeAll.
+        Export-Word -Findings ([pscustomobject]@{ Findings = $script:Findings }) -Collect $null -OutputPath $script:StyleDir 3>$null
+        $script:StyleDocx = (Get-ChildItem -Path $script:StyleDir -Filter '*.docx' | Select-Object -First 1).FullName
+
+        Add-Type -AssemblyName System.IO.Compression.FileSystem
+        $zip = [System.IO.Compression.ZipFile]::OpenRead($script:StyleDocx)
+        try {
+            $script:PartNames = @($zip.Entries | ForEach-Object { $_.FullName })
+            $entry = $zip.Entries | Where-Object { $_.FullName -eq 'word/document.xml' }
+            $reader = [System.IO.StreamReader]::new($entry.Open())
+            $script:DocXml = $reader.ReadToEnd()
+            $reader.Close()
+            $styleEntry = $zip.Entries | Where-Object { $_.FullName -eq 'word/styles.xml' }
+            if ($styleEntry) {
+                $sr = [System.IO.StreamReader]::new($styleEntry.Open())
+                $script:StylesXml = $sr.ReadToEnd()
+                $sr.Close()
+            }
+        }
+        finally { $zip.Dispose() }
+    }
+
+    AfterAll {
+        if ($script:StyleDir -and (Test-Path $script:StyleDir)) {
+            Remove-Item $script:StyleDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
+
+    It 'W-01: the package contains a styles part' {
+        # Phase 0 measured a THREE-part package: _rels, [Content_Types], document.xml. The
+        # absence of this part is the root formatting defect -- no styles means no navigation
+        # pane, no TOC field and no rebranding.
+        $script:PartNames | Should -Contain 'word/styles.xml'
+    }
+
+    It 'W-01: it declares Heading1, Heading2 and Heading3' {
+        foreach ($Id in 'Heading1', 'Heading2', 'Heading3') {
+            $script:StylesXml | Should -Match "w:styleId=`"$Id`""
+        }
+    }
+
+    It 'W-01: each heading style carries an outline level, which is what builds the nav pane' {
+        @([regex]::Matches($script:StylesXml, 'w:outlineLvl')).Count | Should -BeGreaterOrEqual 3
+    }
+
+    It 'W-02: headings in the body reference a declared style' {
+        # The measured failure was 0 of 1,803 paragraphs carrying a pStyle.
+        @([regex]::Matches($script:DocXml, 'w:pStyle')).Count | Should -BeGreaterThan 0
+        $script:DocXml | Should -Match 'w:val="Heading1"'
+    }
+
+    It 'every style id referenced from the body is actually declared in the styles part' {
+        # A dangling pStyle renders as Normal and silently loses the outline level -- the same
+        # symptom as having no styles at all, but harder to spot.
+        $Referenced = @([regex]::Matches($script:DocXml, 'w:pStyle w:val="(?<id>[^"]+)"') |
+            ForEach-Object { $_.Groups['id'].Value } | Sort-Object -Unique)
+
+        $Referenced.Count | Should -BeGreaterThan 0
+        foreach ($Id in $Referenced) {
+            $script:StylesXml | Should -Match "w:styleId=`"$Id`"" -Because "body references style '$Id'"
+        }
+    }
+}
