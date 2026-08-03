@@ -132,12 +132,40 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
 
 #region Palette (mirrors Export-Pptx.ps1/Export-Word.ps1's navy/steel/gold corporate palette)
 
+# Document chrome. These stay -- they are the brand identity the Word/PPTX documents wear, and
+# they are NOT chart-series colours.
 $Script:ScoutEchartsNavy = '1F4E78'
 $Script:ScoutEchartsSteel = '2E75B6'
 $Script:ScoutEchartsGreen = '2E7D32'
 $Script:ScoutEchartsGold = 'B8860B'
 $Script:ScoutEchartsRed = 'B00020'
 $Script:ScoutEchartsGray = '595959'
+
+# ---- CHART palette (separate from chrome, and validated) ----
+#
+# The chart series previously reused the chrome above, and it did not survive measurement:
+#
+#   Lightness band        FAIL  1F4E78 sits at L 0.413, outside the band
+#   Chroma floor          FAIL  1F4E78 and 595959 read as grey
+#   Normal-vision floor   FAIL  2E75B6 vs 1F4E78 is dE 14.1 -- BELOW 15, so navy and steel are
+#                               hard to tell apart even with full colour vision, and they were
+#                               the two most-used series colours in every chart
+#
+# Severity and status are STATUS jobs, not categorical ones, so they take the reserved status
+# palette rather than a themed hue. Status colours never carry meaning alone -- every segment is
+# labelled, which is also the relief rule for `warning`/`serious` sitting under 3:1 on the light
+# surface (that is a property of the fixed status palette, not something to "fix" by drifting the
+# hue).
+#
+# Manual is deliberately NOT a status colour: "a human must look at this" is not a failure, so it
+# takes categorical slot 1 (blue). Unknown and Error previously BOTH rendered grey -- two distinct
+# states, one colour -- so Error now takes `serious` and only Unknown stays muted.
+$Script:ScoutChartGood     = '0ca30c'   # Pass
+$Script:ScoutChartWarning  = 'fab219'   # Partial, Medium severity
+$Script:ScoutChartSerious  = 'ec835a'   # Error
+$Script:ScoutChartCritical = 'd03b3b'   # Fail, High severity
+$Script:ScoutChartInfo     = '2a78d6'   # Manual, Low severity -- categorical slot 1
+$Script:ScoutChartMuted    = '6E7079'   # Unknown only
 
 #endregion
 
@@ -208,10 +236,10 @@ function Get-ScoutEchartsSeverityCounts {
         $buckets[$bucket]++
     }
     return , @(
-        [pscustomobject]@{ Name = 'High'; Value = $buckets['High']; Color = "#$Script:ScoutEchartsRed" }
-        [pscustomobject]@{ Name = 'Medium'; Value = $buckets['Medium']; Color = "#$Script:ScoutEchartsGold" }
-        [pscustomobject]@{ Name = 'Low'; Value = $buckets['Low']; Color = "#$Script:ScoutEchartsSteel" }
-        [pscustomobject]@{ Name = 'Unknown'; Value = $buckets['Unknown']; Color = "#$Script:ScoutEchartsGray" }
+        [pscustomobject]@{ Name = 'High'; Value = $buckets['High']; Color = "#$Script:ScoutChartCritical" }
+        [pscustomobject]@{ Name = 'Medium'; Value = $buckets['Medium']; Color = "#$Script:ScoutChartWarning" }
+        [pscustomobject]@{ Name = 'Low'; Value = $buckets['Low']; Color = "#$Script:ScoutChartInfo" }
+        [pscustomobject]@{ Name = 'Unknown'; Value = $buckets['Unknown']; Color = "#$Script:ScoutChartMuted" }
     )
 }
 
@@ -233,12 +261,13 @@ function Get-ScoutEchartsStatusBreakdown {
     param($Areas)
     $areaArr = @($Areas)
     return , @(
-        [pscustomobject]@{ Name = 'Pass'; Value = (Get-ScoutEchartsSum $areaArr 'Pass'); Color = "#$Script:ScoutEchartsGreen" }
-        [pscustomobject]@{ Name = 'Partial'; Value = (Get-ScoutEchartsSum $areaArr 'Partial'); Color = "#$Script:ScoutEchartsGold" }
-        [pscustomobject]@{ Name = 'Fail'; Value = (Get-ScoutEchartsSum $areaArr 'Fail'); Color = "#$Script:ScoutEchartsRed" }
-        [pscustomobject]@{ Name = 'Manual'; Value = (Get-ScoutEchartsSum $areaArr 'Manual'); Color = "#$Script:ScoutEchartsSteel" }
-        [pscustomobject]@{ Name = 'Unknown'; Value = (Get-ScoutEchartsSum $areaArr 'Unknown'); Color = "#$Script:ScoutEchartsGray" }
-        [pscustomobject]@{ Name = 'Error'; Value = (Get-ScoutEchartsSum $areaArr 'Error'); Color = "#$Script:ScoutEchartsGray" }
+        [pscustomobject]@{ Name = 'Pass'; Value = (Get-ScoutEchartsSum $areaArr 'Pass'); Color = "#$Script:ScoutChartGood" }
+        [pscustomobject]@{ Name = 'Partial'; Value = (Get-ScoutEchartsSum $areaArr 'Partial'); Color = "#$Script:ScoutChartWarning" }
+        [pscustomobject]@{ Name = 'Fail'; Value = (Get-ScoutEchartsSum $areaArr 'Fail'); Color = "#$Script:ScoutChartCritical" }
+        [pscustomobject]@{ Name = 'Manual'; Value = (Get-ScoutEchartsSum $areaArr 'Manual'); Color = "#$Script:ScoutChartInfo" }
+        [pscustomobject]@{ Name = 'Unknown'; Value = (Get-ScoutEchartsSum $areaArr 'Unknown'); Color = "#$Script:ScoutChartMuted" }
+        # Error was grey, identical to Unknown -- two distinct states rendered as one colour.
+        [pscustomobject]@{ Name = 'Error'; Value = (Get-ScoutEchartsSum $areaArr 'Error'); Color = "#$Script:ScoutChartSerious" }
     )
 }
 
@@ -439,8 +468,21 @@ window.__DASHBOARD_DATA__ = /*__DASHBOARD_DATA__*/;
     opt.series = [{
       type: 'pie',
       radius: donut ? ['40%', '70%'] : ['0%', '70%'],
-      data: data.map(function (d) { return { name: d.name, value: d.value, itemStyle: { color: d.color } }; }),
-      label: { color: getThemeColors().text }
+      // 2px surface-coloured ring between adjacent fills, so touching segments read as separate
+      // marks rather than one blended shape.
+      data: data.map(function (d) {
+        return {
+          name: d.name, value: d.value,
+          itemStyle: { color: d.color, borderColor: getThemeColors().bg, borderWidth: 2 }
+        };
+      }),
+      // Name AND value, in text ink rather than the series colour. This is the relief rule:
+      // `warning` and `serious` sit under 3:1 on the light surface, so identity can never be
+      // carried by the fill alone.
+      label: {
+        color: getThemeColors().text,
+        formatter: '{b}: {c}'
+      }
     }];
     chart.setOption(opt, true);
   }
@@ -453,7 +495,27 @@ window.__DASHBOARD_DATA__ = /*__DASHBOARD_DATA__*/;
     var names = data.map(function (d) { return d.name; });
     var series = [{
       type: 'bar',
-      data: data.map(function (d) { return { value: d.value, itemStyle: { color: d.color || '#2E75B6' } }; })
+      // 4px rounded data-end, square at the baseline. The rounding goes on the end the value
+      // reaches, never on the anchored end -- a bar rounded at both ends floats off its axis.
+      data: data.map(function (d) {
+        return {
+          value: d.value,
+          itemStyle: {
+            color: d.color || '#2a78d6',
+            borderRadius: horizontal ? [0, 4, 4, 0] : [4, 4, 0, 0]
+          }
+        };
+      }),
+      // Direct value labels: the bars carry status fills that sit under 3:1 on the light
+      // surface, so the number must be legible without relying on the fill.
+      label: {
+        show: true,
+        position: horizontal ? 'right' : 'top',
+        color: c.text,
+        fontSize: 11
+      },
+      // A hit target wider than the mark, so hovering a 3px-tall bar still works.
+      emphasis: { focus: 'series' }
     }];
     var opt = baseOption('');
     delete opt.legend;
