@@ -7,6 +7,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.3] - 2026-08-03 — the corpus told the truth: five collection defects, none visible from a green suite
+
+Every fix in this release was found by re-collecting eight real tenants into the banked corpus
+and refusing to explain away an empty dataset.
+
+### The v3.3.2 vault fix never reached the result (AB#6896)
+
+`recoveryVaults` was shaped correctly from raw rows — and then dropped on the floor. The copy
+loop walks `$q.Keys` and the key has no typed query, so it was never visited; and the fallback
+guard tested `$r.PSObject.Properties['recoveryVaults']` on a **hashtable**, whose PSObject
+adapter exposes `Keys`/`Values`/`Count` and never the keys, so the branch was unconditionally
+dead. Vaults now copy explicitly, and `tests/Collect.ShapedDatasetsReachTheResult.Tests.ps1`
+fails if any shaped dataset has neither a `$q` entry nor an explicit copy — the next silent
+hand-off loss cannot go unnoticed.
+
+### Export-Pptx shadowed the collect walker and corrupted every product collect (AB#6897)
+
+Export-Pptx defined its own module-scope `Get-ScoutProp`, loaded after the collect walker of the
+same name. Every **product** run (which loads the whole module) read nested `properties.*` as
+null — subnets, TLS versions, retention days — while every harness probe (which dot-sources only
+the collect layer) passed. The banked corpus this poisoned mis-diagnosed three healthy
+collectors as broken. The renderer helper is renamed, and
+`tests/Module.FunctionNameCollisions.Tests.ps1` bans same-name module-scope functions outright.
+The walkers also gained `IDictionary`/`JObject` support (AB#6899).
+
+### Management groups were empty on every run in the product's history (AB#6901)
+
+The Resource Graph query for management groups never passed `-UseTenantScope`, so it returned
+rows only for subscriptions' implicit scope — zero, everywhere. Fixed with a tenant-scoped
+query: 92 management groups across the eight reference tenants, where every prior run banked
+none.
+
+### security.defenderPlans existed only as a hardcoded empty array (AB#6903)
+
+The collect contract shipped `defenderPlans = @()` from the day it was written, while
+`caf.security.yaml` and `waf.security.yaml` carry live rules querying
+`$.security.defenderPlans[?(@.properties.pricingTier == 'Standard')]` — those rules could never
+pass on any tenant. The old corpus explanation ("Defender not enabled in these estates") was
+proven false live: one reference subscription carries 18 Microsoft.Security/pricings plans, 4 of
+them Standard. Plans are now collected per subscription over plain ARM REST — no Az.Security
+dependency — and an unregistered Microsoft.Security provider stays quiet (AB#6900's phrasing
+fix, which also stopped a raw "Please register to Microsoft.Security" warning surfacing mid-run).
+
+### Two runs in the same second no longer overwrite each other (AB#6902)
+
+`Invoke-ScoutAssessmentCore` stamps its run folder `yyyyMMdd_HHmmss`; a second run inside the
+same second shared the folder, overwrote the first run's artefacts, and replaced (rather than
+appended) its drift-history record. The run id now takes a `_NN` suffix on collision. Found by
+the drift-accumulation test on a fast CI runner.
+
+### The corpus is now a committed, integrity-checked harness (AB#6898)
+
+`scripts/Invoke-CorpusCollect.ps1` collects all eight reference tenants with per-tenant
+service-principal auth and refuses to bank silently-bad data (relationship checks: a VNet
+without subnets, workspaces all-null retention, protected items without a vault).
+`scripts/Invoke-CorpusCoverage.ps1` renders a per-collector verdict over a banked run: 36
+collect keys working, 23 empty-everywhere with a maintained explanation each, **0 unexplained**.
+
 ## [3.3.2] - 2026-08-03 — field fixes: Advisor, licence detection, and two collector defects
 
 Fixes found by running against real customer tenants rather than fixtures.

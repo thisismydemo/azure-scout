@@ -41,7 +41,20 @@ All collector definitions, source retirement, strict runtime contracts, and repo
 complete. The remaining release steps are package validation, broad test-suite completion, tag, and
 publication. Historical v2 entries below are retained as release history rather than current status.
 
-## Current Release — v3.3.2 — Field fixes from real tenant runs
+## Current Release — v3.3.3 — The corpus told the truth
+
+Released 3 August 2026. Five collection defects fixed, none of which a green unit suite could
+see: the v3.3.2 Recovery Services vault fix never reached the collect result; Export-Pptx's
+module-scope `Get-ScoutProp` shadowed the collect walker and nulled nested `properties.*` on
+every product run (the defect that corrupted the banked corpus); management groups are collected
+for the first time in the product's history (tenant-scoped Resource Graph, 92 groups across the
+eight reference tenants); `security.defenderPlans` is collected per subscription instead of
+shipping as a hardcoded empty array the CAF/WAF security rules queried in vain; and two runs in
+the same second no longer share one run folder. The corpus is now a committed harness —
+per-tenant integrity checks on collection, per-collector coverage verdicts offline: 36 collect
+keys proven working across 8 real tenants, 0 unexplained empties.
+
+## Previous Release — v3.3.2 — Field fixes from real tenant runs
 
 Released 3 August 2026. Every fix in this release came from running Scout against live estates.
 Advisor ingestion is contained per subscription instead of failing tenant-wide on one unregistered
@@ -53,7 +66,7 @@ visible in every renderer. The v3.3 line (3.3.0 → 3.3.2) delivered the reporti
 AB#6450: conformance-gated Word/Excel/PowerPoint/PDF deliverables, managed-code figure
 rasterisation, and a Power BI PBIP project with a TMDL model and bound visuals.
 
-## Previous Release — v3.2.0 — Deep governance and compliance analytics
+## v3.2.0 — Deep governance and compliance analytics
 
 Released 31 July 2026. Scout modelled fifteen of Microsoft's eighteen published service
 categories; it now models all eighteen. `Migration` went from zero collectors to all five of its
