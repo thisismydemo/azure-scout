@@ -50,7 +50,9 @@ $knownEmpty = @{
     'compute/privateClouds'            = 'Conditional: no AVS private clouds in these estates'
     'networking/azureFirewalls'        = 'Conditional: no Azure Firewalls in these estates'
     'networking/firewallPolicyRuleGroups' = 'Conditional: no firewall policies in these estates'
-    'security/defenderPlans'           = 'Conditional: Defender for Cloud not enabled in these estates'
+    # security/defenderPlans deliberately has NO entry: it was hardcoded empty until AB#6903
+    # and its old "not enabled in these estates" explanation was proven false live (hcs carries
+    # 18 plans, 4 non-Free). If it lands empty-everywhere again, that is UNEXPLAINED -- correct.
 }
 
 $tenantDirs = @(Get-ChildItem -Path $CorpusRun -Directory)

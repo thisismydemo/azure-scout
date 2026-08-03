@@ -170,12 +170,12 @@ rules:
     title: "Guest VMs use advanced threat detection"
     severity: medium
     # Evidences Arc onboarding (a prerequisite for Defender for Servers on non-Azure/guest VMs),
-    # not Defender for Cloud plan assignment itself -- security.defenderPlans is a hard-coded
-    # empty field in collect.json (same pre-existing gap CAF-SEC-02 already has), so plan-level
-    # confirmation stays manual.
+    # not Defender for Cloud plan assignment itself -- security.defenderPlans (populated per
+    # subscription since AB#6903) is tenant-wide plan state and cannot prove the plan covers
+    # these specific guest VMs, so plan-level confirmation stays manual.
     query: "$.domains.hybrid.arcServers[*]"
     assert: { type: exists }
-    remediation: "WAF-AVS-SEC-09. No Arc-onboarded server was found in scope. Arc onboarding is the prerequisite for Defender for Servers coverage on AVS guest VMs -- finding Arc servers is not proof Defender for Cloud's server plan is actually assigned (security.defenderPlans is not populated by any current collection path); confirm plan assignment directly."
+    remediation: "WAF-AVS-SEC-09. No Arc-onboarded server was found in scope. Arc onboarding is the prerequisite for Defender for Servers coverage on AVS guest VMs -- finding Arc servers is not proof Defender for Cloud's server plan covers them (security.defenderPlans records subscription-level plan tiers, not per-VM coverage); confirm plan assignment directly."
     manual: false
   - id: WAF-AVS-SEC-10
     title: "Guest VM OS and database encryption enabled where sensitivity requires it"

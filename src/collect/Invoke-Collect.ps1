@@ -1362,6 +1362,24 @@ resources | where type =~ "microsoft.azureplaywrightservice/accounts"
         }
     }
 
+    # ---- Defender for Cloud plan sweep (AB#6903) ----
+    # security.defenderPlans shipped as a hard-coded @() placeholder while caf.security /
+    # waf.security rules query $.security.defenderPlans[?(@.properties.pricingTier ==
+    # 'Standard')] -- those rules could never pass on any tenant. Unconditional (no gate:
+    # Defender plan assignment is core security posture); one ARM GET per subscription, and
+    # an unregistered Microsoft.Security provider stays quiet (AB#6900).
+    $defenderPlans = @()
+    try {
+        if (-not (Get-Command Get-ScoutDefenderPlanSweep -ErrorAction SilentlyContinue)) {
+            . (Join-Path $PSScriptRoot 'Get-ScoutDefenderPlanSweep.ps1')
+        }
+        $defenderPlans = @(Get-ScoutDefenderPlanSweep -Subscriptions @($r.subscriptions))
+    }
+    catch {
+        Write-Warning "Invoke-Collect: the Defender plan sweep failed; security.defenderPlans will be empty for this run: $($_.Exception.Message)"
+        $defenderPlans = @()
+    }
+
     # ---- every declared dataset exists, even when nothing populated it ----
     #
     # `$r` is a hashtable, and under Set-StrictMode -Version Latest reading a key that was never
@@ -1424,7 +1442,8 @@ resources | where type =~ "microsoft.azureplaywrightservice/accounts"
             # is where the vault lives, not under compute where the protected VM does.
             backupProtectedItems = $r.backupProtectedItems
         }
-        security      = [pscustomobject]@{ defenderPlans = @() }
+        # AB#6903: was hardcoded @() -- see the sweep above.
+        security      = [pscustomobject]@{ defenderPlans = $defenderPlans }
         governance    = [pscustomobject]@{
             managementGroups = @()
             policyAssignments = $rawGovernance.policyAssignments

@@ -9,7 +9,7 @@ rules:
     # Defender secure score / assessments are collected by the raw v1 collectors
     # (Security/DefenderSecureScore, Security/DefenderAssessments) but are not wired into
     # collect.json's domains.security schema the v3 rule engine reads (only
-    # domains.security.keyVaults and the empty security.defenderPlans placeholder are), and
+    # domains.security.keyVaults and security.defenderPlans are), and
     # even if they were, a single collect.json is one point in time -- it cannot prove a
     # trend was "monitored over time" without a retained history Scout does not keep between
     # runs. Scoring "exists" here would be a proxy for a claim ("monitored over time") the
