@@ -150,13 +150,13 @@ Invoke-AzureScout -Assessment LandingZone -OutputFormat All
 ### Single category
 
 ```powershell
-Invoke-AzureScout -Assessment 'Assess: Security' -OutputFormat Html
+Invoke-AzureScout -Assessment 'Assess: Security' -OutputFormat React
 ```
 
 ### Multiple assessments in one run
 
 ```powershell
-Invoke-AzureScout -Assessment 'Assess: Networking','Assess: Security' -OutputFormat Html
+Invoke-AzureScout -Assessment 'Assess: Networking','Assess: Security' -OutputFormat React
 ```
 
 Findings from both are combined into one `findings.json` and one set of
@@ -247,7 +247,7 @@ for exactly what this does and does not verify.
 ### Scoping to a management group (`-ManagementGroupId`)
 
 ```powershell
-Invoke-AzureScout -Assessment LandingZone -ManagementGroup 'contoso-root-mg' -OutputFormat Html
+Invoke-AzureScout -Assessment LandingZone -ManagementGroup 'contoso-root-mg' -OutputFormat React
 ```
 
 ::: warning Scopes Collect too now — and the benchmark still needs MG-root visibility

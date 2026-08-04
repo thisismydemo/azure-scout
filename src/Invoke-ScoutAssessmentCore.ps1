@@ -2,6 +2,27 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+# ---- AB#6922: which report formats are live, and which are on hold ----------------------------
+#
+# The React single-page report is the product's deliverable. It hosts inventory and every
+# assessment behind one adaptive shell, and it exports to PDF / Word / Markdown / CSV from the
+# page itself -- so the standalone document renderers are redundant while they are being rebuilt.
+# Maintaining six half-finished renderers in parallel is what let all six ship below deliverable
+# quality; concentrating on one is the correction.
+#
+# LIFTING THE HOLD IS A ONE-LINE EDIT: remove a name from $ScoutHeldRenderers. Nothing else in the
+# codebase decides this, and the renderers themselves are untouched and still tested.
+#
+# Json / JsonEvidence are NOT held: they are machine-readable data, not documents. The corpus
+# harness, the drift history and downstream tooling consume them.
+$script:ScoutAllRenderers = @(
+    'PowerBi', 'Html', 'Pptx', 'Excel', 'Json', 'JsonEvidence', 'React', 'Pdf', 'Word',
+    'EChartsDashboard', 'GovernanceReport'
+)
+$script:ScoutHeldRenderers = @(
+    'PowerBi', 'Html', 'Pptx', 'Excel', 'Pdf', 'Word', 'EChartsDashboard', 'GovernanceReport'
+)
+
 <#
 .SYNOPSIS
     Azure Scout assessment entry point — collect, assess, and report.
@@ -65,8 +86,12 @@ function Invoke-ScoutAssessmentCore {
         [ValidateSet('All', 'ArmOnly', 'EntraOnly')]
         [string]   $Scope = 'All',              # EntraOnly throws -- ARM/ARG collect only, no Entra path here
         [string[]] $Category,                    # existing category filter still works
+        # AB#6922: the React single-page report is the product's deliverable; every other
+        # rendered format is ON HOLD and will be regenerated FROM it (see $script:ScoutHeldRenderers
+        # below). The names stay in the ValidateSet so existing scripts still bind rather than
+        # failing with a parameter-validation error -- a held format warns and is skipped.
         [ValidateSet('PowerBi', 'Html', 'Pptx', 'Excel', 'Json', 'JsonEvidence', 'React', 'Pdf', 'Word', 'EChartsDashboard', 'All')]
-        [string[]] $OutputFormat = @('Html'),
+        [string[]] $OutputFormat = @('React'),
         [string]   $OutputPath = './output',
         [switch]   $PermissionAudit,
         [switch]   $CollectOnly,                 # stop after collect.json
@@ -285,7 +310,27 @@ function Invoke-ScoutAssessmentCore {
     # the All path -- so the only surface carrying the 1-10 CAF Govern domain maturity score never
     # rendered on a default run. A renderer that exists, passes its tests and is unreachable is
     # indistinguishable from one that was never written.
-    $reporters = if ($OutputFormat -contains 'All') { @('PowerBi', 'Html', 'Pptx', 'Excel', 'Json', 'JsonEvidence', 'React', 'Pdf', 'Word', 'EChartsDashboard', 'GovernanceReport') } else { $OutputFormat }
+    # AB#6922 -- the React report is the deliverable; every other RENDERED format is on hold.
+    #
+    # 'All' therefore expands to the React report plus the machine-readable data exports. Json /
+    # JsonEvidence are deliberately NOT held: they are data, not documents -- the corpus harness,
+    # the drift history and downstream tooling read them, so holding them would break automation
+    # that has nothing to do with the reporting rebuild.
+    #
+    # A held format that is asked for EXPLICITLY warns and is skipped rather than silently
+    # producing nothing (a silent skip is how a blank dashboard shipped past a green suite once
+    # already). The ValidateSet still accepts the names, so existing scripts bind and get a clear
+    # message instead of a parameter-binding failure.
+    $requested = if ($OutputFormat -contains 'All') { $script:ScoutAllRenderers } else { $OutputFormat }
+    $held = @($requested | Where-Object { $script:ScoutHeldRenderers -contains $_ })
+    if ($held.Count -gt 0 -and $OutputFormat -notcontains 'All') {
+        Write-Warning ("Invoke-ScoutAssessmentCore: {0} report format(s) are on hold and will not be rendered: {1}. The React report is the supported deliverable (-OutputFormat React); export to PDF/Word/Markdown/CSV from it. See AB#6922." -f $held.Count, ($held -join ', '))
+    }
+    $reporters = @($requested | Where-Object { $script:ScoutHeldRenderers -notcontains $_ })
+    if ($reporters.Count -eq 0) {
+        Write-Warning 'Invoke-ScoutAssessmentCore: every requested report format is on hold; rendering the React report instead so the run still produces a deliverable.'
+        $reporters = @('React')
+    }
     $reporterIndex = 0
     foreach ($r in $reporters) {
         $reporterIndex++

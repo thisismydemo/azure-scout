@@ -12,9 +12,14 @@ access. Sections 1–2 are the executive summary; sections 3 onward are the acce
 ## 1. What Azure Scout is
 
 Azure Scout inventories an Azure estate and assesses it against Microsoft's own published
-frameworks, then produces the deliverables an assessment engagement is normally written by hand:
-a Word report, a PowerPoint readout, a PDF, an Excel evidence pack, an interactive HTML dashboard
-and a Power BI project.
+frameworks, then produces the deliverable an assessment engagement is normally written by hand:
+a single self-contained report page carrying the inventory, every assessment, the evidence behind
+each finding, and the prioritised path back to compliance — which you can export to PDF, Word,
+Markdown or CSV.
+
+> Standalone Word, PowerPoint, PDF, Excel and Power BI outputs are **coming soon**: they are being
+> rebuilt to generate from that report rather than alongside it, so a document and the page it came
+> from can never disagree (**AB#6922**).
 
 It is **read-only**. Scout never creates, modifies or deletes anything in the tenant, and it holds
 no standing access — it runs under credentials you grant, for as long as you choose to grant them.
