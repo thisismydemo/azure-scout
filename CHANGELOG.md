@@ -7,6 +7,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.4] - 2026-08-04 — one report, and it is the deliverable
+
+Azure Scout produced six rendered report formats. A full multi-tenant render, read end to end,
+found every one of them weak in a different way: a dashboard that drew its headers and no data, a
+maturity report scoring 10/10 with no explanation of what it measured, documents that never named
+which assessment they were, text drawn over text in the PDF, figures running off the slide, and a
+Word file that opened with a repair prompt. Six renderers maintained in parallel is *why* none of
+them reached deliverable quality.
+
+### The React report is now the product's deliverable
+
+One self-contained page hosts the inventory and every assessment behind an adaptive shell — the
+navigation is built from what actually ran, so an inventory-only run shows inventory, and a full
+run shows inventory plus per-assessment detail. Each assessment answers three questions in order:
+what was run (scope, checks executed, and what was **not** assessed and why), what was found
+(findings with their evidence and real resource ids), and what to fix against CAF/WAF guidance.
+
+Every score is shown with its own arithmetic — numerator, denominator, and what was excluded as
+not-applicable — so a number can be checked rather than trusted. That is the direct answer to a
+maturity report that claimed 10/10 while a landing-zone assessment of the same tenant scored 36%.
+
+### Every other rendered format is on hold (AB#6922)
+
+`-OutputFormat All` now renders the React report plus the machine-readable data exports.
+`Json`/`JsonEvidence` are deliberately **not** held — they are data, not documents, and the corpus
+harness and drift history read them.
+
+A held format asked for **by name** warns, is skipped, and the React report renders anyway, so a
+run never returns an empty folder. The parameter still accepts every format name, so existing
+scripts bind and get an explanation rather than a parameter-binding failure. The default
+`-OutputFormat` moves from `Html` — itself now held — to `React`.
+
+The renderers are untouched and still tested. They are being rebuilt to generate **from** the
+React report rather than alongside it, so that a document and the page it came from can no longer
+disagree. Lifting the hold is a one-line edit.
+
+### A cited guidance URL returned 404 (AB#6913)
+
+The CAF Platform automation design area was cited as `.../platform-automation-and-devops` and
+stamped "verified 2026-08-01". That URL 404s; the canonical page has no "and". Those citations are
+surfaced to the reader as *the guidance for this finding*, so the deliverable carried a dead link.
+
+A verified-date stamp is not protection — Microsoft renamed the page after the verification and
+nothing looked again. `scripts/Test-ScoutGuidanceLinks.ps1` now HEADs every cited Learn URL across
+the rule files and reports each dead one with its file and line. It is a script rather than a
+Pester test on purpose: it needs outbound network, and a CI suite that fails when Microsoft has a
+bad afternoon is a suite people learn to ignore. 26 citations audited; this was the only rotted
+one.
+
 ## [3.3.3] - 2026-08-03 — the corpus told the truth: five collection defects, none visible from a green suite
 
 Every fix in this release was found by re-collecting eight real tenants into the banked corpus
