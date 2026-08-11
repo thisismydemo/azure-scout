@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
     Extract Entra ID (Azure AD) resources via Microsoft Graph API.
 
 .DESCRIPTION
-    Queries Microsoft Graph for 15 Entra resource types and normalizes each item
+    Queries Microsoft Graph using the Entra query catalog and normalizes each item
     into a standard structure with a synthetic TYPE property (e.g., 'entra/users').
 
     Each normalized resource has:
@@ -46,9 +46,6 @@ function Start-AZSCEntraExtraction {
         [Parameter(Mandatory)]
         [string]$TenantID
     )
-
-    Write-Host 'Starting Entra ID Extraction: ' -NoNewline
-    Write-Host '15 Resource Types' -ForegroundColor Cyan
 
     $allEntraResources = [System.Collections.Generic.List[object]]::new()
     # AB#6456 -- one entry per catalog query, recording whether it actually succeeded. A
@@ -107,10 +104,45 @@ function Start-AZSCEntraExtraction {
     # mattered, which is why a denied permission outside those four still printed a green
     # READY banner over a scan that would render its worksheet empty.
     $entraQueries = @(Get-ScoutEntraQueryCatalog)
+    $totalQueries = $entraQueries.Count
+
+    Write-Host 'Starting Entra ID Extraction: ' -NoNewline
+    Write-Host "$totalQueries Resource Types" -ForegroundColor Cyan
+
+    # Acquire the tenant-scoped token once before entering the per-query loop. A token
+    # acquisition failure is common to every catalog query; retrying it for every dataset
+    # only repeats the same error and wastes time. Successful acquisition populates the
+    # normal token cache, so Invoke-AZSCGraphRequest below remains unchanged.
+    try {
+        $null = Get-AZSCGraphToken -TenantID $TenantID
+    }
+    catch {
+        $authenticationError = $_.Exception.Message
+        Write-Host '  [' -NoNewline
+        Write-Host 'SKIP' -ForegroundColor Yellow -NoNewline
+        Write-Host '] Microsoft Graph authentication: ' -NoNewline
+        Write-Host $authenticationError -ForegroundColor Yellow
+        Write-Warning "[AzureScout] Entra authentication failed once; all $totalQueries Entra datasets are unavailable. Error: $authenticationError"
+
+        foreach ($query in $entraQueries) {
+            $queryOutcomes.Add([PSCustomObject]@{
+                    Type    = $query.Type
+                    Name    = $query.Name
+                    Success = $false
+                    Count   = 0
+                })
+        }
+
+        Write-Host 'Entra ID Extraction Complete: ' -NoNewline -ForegroundColor Green
+        Write-Host "0 total resources across $totalQueries types" -ForegroundColor Cyan
+        return [PSCustomObject]@{
+            EntraResources = $allEntraResources.ToArray()
+            QueryOutcomes  = $queryOutcomes.ToArray()
+        }
+    }
 
     # ── Execute each query with graceful degradation ──
     $queryIndex = 0
-    $totalQueries = $entraQueries.Count
 
     foreach ($query in $entraQueries) {
         $queryIndex++

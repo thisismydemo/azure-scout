@@ -7,7 +7,7 @@
 .DESCRIPTION
     Validates the Entra ID extraction engine:
       - Returns @{ EntraResources = [array] } structure
-      - Processes all 15 entra queries
+      - Processes every query in the Entra catalog
       - Normalizes resources to { id, name, TYPE, tenantId, properties }
       - Handles SingleObject queries (e.g., organization)
       - Graceful degradation — failed queries do not stop execution
@@ -24,6 +24,12 @@ Import-Module (Join-Path -Path $ModuleRoot -ChildPath 'AzureScout.psd1') -Force 
 
 InModuleScope 'AzureScout' {
 Describe 'Start-AZSCEntraExtraction' {
+
+    BeforeEach {
+        Mock Get-AZSCGraphToken {
+            @{ Authorization = 'Bearer preflight-token'; 'Content-Type' = 'application/json' }
+        }
+    }
 
     # ── Return Structure ──────────────────────────────────────────────
     Context 'Return Structure' {
@@ -107,7 +113,7 @@ Describe 'Start-AZSCEntraExtraction' {
         }
     }
 
-    # ── All 15 Entra Queries ──────────────────────────────────────────
+    # ── All Entra Queries ─────────────────────────────────────────────
     Context 'All Entra Queries Executed' {
 
         BeforeAll {
@@ -125,16 +131,46 @@ Describe 'Start-AZSCEntraExtraction' {
             Remove-Variable -Name graphCallUris -Scope Script -ErrorAction SilentlyContinue
         }
 
-        It 'Calls Invoke-AZSCGraphRequest for at least 15 entra queries' {
+        It 'calls Invoke-AZSCGraphRequest once for every catalog query' {
             $null = Start-AZSCEntraExtraction -TenantID 'test-tenant'
-            Should -Invoke Invoke-AZSCGraphRequest -Times 15 -Scope It
+            $expected = @(Get-ScoutEntraQueryCatalog).Count
+            Should -Invoke Invoke-AZSCGraphRequest -Times $expected -Scope It
         }
 
         It 'pins every Graph query to the requested tenant' {
             $null = Start-AZSCEntraExtraction -TenantID 'target-tenant'
-            Should -Invoke Invoke-AZSCGraphRequest -Times 15 -Scope It -ParameterFilter {
+            $expected = @(Get-ScoutEntraQueryCatalog).Count
+            Should -Invoke Invoke-AZSCGraphRequest -Times $expected -Scope It -ParameterFilter {
                 $TenantID -eq 'target-tenant'
             }
+        }
+    }
+
+    Context 'Graph authentication gate' {
+        BeforeEach {
+            Mock Get-AZSCGraphToken { throw 'AADSTS500213 cross-tenant access denied' }
+            Mock Invoke-AZSCGraphRequest { throw 'A Graph query must not run after authentication fails.' }
+        }
+
+        It 'attempts Graph authentication once and skips every query without retry spam' {
+            $result = Start-AZSCEntraExtraction -TenantID 'target-tenant' -WarningAction SilentlyContinue
+
+            Should -Invoke Get-AZSCGraphToken -Times 1 -Scope It -ParameterFilter {
+                $TenantID -eq 'target-tenant'
+            }
+            Should -Invoke Invoke-AZSCGraphRequest -Times 0 -Scope It
+            @($result.QueryOutcomes).Count | Should -Be @(Get-ScoutEntraQueryCatalog).Count
+            @($result.QueryOutcomes | Where-Object Success).Count | Should -Be 0
+            @($result.EntraResources).Count | Should -Be 0
+        }
+
+        It 'emits one warning for the authentication failure' {
+            $warnings = @()
+            $null = Start-AZSCEntraExtraction -TenantID 'target-tenant' -WarningVariable warnings
+
+            @($warnings).Count | Should -Be 1
+            [string]$warnings[0] | Should -Match 'authentication failed'
+            [string]$warnings[0] | Should -Match 'AADSTS500213'
         }
     }
 

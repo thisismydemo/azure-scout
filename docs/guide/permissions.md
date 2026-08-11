@@ -144,10 +144,10 @@ grant is three directory roles: `Directory Readers` + `Security Reader` + `Authe
 Administrator`, plus one of `Security Administrator` / `Tenant Governance Administrator` for
 `CrossTenantAccess`. See [Assessment Permissions](../assessment/assessment-permissions.md).
 
-::: danger The two Verified ID collectors cannot run under interactive (CLI) sign-in at all
-Scout acquires its user-mode Graph token through `az account get-access-token`, which mints a
-delegated token for the **Azure CLI first-party client**. That client's delegated-scope set is
-fixed by Microsoft — az has no way to request an extra scope — and it does **not** include
+::: danger The two Verified ID collectors cannot run when the current delegated token lacks their scopes
+Scout acquires its user-mode Graph token from the same selected Az context used for ARM collection.
+That first-party client's delegated-scope set is fixed by Microsoft — `Get-AzAccessToken` cannot
+request an arbitrary extra scope — and the commonly issued user token does **not** include
 `Policy.Read.AuthenticationMethod` or `VerifiedId-Profile.Read.All` (measured live 2026-08-08;
 the set is `Directory.AccessAsUser.All`, `User.Read.All`, `Group.ReadWrite.All`,
 `Application.ReadWrite.All`, `AuditLog.Read.All` and a few others). The older endpoints keep
@@ -156,7 +156,7 @@ working because `Directory.AccessAsUser.All` covers them; the newer granular sur
 **every** user — a Global Administrator included. **No directory role fixes this.** To populate
 `Identity/VerifiedIDConfiguration` and `Identity/VerifiedIDProfiles`, run Scout as a service
 principal with those two application permissions granted and admin-consented; under user
-sign-in the pre-flight reports them `UNAVAILABLE WITH CLI SIGN-IN` and the report marks them
+sign-in the pre-flight reports them `UNAVAILABLE WITH CURRENT DELEGATED SIGN-IN` and the report marks them
 *Not assessed* (AB#7187).
 :::
 

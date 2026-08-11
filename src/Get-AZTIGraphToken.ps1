@@ -4,23 +4,18 @@ $ErrorActionPreference = 'Stop'
 
 <#
 .Synopsis
-    Acquire a Microsoft Graph bearer token via Azure CLI.
+    Acquire a Microsoft Graph bearer token for the selected Azure context.
 
 .DESCRIPTION
-    Uses Azure CLI (az account get-access-token) to obtain a bearer token
-    for Microsoft Graph API calls. Caches the token in a script-scope variable
-    and refreshes automatically when within 5 minutes of expiry.
-
-    Requires Azure CLI to be logged in ('az login'). Azure CLI automatically
-    requests proper Graph API scopes during authentication, unlike Az PowerShell.
+    Uses Get-AzAccessToken so Graph and ARM execute as the same account and tenant
+    selected by Invoke-AzureScout. It never starts a second Azure CLI authentication
+    path. Successful tokens are cached per Graph endpoint, tenant, and selected Az
+    account identity, and are refreshed automatically when within 5 minutes of expiry.
 
 .PARAMETER TenantID
-    Optional tenant ID to scope the token to. Without this, 'az account get-access-token'
-    returns a token for whatever tenant Azure CLI's ambient context currently has active,
-    which is not necessarily the tenant the caller is auditing or collecting against --
-    on a multi-tenant/delegated identity (Lighthouse, GDAP, or simply an operator who is
-    signed into several customer tenants) that can silently be the wrong tenant. Pass the
-    same TenantID given to Invoke-AzureScout / Invoke-AZSCPermissionAudit to pin it.
+    Optional tenant ID to scope the token to. Pass the same TenantID given to
+    Invoke-AzureScout / Invoke-AZSCPermissionAudit so ARM and Graph remain pinned
+    to the same resource tenant.
 
 .OUTPUTS
     [hashtable] Authorization headers ready for Invoke-RestMethod:
@@ -33,12 +28,14 @@ $ErrorActionPreference = 'Stop'
     This PowerShell Module is part of Azure Scout (AZSC)
 
 .NOTES
-    Version: 1.1.0
+    Version: 1.2.0
     Authors: thisismydemo
     Modified: 2026-02-24 - Changed from Get-AzAccessToken to Azure CLI for proper Graph scopes
     Modified: 2026-08-08 - AB#7100 -- Added -TenantID so the token targets the tenant being
               audited/collected instead of az CLI's ambient default; cache keyed per tenant so
               a run touching multiple tenants can't return one tenant's cached token for another.
+    Modified: 2026-08-11 - Use only the selected Az context and isolate the cache by account;
+              a different Azure CLI login cannot hijack Entra collection or require a second sign-in.
 #>
 function Get-AZSCGraphToken {
     [CmdletBinding()]
@@ -49,9 +46,14 @@ function Get-AZSCGraphToken {
         [string]$AzureEnvironment
     )
 
+    $azContext = $null
+    try {
+        $azContext = Get-AzContext -ErrorAction SilentlyContinue
+    }
+    catch { }
+
     if (-not $AzureEnvironment) {
         try {
-            $azContext = Get-AzContext -ErrorAction SilentlyContinue
             if ($azContext -and $azContext.PSObject.Properties.Name -contains 'Environment' -and
                 $azContext.Environment -and $azContext.Environment.PSObject.Properties.Name -contains 'Name') {
                 $AzureEnvironment = [string]$azContext.Environment.Name
@@ -69,10 +71,15 @@ function Get-AZSCGraphToken {
         default             { 'https://graph.microsoft.com' }
     }
 
-    # Cache key: empty string means "az CLI's ambient/default tenant", same as the old
-    # single-slot cache. A distinct key per TenantID prevents a token minted for tenant A
-    # from being handed back for a subsequent call scoped to tenant B.
-    $cacheKey = "$graphResource|$(if ($TenantID) { $TenantID } else { '' })"
+    # Include the selected Az account in the cache key. Tenant-only caching can otherwise
+    # return a token for account A after the operator changes the Az context to account B.
+    $azAccountIdentity = ''
+    if ($azContext -and $azContext.PSObject.Properties['Account'] -and $azContext.Account) {
+        $accountId = if ($azContext.Account.PSObject.Properties['Id']) { [string]$azContext.Account.Id } else { '' }
+        $accountType = if ($azContext.Account.PSObject.Properties['Type']) { [string]$azContext.Account.Type } else { '' }
+        $azAccountIdentity = "$accountType|$accountId"
+    }
+    $cacheKey = "$graphResource|$(if ($TenantID) { $TenantID } else { '' })|$azAccountIdentity"
 
     if (-not (Get-Variable -Name '_AZSCGraphTokenCache' -Scope Script -ErrorAction SilentlyContinue)) {
         Set-Variable -Name '_AZSCGraphTokenCache' -Scope Script -Value @{}
@@ -89,39 +96,66 @@ function Get-AZSCGraphToken {
 
     Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + ' - Acquiring new Microsoft Graph token for tenant ' + $(if ($TenantID) { $TenantID } else { '(ambient)' }))
 
+    $plainToken = $null
+    $expiresOn = $null
+    $provider = $null
     try {
-        # Use Azure CLI to get Graph token with proper scopes
-        # Azure CLI device code authentication includes Graph API scopes by default
-        $tenantArgs = @()
-        if ($TenantID) { $tenantArgs = @('--tenant', $TenantID) }
-        $azTokenJson = az account get-access-token --resource $graphResource @tenantArgs 2>&1 | Out-String
+        $tokenArgs = @{
+            ResourceUrl = $graphResource
+            ErrorAction = 'Stop'
+        }
+        if ($TenantID) { $tokenArgs.TenantId = $TenantID }
 
-        if ($LASTEXITCODE -ne 0) {
-            throw "Azure CLI failed to get Graph token. Ensure you are logged in with 'az login'. Error: $azTokenJson"
+        $tokenData = Get-AzAccessToken @tokenArgs
+        if (-not $tokenData -or -not $tokenData.PSObject.Properties['Token'] -or $null -eq $tokenData.Token) {
+            throw 'Get-AzAccessToken returned no token.'
         }
 
-        $tokenData = $azTokenJson | ConvertFrom-Json
-        $plainToken = $tokenData.accessToken
-        $expiresOn = [DateTimeOffset]::Parse($tokenData.expiresOn)
-
-        $headers = @{
-            'Authorization' = "Bearer $plainToken"
-            'Content-Type'  = 'application/json'
+        if ($tokenData.Token -is [System.Security.SecureString]) {
+            $tokenPointer = [IntPtr]::Zero
+            try {
+                $tokenPointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($tokenData.Token)
+                $plainToken = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($tokenPointer)
+            }
+            finally {
+                if ($tokenPointer -ne [IntPtr]::Zero) {
+                    [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($tokenPointer)
+                }
+            }
+        }
+        else {
+            # Older Az.Accounts versions returned a plain string.
+            $plainToken = [string]$tokenData.Token
         }
 
-        # Cache for reuse, keyed per tenant
-        $Script:_AZSCGraphTokenCache[$cacheKey] = [PSCustomObject]@{
-            Headers   = $headers
-            ExpiresOn = $expiresOn
+        if ([string]::IsNullOrWhiteSpace($plainToken)) {
+            throw 'Get-AzAccessToken returned an empty token.'
         }
 
-        Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + ' - Graph token acquired via Azure CLI, expires ' + $expiresOn.ToString('HH:mm:ss') + ' UTC')
-
-        return $headers
+        $expiresOn = if ($tokenData.PSObject.Properties['ExpiresOn'] -and $tokenData.ExpiresOn) {
+            [DateTimeOffset]$tokenData.ExpiresOn
+        }
+        else {
+            $now.AddMinutes(30)
+        }
+        $provider = 'Az PowerShell'
     }
     catch {
-        $errorMessage = "Failed to acquire Microsoft Graph token. Ensure Azure CLI is logged in with 'az login' and has Graph API permissions. Error: $($_.Exception.Message)"
-        Write-Warning $errorMessage
-        throw $errorMessage
+        throw "Failed to acquire Microsoft Graph token from the selected Azure PowerShell context for tenant '$(if ($TenantID) { $TenantID } else { '(ambient)' })'. Graph and ARM use the same Azure sign-in; Azure CLI is not used. Error: $($_.Exception.Message)"
     }
+
+    $headers = @{
+        'Authorization' = "Bearer $plainToken"
+        'Content-Type'  = 'application/json'
+    }
+    $plainToken = $null
+
+    $Script:_AZSCGraphTokenCache[$cacheKey] = [PSCustomObject]@{
+        Headers   = $headers
+        ExpiresOn = $expiresOn
+        Provider  = $provider
+    }
+
+    Write-Debug ((Get-Date -Format 'yyyy-MM-dd_HH_mm_ss') + " - Graph token acquired via $provider, expires " + $expiresOn.ToString('HH:mm:ss') + ' UTC')
+    return $headers
 }

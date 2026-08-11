@@ -62,7 +62,7 @@ it explicitly with the commands below and import the module again.
 | `Az.Storage` | Upload report to Azure Storage account | Optional (only with `-StorageAccount`) |
 | `Az.CostManagement` | Cost data extraction | Optional (only with `-IncludeCosts`) |
 
-**NOT required:** Any `Microsoft.Graph.*` module. AzureScout uses `Get-AzAccessToken -ResourceTypeName MSGraph` with REST calls instead.
+**NOT required:** Any `Microsoft.Graph.*` module. AzureScout uses `Get-AzAccessToken -ResourceUrl <environment-Graph-endpoint>` with REST calls instead.
 
 ## Manual Installation
 

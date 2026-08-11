@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.12.1] - 2026-08-11 - one sign-in, one tenant
+
+### Fixed
+
+- **Entra collection used an unrelated Azure CLI identity instead of the account selected in
+  AzureScout (AB#7279).** Microsoft Graph now acquires its tenant-scoped token exclusively from
+  the selected Azure PowerShell context, so ARM and Graph use the same account and tenant and the
+  operator is never asked to authenticate through a second provider. Successful tokens are cached
+  by Graph endpoint, tenant, and selected account to prevent reuse after an account switch.
+- **One Graph authentication failure was printed once for every Entra dataset.** Entra extraction
+  now performs one authentication gate before its query loop. A common failure produces one clear
+  skip/warning, records every dependent dataset as unavailable, and makes zero dataset requests.
+  The extraction banner also derives its resource-type count from the current catalog.
+
 ## [3.12.0] - 2026-08-10 - less waiting, same evidence
 
 ### Changed

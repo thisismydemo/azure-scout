@@ -27,6 +27,7 @@ BeforeAll {
     $script:root = Split-Path $PSScriptRoot -Parent
 
     . "$script:root/src/collect/Get-ScoutEntraQueryCatalog.ps1"
+    . "$script:root/src/Get-AZTIGraphToken.ps1"
     . "$script:root/src/collect/Start-ScoutEntraExtraction.ps1"
     . "$script:root/src/Get-AZSCSafeProperty.ps1"
     . "$script:root/src/Invoke-AZTIGraphRequest.ps1"
@@ -72,6 +73,12 @@ Describe 'Get-ScoutEntraQueryCatalog -- External Identities entry (AB#7098)' {
 }
 
 Describe 'Start-AZSCEntraExtraction -- normalizes a Graph object with no id property (AB#7098)' {
+    BeforeEach {
+        Mock Get-AZSCGraphToken {
+            @{ Authorization = 'Bearer preflight-token'; 'Content-Type' = 'application/json' }
+        }
+    }
+
     It 'does not throw, and stamps the synthetic type with a $null id' {
         Mock Invoke-AZSCGraphRequest {
             param($Uri)

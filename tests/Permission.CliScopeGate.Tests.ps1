@@ -3,10 +3,10 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 <#
-    AB#7187 — user-mode Graph probes must not report a scope Azure CLI cannot acquire as
+    AB#7187 — user-mode Graph probes must not report a scope the delegated token cannot acquire as
     "DENIED — grant it". A delegated token's scp claim is fixed by the CLI client, so a 403 on a
-    scope outside that claim hits every user (Global Administrator included) and no grant fixes
-    it; the audit reports it UNAVAILABLE WITH CLI SIGN-IN (Warn, Not assessed) instead.
+    scope outside that claim hits every user (Global Administrator included) and no directory-role
+    grant fixes it; the audit reports it UNAVAILABLE WITH CURRENT DELEGATED SIGN-IN instead.
 
     The decoder is exercised for real with hand-built unsigned JWTs; the branch placement inside
     Invoke-AZSCPermissionAudit's probe loop is pinned by source position, matching this repo's
@@ -83,20 +83,20 @@ Describe 'AB#7187 — probe-loop branch placement (source analysis)' {
         $decodeIdx | Should -BeLessThan $loopIdx
     }
 
-    It 'checks the licence gate before the CLI-scope gate (a missing licence is the deeper truth)' {
+    It 'checks the licence gate before the delegated-scope gate (a missing licence is the deeper truth)' {
         $licenceIdx  = Get-AuditSourceIndex 'Test-ScoutTenantLicence -SkuPattern \$req\.SkuPattern'
         $cliScopeIdx = Get-AuditSourceIndex '\$tokenClaim\.Scopes -notcontains \$impact\.Permission'
         $licenceIdx | Should -BeLessThan $cliScopeIdx
     }
 
-    It 'reports the CLI-scope case as a Warn with UNAVAILABLE WITH CLI SIGN-IN, before the generic DENIED' {
-        $cliVerdictIdx = Get-AuditSourceIndex 'UNAVAILABLE WITH CLI SIGN-IN'
+    It 'reports the delegated-scope case as a Warn before the generic DENIED' {
+        $cliVerdictIdx = Get-AuditSourceIndex 'UNAVAILABLE WITH CURRENT DELEGATED SIGN-IN'
         $deniedIdx     = Get-AuditSourceIndex '\$deniedRemediation = if'
         $cliVerdictIdx | Should -BeLessThan $deniedIdx
     }
 
-    It 'the CLI-scope remediation sends the operator to a service principal, never to a role or the Enterprise Applications blade' {
-        $m = [regex]::Match($script:Source, "UNAVAILABLE WITH CLI SIGN-IN[\s\S]{0,900}?Write-AuditLine")
+    It 'the delegated-scope remediation sends the operator to a service principal, never to a role or the Enterprise Applications blade' {
+        $m = [regex]::Match($script:Source, "UNAVAILABLE WITH CURRENT DELEGATED SIGN-IN[\s\S]{0,1000}?Write-AuditLine")
         $m.Success | Should -BeTrue
         $m.Value | Should -Match 'service principal'
         $m.Value | Should -Match 'will not help'

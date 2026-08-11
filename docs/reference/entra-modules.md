@@ -75,15 +75,15 @@ from the ask entirely rather than kept as a fourth unconsumed entry.
 > **"I'm a Global Administrator but the Entra modules still fail with 403 — why?"**
 >
 > **Global Administrator is an Entra directory *role*, not a Microsoft Graph API *scope*.**
-> Entra extraction uses the Graph token that **Azure CLI** issues
-> (`az account get-access-token --resource https://graph.microsoft.com`). That token
-> only carries the **delegated Graph scopes the Azure CLI application has been consented**
-> for you — your directory role does **not** widen those scopes. So an endpoint whose
+> Entra extraction uses the Graph token issued for the **same Az context account and tenant**
+> that ARM collection uses (`Get-AzAccessToken`). That token only carries the delegated
+> Graph scopes issued to the authentication client — your directory role does **not** widen
+> those OAuth scopes. So an endpoint whose
 > scope has not been consented returns `403 Forbidden` regardless of your role.
 
 To read every module above, the signed-in identity needs these **delegated** Microsoft
-Graph permissions consented for the Azure CLI app (or your own app if you authenticate
-with one) — see the Permission column in the [Module Catalog](#module-catalog) above for
+Graph permissions carried by the selected identity's token (or application permissions on
+your own service principal) — see the Permission column in the [Module Catalog](#module-catalog) above for
 which permission unlocks which module:
 
 | Permission | Unlocks |
@@ -109,9 +109,10 @@ minimum each query actually needs.
 Grant/consent once (tenant admin), e.g.:
 
 ```powershell
-# Consent the Azure CLI app to the delegated scopes, then re-login:
-az login --scope https://graph.microsoft.com/.default
-# (Or have a Global Admin grant admin-consent for the scopes above in the Entra portal.)
+# Re-establish the Az context for the exact account and tenant being scanned:
+Connect-AzAccount -Tenant '<tenant-id>'
+# For scopes the delegated token cannot carry, use AzureScout's service-principal parameters
+# with the required Microsoft Graph application permissions admin-consented in Entra ID.
 ```
 
 Endpoints requiring a licensing tier you don't have (e.g. Risky Users without Entra ID P2)

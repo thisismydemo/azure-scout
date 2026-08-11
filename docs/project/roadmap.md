@@ -41,7 +41,14 @@ All collector definitions, source retirement, strict runtime contracts, and repo
 complete. The remaining release steps are package validation, broad test-suite completion, tag, and
 publication. Historical v2 entries below are retained as release history rather than current status.
 
-## Current Release — v3.12.0 — less waiting, same evidence
+## Current Release — v3.12.1 — one sign-in, one tenant
+
+Released 11 August 2026. Microsoft Graph now uses the same selected Azure PowerShell account and
+tenant as ARM collection and never consults an unrelated Azure CLI session. A common Entra
+authentication failure is attempted and reported once instead of repeated for every dataset.
+See CHANGELOG.md and AB#7279.
+
+## Previous Release — v3.12.0 — less waiting, same evidence
 
 Released 10 August 2026. Category-filtered inventory now avoids unrelated remote work through a
 manifest-derived dependency plan and server-side Resource Graph filters. Combined runs reuse the

@@ -12,7 +12,7 @@
 RootModule = 'AzureScout.psm1'
 
 # Version number of this module.
-ModuleVersion = '3.12.0'
+ModuleVersion = '3.12.1'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Core')
@@ -164,7 +164,7 @@ PrivateData = @{
         IconUri = 'https://raw.githubusercontent.com/thisismydemo/azure-scout/main/docs/public/images/azurescout-icon.svg'
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'v3.12.0 - Less waiting, same evidence. Category-filtered inventory runs now derive a conservative extraction plan from the collector manifests and filter Resource Graph server-side while All, unknown, and assessment-backed runs retain full dependency coverage. Combined runs reuse completed security/policy sweep data instead of repeating Defender and policy calls. Operational enrichment caches Recovery Services vaults per subscription, protected items per vault, and storage context per subscription. The ARM REST sweep follows nextLink, retries only transient 408/429/5xx responses, and removes unconditional success-path sleeps. Deterministic call-count and compatibility tests preserve schemas, ordering, successful-empty/unavailable semantics, and offline zero-network behavior. AB#7279. See CHANGELOG.md for the full history.'
+        ReleaseNotes = 'v3.12.1 - One sign-in, one tenant. Microsoft Graph now reuses the exact Azure PowerShell account and tenant selected for ARM collection instead of consulting an unrelated Azure CLI session. A tenant-wide Entra authentication failure is attempted and reported once rather than repeated for every dataset, and the extraction banner derives its resource-type count from the live catalog. No second Azure sign-in is required. AB#7279. See CHANGELOG.md for the full history.'
 
         # Prerelease string of this module
         # Prerelease = ''

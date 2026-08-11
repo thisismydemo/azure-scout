@@ -135,16 +135,15 @@ function Get-ScoutGraphTokenClaim {
         (user sign-in: `scp` claim) or an app token (SPN: `roles` claim), and which
         permissions it carries.
 
-        Why this exists: in user-interactive mode the token comes from
-        `az account get-access-token`, i.e. the Azure CLI first-party client
-        (04b07795-8ddb-461a-bbee-02f9e1bf7b46). That client's delegated-scope set is fixed by
-        Microsoft -- az has no way to request an extra scope -- so a Graph endpoint whose
-        required scope is outside that set returns 403 for EVERY user, a Global Administrator
-        included. That failure is a property of the sign-in CLIENT, not of the caller's
+        Why this exists: in user-interactive mode the token is delegated and its scope set is
+        fixed by the first-party authentication client behind the selected Az context.
+        Get-AzAccessToken cannot add an arbitrary Graph scope, so an endpoint whose required
+        scope is outside the issued token returns 403 for EVERY user, a Global Administrator
+        included. That failure is a property of the sign-in CLIENT/token, not of the caller's
         directory roles, and the audit must say so instead of sending an owner with
         tenant-wide rights to a permissions blade that cannot fix it -- the same anti-pattern
         AB#6893 removed for licence-gated permissions. (Older endpoints keep working because
-        the az scope set includes the broad Directory.AccessAsUser.All, which newer granular
+        the common delegated scope set includes broad Directory.AccessAsUser.All, which newer granular
         surfaces such as authenticationMethodsPolicy and identity/verifiedId do not honour --
         that is why Policy.Read.All probes pass on the same token these two fail on.)
     #>
@@ -624,20 +623,20 @@ function Invoke-AZSCPermissionAudit {
 
                     # AB#7187. A delegated token that does not CARRY the required scope cannot
                     # pass this probe no matter which directory roles the signed-in user holds:
-                    # user-mode tokens come from Azure CLI, whose fixed pre-authorized scope set
-                    # cannot be extended, so "grant the permission" is advice that cannot work
+                    # user-mode tokens carry a fixed pre-authorized scope set that
+                    # Get-AzAccessToken cannot extend, so "grant the permission" is advice that cannot work
                     # -- a Global Administrator hits the same 403. Report the truth instead:
                     # this surface needs a service principal, or it stays Not assessed.
                     if ($tokenClaim -and $tokenClaim.IsDelegated -and $tokenClaim.Scopes -notcontains $impact.Permission) {
                         foreach ($c in $impact.Collectors) {
                             $emptyCollectors.Add([PSCustomObject]@{
                                     Collector  = $c
-                                    Reason     = "Unavailable with CLI sign-in — needs '$($impact.Permission)' via a service principal"
+                                    Reason     = "Unavailable with current delegated sign-in — needs '$($impact.Permission)' via a service principal"
                                     Permission = $impact.Permission
                                 })
                         }
-                        $r = New-CheckResult -Check $checkName -Status 'Warn' -Message "UNAVAILABLE WITH CLI SIGN-IN — $($impact.Permission) ($purpose) is not among the delegated scopes Azure CLI tokens carry, and az cannot request it, so this fails for every user regardless of directory roles. $($impact.CollectorCount) collector(s) will be empty and are reported as Not assessed: $($impact.Collectors -join ', ')" -Remediation "Run Scout with a service principal (-AppId with -Secret or -CertificatePath) granted the '$($impact.Permission)' application permission with admin consent. Granting directory roles to this user account will not help."
-                        Write-AuditLine -Status Warn -Text "$checkName — unavailable with CLI sign-in; reported as Not assessed"
+                        $r = New-CheckResult -Check $checkName -Status 'Warn' -Message "UNAVAILABLE WITH CURRENT DELEGATED SIGN-IN — $($impact.Permission) ($purpose) is not among the delegated scopes carried by the selected Az context token, and Get-AzAccessToken cannot add it, so this fails regardless of directory roles. $($impact.CollectorCount) collector(s) will be empty and are reported as Not assessed: $($impact.Collectors -join ', ')" -Remediation "Run Scout with a service principal (-AppId with -Secret or -CertificatePath) granted the '$($impact.Permission)' application permission with admin consent. Granting directory roles to this user account will not help because a directory role cannot add a missing OAuth scope."
+                        Write-AuditLine -Status Warn -Text "$checkName — unavailable with current delegated sign-in; reported as Not assessed"
                         $graphDetails.Add($r)
                         continue
                     }
