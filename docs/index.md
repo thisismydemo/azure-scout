@@ -1,81 +1,42 @@
 ---
 layout: home
-description: See everything. Own your cloud. A PowerShell module for comprehensive Azure + Entra ID discovery, inventory, and CAF/WAF assessment.
+description: AzureScout has moved to its new home at Hybrid Solutions Cloud.
 
 hero:
   name: AzureScout
-  text: See everything. Own your cloud.
-  tagline: One PowerShell command that inventories your entire Azure estate — and scores it against CAF and WAF. Read-only, offline-capable, no agents.
+  text: Scout has scouted a new home.
+  tagline: The compass still works — we have simply moved the base camp to Hybrid Solutions Cloud.
   image:
     src: /images/azurescout-banner.svg
     alt: AzureScout
   actions:
     - theme: brand
-      text: Get started
-      link: /guide/
+      text: Visit the new documentation
+      link: https://hybrid-solutions-cloud.github.io/azure-scout/
     - theme: alt
-      text: What it assesses
-      link: /reference/assessment-catalogue
-    - theme: alt
-      text: View on GitHub
-      link: https://github.com/thisismydemo/azure-scout
+      text: Open the new GitHub repository
+      link: https://github.com/Hybrid-Solutions-Cloud/azure-scout
 
 features:
-  - title: Two modes, one command
-    details: Run bare for a wide inventory of everything in the tenant. Add -Assessment for a scored CAF/WAF review. Run with no parameters at all and a guided wizard walks you through it.
-    link: /guide/overview
-    linkText: How the modes differ
-  - title: 245 collectors, 18 categories
-    details: Every one of Microsoft's eighteen published service categories, from AI and Analytics through to Storage and Web — plus Entra ID identity objects via Microsoft Graph.
-    link: /reference/arm-modules
-    linkText: Browse the collectors
-  - title: 46 assessments
-    details: CAF design areas, WAF pillars, workload reviews, FinOps, DevOps and compliance — each backed by declarative rule files with published automated-versus-manual counts.
-    link: /reference/assessment-catalogue
-    linkText: Browse the assessments
-  - title: Read-only, always
-    details: Scout never creates, modifies or deletes anything in your tenant. Reader at the root management group is enough, and a pre-flight audit tells you exactly what you can and cannot collect before you run.
-    link: /guide/permissions
-    linkText: Permissions required
-  - title: One report, and it is the deliverable
-    details: The self-contained React/HTML report — inventory, every assessment, evidence and the remediation plan on one page, exporting to Markdown, JSON, CSV and PDF from the page itself. React, Json and JsonEvidence are the only live output formats in every run mode. All legacy renderers are on hold while they are rebuilt to generate from React.
-    link: /assessment/configuration
-    linkText: Report tiers and what is on hold
-  - title: Unattended by design
-    details: Azure Automation runbooks, GitHub Actions, or Azure DevOps pipelines. Managed identity or service principal, writing straight to blob storage.
-    link: /automation-guide/
-    linkText: Automation options
+  - title: New trailhead
+    details: Current guides, reference material, release notes, and project documentation now live at the Hybrid Solutions Cloud site.
+    link: https://hybrid-solutions-cloud.github.io/azure-scout/
+    linkText: Go to the new site
+  - title: New code home
+    details: Source code, active development, issues, and future releases now live in the Hybrid-Solutions-Cloud GitHub organization.
+    link: https://github.com/Hybrid-Solutions-Cloud/azure-scout
+    linkText: Go to the new repository
+  - title: Same Scout
+    details: The PowerShell module name, commands, and PowerShell Gallery package remain AzureScout. Only the project home has changed.
 ---
 
-## Quick start
+## We moved homes
 
-```powershell
-# Install from the PowerShell Gallery
-Install-Module -Name AzureScout
+AzureScout packed its map, checked the compass twice, and found a new home with
+**Hybrid Solutions Cloud**.
 
-# Guided wizard — no parameters needed
-Invoke-AzureScout
+- **New website:** <https://hybrid-solutions-cloud.github.io/azure-scout/>
+- **New GitHub repository:** <https://github.com/Hybrid-Solutions-Cloud/azure-scout>
 
-# Full inventory, ARM + Entra ID
-Invoke-AzureScout -Scope All
-
-# Scored CAF/WAF assessment
-Invoke-AzureScout -Assessment 'CAF: Azure Landing Zone'
-
-# Check what you have access to, before running anything
-Invoke-AzureScout -PermissionAudit
-```
-
-Already signed in with `Connect-AzAccount`? Scout uses that session — no extra flags.
-
-## Where to go next
-
-| If you want to… | Start here |
-|---|---|
-| Understand the two modes and pick one | [Overview](./guide/overview.md) |
-| Install and run it for the first time | [Guide](./guide/) |
-| Know what it can assess | [Assessment Catalogue](./reference/assessment-catalogue.md) |
-| Know what it collects | [ARM Modules](./reference/arm-modules.md) |
-| Work out which permissions to request | [Permissions](./guide/permissions.md) |
-| Run it on a schedule | [Automation](./automation-guide/) |
-| Add a collector or contribute | [Contributing](./project/contributing.md) |
+This legacy site remains as a signpost for existing bookmarks. Please update saved links and use
+the new locations for current documentation, source code, issues, and releases.
