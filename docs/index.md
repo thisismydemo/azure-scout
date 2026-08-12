@@ -1,6 +1,10 @@
 ---
 layout: home
 description: AzureScout has moved to its new home at Hybrid Solutions Cloud.
+navbar: false
+sidebar: false
+aside: false
+footer: false
 
 hero:
   name: AzureScout
@@ -12,7 +16,7 @@ hero:
   actions:
     - theme: brand
       text: Visit the new documentation
-      link: https://hybrid-solutions-cloud.github.io/azure-scout/
+      link: https://labs.hybridsolutions.cloud/azure-scout/
     - theme: alt
       text: Open the new GitHub repository
       link: https://github.com/Hybrid-Solutions-Cloud/azure-scout
@@ -20,7 +24,7 @@ hero:
 features:
   - title: New trailhead
     details: Current guides, reference material, release notes, and project documentation now live at the Hybrid Solutions Cloud site.
-    link: https://hybrid-solutions-cloud.github.io/azure-scout/
+    link: https://labs.hybridsolutions.cloud/azure-scout/
     linkText: Go to the new site
   - title: New code home
     details: Source code, active development, issues, and future releases now live in the Hybrid-Solutions-Cloud GitHub organization.
@@ -29,14 +33,3 @@ features:
   - title: Same Scout
     details: The PowerShell module name, commands, and PowerShell Gallery package remain AzureScout. Only the project home has changed.
 ---
-
-## We moved homes
-
-AzureScout packed its map, checked the compass twice, and found a new home with
-**Hybrid Solutions Cloud**.
-
-- **New website:** <https://hybrid-solutions-cloud.github.io/azure-scout/>
-- **New GitHub repository:** <https://github.com/Hybrid-Solutions-Cloud/azure-scout>
-
-This legacy site remains as a signpost for existing bookmarks. Please update saved links and use
-the new locations for current documentation, source code, issues, and releases.
